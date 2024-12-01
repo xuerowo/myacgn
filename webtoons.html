@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=0.5">
+   <title>韓漫推薦</title>
+   <link rel="icon" href="images/favicon.jpg" type="image/jpg">
+   <style>
+      body {
+         background-color: #f4f4f9;
+         padding: 20px;
+      }
+      h1 {
+         text-align: center;
+         color: #333;
+         margin-bottom: 40px;
+      }
+      h2 {
+         color: #4A90E2;
+      }
+      p {
+         font-size: 16px;
+         line-height: 1.5;
+         color: #666;
+      }
+      .container {
+         display: flex;
+         align-items: center;
+         background-color: #fff;
+         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+         margin-bottom: 20px;
+         padding: 20px;
+         border-radius: 10px;
+      }
+      .container img {
+         width: 200px;
+         height: auto;
+         border-radius: 10px;
+         margin-right: 20px;
+      }
+      .link-style-1 {
+         display: inline-block;
+         margin-top: 10px;
+         padding: 10px 20px;
+         background-color: #4A90E2;
+         color: #fff;
+         text-decoration: none;
+         border-radius: 5px;
+         text-align: center;
+      }
+      .link-style-1:hover {
+         background-color: #357ABD;
+      }
+      .navbar {
+         position: fixed;
+         top: 0;
+         left: 0;
+         width: 100%;
+         background-color: rgba(255, 255, 255, 0.9);
+         padding: 10px 0;
+         z-index: 1000;
+         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+         transition: top 0.3s, opacity 0.3s;
+         opacity: 1;
+      }
+      .navbar ul {
+         display: flex;
+         justify-content: center;
+         list-style-type: none;
+         margin: 0;
+         padding: 0;
+      }
+      .navbar li {
+         margin: 0 20px;
+      }
+
+      .navbar a {
+         text-decoration: none;
+         color: #333;
+         font-size: 18px;
+         padding: 10px 15px;
+         transition: color 0.3s;
+      }
+
+      .navbar a:hover {
+         color: #007bff;
+      }
+      .content {
+         margin-top: 70px;
+         padding: 20px;
+      }
+   </style>
+</head>
+<body>
+   <div class="navbar">
+      <ul>
+         <li><a href="animations.html">動畫</a></li>
+         <li><a href="webtoons.html" style="color: #007bff;">網漫</a></li>
+         <li><a href="lightnovels.html">輕小說</a></li>
+         <li><a href="visualnovels.html">視覺小說</a></li>
+      </ul>
+   </div>
+   <script>
+      let lastScrollTop = 0;
+      const navbar = document.querySelector('.navbar');
+      window.addEventListener('scroll', function() {
+         let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+         if (currentScroll > lastScrollTop) {
+            navbar.style.opacity = '0';
+            navbar.style.top = "-70px";
+         } else {
+            navbar.style.opacity = '1';
+            navbar.style.top = "0";
+         }
+         lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+      });
+   </script>
+   <h1>網漫推薦一覽</h1>
+   <div class="container">
+      <img src="https://nttu11325101.github.io/test/1.webp">
+      <div>
+         <h2>無限魔法師</h2>
+         <p>簡介:棄養在馬廄,以平民身分長大的希洛涅。<br> 他藉由天生出色的洞察力自學識字,某天來到了城裡,體驗到自己極為好奇的魔法。<br>這使得希洛涅夢想成為魔法師,然而身分的高牆十分殘酷,他在長大成人前就明白了世界的黑暗面....<br> 在這個某些層面上有些扭曲的世界, 他能成為自己夢寐以求的魔法師嗎?</p>
+         <a href="https://tw.kakaowebtoon.com/content/%E7%84%A1%E9%99%90%E9%AD%94%E6%B3%95%E5%B8%AB/512?tab=episode" target="_blank" class="link-style-1">連結</a>
+      </div>
+   </div>
+   <div class="container">
+      <img src="https://nttu11325101.github.io/test/2.png">
+      <div>
+         <h2>全知讀者視角</h2>
+         <p>簡介:「您收到了主線任務。」 長著角的妖怪，熟悉的人物登場…… 太扯了...這是我讀過的小說劇情！</p>
+         <a href="https://www.webtoons.com/zh-hant/fantasy/duzhe/list?title_no=2089" target="_blank" class="link-style-1">連結</a>
+      </div>
+   </div>
+   <div class="container">
+      <img src="https://nttu11325101.github.io/test/3.jpg">
+      <div>
+         <h2>遊戲最強破壞玩家</h2>
+         <p>簡介:世界上最有可能性的遊戲。 亞進電子、西里科夫工業公司、阿爾戈斯集團。由世界頂尖的大企業合作推出的人類史上首款虛擬現實遊戲《阿爾卡迪亞》。 【歡迎來到幻想的世界，阿爾卡迪亞。】 這裡充滿了各式各樣的瘋狂趣事， 現在馬上開始體驗！</p>
+         <a href="https://www.webtoons.com/zh-hant/fantasy/worlds-strongest-troll/list?title_no=5226" target="_blank" class="link-style-1">連結</a>
+      </div>
+   </div>
+   <div class="container">
+      <img src="https://nttu11325101.github.io/test/4.png">
+      <div>
+         <h2>曾經是最終BOSS</h2>
+         <p>簡介:《深淵之塔》的BOSS巴風特正在等待與自己勢均力敵的強悍獵人。 在反覆的打鬥中感到無聊時，他因為死去的獵人們留下的戰利品， 而開始對人間產生了興趣，在此同時，他一直盼望的強大獵人也出現在眼前， 看著他，巴風特又更加地被人類的存在所吸引。最終，巴風特自己也想成爲人類……</p>
+         <a href="https://www.webtoons.com/zh-hant/action/iwas-the-final-boss/list?title_no=5155" target="_blank" class="link-style-1">連結</a>
+      </div>
+   </div>
+   <div class="container">
+      <img src="https://nttu11325101.github.io/test/5.jpg">
+      <div>
+         <h2>異世界的美味魔法</h2>
+         <p>簡介:夢想當上廚師的主角，因為意外而掉入異世界裡。在充滿怪獸以及魔法的奇幻世界裡，他也想開間屬於自己的餐廳。但因為戰爭的緣故，一到這個世界就被徵召去當兵了，結束長達15年的苦日子後，他終於開了屬於自己的餐廳，然而…</p>
+         <a href="https://www.webtoons.com/zh-hant/fantasy/the-wizards-restaurant/list?title_no=6251" target="_blank" class="link-style-1">連結</a>
+      </div>
+   </div>
+   <div class="container">
+      <img src="https://nttu11325101.github.io/test/6.jpg">
+      <div>
+         <h2>三流反派的學院生存記</h2>
+         <p>簡介:轉生到自己最喜歡的遊戲後，我成為了不起眼的三流反派角色。雖然只想安安靜靜地生活，但是在這個世界很難生存下去。我沒什麼野心，目標就只有從學院畢業。 為了迎接這個故事的結局，我會用主角做不到的三流反派方式活下來！</p>
+         <a href="https://www.webtoons.com/zh-hant/fantasy/academy-survival/list?title_no=6261" target="_blank" class="link-style-1">連結</a>
+      </div>
+   </div>
+   <div class="container">
+      <img src="https://nttu11325101.github.io/test/7.png">
+      <div>
+         <h2>我殺了學院玩家</h2>
+         <p>簡介:某天，我進入了曾經玩過的遊戲世界，和遊戲主角朴時厚一起攜手打天下，但隨著故事走向偏移、重要角色離奇失蹤等，我才意外發現他的真面目——是個只為累積經驗值而不擇手段、不折不扣的殺人變態！為了拯救世界和平，我殺了他...取代他成為了主角！往後的我該怎麼做，才能讓遊戲走向完美結局呢?</p>
+         <a href="https://www.webtoons.com/zh-hant/fantasy/i-killed-the-academy-player/list?title_no=6141" target="_blank" class="link-style-1">連結</a>
+      </div>
+   </div>
+   <div class="container">
+      <img src="https://nttu11325101.github.io/test/8.jpg">
+      <div>
+         <h2>隱藏力量的邊緣英雄</h2>
+         <p>簡介:比起漫畫中出現的主角，從小就覺得平常雖然不起眼，其實擁有比任何人都要強大的「隱藏力量的角色」更帥氣。 接著突如其來的轉生機會！ 「在新的世界，你想要變成什麼呢？」 「我想變成『隱．力．邊』!」 …可是我想要的「隱．力．邊」不是這樣的啊!?</p>
+         <a href="https://www.webtoons.com/zh-hant/fantasy/hid-my-power/list?title_no=5770&page=5" target="_blank" class="link-style-1">連結</a>
+      </div>
+   </div>
+    <div class="container">
+      <img src="https://tw-a.kakaopagecdn.com/P/C/382/c1/2x/55c0d5d9-e36a-432d-a0ba-402c8abe4dec.webp">
+      <div>
+         <h2>歷經萬年回歸的玩家</h2>
+         <p>簡介:某一天,他突然墜入了地獄。他所擁有的只有對活下去的渴望, 以及捕食的權能。從一天地獄殺到九天地獄,他吞噬了數萬、數十萬的惡魔, 最後連七大公都需要跪在他面前。<br> 「您怎麼會想回去呢? 陛下不是已經擁有地獄的一切了嗎!」<br>「擁有個屁。」<br>不只沒有好吃的,連值得享受的事情都沒有!在地獄的只有荒涼的大地和噁心的惡魔! <br> 「我要回去。」<br>經過漫長的一萬年,他終於回到地球。但是,那已經不是他記憶中的地球...</p>
+         <a href="https://tw.kakaowebtoon.com/content/%E6%AD%B7%E7%B6%93%E8%90%AC%E5%B9%B4%E5%9B%9E%E6%AD%B8%E7%9A%84%E7%8E%A9%E5%AE%B6/382?tab=episode" target="_blank" class="link-style-1">連結</a>
+      </div>
+   </div>
+   <div class="container">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJNKAG0-Ui_5TAyBShRPveMQ3AUHzxP-aM8w&s">
+      <div>
+         <h2>雖是輔助，依舊帶飛</h2>
+         <p>簡介:李徐憲數年間一直在遊戲《阿斯拉》裡佔領第一玩家的寶座。有一天，他忽然得知一個名叫《阿斯利安》的虛擬現實遊戲是以《阿斯拉》為前身的。雖然《阿斯拉》不管是設定還是遊戲自由度都很棒，初期也有很多玩家註冊，但受到虛擬現實遊戲的衝擊後，它慢慢失去了人氣。於是，李徐憲下定決心要在《阿斯利安》裡展現自己身為第一玩家的實力。雖然他提前為了獲得更好的職業做了準備，但他被惡魔凱德莉亞算計，成為了輔助！為了擺脫這種困境，他為自己找了一個輸出型隊友，二人的升級之旅正式開啟。</p>
+      </div>
+   </div>
+   <div class="container">
+      <img src="https://cf.mhgui.com/cpic/h/49602.jpg">
+      <div>
+         <h2>重生刺客是天才劍士</h2>
+         <p>簡介:拉昂的一生就像一條拴著鎖鏈的狗。 然而，造化弄人，他獲得了新生──即使他的怒火依然留在斷裂的鎖鏈之中。 終於能夠自立，他決定按照自己的意願生活。 「我會殺死一切阻擋我的人，神也不例外。」</p>
+      </div>
+   </div>
+   <div class="container">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmkllvxtGPShBZCDLq21-xFJkti705AnJSng&s">
+      <div>
+         <h2>小說裡的叛逆路人甲</h2>
+         <p>簡介:「我是誰？」這裡是我筆下的小說世界，然而我卻附身到一個我從未寫過的角色上。身為一個與小說中的角色們毫無交集的透明人、路人甲......不，嚴格來說，作為小說裡的塵埃，我該如何生存？首先，我要努力撐到小說劇情完結！</p>
+      </div>
+   </div>
+   <div class="container">
+      <img src="https://gcs.rimg.com.tw/g2/4/e1/b4/22403648315828_345.jpg">
+      <div>
+         <h2>厭學魔法師想畢業</h2>
+         <p>簡介:易亨本是研究生，卻重生為了異世界魔法名門的老么。他下定決心再也不會靠近有「學」字的地方。然而並沒有用，因為他成為了臭名昭著的魔法學校「艾因羅佳德」的新生。這裡不僅需要自給自足，還會有怪物出沒！而且連教授們也都是一群瘋子！聞所未聞的...。</p>
+      </div>
+   </div>
+   <div class="container">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlIEZ4GqrO95gMckD-AvqpQRygqoihORNt9w&s">
+      <div>
+         <h2>魔法學院的閃現天才</h2>
+         <p>不專業簡介:穿越到遊戲之中只會閃現魔法的劍士角色，然後進入學院...</p>
+      </div>
+   </div>
+   <div class="container">
+      <img src="https://p6.ecombdimg.com/tos-cn-i-scl3phc04j/c2fe9b353b934d889a2548937d519e86~tplv-scl3phc04j-image.jpeg">
+      <div>
+         <h2>配角成了BOSS的青梅竹馬</h2>
+         <p>不專業簡介:轉生到遊戲之中的膽小鬼劍客配角，在小時候和遊戲的中間BOSS延荷娜成為同學，一起成長實力之後進入學院...</p>
+      </div>
+   </div>
+    <div class="container">
+      <img src="https://gcs.rimg.com.tw/g4/bd7/5f2/uyuni1792/3/c5/22/22435518902562_120.jpg">
+      <div>
+         <h2>世上最好的青梅竹馬</h2>
+         <p>不專業簡介:劍尊的女弟子魏雪兒在正魔大戰中殺了數百魔人，最後打敗了從正派投奔魔教的男主，她問男主剩下的魔人在哪裡，男主回想起記憶中他們的第一次見面，然後決定告訴她答案，但因為背叛魔教而觸發禁制死亡。男主臨死前的跑馬燈是其他三位臨死前女角的回憶。男主閉上眼再睜開眼之後就重生到與魏雪兒第一次見面的時候...</p>
+      </div>
+   </div>
+    <div class="container">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIa7juri8hi8VzkwMFgRjTK6Vrp2cLZGHAjQ&s">
+      <div>
+         <h2>一把刺身刀所向無敵</h2>
+         <p>不專業簡介:男主高中畢業後握刀20年，成了全國第一刀手，是魚料理店的廚師長。某天突然被遊戲吞掉，附身在了遊戲中不知道在哪兒的背景人物姜劍魔身上，男主在附身之前，姜劍魔已經覺醒了加護並考上了學院。姜劍魔的加護是無痛、劍神的加護。</p>
+      </div>
+   </div>
+   <div class="container">
+      <img src="https://p3-sign.douyinpic.com/tos-cn-p-0015c000-ce/oEfEhVntC19WEjBAFdAIEIQDdwjeHPbC2ZfFcy~tplv-dy-resize-walign-adapt-aq:540:q75.webp?x-expires=1733450400&x-signature=xoXHVzLlOOBOH5crJOjWpksR4HM%3D&from=327834062&s=PackSourceEnum_DOUYIN_REFLOW&se=false&sc=cover&biz_tag=aweme_video&l=202411221027138398A6B9CCBB0A55CC31">
+      <div>
+         <h2>配角在武林生存</h2>
+         <p>不專業簡介:本作男主附身到了前世讀過的浪漫幻想小說【天龍戀歌】中，女主弟弟身上。</p>
+      </div>
+   </div>
+   <div class="container">
+      <img src="https://mwappimgs.cc/static/upload2/book/id/339005/cover_1.jpg?v=1732174644">
+      <div>
+         <h2>漫畫裡的羅康林</h2>
+         <p>不專業簡介:羅康林在吐槽網漫【逃出危機的六名新娘】後，隔天，發現網漫融入現實世界...</p>
+      </div>
+   </div>
+   <footer style="text-align: center; margin-top: 20px; font-family: Arial, sans-serif;">
+      <p id="lastModified" style="
+         font-size: 1.2em;
+         color: #555;
+         background-color: #f9f9f9;
+         padding: 10px 15px;
+         border-radius: 8px;
+         display: inline-block;
+         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+         "></p>
+      <p id="lastModified" style="
+         font-size: 1em;
+         color: #777;
+         padding: 8px 15px;
+         margin-top: 20px;
+         "></p>
+      <p style="
+         font-size: 1em;
+         color: #777;
+         padding: 8px 15px;
+         margin-top: 10px;
+      ">網頁由 林雲 製作</p>
+   </footer>
+   <script>
+      onst lastModified = new Date(document.lastModified).toLocaleString('zh-TW', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      });
+      document.getElementById("lastModified").innerText = `這裡最後打掃過的時間是：${lastModified}`;
+   </script>
+</body>
+</html>
