@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+    <title>視覺小說推薦</title>
+    <link rel="icon" href="favicon.jpg" type="image/jpg">
+    <style>
+        body {
+            background-color: #f4f4f9;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 40px;
+        }
+        h2 {
+            color: #4A90E2;
+        }
+        p {
+            font-size: 16px;
+            line-height: 1.5;
+            color: #666;
+        }
+        .container {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 10px;
+        }
+       .container img {
+            width: 200px;
+            height: auto;
+            border-radius: 10px;
+            margin-right: 20px;
+        }
+        .link-style-1 {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #4A90E2;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .link-style-1:hover {
+            background-color: #357ABD;
+        }
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px 0;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: top 0.3s, opacity 0.3s;
+            opacity: 1;
+         }
+        .navbar ul {
+            display: flex;
+            justify-content: center;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar li {
+            margin: 0 20px;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: #333;
+            font-size: 18px;
+            padding: 10px 15px;
+            transition: color 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #007bff;
+        }
+        .content {
+            margin-top: 70px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <ul>
+            <li><a href="animations.html">動畫</a></li>
+            <li><a href="webtoons.html">網漫</a></li>
+            <li><a href="lightnovels.html" style="color: #007bff;">輕小說</a></li>
+            <li><a href="visualnovels.html">視覺小說</a></li>
+        </ul>
+    </div>
+    <script>
+        let lastScrollTop = 0;
+        const navbar = document.querySelector('.navbar');
+        window.addEventListener('scroll', function() {
+            let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+            if (currentScroll > lastScrollTop) {
+                navbar.style.opacity = '0';
+                navbar.style.top = "-70px";
+            } else {
+                navbar.style.opacity = '1';
+                navbar.style.top = "0";
+            }
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+        });
+    </script>
+    <h1>視覺小說推薦一覽</h1>
+    <div class="container">
+        <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2593370/header_tchinese.jpg?t=1729664615">
+        <div>
+        <h2>餓殍：明末千里行</h2>
+        <p>簡介:明末崇禎五年（1632年），盜匪良和同夥接了人牙子的委託。<br>良需將四名小女孩從華州城運至洛陽城。<br>路途千里，一行人將走過華州、閿鄉、陝州、最終抵達洛陽。<br>起初，良以為被他運送的女孩會被賣到富人家裡作養女。<br>行至途中，名為“穗”的女孩告知良此次運送的“真相”。<br>原來，買走女孩的是一頭修行千年的豚妖。<br>豚妖以食女童為樂，每年壽辰便從陝地搜羅女童食用，穗的姐姐正是因此而死。<br>穗希望良能放棄運送，最好能與她一同刺殺豚妖，幫她姐姐和數年來喪生的女孩們復仇！<br>良不完全信穗的話，畢竟穗的身上似乎埋藏着很多謎團。<br>良將在旅途中搜集情報，查明真相，並作出他的選擇。</p>
+        <a href="https://store.steampowered.com/app/2593370/_/?l=tchinese" target="_blank" class="link-style-1">連結</a>
+        </div>
+    </div>
+    <footer style="text-align: center; margin-top: 20px; font-family: Arial, sans-serif;">
+        <p id="lastModified" style="
+            font-size: 1.2em;
+            color: #555;
+            background-color: #f9f9f9;
+            padding: 10px 15px;
+            border-radius: 8px;
+            display: inline-block;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            "></p>
+        <p id="lastModified" style="
+            font-size: 1em;
+            color: #777;
+            padding: 8px 15px;
+            margin-top: 20px;
+            "></p>
+        <p style="
+            font-size: 1em;
+            color: #777;
+            padding: 8px 15px;
+            margin-top: 10px;
+            ">網頁由 林雲 製作</p>
+    </footer>
+    <script>
+        const lastModified = new Date(document.lastModified).toLocaleString('zh-TW', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+        });
+        document.getElementById("lastModified").innerText = `這裡最後打掃過的時間是：${lastModified}`;
+    </script>
+</body>
+</html>
