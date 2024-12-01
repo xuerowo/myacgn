@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+    <title>輕小說推薦</title>
+    <link rel="icon" href="images/favicon.jpg" type="image/jpg">
+    <style>
+        body {
+            background-color: #f4f4f9;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 40px;
+        }
+        h2 {
+            color: #4A90E2;
+        }
+        p {
+            font-size: 16px;
+            line-height: 1.5;
+            color: #666;
+        }
+        .container {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .container img {
+            width: 200px;
+            height: auto;
+            border-radius: 10px;
+            margin-right: 20px;
+        }
+        .link-style-1 {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #4A90E2;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .link-style-1:hover {
+            background-color: #357ABD;
+        }
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px 0;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: top 0.3s, opacity 0.3s;
+            opacity: 1;
+        }
+        .navbar ul {
+            display: flex;
+            justify-content: center;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar li {
+            margin: 0 20px;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: #333;
+            font-size: 18px;
+            padding: 10px 15px;
+            transition: color 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #007bff;
+        }
+        .content {
+            margin-top: 70px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <ul>
+            <li><a href="animations.html">動畫</a></li>
+            <li><a href="webtoons.html">網漫</a></li>
+            <li><a href="lightnovels.html" style="color: #007bff;">輕小說</a></li>
+            <li><a href="visualnovels.html">視覺小說</a></li>
+        </ul>
+    </div>
+    <script>
+        let lastScrollTop = 0;
+        const navbar = document.querySelector('.navbar');
+        window.addEventListener('scroll', function() {
+            let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+            if (currentScroll > lastScrollTop) {
+                navbar.style.opacity = '0';
+                navbar.style.top = "-70px";
+            } else {
+                navbar.style.opacity = '1';
+                navbar.style.top = "0";
+            }
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+        });
+    </script>
+    <h1>輕小說推薦一覽</h1>
+    <div class="container">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNMvZifiesrfVz-YthfhXQtTVV2eMjmdXSGQ&s">
+        <div>
+            <h2>在朋友背後與你悄悄牽手。談著無法言說的戀愛</h2>
+            <p>簡介:青春可不只是戀愛。但是――。唯獨這份戀情不願被人知曉。<br>
+「青春＝交女朋友？再怎麼說那也不是青春的全部吧」<br>
+對戀愛有心理陰影的高中生，古賀純也認為比起戀愛，和朋友們在喧鬧中促進友誼才是青春。<br>
+在他看來，親密的五人男女時而仰望美麗的星空，時而在家庭餐廳暢談至天明的當下，才是包括自己在內大家的青春。<br>
+――可是，為什麼我們面對身為朋友的對方，卻還是墜入愛河了呢。明明可能沒辦法維持一直以來的關係了。<br>
+在得知團體中的一人，成島夜瑠隱瞞的真心之後，純也與她構建了共犯關係之後，並非故意，但還是逐漸觸碰到了彼此的傷口。<br>
+這是一部友誼與戀情交錯，直率的心意和扭曲的愛慕之心交織而成的青春戀愛劇。</p>
+        </div>
+    </div>
+    <div class="container">
+        <img src="https://books.google.com.tw/books/publisher/content?id=q8t6EAAAQBAJ&hl=zh-TW&pg=PP1&img=1&zoom=3&bul=1&sig=ACfU3U2IyccXzH7GbSq-TIZk_tEkUsqAaw&w=1280">
+        <div>
+            <h2>快跟超可愛的我交往吧!</h2>
+            <p>簡介:「雖然非我的本意，但請和我交往。」<br>
+理由是為了解決現充集團中三角關係而希望我能跟她成為假情侶！<br>
+由於報酬是極為珍貴的絕版遊戲而被吊起胃口，儘管不情願還是答應了……<br>
+「好囉好囉，能看到可愛女友充滿朝氣的笑容而覺得開心吧？」<br>
+在教室中隱藏本性的結朱，只在我的面前展現自戀全開的言行舉止，實在有夠煩人……<br>
+明明應該是這樣，相處起來卻讓人覺得舒服，兩人單獨的時間也為日常增添樂趣，逐漸變成生活中的一部分――<br>
+邊緣宅男與現充人氣女，興趣跟個性截然不同的兩人開始扮演「假情侶」，隱藏本性的青春喜劇！</p>
+        </div>
+    </div>
+    <div class="container">
+        <img src="https://tw.linovelib.com/files/article/image/3/3875/3875s.jpg">
+        <div>
+            <h2>討厭書的我，戀上圖書室的魔女</h2>
+            <p>簡介:截然相反的兩人透過「書籍」拉近了心靈的距離<br>
+成功高中出道，被公認為陽角的清水奏太。和朋友說的梗大都是手機看的。手機上的內容既有趣又刺激，可以輕鬆享受的內容超多。<br>
+反之，在資訊過剩的今天，閱讀又累又花時間，作為娛樂而言性價比極低，那些閱讀愛好者是怎麼想的，奏太實在是無法理解。<br>
+直到在高一秋天，他遇見了她——。</p>
+        </div>
+    </div>
+    <div class="container">
+        <img src="https://shoplineimg.com/655b0f3c9b81d900188b35f1/664035b2ba081d0019604352/800x.webp?source_format=jpg">
+        <div>
+            <h2>最強廢渣皇子暗中活躍於帝位之爭</h2>
+            <p>簡介:無能萎靡的皇子艾諾特聲望低落。<br>他生活浪蕩，還被帝國上下看扁成「優點都被杰出的雙胞胎弟弟吸收殆盡的『廢渣皇子』」。<br>然而，面臨皇子間的帝位之爭越趨激烈的危機，艾諾特終于決心拿出真本事。<br>「我沒有打算成為皇帝，但是要我被斗垮而死于非命嘛，想都別想。」<br>深藏已久的稀世才智發揮出謀略與談判術，<br>再加上「操控古代禁忌魔法之頂尖SS級冒險者」的真正實力及其地位──<br>掩飾真身于暗中活躍的廢渣皇子將運用一切，並帶著肯為他奉獻的舉國第一美姬，<br>從幕後支配這場帝位之爭！</p>
+        </div>
+    </div>
+    <div class="container">
+        <img src="https://tw.linovelib.com/files/article/image/3/3862/3862s.jpg?1716794373">
+        <div>
+            <h2>無知轉生~就算轉生到了一無所知的遊戲世界我也會全力守護原作~</h2>
+            <p>簡介:主人公轉生到了曾比任何人都要沉迷、對每個角落都了如指掌的魂之遊戲里......其實是轉生到了只有名字相似,除名字以外一無所知的謎之遊戲里,成了謎之角色!<br>遊戲類型、系統、登場人物、主線的開始時間、舞台、甚至連自己在作品當中的角色定位都不清楚。<br>即便如此,他仍拚命地收集情報,總算確認了自己就是「學園戀愛RPG的主人公」,為了守護世界 和自己的小命,他超脫常軌精進不懈地迎擊原作!<br> 這是轉生到一無所知的世界的主人公、用努力和毅力全力顛覆原作的故事!</p>
+        </div>
+    </div>
+    <footer style="text-align: center; margin-top: 20px; font-family: Arial, sans-serif;">
+        <p id="lastModified" style="
+            font-size: 1.2em;
+            color: #555;
+            background-color: #f9f9f9;
+            padding: 10px 15px;
+            border-radius: 8px;
+            display: inline-block;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            "></p>
+        <p id="lastModified" style="
+            font-size: 1em;
+            color: #777;
+            padding: 8px 15px;
+            margin-top: 20px;
+            "></p>
+        <p style="
+            font-size: 1em;
+            color: #777;
+            padding: 8px 15px;
+            margin-top: 10px;
+            ">網頁由 林雲 製作</p>
+    </footer>
+    <script>
+        const lastModified = new Date(document.lastModified).toLocaleString('zh-TW', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+        });
+        document.getElementById("lastModified").innerText = `這裡最後打掃過的時間是：${lastModified}`;
+    </script>
+</body>
+</html>
