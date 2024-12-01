@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=0.5">
+   <title>動畫推薦</title>
+   <link rel="icon" href="images/favicon.jpg" type="image/jpg">
+   <style>
+      body {
+         background-color: #f4f4f9;
+         padding: 20px;
+      }
+      h1 {
+         text-align: center;
+         color: #333;
+         margin-bottom: 40px;
+      }
+      h2 {
+         color: #4A90E2;
+      }
+      p {
+         font-size: 16px;
+         line-height: 1.5;
+         color: #666;
+      }
+      .container {
+         display: flex;
+         align-items: center;
+         background-color: #fff;
+         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+         margin-bottom: 20px;
+         padding: 20px;
+         border-radius: 10px;
+      }
+      .container img {
+         width: 200px;
+         height: auto;
+         border-radius: 10px;
+         margin-right: 20px;
+      }
+      .link-style-1 {
+         display: inline-block;
+         margin-top: 10px;
+         padding: 10px 20px;
+         background-color: #4A90E2;
+         color: #fff;
+         text-decoration: none;
+         border-radius: 5px;
+         text-align: center;
+      }
+      .link-style-1:hover {
+         background-color: #357ABD;
+      }
+      .navbar {
+         position: fixed;
+         top: 0;
+         left: 0;
+         width: 100%;
+         background-color: rgba(255, 255, 255, 0.9);
+         padding: 10px 0;
+         z-index: 1000;
+         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+         transition: top 0.3s, opacity 0.3s;
+         opacity: 1;
+      }
+      .navbar ul {
+         display: flex;
+         justify-content: center;
+         list-style-type: none;
+         margin: 0;
+         padding: 0;
+      }
+
+      .navbar li {
+         margin: 0 20px;
+      }
+
+      .navbar a {
+         text-decoration: none;
+         color: #333;
+         font-size: 18px;
+         padding: 10px 15px;
+         transition: color 0.3s;
+      }
+
+      .navbar a:hover {
+         color: #007bff;
+      }
+      .content {
+         margin-top: 70px;
+         padding: 20px;
+      }
+   </style>
+</head>
+<body>
+   <div class="navbar">
+      <ul>
+         <li><a href="animations.html" style="color: #007bff;">動畫</a></li>
+         <li><a href="webtoons.html">網漫</a></li>
+         <li><a href="lightnovels.html">輕小說</a></li>
+         <li><a href="visualnovels.html">視覺小說</a></li>
+      </ul>
+   </div>
+   <script>
+      let lastScrollTop = 0;
+      const navbar = document.querySelector('.navbar');
+      window.addEventListener('scroll', function() {
+         let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+         if (currentScroll > lastScrollTop) {
+            navbar.style.opacity = '0';
+            navbar.style.top = "-70px";
+         } else {
+            navbar.style.opacity = '1';
+            navbar.style.top = "0";
+         }
+         lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+      });
+   </script>
+   <h1>留言區</h1>
+   <script defer src="https://cdn.commento.io/js/commento.js"></script>
+<div id="commento"></div>
+   <div id="vcomments"></div>
+   <footer style="text-align: center; margin-top: 20px; font-family: Arial, sans-serif;">
+      <p id="lastModified" style="
+         font-size: 1.2em;
+         color: #555;
+         background-color: #f9f9f9;
+         padding: 10px 15px;
+         border-radius: 8px;
+         display: inline-block;
+         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+         "></p>
+      <p id="lastModified" style="
+         font-size: 1em;
+         color: #777;
+         padding: 8px 15px;
+         margin-top: 20px;
+         "></p>
+      <p style="
+         font-size: 1em;
+         color: #777;
+         padding: 8px 15px;
+         margin-top: 10px;
+         ">網頁由 林雲 製作</p>
+      </footer>
+      <script>
+         const lastModified = new Date(document.lastModified).toLocaleString('zh-TW', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+         });
+         document.getElementById("lastModified").innerText = `這裡最後打掃過的時間是：${lastModified}`;
+      </script>
+</body>
+</html>
