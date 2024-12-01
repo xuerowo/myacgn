@@ -119,7 +119,6 @@
    </script>
    <h1>留言區</h1>
    <script defer src="https://cdn.commento.io/js/commento.js"></script>
-<div id="commento"></div>
    <hr style="border: none; height: 2px; background: linear-gradient(to right, #ff0000, #00ff00); margin: 20px 0;">
    <div id="disqus_thread"></div>
 <script>
@@ -140,6 +139,7 @@
     })();
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+   <div id="commento"></div>
    <div id="vcomments"></div>
    <footer style="text-align: center; margin-top: 20px; font-family: Arial, sans-serif;">
       <p id="lastModified" style="
@@ -163,18 +163,18 @@
          padding: 8px 15px;
          margin-top: 10px;
          ">網頁由 林雲 製作</p>
-      </footer>
-      <script>
-         const lastModified = new Date(document.lastModified).toLocaleString('zh-TW', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-         });
-         document.getElementById("lastModified").innerText = `這裡最後打掃過的時間是：${lastModified}`;
-      </script>
+   </footer>
+   <script>
+      const lastModified = new Date(document.lastModified).toLocaleString('zh-TW', {
+         year: 'numeric',
+         month: 'long',
+         day: 'numeric',
+         hour: '2-digit',
+         minute: '2-digit',
+         second: '2-digit',
+      });
+      document.getElementById("lastModified").innerText = `這裡最後打掃過的時間是：${lastModified}`;
+   </script>
    <script id="dsq-count-scr" src="//https-xuerowo-github-io-myacg-commentsection-html.disqus.com/count.js" async></script>
 </body>
 </html>
