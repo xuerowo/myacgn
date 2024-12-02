@@ -105,21 +105,6 @@
             <li><a href="commentsection.html">留言區</a></li>
         </ul>
     </div>
-    <script>
-        let lastScrollTop = 0;
-        const navbar = document.querySelector('.navbar');
-        window.addEventListener('scroll', function() {
-            let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-            if (currentScroll > lastScrollTop) {
-                navbar.style.opacity = '0';
-                navbar.style.top = "-70px";
-            } else {
-                navbar.style.opacity = '1';
-                navbar.style.top = "0";
-            }
-            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
-        });
-    </script>
     <h1>輕小說推薦一覽</h1>
     <h5>備註:輕小說盜版網站推薦用<a href="https://www.lightnovel.us" target="_blank" style="color: #007bff; text-decoration: none;">LK輕之國度</a>，該網站需要登入帳號，否則會受限，也可以選擇在網站上下載該網站的手機app。另外一個網站是<a href="https://www.wenku8.net" target="_blank" style="color: #007bff; text-decoration: none;">輕小說文庫</a>，瀏覽器搜尋輕小說的名稱時，進入該網站可直接閱讀內容，無需登入帳號。然而，若直接搜尋「輕小說文庫」並進入該網站，則需要登入帳號才能瀏覽，google&nbsp;play商店有「輕小說文庫」app可下載。</h5>
     <div class="container">
@@ -182,12 +167,6 @@
             display: inline-block;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             "></p>
-        <p id="lastModified" style="
-            font-size: 1em;
-            color: #777;
-            padding: 8px 15px;
-            margin-top: 20px;
-            "></p>
         <p style="
             font-size: 1em;
             color: #777;
@@ -195,6 +174,21 @@
             margin-top: 10px;
             ">網頁由 林雲 製作</p>
     </footer>
+    <script>
+        let lastScrollTop = 0;
+        const navbar = document.querySelector('.navbar');
+        window.addEventListener('scroll', function() {
+            let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+            if (currentScroll > lastScrollTop) {
+                navbar.style.opacity = '0';
+                navbar.style.top = "-70px";
+            } else {
+                navbar.style.opacity = '1';
+                navbar.style.top = "0";
+            }
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+        });
+    </script>
     <script>
         const lastModified = new Date(document.lastModified).toLocaleString('zh-TW', {
             year: 'numeric',
