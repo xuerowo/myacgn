@@ -105,21 +105,6 @@
          <li><a href="commentsection.html">留言區</a></li>
       </ul>
    </div>
-   <script>
-      let lastScrollTop = 0;
-      const navbar = document.querySelector('.navbar');
-      window.addEventListener('scroll', function() {
-         let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-         if (currentScroll > lastScrollTop) {
-            navbar.style.opacity = '0';
-            navbar.style.top = "-70px";
-         } else {
-            navbar.style.opacity = '1';
-            navbar.style.top = "0";
-         }
-         lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
-      });
-   </script>
    <h1>動畫推薦一覽</h1>
    <h5>備註:日本動畫盜版網站推薦用<a href="https://anime1.me" target="_blank" style="color: #007bff; text-decoration: none;">anime1.me</a>，日本和大陸動畫都有的盜版網站推薦用<a href="https://www.xgcartoon.com/" target="_blank" style="color: #007bff; text-decoration: none;">西瓜卡通</a>。</h5>
    <h3>【日本動畫】</h3>
@@ -250,12 +235,6 @@
          display: inline-block;
          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
          "></p>
-      <p id="lastModified" style="
-         font-size: 1em;
-         color: #777;
-         padding: 8px 15px;
-         margin-top: 20px;
-         "></p>
       <p style="
          font-size: 1em;
          color: #777;
@@ -263,6 +242,21 @@
          margin-top: 10px;
          ">網頁由 林雲 製作</p>
    </footer>
+   <script>
+      let lastScrollTop = 0;
+      const navbar = document.querySelector('.navbar');
+      window.addEventListener('scroll', function() {
+         let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+         if (currentScroll > lastScrollTop) {
+            navbar.style.opacity = '0';
+            navbar.style.top = "-70px";
+         } else {
+            navbar.style.opacity = '1';
+            navbar.style.top = "0";
+         }
+         lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+      });
+   </script>
    <script>
       const lastModified = new Date(document.lastModified).toLocaleString('zh-TW', {
          year: 'numeric',
