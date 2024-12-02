@@ -20,6 +20,10 @@
         h2 {
             color: #4A90E2;
         }
+        h4{
+            color: #555;
+            background-color: #f9f9f9;
+        }
         p {
             font-size: 16px;
             line-height: 1.5;
@@ -89,48 +93,48 @@
             color: #007bff;
         }
         body.dark-mode {
-         background-color: #121212;
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        .dark-mode p{
          color: #e0e0e0;
-      }
-      .dark-mode p{
-         color: #e0e0e0;
-      }
-      .dark-mode h4{
-         background-color: #1e1e1e;
-         color: #e0e0e0;
-      }
-      body.dark-mode .container {
-         background-color: #1e1e1e;
-         color: #e0e0e0;
-      }
-      body.dark-mode .link-style-1 {
-         background-color: #357ABD;
-      }
-      body.dark-mode .link-style-1:hover {
-         background-color: #285c8a;
-      }
-      body.dark-mode .navbar {
-         background-color: rgba(51, 51, 51, 0.8);
-         color: #e0e0e0;
-      }
-      body.dark-mode .navbar a {
-         color: #e0e0e0;
-      }
-      body.dark-mode .navbar a:hover {
-         color: #007bff;
-      }
-      #theme-toggle {
-         padding: 3px 6px;
-         background-color: #4A90E2;
-         color: #fff;
-         border: none;
-         cursor: pointer;
-         display: flex;
-         align-items: center;
-      }
-      #theme-toggle:hover {
-         background-color: #357ABD;
-      }
+        }
+        .dark-mode h4{
+            background-color: #1e1e1e;
+            color: #e0e0e0;
+        }
+        body.dark-mode .container {
+            background-color: #1e1e1e;
+            color: #e0e0e0;
+        }
+        body.dark-mode .link-style-1 {
+            background-color: #357ABD;
+        }
+        body.dark-mode .link-style-1:hover {
+            background-color: #285c8a;
+        }
+        body.dark-mode .navbar {
+            background-color: rgba(51, 51, 51, 0.8);
+            color: #e0e0e0;
+        }
+        body.dark-mode .navbar a {
+            color: #e0e0e0;
+        }
+        body.dark-mode .navbar a:hover {
+            color: #007bff;
+        }
+        #theme-toggle {
+            padding: 3px 6px;
+            background-color: #4A90E2;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        #theme-toggle:hover {
+            background-color: #357ABD;
+        }
     </style>
 </head>
 <body>
@@ -141,6 +145,7 @@
             <li><a href="lightnovels.html" style="color: #007bff;">輕小說</a></li>
             <li><a href="visualnovels.html">視覺小說</a></li>
             <li><a href="commentsection.html">留言區</a></li>
+            <li><button id="theme-toggle">🌞明亮模式</button></li>
         </ul>
     </div>
     <h1>輕小說推薦一覽</h1>
@@ -196,14 +201,14 @@
         </div>
     </div>
     <footer style="text-align: center; margin-top: 20px; font-family: Arial, sans-serif;">
-        <p id="lastModified" style="
+        <h4 id="lastModified" style="
             font-size: 1.2em;
             background-color: #f9f9f9;
             padding: 10px 15px;
             border-radius: 8px;
             display: inline-block;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            "></p>
+            "></h4>
         <h6 style="
             font-size: 1em;
             padding: 8px 15px;
@@ -226,27 +231,27 @@
         });
     </script>
     <script>
-      const themeToggle = document.getElementById('theme-toggle');
-      const body = document.body;
-      const icon = document.getElementById('icon');
-      if (localStorage.getItem('theme') === 'dark') {
-         body.classList.add('dark-mode');
-         themeToggle.textContent = '🌜黑暗模式';
-      }
-      themeToggle.addEventListener('click', () => {
-         body.classList.toggle('dark-mode');
-         if (body.classList.contains('dark-mode')) {
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        const icon = document.getElementById('icon');
+        if (localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark-mode');
             themeToggle.textContent = '🌜黑暗模式';
-         } else {
+        }
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+            themeToggle.textContent = '🌜黑暗模式';
+        } else {
             themeToggle.textContent = '🌞明亮模式';
-         }
-         if (body.classList.contains('dark-mode')) {
+        }
+        if (body.classList.contains('dark-mode')) {
             localStorage.setItem('theme', 'dark');
-         } else {
+        } else {
             localStorage.setItem('theme', 'light');
-         }
-      });
-   </script>
+        }
+    });
+    </script>
     <script>
         const lastModified = new Date(document.lastModified).toLocaleString('zh-TW', {
             year: 'numeric',
