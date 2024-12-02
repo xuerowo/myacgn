@@ -2,11 +2,11 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="description" content="留言區推薦">
-    <meta name="keywords" content="留言區推薦">
+    <meta name="description" content="視覺小說推薦">
+    <meta name="keywords" content="視覺小說推薦">
     <meta name="author" content="林雲">
     <meta name="viewport" content="width=device-width, initial-scale=0.5">
-    <title>留言區推薦</title>
+    <title>視覺小說推薦</title>
     <link rel="icon" href="images/favicon.jpg" type="image/jpg">
     <style>
         body {
@@ -143,35 +143,21 @@
             <li><a href="animations.html">動畫</a></li>
             <li><a href="webtoons.html">網漫</a></li>
             <li><a href="lightnovels.html">輕小說</a></li>
-            <li><a href="visualnovels.html">視覺小說</a></li>
-            <li><a href="commentsection.html" style="color: #007bff;">留言區</a></li>
+            <li><a href="visualnovels.html" style="color: #007bff;">視覺小說</a></li>
+            <li><a href="commentsection.html">留言區</a></li>
             <li><button id="theme-toggle">🌞明亮模式</button></li>
         </ul>
     </div>
-    <h1>留言區</h1>
-   	<script defer src="https://cdn.commento.io/js/commento.js"></script>
-   	<div id="commento"></div>
-   	<hr style="border: none; height: 2px; background: linear-gradient(to right, #ff0000, #00ff00); margin: 20px 0;">
-   	<div id="disqus_thread"></div>
-	<script>
-    	/**
-    	*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-    	*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
-    	/*
-    	var disqus_config = function () {
-    	this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
-    	this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-    	};
-    	*/
-    	(function() { // DON'T EDIT BELOW THIS LINE
-    	var d = document, s = d.createElement('script');
-    	s.src = 'https://https-xuerowo-github-io-myacg-commentsection-html.disqus.com/embed.js';
-    	s.setAttribute('data-timestamp', +new Date());
-    	(d.head || d.body).appendChild(s);
-    	})();
-	</script>
-	<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-	<footer style="text-align: center; margin-top: 20px; font-family: Arial, sans-serif;">
+    <h1>視覺小說推薦一覽</h1>
+   	<div class="container">
+      	<img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2593370/header_tchinese.jpg?t=1729664615">
+      	<div>
+      		<h2>餓殍：明末千里行</h2>
+      		<p>簡介:明末崇禎五年（1632年），盜匪良和同夥接了人牙子的委託。<br>良需將四名小女孩從華州城運至洛陽城。<br>路途千里，一行人將走過華州、閿鄉、陝州、最終抵達洛陽。<br>起初，良以為被他運送的女孩會被賣到富人家裡作養女。<br>行至途中，名為“穗”的女孩告知良此次運送的“真相”。<br>原來，買走女孩的是一頭修行千年的豚妖。<br>豚妖以食女童為樂，每年壽辰便從陝地搜羅女童食用，穗的姐姐正是因此而死。<br>穗希望良能放棄運送，最好能與她一同刺殺豚妖，幫她姐姐和數年來喪生的女孩們復仇！<br>良不完全信穗的話，畢竟穗的身上似乎埋藏着很多謎團。<br>良將在旅途中搜集情報，查明真相，並作出他的選擇。</p>
+      		<a href="https://store.steampowered.com/app/2593370/_/?l=tchinese" target="_blank" class="link-style-1">連結</a>
+      	</div>
+   	</div>
+   	<footer style="text-align: center; margin-top: 20px; font-family: Arial, sans-serif;">
         <h4 id="lastModified" style="
             font-size: 1.2em;
             padding: 10px 15px;
@@ -222,7 +208,6 @@
         }
     });
     </script>
-    <script id="dsq-count-scr" src="//https-xuerowo-github-io-myacg-commentsection-html.disqus.com/count.js" async></script>
     <script>
         const lastModified = new Date(document.lastModified).toLocaleString('zh-TW', {
             year: 'numeric',
