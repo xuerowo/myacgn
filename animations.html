@@ -1,98 +1,98 @@
-<!DOCTYPE html> <!-- 宣告文件類型為 HTML5 -->
-<html> <!-- 定義 HTML 文件的根元素 -->
-<head> <!-- 頁面頭部，用於包含元數據和資源 -->
-    <meta charset="UTF-8"> <!-- 設定文件的字符編碼為 UTF-8 -->
-    <meta name="description" content="動畫推薦"> <!-- 描述該網頁內容，用於 SEO -->
-    <meta name="keywords" content="動畫推薦"> <!-- 提供頁面的關鍵字，用於 SEO -->
-    <meta name="author" content="林雲"> <!-- 聲明頁面作者 -->
-    <meta name="viewport" content="width=device-width, initial-scale=0.5"> <!-- 設置視窗寬度比例，提升手機瀏覽體驗 -->
-    <title>動畫推薦</title> <!-- 設置網頁標題 -->
-    <link rel="icon" href="images/favicon.jpg" type="image/jpg"> <!-- 設定網頁的 favicon 圖標 -->
-    <style> <!-- CSS 樣式區塊 -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="動畫推薦">
+    <meta name="keywords" content="動畫推薦">
+    <meta name="author" content="林雲">
+    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+    <title>動畫推薦</title>
+    <link rel="icon" href="images/favicon.jpg" type="image/jpg">
+    <style>
         body {
-            background-color: #f4f4f9; /* 設定網頁背景顏色 */
-            padding: 20px; /* 設定頁面內容與邊緣的距離 */
+            background-color: #f4f4f9;
+            padding: 20px;
         }
         h1 {
-            text-align: center; /* 標題文字居中 */
-            margin-bottom: 40px; /* 標題底部設置 40px 的間距 */
+            text-align: center;
+            margin-bottom: 40px;
         }
         h2 {
-            color: #4A90E2; /* 設定標題 2 的文字顏色為藍色 */
+            color: #4A90E2;
         }
         h4{
-            color: #555; /* 設定標題 4 的文字顏色為深灰色 */
-            background-color: #f9f9f9; /* 設定背景顏色為淡灰 */
+            color: #555;
+            background-color: #f9f9f9;
         }
         p {
-            font-size: 16px; /* 設置段落字體大小 */
-            line-height: 1.5; /* 設置段落行高 */
-            color: #666; /* 設定段落文字顏色為灰色 */
+            font-size: 16px;
+            line-height: 1.5;
+            color: #666;
         }
         .container {
-            display: flex; /* 使用 flex 排版模型 */
-            align-items: center; /* 垂直居中對齊子項目 */
-            background-color: #fff; /* 設定容器背景為白色 */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 設置陰影效果 */
-            margin-bottom: 20px; /* 設定容器底部間距 */
-            padding: 20px; /* 設定內邊距 */
-            border-radius: 10px; /* 設置圓角 */
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 10px;
         }
         .container img {
-            width: 200px; /* 設定圖片寬度 */
-            height: auto; /* 高度自動調整比例 */
-            border-radius: 10px; /* 設置圖片圓角 */
-            margin-right: 20px; /* 圖片與文字間設置間距 */
+            width: 200px;
+            height: auto;
+            border-radius: 10px;
+            margin-right: 20px;
         }
         .link-style-1 {
-            display: inline-block; /* 設定為行內塊級元素 */
-            margin-top: 10px; /* 設置上方間距 */
-            padding: 10px 20px; /* 設定內邊距 */
-            background-color: #4A90E2; /* 設置背景顏色 */
-            color: #fff; /* 設置文字顏色 */
-            text-decoration: none; /* 移除超連結的預設底線 */
-            border-radius: 5px; /* 設置圓角 */
-            text-align: center; /* 文字居中對齊 */
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #4A90E2;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
         }
         .link-style-1:hover {
-            background-color: #357ABD; /* 滑鼠懸停時改變背景顏色 */
+            background-color: #357ABD;
         }
         .navbar {
-            position: fixed; /* 設置固定位置，隨滾動固定於螢幕頂部 */
-            top: 0; /* 導航欄距離頂部 0 */
-            left: 0; /* 導航欄距離左側 0 */
-            width: 100%; /* 設置導航欄寬度為 100% */
-            background-color: rgba(255, 255, 255, 0.9); /* 半透明白色背景 */
-            padding: 10px 0; /* 設置上下內邊距 */
-            z-index: 1000; /* 設置導航欄疊加層級 */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 設置陰影效果 */
-            transition: top 0.3s, opacity 0.3s; /* 加入平滑過渡效果 */
-            opacity: 1; /* 初始透明度設置為不透明 */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px 0;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: top 0.3s, opacity 0.3s;
+            opacity: 1;
         }
         .navbar ul {
-            display: flex; /* 導航列使用 flex 排版 */
-            justify-content: center; /* 水平居中對齊內容 */
-            list-style-type: none; /* 移除預設的列表符號 */
-            margin: 0; /* 清除列表的外邊距 */
-            padding: 0; /* 清除列表的內邊距 */
+            display: flex;
+            justify-content: center;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
         }
 
         .navbar li {
-            margin: 0 20px; /* 導航列項目之間設置水平間距 */
+            margin: 0 20px;
         }
 
         .navbar a {
-            text-decoration: none; /* 移除超連結的底線 */
-            color: #333; /* 設置文字顏色深灰色 */
-            font-size: 18px; /* 設置字體大小 */
-            padding: 10px 15px; /* 設置內邊距 */
-            transition: color 0.3s; /* 設置文字顏色平滑過渡效果 */
+            text-decoration: none;
+            color: #333;
+            font-size: 18px;
+            padding: 10px 15px;
+            transition: color 0.3s;
         }
 
         .navbar a:hover {
-            color: #007bff; /* 滑鼠懸停時文字顏色變為藍色 */
+            color: #007bff;
         }
-        body.dark-mode { /* 設置黑暗模式下的樣式 */
+        body.dark-mode {
             background-color: #121212;
             color: #e0e0e0;
         }
@@ -124,44 +124,44 @@
             color: #007bff;
         }
         #theme-toggle {
-            padding: 3px 6px; /* 設定按鈕的內邊距，上下 3px，左右 6px，使按鈕內容不緊貼邊框 */
-            background-color: #4A90E2; /* 設定按鈕的背景顏色為藍色 */
-            color: #fff; /* 設定按鈕文字顏色為白色，與背景形成鮮明對比 */
-            border: none; /* 移除按鈕的預設邊框 */
-            cursor: pointer; /* 設置滑鼠懸停在按鈕上時顯示為手指樣式，表示該元素是可點擊的 */
-            display: flex; /* 設定為彈性盒模型，允許內部元素對齊 */
-            align-items: center; /* 垂直對齊按鈕內的內容，使圖示和文字居中 */
+            padding: 3px 6px;
+            background-color: #4A90E2;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
         }
         #theme-toggle:hover {
-            background-color: #357ABD; /* 滑鼠懸停時，按鈕的背景顏色變為較深的藍色 */
+            background-color: #357ABD;
         }
-    </style> <!-- 樣式定義結束 -->
+    </style>
 </head>
-<body> <!-- 定義頁面主體 -->
-	<div class="navbar"> <!-- 頂部固定的導航欄 -->
-        <ul> <!-- 導航欄項目列表 -->
-            <li><a href="animations.html" style="color: #007bff;">動畫</a></li> <!-- 動畫頁面的超連結 -->
+<body>
+	<div class="navbar">
+        <ul>
+            <li><a href="animations.html" style="color: #007bff;">動畫</a></li>
             <li><a href="webtoons.html">網漫</a></li>
             <li><a href="lightnovels.html">輕小說</a></li>
             <li><a href="visualnovels.html">視覺小說</a></li>
             <li><a href="commentsection.html">留言區</a></li>
-            <li><button id="theme-toggle">🌞明亮模式</button></li> <!-- 切換主題模式的按鈕 -->
+            <li><button id="theme-toggle">🌞明亮模式</button></li>
         </ul>
-    </div> <!-- 導航欄結束 -->
-    <h1>動畫推薦一覽</h1> <!-- 頁面主標題 -->
+    </div>
+    <h1>動畫推薦一覽</h1>
     <h5>備註:日本動畫盜版網站推薦用<a href="https://anime1.me" target="_blank" style="color: #007bff; text-decoration: none;">anime1.me</a>，日本和大陸動畫都有的盜版網站推薦用<a href="https://www.xgcartoon.com/" target="_blank" style="color: #007bff; text-decoration: none;">西瓜卡通</a>。</h5>
     <h5>備註2:集數狀態最後更新日期為2024/12/3</h5>
     <h3>【日本動畫】</h3>
-    <div class="container"> <!-- 第一部動畫的內容容器 -->
-    	<img src="https://p2.bahamut.com.tw/B/ACG/c/77/0000076677.JPG"> <!-- 動畫封面圖片 -->
-    	<div> <!-- 動畫文字內容區域 -->
+    <div class="container">
+    	<img src="https://p2.bahamut.com.tw/B/ACG/c/77/0000076677.JPG">
+    	<div>
     		<h2>為美好的世界獻上祝福!</h2>
             <p>集數:本傳第一、二季各10集+OVA1集，第三季共11集，外傳共12集，一部劇場版</p>
     		<p>簡介:從沒想過這個廢到不行的人生，就這樣以廢到不行的方式結束了……廢到連因為痛失愛子、本應傷心欲絕的父母，在聽了死因之後，卻不禁先笑了出來的程度！ 廢到無藥可救的繭居族 佐藤和真，轉生到了跟RPG遊戲畫面一模一樣的異世界，與作為特別附贈品一起同行、智商和運氣都差到教人傻眼地步的女神 阿克婭，姑且組成了一支（看起來）人模人樣的隊伍，引發接二連三的問題！</p>
-    		<a href="https://ani.gamer.com.tw/animeVideo.php?sn=7294" target="_blank" class="link-style-1">連結</a> <!-- 動畫的外部連結 -->
+    		<a href="https://ani.gamer.com.tw/animeVideo.php?sn=7294" target="_blank" class="link-style-1">連結</a>
         </div>
     </div>
-    <div class="container"> <!-- 第二部動畫的內容容器 -->
+    <div class="container">
         <img src="https://p2.bahamut.com.tw/B/ACG/c/36/0000120336.JPG">
         <div>
             <h2>我想成為影之強者！</h2>
@@ -233,7 +233,7 @@
             <a href="https://ani.gamer.com.tw/animeVideo.php?sn=38881" target="_blank" class="link-style-1">連結</a>
         </div>
     </div>
-    <hr style="border: none; height: 2px; background: linear-gradient(to right, #ff0000, #00ff00); margin: 20px 0;"> <!-- 使用漸變效果的水平分隔線 -->
+    <hr style="border: none; height: 2px; background: linear-gradient(to right, #ff0000, #00ff00); margin: 20px 0;">
     <h3>【大陸動畫】</h3>
     <div class="container">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3yrSUIdLy_d9V7uJ6Z7DH_LPHYwo5OEVALw&s">
@@ -284,66 +284,66 @@
             <a href="https://www.youtube.com/playlist?list=PLBakWosU0sfhpbpTxp1RPx8E2n5WoTmxy" target="_blank" class="link-style-1">連結</a>
         </div>
     </div>
-    <footer style="text-align: center; margin-top: 20px; font-family: Arial, sans-serif;"> <!-- 這個 <footer> 元素顯示頁面底部的內容，通常包含網站的版權聲明、聯繫方式、隱私政策等資訊 -->
+    <footer style="text-align: center; margin-top: 20px; font-family: Arial, sans-serif;">
         <h4 id="lastModified" style="
             font-size: 1.2em;
             padding: 10px 15px;
             border-radius: 8px;
             display: inline-block;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            "></h4> <!-- 顯示最後修改時間的區域，內容由 JavaScript 動態插入 -->
+            "></h4>
         <h6 style="
             font-size: 1em;
             padding: 8px 15px;
             margin-top: 10px;
-            ">網頁由 林雲 製作</h6> <!-- 顯示網頁的製作者信息 -->
+            ">網頁由 林雲 製作</h6>
     </footer>
     <script>
-        let lastScrollTop = 0; /* 儲存上次滾動位置 */
-        const navbar = document.querySelector('.navbar'); /* 獲取導航欄元素 */
-        window.addEventListener('scroll', function() { /* 監聽滾動事件 */
-            let currentScroll = window.pageYOffset || document.documentElement.scrollTop; /* 獲取當前滾動位置 */
-            if (currentScroll > lastScrollTop) { /* 判斷滾動方向 */
-                navbar.style.opacity = '0'; /* 隱藏導航欄 */
-                navbar.style.top = "-70px"; /* 移動導航欄位置 */
+        let lastScrollTop = 0;
+        const navbar = document.querySelector('.navbar');
+        window.addEventListener('scroll', function() {
+            let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+            if (currentScroll > lastScrollTop) {
+                navbar.style.opacity = '0';
+                navbar.style.top = "-70px";
             } else {
-                navbar.style.opacity = '1'; /* 顯示導航欄 */
-                navbar.style.top = "0"; /* 將導航欄移回原位 */
+                navbar.style.opacity = '1';
+                navbar.style.top = "0";
             }
-            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; /* 更新滾動位置 */
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
         });
     </script>
     <script>
-        const themeToggle = document.getElementById('theme-toggle'); /* 獲取主題切換按鈕 */
-        const body = document.body; /* 獲取 body 元素 */
-        if (localStorage.getItem('theme') === 'dark') { /* 檢查本地存儲的主題設置 */
-            body.classList.add('dark-mode'); /* 如果是黑暗模式，則添加相關 class */
-            themeToggle.textContent = '🌜黑暗模式'; /* 更新按鈕文本 */
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        if (localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark-mode');
+            themeToggle.textContent = '🌜黑暗模式';
         }
-        themeToggle.addEventListener('click', () => { /* 監聽按鈕點擊事件 */
-            body.classList.toggle('dark-mode'); /* 切換黑暗模式 class */
-            if (body.classList.contains('dark-mode')) { /* 根據模式更新按鈕文本 */
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
             themeToggle.textContent = '🌜黑暗模式';
         } else {
             themeToggle.textContent = '🌞明亮模式';
         }
-        if (body.classList.contains('dark-mode')) { /* 根據模式保存到本地存儲 */
+        if (body.classList.contains('dark-mode')) {
             localStorage.setItem('theme', 'dark');
         } else {
             localStorage.setItem('theme', 'light');
         }
     });
     </script>
-    <script> /* 使用 JavaScript 來顯示網頁的最後修改時間 */
-        const lastModified = new Date(document.lastModified).toLocaleString('zh-TW', { // 獲取瀏覽器提供的網頁最後修改時間 // 將時間格式化為台灣的本地時間格式
-            year: 'numeric',       // 顯示完整的年份 (例如：2024)
-            month: 'long',         // 顯示完整的月份名稱 (例如：十二月)
-            day: 'numeric',        // 顯示日期 (例如：3)
-            hour: '2-digit',       // 顯示小時，使用兩位數字 (例如：09 或 23)
-            minute: '2-digit',     // 顯示分鐘，使用兩位數字 (例如：05 或 45)
-            second: '2-digit',      // 顯示秒數，使用兩位數字 (例如：08 或 59)
-        }); // 將格式化後的時間插入到網頁中的指定元素
-        document.getElementById("lastModified").innerText = `這裡最後打掃過的時間是：${lastModified}`; // 更新頁腳中 id 為 "lastModified" 的 h4 元素，顯示最後修改時間
+    <script>
+        const lastModified = new Date(document.lastModified).toLocaleString('zh-TW', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+        });
+        document.getElementById("lastModified").innerText = `這裡最後打掃過的時間是：${lastModified}`;
     </script>
 </body>
 </html>
