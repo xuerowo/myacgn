@@ -348,7 +348,7 @@
         const repoName = "myacg";
         const filePath = "webtoons.html";
     
-        fetch(`https://api.github.com/repos/${xuerowo}/${myacg}/commits?path=${webtoons.html}`)
+        fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/commits?path=${filePath}`)
             .then(response => response.json())
             .then(commits => {
                 if (commits.length > 0) {
