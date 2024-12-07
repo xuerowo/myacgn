@@ -49,33 +49,23 @@
 
         <pre id="fileContent">請選擇檔案以顯示內容...</pre>
     </div>
-
     <script>
-        // 設定 GitHub 儲存庫的資訊
-        const username = '<您的 GitHub 用戶名>';
-        const repoName = '<儲存庫名稱>';
-        const folderPath = '';  // 根目錄
-
-        // 呼叫 GitHub API 取得資料夾列表
+        const username = '<xuerowo>';
+        const repoName = '<myacg>';
+        const folderPath = '';
         function fetchFiles(path) {
             return fetch(`https://api.github.com/repos/${username}/${repoName}/contents/${path}`)
                 .then(response => response.json())
                 .catch(error => console.error('無法載入資料夾內容:', error));
         }
-
-        // 顯示根目錄下的資料夾
         function loadFolderList() {
             fetchFiles(folderPath).then(data => {
                 const folderSelector = document.getElementById('folderSelector');
-                folderSelector.innerHTML = '';  // 清空資料夾選擇器內容
-
-                // 預設選項
+                folderSelector.innerHTML = '';
                 const defaultOption = document.createElement('option');
                 defaultOption.value = '';
                 defaultOption.textContent = '請選擇資料夾';
                 folderSelector.appendChild(defaultOption);
-
-                // 將資料夾加入到選擇器
                 data.forEach(item => {
                     if (item.type === 'dir') {
                         const option = document.createElement('option');
@@ -86,19 +76,13 @@
                 });
             });
         }
-
-        // 當選擇資料夾時，載入該資料夾下的檔案
         document.getElementById('folderSelector').addEventListener('change', function () {
             const selectedFolder = this.value;
             const fileSelector = document.getElementById('fileSelector');
-            const pageTitle = document.getElementById('pageTitle');
-            
+            const pageTitle = document.getElementById('pageTitle');      
             if (selectedFolder) {
-                // 更新 title 和 h1
                 document.title = selectedFolder;
                 pageTitle.textContent = selectedFolder;
-
-                // 載入選擇資料夾中的檔案
                 loadFileList(selectedFolder);
             } else {
                 document.title = '檔案檢視器';
@@ -107,20 +91,14 @@
                 document.getElementById('fileContent').textContent = '請選擇檔案以顯示內容...';
             }
         });
-
-        // 載入資料夾中的檔案清單
         function loadFileList(folder) {
             fetchFiles(folder).then(data => {
                 const fileSelector = document.getElementById('fileSelector');
-                fileSelector.innerHTML = '';  // 清空檔案選擇器內容
-
-                // 預設選項
+                fileSelector.innerHTML = '';
                 const defaultOption = document.createElement('option');
                 defaultOption.value = '';
                 defaultOption.textContent = '請選擇檔案';
                 fileSelector.appendChild(defaultOption);
-
-                // 將檔案加入到選擇器
                 data.forEach(item => {
                     if (item.type === 'file') {
                         const option = document.createElement('option');
@@ -131,17 +109,12 @@
                 });
             });
         }
-
-        // 當選擇檔案時，載入並顯示檔案內容
         document.getElementById('fileSelector').addEventListener('change', function () {
             const selectedFile = this.value;
             const pageTitle = document.getElementById('pageTitle');
             if (selectedFile) {
-                // 更新 title 和 h1
-                document.title = selectedFile.split('/').pop(); // 顯示檔案名稱
+                document.title = selectedFile.split('/').pop();
                 pageTitle.textContent = selectedFile.split('/').pop();
-
-                // 載入檔案內容
                 loadFile(selectedFile);
             } else {
                 document.title = '檔案檢視器';
@@ -149,11 +122,8 @@
                 document.getElementById('fileContent').textContent = '請選擇檔案以顯示內容...';
             }
         });
-
-        // 讀取檔案並顯示內容
         function loadFile(filePath) {
             const fileUrl = `https://raw.githubusercontent.com/${username}/${repoName}/main/${filePath}`;
-
             fetch(fileUrl)
                 .then(response => response.text())
                 .then(text => {
@@ -165,8 +135,6 @@
                     document.getElementById('fileContent').textContent = '無法載入檔案：' + error;
                 });
         }
-
-        // 初始化資料夾列表
         window.onload = function() {
             loadFolderList();
         }
