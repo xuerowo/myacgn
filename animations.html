@@ -339,7 +339,7 @@
         const repoName = "myacg";
         const filePath = "animations.html";
     
-        fetch(`https://api.github.com/repos/${xuerowo}/${myacg}/commits?path=${animations.html}`)
+        fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/commits?path=${filePath}`)
             .then(response => response.json())
             .then(commits => {
                 if (commits.length > 0) {
