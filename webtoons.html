@@ -347,7 +347,6 @@
         const repoOwner = "xuerowo";
         const repoName = "myacg";
         const filePath = "webtoons.html";
-    
         fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/commits?path=${filePath}`)
             .then(response => response.json())
             .then(commits => {
