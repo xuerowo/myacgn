@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>檔案檢視器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        select, button {
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-word;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="pageTitle">請選擇檔案</h1>
+        <h2 id="chapterTitle"></h2>
+        <label for="fileSelector">選擇檔案：</label>
+        <select id="fileSelector">
+            <option value="">載入資料夾...</option>
+        </select>
+        <pre id="fileContent">請選擇檔案以顯示內容...</pre>
+    </div>
+    <script>
+        const username = '<xuerowo>';
+        const repoName = '<myacg>';
+        let folderPath = '';
+        function loadFiles(path = '') {
+            const url = `https://api.github.com/repos/${username}/${repoName}/contents/${path}`;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const fileSelector = document.getElementById('fileSelector');
+                    fileSelector.innerHTML = '';
+                    const defaultOption = document.createElement('option');
+                    defaultOption.value = '';
+                    defaultOption.textContent = '請選擇檔案';
+                    fileSelector.appendChild(defaultOption);
+                    data.forEach(item => {
+                        const option = document.createElement('option');
+                        if (item.type === 'dir') {
+                            option.value = item.path;
+                            option.textContent = `📂 ${item.name}`;
+                        } else if (item.type === 'file' && item.name.endsWith('.txt')) {
+                            option.value = item.path;
+                            option.textContent = `📄 ${item.name.replace('.txt', '')}`;
+                        }
+                        fileSelector.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('無法載入檔案清單:', error);
+                });
+        }
+        document.getElementById('fileSelector').addEventListener('change', function () {
+            const selectedPath = this.value;
+            const pageTitle = document.getElementById('pageTitle');
+            const chapterTitle = document.getElementById('chapterTitle');
+            if (selectedPath) {
+                if (selectedPath.includes('/')) {
+                    folderPath = selectedPath;
+                    loadFiles(folderPath); //
+                } else {
+                    document.title = selectedPath.replace('.txt', '');
+                    pageTitle.textContent = '檔案檢視器';
+                    chapterTitle.textContent = selectedPath.replace('.txt', '');
+                    loadFile(selectedPath);
+                }
+            } else {
+                document.title = '檔案檢視器';
+                pageTitle.textContent = '請選擇檔案';
+                chapterTitle.textContent = '請選擇章節';
+                document.getElementById('fileContent').textContent = '請選擇檔案以顯示內容...';
+            }
+        });
+        function loadFile(filePath) {
+            const fileUrl = `https://raw.githubusercontent.com/${username}/${repoName}/main/${filePath}`;
+            fetch(fileUrl)
+                .then(response => response.text())
+                .then(text => {
+                    const lines = text.split('\n');
+                    const formattedText = lines.map(line => line.trim() + '\n\n').join('\n');
+                    document.getElementById('fileContent').textContent = formattedText;
+                })
+                .catch(error => {
+                    document.getElementById('fileContent').textContent = '無法載入檔案：' + error;
+                });
+        }
+        loadFiles();
+    </script>
+</body>
+</html>
