@@ -33,68 +33,127 @@
 </head>
 <body>
     <div class="container">
-        <h1 id="pageTitle">請選擇檔案</h1>
-        <h2 id="chapterTitle"></h2>
-        <label for="fileSelector">選擇檔案：</label>
-        <select id="fileSelector">
+        <h1 id="pageTitle">請選擇資料夾和檔案</h1>
+
+        <!-- 資料夾選擇器 -->
+        <label for="folderSelector">選擇資料夾：</label>
+        <select id="folderSelector">
             <option value="">載入資料夾...</option>
         </select>
+
+        <!-- 檔案選擇器 -->
+        <label for="fileSelector">選擇檔案：</label>
+        <select id="fileSelector">
+            <option value="">請先選擇資料夾</option>
+        </select>
+
         <pre id="fileContent">請選擇檔案以顯示內容...</pre>
     </div>
+
     <script>
-        const username = '<xuerowo>';
-        const repoName = '<myacg>';
-        let folderPath = '';
-        function loadFiles(path = '') {
-            const url = `https://api.github.com/repos/${username}/${repoName}/contents/${path}`;
-            fetch(url)
+        // 設定 GitHub 儲存庫的資訊
+        const username = '<您的 GitHub 用戶名>';
+        const repoName = '<儲存庫名稱>';
+        const folderPath = '';  // 根目錄
+
+        // 呼叫 GitHub API 取得資料夾列表
+        function fetchFiles(path) {
+            return fetch(`https://api.github.com/repos/${username}/${repoName}/contents/${path}`)
                 .then(response => response.json())
-                .then(data => {
-                    const fileSelector = document.getElementById('fileSelector');
-                    fileSelector.innerHTML = '';
-                    const defaultOption = document.createElement('option');
-                    defaultOption.value = '';
-                    defaultOption.textContent = '請選擇檔案';
-                    fileSelector.appendChild(defaultOption);
-                    data.forEach(item => {
-                        const option = document.createElement('option');
-                        if (item.type === 'dir') {
-                            option.value = item.path;
-                            option.textContent = `📂 ${item.name}`;
-                        } else if (item.type === 'file' && item.name.endsWith('.txt')) {
-                            option.value = item.path;
-                            option.textContent = `📄 ${item.name.replace('.txt', '')}`;
-                        }
-                        fileSelector.appendChild(option);
-                    });
-                })
-                .catch(error => {
-                    console.error('無法載入檔案清單:', error);
-                });
+                .catch(error => console.error('無法載入資料夾內容:', error));
         }
-        document.getElementById('fileSelector').addEventListener('change', function () {
-            const selectedPath = this.value;
+
+        // 顯示根目錄下的資料夾
+        function loadFolderList() {
+            fetchFiles(folderPath).then(data => {
+                const folderSelector = document.getElementById('folderSelector');
+                folderSelector.innerHTML = '';  // 清空資料夾選擇器內容
+
+                // 預設選項
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = '請選擇資料夾';
+                folderSelector.appendChild(defaultOption);
+
+                // 將資料夾加入到選擇器
+                data.forEach(item => {
+                    if (item.type === 'dir') {
+                        const option = document.createElement('option');
+                        option.value = item.path;
+                        option.textContent = item.name;
+                        folderSelector.appendChild(option);
+                    }
+                });
+            });
+        }
+
+        // 當選擇資料夾時，載入該資料夾下的檔案
+        document.getElementById('folderSelector').addEventListener('change', function () {
+            const selectedFolder = this.value;
+            const fileSelector = document.getElementById('fileSelector');
             const pageTitle = document.getElementById('pageTitle');
-            const chapterTitle = document.getElementById('chapterTitle');
-            if (selectedPath) {
-                if (selectedPath.includes('/')) {
-                    folderPath = selectedPath;
-                    loadFiles(folderPath); //
-                } else {
-                    document.title = selectedPath.replace('.txt', '');
-                    pageTitle.textContent = '檔案檢視器';
-                    chapterTitle.textContent = selectedPath.replace('.txt', '');
-                    loadFile(selectedPath);
-                }
+            
+            if (selectedFolder) {
+                // 更新 title 和 h1
+                document.title = selectedFolder;
+                pageTitle.textContent = selectedFolder;
+
+                // 載入選擇資料夾中的檔案
+                loadFileList(selectedFolder);
             } else {
                 document.title = '檔案檢視器';
-                pageTitle.textContent = '請選擇檔案';
-                chapterTitle.textContent = '請選擇章節';
+                pageTitle.textContent = '請選擇資料夾和檔案';
+                fileSelector.innerHTML = '<option value="">請先選擇資料夾</option>';
                 document.getElementById('fileContent').textContent = '請選擇檔案以顯示內容...';
             }
         });
+
+        // 載入資料夾中的檔案清單
+        function loadFileList(folder) {
+            fetchFiles(folder).then(data => {
+                const fileSelector = document.getElementById('fileSelector');
+                fileSelector.innerHTML = '';  // 清空檔案選擇器內容
+
+                // 預設選項
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = '請選擇檔案';
+                fileSelector.appendChild(defaultOption);
+
+                // 將檔案加入到選擇器
+                data.forEach(item => {
+                    if (item.type === 'file') {
+                        const option = document.createElement('option');
+                        option.value = item.path;
+                        option.textContent = item.name;
+                        fileSelector.appendChild(option);
+                    }
+                });
+            });
+        }
+
+        // 當選擇檔案時，載入並顯示檔案內容
+        document.getElementById('fileSelector').addEventListener('change', function () {
+            const selectedFile = this.value;
+            const pageTitle = document.getElementById('pageTitle');
+            if (selectedFile) {
+                // 更新 title 和 h1
+                document.title = selectedFile.split('/').pop(); // 顯示檔案名稱
+                pageTitle.textContent = selectedFile.split('/').pop();
+
+                // 載入檔案內容
+                loadFile(selectedFile);
+            } else {
+                document.title = '檔案檢視器';
+                pageTitle.textContent = '請選擇檔案';
+                document.getElementById('fileContent').textContent = '請選擇檔案以顯示內容...';
+            }
+        });
+
+        // 讀取檔案並顯示內容
         function loadFile(filePath) {
             const fileUrl = `https://raw.githubusercontent.com/${username}/${repoName}/main/${filePath}`;
+
             fetch(fileUrl)
                 .then(response => response.text())
                 .then(text => {
@@ -106,7 +165,11 @@
                     document.getElementById('fileContent').textContent = '無法載入檔案：' + error;
                 });
         }
-        loadFiles();
+
+        // 初始化資料夾列表
+        window.onload = function() {
+            loadFolderList();
+        }
     </script>
 </body>
 </html>
