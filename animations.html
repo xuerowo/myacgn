@@ -335,15 +335,25 @@
     });
     </script>
     <script>
-        const lastModified = new Date(document.lastModified).toLocaleString('zh-TW', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-        });
-        document.getElementById("lastModified").innerText = `這裡最後打掃過的時間是：${lastModified}`;
+        const repoOwner = "xuerowo";
+        const repoName = "myacg";
+        const filePath = "animations.html";
+    
+        fetch(`https://api.github.com/repos/${rxuerowo}/${myacg}/commits?path=${animations.html}`)
+            .then(response => response.json())
+            .then(commits => {
+                if (commits.length > 0) {
+                    const lastCommitDate = new Date(commits[0].commit.committer.date).toLocaleString('zh-TW', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                    });
+                    document.getElementById("lastModified").innerText = `這裡最後打掃過的時間是：${lastCommitDate}`;
+                }
+            })
     </script>
 </body>
 </html>
