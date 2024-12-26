@@ -311,7 +311,9 @@
         function updateClockDisplay(time) {
             const clockElement = document.getElementById('clock');
             if (clockElement) {
-                clockElement.textContent = time;
+                const [hours, minutes] = time.split(':');
+                const formattedTime = `${parseInt(hours)}:${minutes}`;
+                clockElement.textContent = formattedTime;
             }
         }
 
