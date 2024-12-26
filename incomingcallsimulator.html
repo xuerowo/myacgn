@@ -47,7 +47,6 @@
             color: #666;
             font-size: 14px;
             background: rgb(33, 33, 33);
-            border-bottom: 1px solid #eee;
         }
 
         .caller-info {
@@ -310,7 +309,7 @@
         }
 
         function updateBatteryDisplay(level) {
-            const batteryWidth = Math.floor((level / 100) * 15);
+            const batteryWidth = Math.floor((level / 100) * 20);
             const batteryElement = document.querySelector('.status-bar svg rect:last-child');
             const batteryText = document.querySelector('.battery-text');
             if (batteryElement) {
