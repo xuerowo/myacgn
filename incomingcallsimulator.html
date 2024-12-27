@@ -5,6 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>來電模擬器</title>
     <style>
+        :root {
+            --bg-color: #f0f0f0;
+            --phone-bg: #1c1c1e;
+            --status-bar-bg: rgb(33, 33, 33);
+            --text-color: white;
+            --input-bg: #2c2c2e;
+            --input-border: #333;
+            --avatar-bg: #666;
+            --secondary-text: #999;
+            --tertiary-text: #888;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #ffffff;
+            --phone-bg: #f2f2f7;
+            --status-bar-bg: rgb(240, 240, 240);
+            --text-color: black;
+            --input-bg: #ffffff;
+            --input-border: #ddd;
+            --avatar-bg: #e0e0e0;
+            --secondary-text: #666;
+            --tertiary-text: #777;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,12 +37,27 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: #f0f0f0;
+            background-color: var(--bg-color);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .theme-switch {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: #0a84ff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            z-index: 1000;
         }
 
         .phone-container {
@@ -34,7 +73,7 @@
         .phone-screen {
             width: 100%;
             height: 100%;
-            background: #1c1c1e;
+            background: var(--phone-bg);
             border-radius: 30px;
             overflow: hidden;
             position: relative;
@@ -44,50 +83,70 @@
             display: flex;
             justify-content: space-between;
             padding: 12px 20px;
-            color: #666;
+            color: var(--secondary-text);
             font-size: 14px;
-            background: rgb(33, 33, 33);
+            background: var(--status-bar-bg);
+            transition: background-color 0.3s;
         }
 
         .caller-info {
             text-align: center;
             margin-top: 60px;
             margin-bottom: 40px;
-            color: white;
+            color: var(--text-color);
+            transition: color 0.3s;
         }
 
         .avatar {
             width: 120px;
             height: 120px;
-            background: #666;
+            background: var(--avatar-bg);
             border-radius: 50%;
             margin: 0 auto 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 48px;
-            color: #aaa;
+            color: var(--secondary-text);
+            position: relative;
+            overflow: hidden;
+            transition: background-color 0.3s;
+        }
+
+        .avatar svg {
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+
+        .avatar.default svg {
+            display: block;
+        }
+
+        .avatar.default span {
+            display: none;
         }
 
         .caller-name {
             font-size: 28px;
             font-weight: bold;
             margin-bottom: 8px;
+            color: var(--text-color);
         }
 
         .phone-number {
-            color: #999;
+            color: var(--secondary-text);
             margin-bottom: 8px;
             font-size: 16px;
         }
 
         .call-type {
-            color: #888;
+            color: var(--tertiary-text);
             font-size: 14px;
         }
 
         .call-status {
-            color: #999;
+            color: var(--secondary-text);
             font-size: 16px;
             margin-top: 20px;
         }
@@ -153,7 +212,7 @@
 
         .controls {
             padding: 20px;
-            color: white;
+            color: var(--text-color);
         }
 
         .input-group {
@@ -163,17 +222,17 @@
         .input-group label {
             display: block;
             margin-bottom: 5px;
-            color: #999;
+            color: var(--secondary-text);
         }
 
         .input-group input {
             width: 100%;
             padding: 12px;
-            border: 1px solid #333;
+            border: 1px solid var(--input-border);
             border-radius: 8px;
             font-size: 16px;
-            background: #2c2c2e;
-            color: white;
+            background: var(--input-bg);
+            color: var(--text-color);
         }
 
         #triggerButton {
@@ -197,39 +256,67 @@
 
         .call-timer {
             font-size: 16px;
-            color: #999;
+            color: var(--secondary-text);
             margin-top: 10px;
+        }
+
+        .status-bar svg path {
+            fill: var(--text-color);
+            stroke: var(--text-color);
+        }
+
+        .status-bar rect {
+            stroke: var(--text-color);
+        }
+
+        .clock-text {
+            color: var(--text-color) !important;
+        }
+
+        .signal-text {
+            color: var(--text-color) !important;
+        }
+        .battery-text{
+            color: var(--text-color) !important;
         }
     </style>
 </head>
-<body>
+<body data-theme="dark">
+    <button class="theme-switch" onclick="toggleTheme()">切換主題</button>
     <div class="phone-container">
         <div class="phone-screen">
             <div class="status-bar">
-                <span id="clock" style="flex: 1; color: white;">00:00</span>
+                <span id="clock" class="clock-text" style="flex: 1;">00:00</span>
                 <div style="display: flex; align-items: center; gap: 4px;">
-                    <span style="color: white;">5G</span>
+                    <span class="signal-text">5G</span>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1 20h3v-3H1v3zm5 0h3v-6H6v6zm5 0h3v-9h-3v9zm5 0h3v-12h-3v12zm5 0h3v-15h-3v15z" fill="white" stroke="white"/>
+                        <path d="M1 20h3v-3H1v3zm5 0h3v-6H6v6zm5 0h3v-9h-3v9zm5 0h3v-12h-3v12zm5 0h3v-15h-3v15z" fill="currentColor" stroke="currentColor"/>
                     </svg>
                     <div style="position: relative; display: flex; align-items: center;">
                         <svg width="28" height="14" viewBox="0 0 28 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="1" y="1" width="24" height="12" rx="2" stroke="white" stroke-width="2"/>
-                            <rect x="26" y="4" width="2" height="6" fill="white"/>
-                            <rect x="3" y="3" width="15" height="8" fill="#666"/>
+                            <rect x="1" y="1" width="24" height="12" rx="2" stroke="currentColor" stroke-width="2"/>
+                            <rect x="26" y="4" width="2" height="6" fill="currentColor"/>
+                            <rect x="3.2" y="3.2" width="15" height="8" fill="#999" fill-opacity="0.7" stroke-opacity="0.3"/>
                         </svg>
-                        <span class="battery-text" style="position: absolute; width: 24px; text-align: center; left: 1px; font-size: 9px; font-weight: 500; color: white;">100</span>
+                        <span class="battery-text" style="position: absolute; width: 24px; text-align: center; left: 1px; font-size: 9px; font-weight: 500;">100</span>
                     </div>
                 </div>
             </div>
 
             <div id="callScreen" class="hidden">
                 <div class="caller-info">
-                    <div class="avatar">
-                        <span id="avatarInitial">王</span>
+                    <div class="avatar default" id="avatarContainer">
+                        <span id="avatarInitial"></span>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="50" fill="#333333"/>
+                            <g transform="translate(20, 15)">
+                                <circle cx="30" cy="25" r="15" fill="#666666"/>
+                                <path d="M5 67 Q30 22 55 67" fill="#666666"/>
+                            </g>
+                        </svg>
                     </div>
-                    <div class="caller-name" id="callerNameDisplay">王小明</div>
-                    <div class="phone-number" id="phoneNumberDisplay">0912-345-678</div>
+                    <div class="caller-name" id="callerNameDisplay"></div>
+                    <div class="phone-number" id="phoneNumberDisplay"></div>
                     <div class="call-type">行動電話</div>
                     <div class="call-status">來電中...</div>
                 </div>
@@ -254,11 +341,18 @@
 
             <div id="activeCall" class="hidden">
                 <div class="caller-info">
-                    <div class="avatar">
-                        <span id="avatarInitialActive">王</span>
+                    <div class="avatar default" id="avatarContainerActive">
+                        <span id="avatarInitialActive"></span>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="50" fill="#333333"/>
+                            <g transform="translate(20, 15)">
+                                <circle cx="30" cy="25" r="15" fill="#666666"/>
+                                <path d="M5 67 Q30 22 55 67" fill="#666666"/>
+                            </g>
+                        </svg>
                     </div>
-                    <div class="caller-name" id="callerNameActive">王小明</div>
-                    <div class="phone-number" id="phoneNumberActive">0912-345-678</div>
+                    <div class="caller-name" id="callerNameActive"></div>
+                    <div class="phone-number" id="phoneNumberActive"></div>
                     <div class="call-status">通話中</div>
                     <div class="call-timer" id="callTimer">00:00</div>
                 </div>
@@ -277,7 +371,7 @@
             <div id="controls" class="controls">
                 <div class="input-group">
                     <label for="callerName">來電者姓名:</label>
-                    <input type="text" id="callerName" value="王小明">
+                    <input type="text" id="callerName" value="">
                 </div>
                 <div class="input-group">
                     <label for="phoneNumber">電話號碼:</label>
@@ -299,6 +393,13 @@
     <script>
         let callInterval;
         let seconds = 0;
+
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+        }
         
         function updateCallTimer() {
             seconds++;
@@ -314,7 +415,7 @@
             const batteryText = document.querySelector('.battery-text');
             if (batteryElement) {
                 batteryElement.setAttribute('width', batteryWidth);
-                batteryElement.setAttribute('fill', level <= 20 ? '#ff3b30' : '#666');
+                batteryElement.setAttribute('fill', level <= 20 ? '#ff3b30' : '#999');
             }
             if (batteryText) {
                 batteryText.textContent = level;
@@ -339,11 +440,26 @@
             
             document.getElementById('callerNameDisplay').textContent = callerName;
             document.getElementById('phoneNumberDisplay').textContent = phoneNumber;
-            document.getElementById('avatarInitial').textContent = callerName[0];
             
             document.getElementById('callerNameActive').textContent = callerName;
             document.getElementById('phoneNumberActive').textContent = phoneNumber;
-            document.getElementById('avatarInitialActive').textContent = callerName[0];
+            
+            const avatarContainer = document.getElementById('avatarContainer');
+            const avatarContainerActive = document.getElementById('avatarContainerActive');
+            const avatarInitial = document.getElementById('avatarInitial');
+            const avatarInitialActive = document.getElementById('avatarInitialActive');
+            
+            if (callerName) {
+                avatarContainer.classList.remove('default');
+                avatarContainerActive.classList.remove('default');
+                avatarInitial.textContent = callerName[0];
+                avatarInitialActive.textContent = callerName[0];
+            } else {
+                avatarContainer.classList.add('default');
+                avatarContainerActive.classList.add('default');
+                avatarInitial.textContent = '';
+                avatarInitialActive.textContent = '';
+            }
 
             updateBatteryDisplay(batteryLevel);
             updateClockDisplay(clockTime);
