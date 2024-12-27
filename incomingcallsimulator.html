@@ -159,7 +159,7 @@
             bottom: 60px;
             left: 0;
             right: 0;
-            gap: 100px;
+            gap: 20px;
         }
 
         .button {
@@ -204,10 +204,6 @@
 
         .accept .button-icon svg {
             transform: rotate(0deg);
-        }
-
-        .end-call {
-            margin: 0 auto;
         }
 
         .controls {
@@ -260,6 +256,14 @@
             margin-top: 10px;
         }
 
+        .speaker {
+            box-shadow: none;
+        }
+
+        .speaker.active svg path {
+            stroke: #0a84ff;
+        }
+
         .status-bar svg path {
             fill: var(--text-color);
             stroke: var(--text-color);
@@ -276,8 +280,16 @@
         .signal-text {
             color: var(--text-color) !important;
         }
+
         .battery-text{
             color: var(--text-color) !important;
+        }
+        .speaker svg path {
+            stroke: var(--text-color);
+        }
+
+        .speaker.active svg path {
+            stroke: #0a84ff;
         }
     </style>
 </head>
@@ -358,6 +370,23 @@
                 </div>
 
                 <div class="buttons">
+                    <button class="button speaker" onclick="toggleSpeaker()" style="background: transparent;">
+                        <span class="button-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                                <path d="M35 35h-15c-2 0-4 2-4 4v22c0 2 2 4 4 4h15l15 15V20L35 35z" 
+                                    fill="none" 
+                                    stroke="white" 
+                                    stroke-width="4"
+                                    stroke-linejoin="round"/>
+                                
+                                <path d="M60 30c8 7 8 33 0 40M75 20c12 12 12 48 0 60" 
+                                    fill="none" 
+                                    stroke="white" 
+                                    stroke-width="4" 
+                                    stroke-linecap="round"/>
+                            </svg>
+                        </span>
+                    </button>
                     <button class="button decline end-call" onclick="endCall()">
                         <span class="button-icon">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -430,6 +459,11 @@
                 const formattedTime = `${parseInt(hours)}:${minutes}`;
                 clockElement.textContent = formattedTime;
             }
+        }
+
+        function toggleSpeaker() {
+            const speakerBtn = document.querySelector('.speaker');
+            speakerBtn.classList.toggle('active');
         }
 
         function startCall() {
