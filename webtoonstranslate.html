@@ -447,6 +447,15 @@
     <script>
         const { createApp } = Vue;
 
+        // GitHub API 設置
+        const GITHUB_TOKEN = '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';
+        const axiosConfig = {
+            headers: {
+                'Authorization': `token ${GITHUB_TOKEN}`,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        };
+
         // 本地存儲的鍵名
         const STORAGE_KEYS = {
             CACHE: 'manga_cache',
@@ -515,14 +524,16 @@
                         }
 
                         const response = await axios.get(
-                            'https://api.github.com/repos/xuerowo/myacg/contents/網漫翻譯'
+                            'https://api.github.com/repos/xuerowo/myacg/contents/網漫翻譯',
+                            axiosConfig
                         );
                         
                         this.mangaList = await Promise.all(
                             response.data.map(async (item) => {
                                 if (item.type === 'dir') {
                                     const coverResponse = await axios.get(
-                                        `https://api.github.com/repos/xuerowo/myacg/contents/網漫翻譯/${item.name}/cover.jpg`
+                                        `https://api.github.com/repos/xuerowo/myacg/contents/網漫翻譯/${item.name}/cover.jpg`,
+                                        axiosConfig
                                     );
                                     
                                     return {
@@ -546,7 +557,8 @@
                 async fetchTextFile(path) {
                     try {
                         const response = await axios.get(
-                            `https://api.github.com/repos/xuerowo/myacg/contents/${path}`
+                            `https://api.github.com/repos/xuerowo/myacg/contents/${path}`,
+                            axiosConfig
                         );
                         // 使用 TextDecoder 正確解碼 Base64 內容
                         const binary = atob(response.data.content);
@@ -574,7 +586,8 @@
 
                         // 獲取章節列表
                         const response = await axios.get(
-                            `https://api.github.com/repos/xuerowo/myacg/contents/網漫翻譯/${manga.title}`
+                            `https://api.github.com/repos/xuerowo/myacg/contents/網漫翻譯/${manga.title}`,
+                            axiosConfig
                         );
 
                         const chapters = response.data
@@ -621,7 +634,8 @@
                         }
 
                         const response = await axios.get(
-                            `https://api.github.com/repos/xuerowo/myacg/contents/${chapter.path}`
+                            `https://api.github.com/repos/xuerowo/myacg/contents/${chapter.path}`,
+                            axiosConfig
                         );
 
                         this.currentChapterPages = response.data
@@ -647,7 +661,8 @@
                 async preloadChapter(chapter) {
                     try {
                         const response = await axios.get(
-                            `https://api.github.com/repos/xuerowo/myacg/contents/${chapter.path}`
+                            `https://api.github.com/repos/xuerowo/myacg/contents/${chapter.path}`,
+                            axiosConfig
                         );
 
                         // 預加載圖片
@@ -666,29 +681,22 @@
                         console.error('Error preloading chapter:', error);
                     }
                 },
+
+                // [其餘方法保持不變]
                 setupScrollListener() {
                     window.addEventListener('scroll', this.handleScroll);
                 },
                 handleScroll() {
-                    // 清除之前的定時器
                     clearTimeout(this.scrollTimeout);
-
                     const st = window.pageYOffset || document.documentElement.scrollTop;
                     const isScrollingDown = st > this.lastScrollTop;
                     const isAtBottom = window.innerHeight + window.pageYOffset >= document.body.offsetHeight - 100;
-
-                    // 向下滾動時隱藏控制欄
                     if (isScrollingDown && !isAtBottom) {
                         this.hideControls = true;
-                    }
-                    // 向上滾動或到達底部時顯示控制欄
-                    else {
+                    } else {
                         this.hideControls = false;
                     }
-
                     this.lastScrollTop = st;
-
-                    // 設置定時器，停止滾動一段時間後顯示控制欄
                     this.scrollTimeout = setTimeout(() => {
                         this.hideControls = false;
                     }, 2000);
@@ -716,8 +724,6 @@
                     if (this.selectedManga && this.currentChapter) {
                         this.readingProgress[this.selectedManga.title] = this.currentChapter.number;
                         localStorage.setItem(STORAGE_KEYS.READING_PROGRESS, JSON.stringify(this.readingProgress));
-                        
-                        // 更新已讀章節
                         if (!this.readChapters[this.selectedManga.title]) {
                             this.readChapters[this.selectedManga.title] = [];
                         }
@@ -753,7 +759,6 @@
             },
             mounted() {
                 this.fetchMangaList();
-                // 設置初始主題
                 document.documentElement.setAttribute('data-theme', this.isDarkMode ? 'dark' : 'light');
             },
             beforeUnmount() {
