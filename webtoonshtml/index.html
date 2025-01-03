@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的網漫閱讀</title>
+    <link rel="stylesheet" href="common.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js"></script>
+    <style>
+        .manga-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .manga-card {
+            background: var(--background-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .manga-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .bookmark-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.5);
+            padding: 5px;
+            border-radius: 50%;
+            color: #fff;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .manga-card img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+        }
+
+        .manga-card-content {
+            padding: 1rem;
+            background: var(--background-color);
+        }
+
+        .manga-card-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .reading-progress {
+            font-size: 0.9rem;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <nav class="navbar">
+            <div class="container">
+                <h1>我的網漫閱讀</h1>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div class="manga-grid">
+                <div v-for="manga in mangaList" 
+                     :key="manga.title" 
+                     class="manga-card">
+                    <div class="bookmark-icon" 
+                         @click.stop="toggleBookmark(manga)"
+                         :style="{ color: isBookmarked(manga) ? '#ffeb3b' : '#fff' }">
+                        ★
+                    </div>
+                    <img :src="manga.coverUrl" 
+                         :alt="manga.title" 
+                         @click="goToDetail(manga)">
+                    <div class="manga-card-content" @click="goToDetail(manga)">
+                        <div class="manga-card-title">{{ manga.title }}</div>
+                        <div v-if="getReadingProgress(manga)" class="reading-progress">
+                            已讀到：第{{ getReadingProgress(manga) }}話
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 本地存儲的鍵名
+        const STORAGE_KEYS = {
+            CACHE: 'manga_cache',
+            READING_PROGRESS: 'reading_progress',
+            BOOKMARKS: 'manga_bookmarks'
+        };
+
+        createApp({
+            data() {
+                return {
+                    mangaList: [],
+                    bookmarks: JSON.parse(localStorage.getItem(STORAGE_KEYS.BOOKMARKS) || '[]'),
+                    readingProgress: JSON.parse(localStorage.getItem(STORAGE_KEYS.READING_PROGRESS) || '{}')
+                }
+            },
+            methods: {
+                async fetchMangaList() {
+                    try {
+                        // 檢查緩存
+                        const cached = localStorage.getItem(STORAGE_KEYS.CACHE);
+                        if (cached) {
+                            const { data, timestamp } = JSON.parse(cached);
+                            // 緩存時間小於1小時則使用緩存
+                            if (Date.now() - timestamp < 3600000) {
+                                this.mangaList = data;
+                                return;
+                            }
+                        }
+
+                        const response = await axios.get(
+                            'https://api.github.com/repos/xuerowo/myacg/contents/網漫翻譯'
+                        );
+                        
+                        this.mangaList = await Promise.all(
+                            response.data.map(async (item) => {
+                                if (item.type === 'dir') {
+                                    const coverResponse = await axios.get(
+                                        `https://api.github.com/repos/xuerowo/myacg/contents/網漫翻譯/${item.name}/cover.jpg`
+                                    );
+                                    
+                                    return {
+                                        title: item.name,
+                                        coverUrl: coverResponse.data.download_url,
+                                        path: item.path
+                                    };
+                                }
+                            }).filter(Boolean)
+                        );
+
+                        // 更新緩存
+                        localStorage.setItem(STORAGE_KEYS.CACHE, JSON.stringify({
+                            data: this.mangaList,
+                            timestamp: Date.now()
+                        }));
+                    } catch (error) {
+                        console.error('Error fetching manga list:', error);
+                    }
+                },
+                toggleBookmark(manga) {
+                    const index = this.bookmarks.findIndex(b => b.title === manga.title);
+                    if (index === -1) {
+                        this.bookmarks.push({
+                            title: manga.title,
+                            coverUrl: manga.coverUrl,
+                            path: manga.path
+                        });
+                    } else {
+                        this.bookmarks.splice(index, 1);
+                    }
+                    localStorage.setItem(STORAGE_KEYS.BOOKMARKS, JSON.stringify(this.bookmarks));
+                },
+                isBookmarked(manga) {
+                    return this.bookmarks.some(b => b.title === manga.title);
+                },
+                getReadingProgress(manga) {
+                    return this.readingProgress[manga.title];
+                },
+                goToDetail(manga) {
+                    // 使用 URL 參數傳遞漫畫信息
+                    window.location.href = `detail.html?title=${encodeURIComponent(manga.title)}`;
+                }
+            },
+            mounted() {
+                this.fetchMangaList();
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
