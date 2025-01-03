@@ -86,9 +86,9 @@
                          :alt="manga.title" 
                          @click="goToDetail(manga)">
                     <div class="manga-card-content" @click="goToDetail(manga)">
-                        <div class="manga-card-title">{{ manga.title }}</div>
+                        <div class="manga-card-title">{{manga.title}}</div>
                         <div v-if="getReadingProgress(manga)" class="reading-progress">
-                            已讀到：第{{ getReadingProgress(manga) }}話
+                            已讀到：第{{getReadingProgress(manga)}}話
                         </div>
                     </div>
                 </div>
