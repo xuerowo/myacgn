@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>閱讀漫畫 - 我的網漫閱讀</title>
+    <link rel="stylesheet" href="common.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js"></script>
+    <style>
+        .reader-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding-bottom: 60px;
+        }
+
+        .manga-page {
+            max-width: 100%;
+            margin: 0 auto 1rem;
+            display: block;
+        }
+
+        /* 閱讀頁面控制項樣式 */
+        .reader-controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.9);
+            color: #fff;
+            transition: transform 0.3s;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        .reader-controls.hidden {
+            transform: translateY(100%);
+        }
+
+        .control-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1rem;
+        }
+
+        .control-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            background: var(--primary-color);
+            color: #fff;
+            cursor: pointer;
+            min-width: 80px;
+        }
+
+        .control-btn:hover {
+            background: #357abd;
+        }
+
+        .control-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* 章節目錄樣式 */
+        .chapter-menu {
+            background: rgba(0,0,0,0.95);
+            max-height: 300px;
+            overflow-y: auto;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .chapter-menu-header {
+            padding: 1rem;
+            text-align: center;
+            font-weight: bold;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: sticky;
+            top: 0;
+            background: inherit;
+        }
+
+        .chapter-menu-list {
+            padding: 0.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 0.5rem;
+        }
+
+        .chapter-menu-item {
+            padding: 0.75rem;
+            cursor: pointer;
+            border-radius: 4px;
+            text-align: center;
+            background: rgba(255,255,255,0.1);
+            transition: background-color 0.2s;
+        }
+
+        .chapter-menu-item:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .chapter-menu-item.current {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .chapter-menu-item.read {
+            opacity: 0.7;
+        }
+
+        /* 加載動畫 */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div v-if="currentChapter" class="reader-container">
+            <img v-for="(page, index) in currentChapterPages"
+                 :key="index"
+                 :src="page"
+                 class="manga-page"
+                 loading="lazy">
+            
+            <div class="reader-controls" :class="{ hidden: hideControls }">
+                <div v-if="showChapterMenu" class="chapter-menu">
+                    <div class="chapter-menu-header">
+                        章節目錄
+                    </div>
+                    <div class="chapter-menu-list">
+                        <div v-for="chapter in chapters"
+                             :key="chapter.number"
+                             class="chapter-menu-item"
+                             :class="{
+                                 current: chapter.number === currentChapter.number,
+                                 read: isChapterRead(chapter)
+                             }"
+                             @click="loadChapter(chapter.number)">
+                            第{{ chapter.number }}話
+                        </div>
+                    </div>
+                </div>
+                <div class="control-buttons">
+                    <button class="control-btn" 
+                            @click="loadChapter(currentChapter.number - 1)"
+                            :disabled="!hasPreviousChapter">
+                        上一話
+                    </button>
+                    <button class="control-btn" 
+                            @click="toggleChapterMenu">
+                        目錄
+                    </button>
+                    <button class="control-btn" 
+                            @click="goToDetail">
+                        返回
+                    </button>
+                    <button class="control-btn" 
+                            @click="loadChapter(currentChapter.number + 1)"
+                            :disabled="!hasNextChapter">
+                        下一話
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div v-else class="loading">
+            加載中...
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEYS = {
+            READ_CHAPTERS: 'read_chapters',
+            READING_PROGRESS: 'reading_progress'
+        };
+
+        createApp({
+            data() {
+                return {
+                    title: '',
+                    chapters: [],
+                    currentChapter: null,
+                    currentChapterPages: [],
+                    hideControls: false,
+                    showChapterMenu: false,
+                    lastScrollTop: 0,
+                    scrollTimeout: null,
+                    readChapters: JSON.parse(localStorage.getItem(STORAGE_KEYS.READ_CHAPTERS) || '{}')
+                }
+            },
+            computed: {
+                hasPreviousChapter() {
+                    if (!this.currentChapter) return false;
+                    return this.chapters.some(ch => ch.number === this.currentChapter.number - 1);
+                },
+                hasNextChapter() {
+                    if (!this.currentChapter) return false;
+                    return this.chapters.some(ch => ch.number === this.currentChapter.number + 1);
+                }
+            },
+            methods: {
+                async loadMangaData(title) {
+                    try {
+                        const response = await axios.get(
+                            `https://api.github.com/repos/xuerowo/myacg/contents/網漫翻譯/${title}`
+                        );
+
+                        this.chapters = response.data
+                            .filter(item => 
+                                item.type === 'dir' && !isNaN(parseInt(item.name))
+                            )
+                            .map(item => ({
+                                number: parseInt(item.name),
+                                path: item.path
+                            }))
+                            .sort((a, b) => a.number - b.number);
+
+                        this.title = title;
+                    } catch (error) {
+                        console.error('Error loading manga data:', error);
+                    }
+                },
+                async loadChapter(chapterNumber) {
+                    try {
+                        const chapter = this.chapters.find(ch => ch.number === chapterNumber);
+                        if (!chapter) return;
+
+                        // 清空當前內容
+                        this.currentChapterPages = [];
+                        this.showChapterMenu = false;
+                        window.scrollTo(0, 0);
+
+                        // 獲取章節內容
+                        const response = await axios.get(
+                            `https://api.github.com/repos/xuerowo/myacg/contents/${chapter.path}`
+                        );
+
+                        this.currentChapterPages = response.data
+                            .filter(file => file.name.endsWith('.jpg'))
+                            .sort((a, b) => {
+                                const numA = parseInt(a.name.split('.')[0]);
+                                const numB = parseInt(b.name.split('.')[0]);
+                                return numA - numB;
+                            })
+                            .map(file => file.download_url);
+
+                        this.currentChapter = chapter;
+                        this.updateReadingProgress();
+                        this.setupScrollListener();
+
+                        // 預加載下一章
+                        this.preloadNextChapter();
+
+                        // 更新 URL
+                        const params = new URLSearchParams(window.location.search);
+                        params.set('chapter', chapter.number);
+                        window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
+                    } catch (error) {
+                        console.error('Error loading chapter:', error);
+                    }
+                },
+                async preloadNextChapter() {
+                    if (!this.hasNextChapter) return;
+
+                    try {
+                        const nextChapter = this.chapters.find(ch => ch.number === this.currentChapter.number + 1);
+                        const response = await axios.get(
+                            `https://api.github.com/repos/xuerowo/myacg/contents/${nextChapter.path}`
+                        );
+
+                        response.data
+                            .filter(file => file.name.endsWith('.jpg'))
+                            .map(file => file.download_url)
+                            .forEach(url => {
+                                const img = new Image();
+                                img.src = url;
+                            });
+                    } catch (error) {
+                        console.error('Error preloading next chapter:', error);
+                    }
+                },
+                updateReadingProgress() {
+                    if (!this.title || !this.currentChapter) return;
+
+                    // 更新閱讀進度
+                    const progress = JSON.parse(localStorage.getItem(STORAGE_KEYS.READING_PROGRESS) || '{}');
+                    progress[this.title] = this.currentChapter.number;
+                    localStorage.setItem(STORAGE_KEYS.READING_PROGRESS, JSON.stringify(progress));
+
+                    // 更新已讀章節
+                    if (!this.readChapters[this.title]) {
+                        this.readChapters[this.title] = [];
+                    }
+                    if (!this.readChapters[this.title].includes(this.currentChapter.number)) {
+                        this.readChapters[this.title].push(this.currentChapter.number);
+                        localStorage.setItem(STORAGE_KEYS.READ_CHAPTERS, JSON.stringify(this.readChapters));
+                    }
+                },
+                isChapterRead(chapter) {
+                    return this.readChapters[this.title]?.includes(chapter.number);
+                },
+                setupScrollListener() {
+                    window.addEventListener('scroll', this.handleScroll);
+                },
+                handleScroll() {
+                    clearTimeout(this.scrollTimeout);
+
+                    const st = window.pageYOffset || document.documentElement.scrollTop;
+                    const isScrollingDown = st > this.lastScrollTop;
+                    const isAtBottom = window.innerHeight + window.pageYOffset >= document.body.offsetHeight - 100;
+
+                    if (isScrollingDown && !isAtBottom) {
+                        this.hideControls = true;
+                    } else {
+                        this.hideControls = false;
+                    }
+
+                    this.lastScrollTop = st;
+
+                    this.scrollTimeout = setTimeout(() => {
+                        this.hideControls = false;
+                    }, 2000);
+                },
+                toggleChapterMenu() {
+                    this.showChapterMenu = !this.showChapterMenu;
+                },
+                goToDetail() {
+                    window.location.href = `detail.html?title=${encodeURIComponent(this.title)}`;
+                }
+            },
+            mounted() {
+                const params = new URLSearchParams(window.location.search);
+                const title = params.get('title');
+                const chapter = parseInt(params.get('chapter'));
+
+                if (title && chapter) {
+                    this.loadMangaData(title).then(() => {
+                        this.loadChapter(chapter);
+                    });
+                } else {
+                    window.location.href = 'index.html';
+                }
+            },
+            beforeUnmount() {
+                window.removeEventListener('scroll', this.handleScroll);
+                clearTimeout(this.scrollTimeout);
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
