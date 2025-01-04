@@ -179,7 +179,7 @@
                     this.lastScrollTop = st;
                     this.scrollTimeout = setTimeout(() => {
                         this.hideControls = false;
-                    }, 2000);
+                    }, 5000);
                 },
                 markAsRead() {
                     const readChapters = JSON.parse(localStorage.getItem(STORAGE_KEYS.READ_CHAPTERS) || '{}');
