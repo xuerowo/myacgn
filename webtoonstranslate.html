@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>網漫翻譯</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js"></script>
     <style>
         :root {
             --primary-color: #4a90e2;
@@ -502,61 +501,73 @@
             },
             methods: {
                 async fetchMangaList() {
-                    try {
-                        // 檢查緩存
-                        const cached = localStorage.getItem(STORAGE_KEYS.CACHE);
-                        if (cached) {
-                            const { data, timestamp } = JSON.parse(cached);
-                            // 緩存時間小於1小時則使用緩存
-                            if (Date.now() - timestamp < 3600000) {
-                                this.mangaList = data;
-                                return;
-                            }
-                        }
-
-                        const response = await axios.get(
-                            'https://api.github.com/repos/xuerowo/myacg/contents/網漫翻譯'
-                        );
-                        
-                        this.mangaList = await Promise.all(
-                            response.data.map(async (item) => {
-                                if (item.type === 'dir') {
-                                    const coverResponse = await axios.get(
-                                        `https://api.github.com/repos/xuerowo/myacg/contents/網漫翻譯/${item.name}/cover.jpg`
-                                    );
-                                    
-                                    return {
-                                        title: item.name,
-                                        coverUrl: coverResponse.data.download_url,
-                                        path: item.path
+                    const path = './網漫翻譯';
+                    // 先試著讀取第一個漫畫資料夾
+                    let mangaIndex = 1;
+                    const mangaList = [];
+    
+                    while (true) {
+                        try {
+                            const manga = {
+                                title: `漫畫${mangaIndex}`,
+                                path: `${path}/漫畫${mangaIndex}`,
+                                chapters: []
+                            };
+            
+                            // 嘗試讀取封面
+                            await fetch(`${manga.path}/cover.jpg`);
+            
+                            // 檢測章節
+                            let chapterNum = 1;
+                            while (true) {
+                                try {
+                                    const chapter = {
+                                        number: chapterNum,
+                                        path: `${manga.path}/${chapterNum}`,
+                                        pages: []
                                     };
+                    
+                                    // 檢測每章的頁數
+                                    let pageNum = 1;
+                                    while (true) {
+                                        try {
+                                            await fetch(`${chapter.path}/${pageNum}.jpg`);
+                                            chapter.pages.push(`${chapter.path}/${pageNum}.jpg`);
+                                            pageNum++;
+                                        } catch {
+                                            break;
+                                        }
+                                    }
+                    
+                                    if (chapter.pages.length > 0) {
+                                        manga.chapters.push(chapter);
+                                        chapterNum++;
+                                    } else {
+                                        break;
+                                    }
+                                } catch {
+                                    break;
                                 }
-                            }).filter(Boolean)
-                        );
-
-                        // 更新緩存
-                        localStorage.setItem(STORAGE_KEYS.CACHE, JSON.stringify({
-                            data: this.mangaList,
-                            timestamp: Date.now()
-                        }));
-                    } catch (error) {
-                        console.error('Error fetching manga list:', error);
+                            }
+            
+                            if (manga.chapters.length > 0) {
+                                mangaList.push(manga);
+                                mangaIndex++;
+                            } else {
+                                break;
+                            }
+                        } catch {
+                            break;
+                        }
                     }
+    
+                    this.mangaList = mangaList;
                 },
                 async fetchTextFile(path) {
                     try {
-                        const response = await axios.get(
-                            `https://api.github.com/repos/xuerowo/myacg/contents/${path}`
-                        );
-                        // 使用 TextDecoder 正確解碼 Base64 內容
-                        const binary = atob(response.data.content);
-                        const bytes = new Uint8Array(binary.length);
-                        for (let i = 0; i < binary.length; i++) {
-                            bytes[i] = binary.charCodeAt(i);
-                        }
-                        const decoder = new TextDecoder('utf-8');
-                        const content = decoder.decode(bytes);
-                        return content.trim();
+                        const response = await fetch(path);
+                        const text = await response.text();
+                        return text.trim();
                     } catch (error) {
                         console.error(`Error fetching ${path}:`, error);
                         return '';
@@ -565,34 +576,19 @@
                 async showMangaDetail(manga) {
                     try {
                         // 獲取漫畫信息
-                        const infoPath = `網漫翻譯/${manga.title}/資訊`;
+                        const infoPath = `${manga.path}/資訊`;
                         const [author, description, genres] = await Promise.all([
                             this.fetchTextFile(`${infoPath}/作者.txt`),
                             this.fetchTextFile(`${infoPath}/簡介.txt`),
                             this.fetchTextFile(`${infoPath}/類型.txt`)
                         ]);
 
-                        // 獲取章節列表
-                        const response = await axios.get(
-                            `https://api.github.com/repos/xuerowo/myacg/contents/網漫翻譯/${manga.title}`
-                        );
-
-                        const chapters = response.data
-                            .filter(item => 
-                                item.type === 'dir' && !isNaN(parseInt(item.name))
-                            )
-                            .map(item => ({
-                                number: parseInt(item.name),
-                                path: item.path
-                            }))
-                            .sort((a, b) => a.number - b.number);
-
+                        // 使用 manga.chapters 而不是從 API 獲取
                         this.selectedManga = {
                             ...manga,
                             author,
                             description,
                             genres: genres.split(',').map(g => g.trim()),
-                            chapters
                         };
 
                         this.currentView = 'detail';
@@ -601,70 +597,17 @@
                     }
                 },
                 async readChapter(chapter) {
-                    try {
-                        // 如果已經在閱讀這個章節，只需要關閉目錄
-                        if (this.currentChapter && this.currentChapter.number === chapter.number) {
-                            this.showChapterMenu = false;
-                            return;
-                        }
-
-                        // 顯示加載狀態
-                        this.currentChapterPages = [];
+                    if (this.currentChapter && this.currentChapter.number === chapter.number) {
                         this.showChapterMenu = false;
-
-                        // 預加載下一話
-                        if (this.hasNextChapter) {
-                            const nextChapter = this.selectedManga.chapters[
-                                this.selectedManga.chapters.findIndex(ch => ch.number === chapter.number) + 1
-                            ];
-                            this.preloadChapter(nextChapter);
-                        }
-
-                        const response = await axios.get(
-                            `https://api.github.com/repos/xuerowo/myacg/contents/${chapter.path}`
-                        );
-
-                        this.currentChapterPages = response.data
-                            .filter(file => file.name.endsWith('.jpg'))
-                            .sort((a, b) => {
-                                const numA = parseInt(a.name.split('.')[0]);
-                                const numB = parseInt(b.name.split('.')[0]);
-                                return numA - numB;
-                            })
-                            .map(file => file.download_url);
-
-                        this.currentChapter = chapter;
-                        this.currentView = 'reader';
-                        this.updateReadingProgress();
-                        window.scrollTo(0, 0);
-
-                        // 添加滾動監聽
-                        this.setupScrollListener();
-                    } catch (error) {
-                        console.error('Error fetching chapter pages:', error);
+                        return;
                     }
-                },
-                async preloadChapter(chapter) {
-                    try {
-                        const response = await axios.get(
-                            `https://api.github.com/repos/xuerowo/myacg/contents/${chapter.path}`
-                        );
 
-                        // 預加載圖片
-                        response.data
-                            .filter(file => file.name.endsWith('.jpg'))
-                            .sort((a, b) => {
-                                const numA = parseInt(a.name.split('.')[0]);
-                                const numB = parseInt(b.name.split('.')[0]);
-                                return numA - numB;
-                            })
-                            .forEach(file => {
-                                const img = new Image();
-                                img.src = file.download_url;
-                            });
-                    } catch (error) {
-                        console.error('Error preloading chapter:', error);
-                    }
+                    this.currentChapterPages = chapter.pages;
+                    this.currentChapter = chapter;
+                    this.currentView = 'reader';
+                    this.updateReadingProgress();
+                    window.scrollTo(0, 0);
+                    this.setupScrollListener();
                 },
                 setupScrollListener() {
                     window.addEventListener('scroll', this.handleScroll);
