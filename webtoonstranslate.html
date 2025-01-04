@@ -502,12 +502,9 @@
             methods: {
                 async fetchMangaList() {
                     try {
-                        const path = './網漫翻譯';
+                        // 使用完整的 GitHub Pages 路徑
+                        const path = '/myacg/網漫翻譯';  // 修改為你的儲存庫路徑
                         console.log('開始掃描路徑:', path);
-        
-                        // 先試著讀取文件夾
-                        const testCover = await fetch(`${path}/漫畫1/cover.jpg`);
-                        console.log('測試讀取封面:', testCover.ok ? '成功' : '失敗');
         
                         let mangaIndex = 1;
                         const mangaList = [];
@@ -517,7 +514,7 @@
                                 const manga = {
                                     title: `漫畫${mangaIndex}`,
                                     path: `${path}/漫畫${mangaIndex}`,
-                                    coverUrl: `${path}/漫畫${mangaIndex}/cover.jpg`,  // 添加 coverUrl
+                                    coverUrl: `${path}/漫畫${mangaIndex}/cover.jpg`,  // 更新 coverUrl 路徑
                                     chapters: []
                                 };
                 
@@ -529,7 +526,6 @@
                                     console.log(`找不到漫畫${mangaIndex}的封面`);
                                     break;
                                 }
-                                console.log(`找到漫畫${mangaIndex}的封面`);
 
                                 // 檢測章節
                                 let chapterNum = 1;
@@ -541,19 +537,15 @@
                                             pages: []
                                         };
                         
-                                        console.log(`檢查第${chapterNum}話`);
-                        
                                         // 檢測每章的頁數
                                         let pageNum = 1;
                                         let hasPages = false;
                         
-                                        while (true) {
+                                        while (pageNum <= 100) { // 設定一個合理的上限
                                             const pagePath = `${chapter.path}/${pageNum}.jpg`;
                                             const pageResponse = await fetch(pagePath);
                             
-                                            if (!pageResponse.ok) {
-                                                break;
-                                            }
+                                            if (!pageResponse.ok) break;
                             
                                             chapter.pages.push(pagePath);
                                             hasPages = true;
@@ -562,10 +554,8 @@
 
                                         if (hasPages) {
                                             manga.chapters.push(chapter);
-                                            console.log(`第${chapterNum}話找到${chapter.pages.length}頁`);
                                             chapterNum++;
                                         } else {
-                                            console.log(`第${chapterNum}話沒有頁面`);
                                             break;
                                         }
                                     } catch (error) {
@@ -575,11 +565,9 @@
                                 }
 
                                 if (manga.chapters.length > 0) {
-                                    console.log(`漫畫${mangaIndex}共有${manga.chapters.length}章`);
                                     mangaList.push(manga);
                                     mangaIndex++;
                                 } else {
-                                    console.log(`漫畫${mangaIndex}沒有章節`);
                                     break;
                                 }
                             } catch (error) {
@@ -597,7 +585,7 @@
                 },
                 async fetchTextFile(path) {
                     try {
-                        const response = await fetch(path);
+                        const response = await fetch(`/myacg/${path}`); // 加入儲存庫名稱
                         const text = await response.text();
                         return text.trim();
                     } catch (error) {
