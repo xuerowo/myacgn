@@ -6,6 +6,7 @@
     <title>閱讀章節 - 魔法學院的閃現天才 - 網漫翻譯</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js"></script>
     <style>
+        /* 保持原有的樣式 */
         :root {
             --primary-color: #4a90e2;
             --secondary-color: #f5f5f5;
@@ -106,7 +107,7 @@
 <body>
     <div id="app">
         <div class="chapter-info" :class="{ hidden: hideControls }">
-            第{{ currentChapter }}話
+            {{ currentChapterTitle }}
         </div>
 
         <div v-if="loading" class="loading">
@@ -118,7 +119,8 @@
                  :key="page"
                  :src="page"
                  class="manga-page"
-                 loading="lazy">
+                 loading="lazy"
+                 @error="handleImageError(page)">
         </div>
 
         <div class="reader-controls" :class="{ hidden: hideControls }">
@@ -145,8 +147,7 @@
         };
 
         const STORAGE_KEYS = {
-            READ_CHAPTERS: 'read_chapters',
-            CHAPTER_LIST: 'chapter_list'
+            READ_CHAPTERS: 'read_chapters'
         };
 
         const { createApp } = Vue;
@@ -155,67 +156,73 @@
             data() {
                 return {
                     currentChapter: 0,
+                    chapterData: null,
                     pages: [],
                     hideControls: false,
                     lastScrollTop: 0,
                     scrollTimeout: null,
                     loading: true,
-                    allChapters: []
+                    imageData: null,
+                    failedImages: new Set()
                 }
             },
             computed: {
                 hasNext() {
-                    const nextChapter = this.currentChapter + 1;
-                    return this.allChapters.includes(nextChapter);
+                    const nextChapter = (this.currentChapter + 1).toString();
+                    return this.imageData && nextChapter in this.imageData;
                 },
                 hasPrevious() {
-                    const prevChapter = this.currentChapter - 1;
-                    return this.allChapters.includes(prevChapter);
+                    const prevChapter = (this.currentChapter - 1).toString();
+                    return this.imageData && prevChapter in this.imageData;
+                },
+                currentChapterTitle() {
+                    return this.chapterData?.title || `第${this.currentChapter}話`;
                 }
             },
             methods: {
-                async loadChapterList() {
+                async loadChapterData() {
                     try {
-                        const response = await fetch('chapters.json');
-                        const data = await response.json();
-                        this.allChapters = data.chapters.sort((a, b) => a - b);
-                    } catch (error) {
-                        console.error('載入章節列表失敗:', error);
-                        this.allChapters = [];
-                    }
-                },
-                async loadChapter() {
-                    this.loading = true;
-                    this.pages = [];
+                        // 載入圖片資訊
+                        if (!this.imageData) {
+                            const response = await fetch('images.json');
+                            this.imageData = await response.json();
+                        }
 
-                    try {
-                        const pages = [];
-                        let pageIndex = 1;
+                        const chapterKey = this.currentChapter.toString();
+                        this.chapterData = this.imageData[chapterKey];
+
+                        if (!this.chapterData) {
+                            throw new Error('找不到此章節');
+                        }
+
+                        // 設置頁面
+                        this.pages = this.chapterData.images;
                         
-                        while (true) {
-                            try {
-                                const imgPath = `${this.currentChapter}/${pageIndex}.jpg`;
-                                const response = await fetch(imgPath);
-                                if (!response.ok) break;
-                                pages.push(imgPath);
-                                pageIndex++;
-                            } catch {
-                                break;
-                            }
+                        // 預載入下一章
+                        const nextChapterKey = (this.currentChapter + 1).toString();
+                        if (this.imageData[nextChapterKey]) {
+                            this.preloadNextChapter(this.imageData[nextChapterKey].images);
                         }
 
-                        if (pages.length === 0) {
-                            throw new Error('沒有找到圖片');
-                        }
-
-                        this.pages = pages;
                         this.markAsRead();
                     } catch (error) {
                         console.error('載入章節失敗:', error);
                         alert('載入章節失敗');
+                        window.location.href = 'detail.html';
                     } finally {
                         this.loading = false;
                     }
+                },
+                preloadNextChapter(images) {
+                    // 預載入下一章的圖片
+                    for (const imagePath of images) {
+                        const img = new Image();
+                        img.src = imagePath;
+                    }
+                },
+                handleImageError(page) {
+                    this.failedImages.add(page);
+                    console.error(`圖片載入失敗: ${page}`);
                 },
                 goToManga() {
                     window.location.href = 'detail.html';
@@ -272,9 +279,8 @@
                 this.currentChapter = chapter;
                 document.title = `第${chapter}話 - ${MANGA_INFO.title} - 網漫翻譯`;
 
-                // 載入章節列表和內容
-                await this.loadChapterList();
-                await this.loadChapter();
+                // 載入章節內容
+                await this.loadChapterData();
 
                 // 設置事件監聽
                 window.addEventListener('scroll', this.handleScroll);
