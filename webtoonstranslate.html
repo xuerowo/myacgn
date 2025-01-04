@@ -502,37 +502,69 @@
             methods: {
                 async fetchMangaList() {
     try {
-        const basePath = '/myacg/網漫翻譯';
-        console.log('開始掃描路徑:', basePath);
-
-        // 取得資料夾列表
-        const response = await fetch(basePath);
-        const folders = await response.json();
+        // 讀取配置文件
+        const configPath = `/myacg/${encodeURIComponent('網漫翻譯')}/mangalist.json`;
+        console.log('讀取配置文件:', configPath);
         
+        const response = await fetch(configPath);
+        const config = await response.json();
         const mangaList = [];
 
-        // 掃描每個資料夾
-        for (const folder of folders) {
-            if (folder.type === 'dir') {  // 確認是資料夾
+        // 處理每個漫畫
+        for (const name of config.mangaList) {
+            try {
+                const encodedName = encodeURIComponent(name);
                 const manga = {
-                    title: folder.name,
-                    path: `${basePath}/${encodeURIComponent(folder.name)}`,
-                    coverUrl: `${basePath}/${encodeURIComponent(folder.name)}/cover.jpg`,
+                    title: name,
+                    path: `/myacg/${encodeURIComponent('網漫翻譯')}/${encodedName}`,
+                    coverUrl: `/myacg/${encodeURIComponent('網漫翻譯')}/${encodedName}/cover.jpg`,
                     chapters: []
                 };
+
+                console.log(`檢查漫畫: ${name}`);
+                const coverResponse = await fetch(manga.coverUrl);
                 
-                try {
-                    const coverResponse = await fetch(manga.coverUrl);
-                    if (coverResponse.ok) {
+                if (coverResponse.ok) {
+                    // 檢查章節
+                    let chapterIndex = 1;
+                    while (true) {
+                        const chapterPath = `${manga.path}/${chapterIndex}`;
+                        const pageResponse = await fetch(`${chapterPath}/1.jpg`);
+                        
+                        if (pageResponse.ok) {
+                            // 檢查這一章的所有頁面
+                            const pages = [];
+                            let pageIndex = 1;
+                            while (true) {
+                                const pagePath = `${chapterPath}/${pageIndex}.jpg`;
+                                const pageCheck = await fetch(pagePath);
+                                if (!pageCheck.ok) break;
+                                pages.push(pagePath);
+                                pageIndex++;
+                            }
+                            
+                            manga.chapters.push({
+                                number: chapterIndex,
+                                path: chapterPath,
+                                pages: pages
+                            });
+                            chapterIndex++;
+                        } else {
+                            break;
+                        }
+                    }
+
+                    if (manga.chapters.length > 0) {
                         mangaList.push(manga);
                     }
-                } catch (error) {
-                    console.log(`讀取 ${folder.name} 失敗:`, error);
                 }
+            } catch (error) {
+                console.log(`讀取漫畫 ${name} 時發生錯誤:`, error);
             }
         }
 
         this.mangaList = mangaList;
+        console.log('完成掃描，找到漫畫數量:', mangaList.length);
         
     } catch (error) {
         console.error('fetchMangaList 錯誤:', error);
