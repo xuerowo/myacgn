@@ -205,11 +205,11 @@
                     window.location.href = '/myacg/index.html';
                 },
                 goToChapter(chapter) {
-                    window.location.href = `${chapter}/chapter.html`;
+                    window.location.href = `chapter.html?chapter=${chapter}`;
                 },
                 isChapterRead(chapter) {
                     const key = this.manga.title;
-                    window.location.href = `chapter.html?chapter=${chapter}`;
+                    return this.readChapters[key]?.includes(chapter);
                 }
             },
             mounted() {
