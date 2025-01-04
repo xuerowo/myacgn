@@ -1,142 +1,54 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-tw">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>魔法學院的閃現天才 - 網漫翻譯</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js"></script>
+    <title>漫畫詳情</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <style>
-        :root {
-            --primary-color: #4a90e2;
-            --secondary-color: #f5f5f5;
-            --text-color: #333;
-            --border-color: #ddd;
-            --background-color: #fff;
-        }
-
-        :root[data-theme="dark"] {
-            --primary-color: #64b5f6;
-            --secondary-color: #1a1a1a;
-            --text-color: #e0e0e0;
-            --border-color: #333;
-            --background-color: #121212;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            line-height: 1.6;
-            color: var(--text-color);
-            background-color: var(--secondary-color);
-        }
-
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
-
-        .navbar {
-            background-color: var(--background-color);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding: 1rem;
-            margin-bottom: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .navbar h1 {
-            color: var(--primary-color);
-            margin: 0;
-            cursor: pointer;
-        }
-
         .manga-detail {
-            background: var(--background-color);
-            border-radius: 8px;
-            padding: 2rem;
-            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
-
         .manga-info {
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 2rem;
+            display: flex;
+            gap: 20px;
         }
-
         .manga-cover {
-            width: 100%;
-            border-radius: 4px;
+            max-width: 300px;
+            height: auto;
         }
-
-        .manga-description {
-            margin-top: 1rem;
-            line-height: 1.8;
-            white-space: pre-line;
-        }
-
-        .manga-title {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-            color: var(--text-color);
-        }
-
-        .manga-metadata {
-            margin-bottom: 1rem;
-            color: var(--text-color);
-        }
-
         .chapter-list {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-top: 2rem;
+            gap: 10px;
         }
-
         .chapter-item {
-            background: var(--secondary-color);
-            padding: 1rem;
-            border-radius: 4px;
-            text-align: center;
+            padding: 10px;
+            border: 1px solid #ddd;
             cursor: pointer;
-            transition: background-color 0.2s;
+            text-align: center;
         }
-
         .chapter-item.read {
-            opacity: 0.7;
+            background-color: #f0f0f0;
         }
-
-        .chapter-item:hover {
-            background: var(--primary-color);
-            color: #fff;
-        }
-
-        @media (max-width: 768px) {
-            .manga-info {
-                grid-template-columns: 1fr;
-            }
-
-            .manga-cover {
-                max-width: 300px;
-                margin: 0 auto;
-            }
+        .back-button {
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
     <div id="app">
-        <nav class="navbar">
-            <h1 @click="goHome">網漫翻譯</h1>
-        </nav>
-
         <div class="container">
+            <button class="back-button" @click="goHome">返回首頁</button>
             <div class="manga-detail">
                 <div class="manga-info">
                     <img :src="manga.coverUrl" :alt="manga.title" class="manga-cover">
@@ -163,19 +75,19 @@
     </div>
 
     <script>
-        // 漫畫資訊（直接寫在這裡）
         const MANGA_INFO = {
             title: '魔法學院的閃現天才',
             author: '作者名稱',
             genres: '奇幻、冒險',
-            description: '這是一個關於...',
+            description: '這是一個關於魔法學院中一位具有特殊能力的學生的故事...',
             coverUrl: 'cover.jpg'
         };
 
-        // 本地存儲的鍵名
         const STORAGE_KEYS = {
             READ_CHAPTERS: 'read_chapters'
         };
+
+        const { createApp } = Vue;
 
         createApp({
             data() {
@@ -188,10 +100,8 @@
             methods: {
                 async fetchChapters() {
                     try {
-                        // 讀取章節清單
                         const response = await fetch('chapters.json');
                         const data = await response.json();
-                        // 確保章節按順序排序
                         this.chapters = data.chapters.sort((a, b) => a - b);
                     } catch (error) {
                         console.error('讀取章節清單失敗:', error);
@@ -201,7 +111,6 @@
                     window.location.href = '/myacg/index.html';
                 },
                 goToChapter(chapter) {
-                    // 前往章節閱讀頁面
                     window.location.href = `${chapter}/chapter${chapter}.html`;
                 },
                 isChapterRead(chapter) {
