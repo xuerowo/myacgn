@@ -501,98 +501,98 @@
             },
             methods: {
                 async fetchMangaList() {
-                    try {
-                        // 使用完整的 GitHub Pages 路徑
-                        const path = '/myacg/網漫翻譯';  // 修改為你的儲存庫路徑
-                        console.log('開始掃描路徑:', path);
+    try {
+        // 基礎路徑
+        const basePath = '/myacg/網漫翻譯';
+        console.log('開始掃描路徑:', basePath);
         
-                        let mangaIndex = 1;
-                        const mangaList = [];
+        let mangaIndex = 1;
+        const mangaList = [];
 
-                        while (true) {
-                            try {
-                                const manga = {
-                                    title: `漫畫${mangaIndex}`,
-                                    path: `${path}/漫畫${mangaIndex}`,
-                                    coverUrl: `${path}/漫畫${mangaIndex}/cover.jpg`,  // 更新 coverUrl 路徑
-                                    chapters: []
-                                };
+        while (true) {
+            try {
+                // 建立並編碼路徑
+                const mangaFolderName = `漫畫${mangaIndex}`;
+                const encodedPath = `${encodeURIComponent(basePath)}/${encodeURIComponent(mangaFolderName)}`;
                 
-                                console.log('檢查漫畫:', manga.path);
+                const manga = {
+                    title: mangaFolderName,
+                    path: encodedPath,
+                    coverUrl: `${encodedPath}/${encodeURIComponent('cover.jpg')}`,
+                    chapters: []
+                };
+                
+                console.log('檢查漫畫:', manga.coverUrl);
 
-                                // 嘗試讀取封面
-                                const coverResponse = await fetch(manga.coverUrl);
-                                if (!coverResponse.ok) {
-                                    console.log(`找不到漫畫${mangaIndex}的封面`);
-                                    break;
-                                }
+                // 嘗試讀取封面
+                const coverResponse = await fetch(manga.coverUrl);
+                if (!coverResponse.ok) {
+                    console.log(`找不到漫畫${mangaIndex}的封面`);
+                    break;
+                }
 
-                                // 檢測章節
-                                let chapterNum = 1;
-                                while (true) {
-                                    try {
-                                        const chapter = {
-                                            number: chapterNum,
-                                            path: `${manga.path}/${chapterNum}`,
-                                            pages: []
-                                        };
+                // 檢測章節
+                let chapterNum = 1;
+                while (true) {
+                    const chapter = {
+                        number: chapterNum,
+                        path: `${encodedPath}/${chapterNum}`,
+                        pages: []
+                    };
+                    
+                    // 檢測每章的頁數
+                    let pageNum = 1;
+                    let hasPages = false;
+                    
+                    while (pageNum <= 100) {
+                        const pagePath = `${chapter.path}/${pageNum}.jpg`;
+                        const pageResponse = await fetch(pagePath);
                         
-                                        // 檢測每章的頁數
-                                        let pageNum = 1;
-                                        let hasPages = false;
+                        if (!pageResponse.ok) break;
                         
-                                        while (pageNum <= 100) { // 設定一個合理的上限
-                                            const pagePath = `${chapter.path}/${pageNum}.jpg`;
-                                            const pageResponse = await fetch(pagePath);
-                            
-                                            if (!pageResponse.ok) break;
-                            
-                                            chapter.pages.push(pagePath);
-                                            hasPages = true;
-                                            pageNum++;
-                                        }
+                        chapter.pages.push(pagePath);
+                        hasPages = true;
+                        pageNum++;
+                    }
 
-                                        if (hasPages) {
-                                            manga.chapters.push(chapter);
-                                            chapterNum++;
-                                        } else {
-                                            break;
-                                        }
-                                    } catch (error) {
-                                        console.log(`讀取第${chapterNum}話時發生錯誤:`, error);
-                                        break;
-                                    }
-                                }
+                    if (hasPages) {
+                        manga.chapters.push(chapter);
+                        chapterNum++;
+                    } else {
+                        break;
+                    }
+                }
 
-                                if (manga.chapters.length > 0) {
-                                    mangaList.push(manga);
-                                    mangaIndex++;
-                                } else {
-                                    break;
-                                }
-                            } catch (error) {
-                                console.log('讀取漫畫時發生錯誤:', error);
-                                break;
-                            }
-                        }
+                if (manga.chapters.length > 0) {
+                    mangaList.push(manga);
+                    mangaIndex++;
+                } else {
+                    break;
+                }
+            } catch (error) {
+                console.log('讀取漫畫時發生錯誤:', error);
+                break;
+            }
+        }
 
-                        console.log('掃描完成, 找到漫畫數量:', mangaList.length);
-                        this.mangaList = mangaList;
+        console.log('掃描完成, 找到漫畫數量:', mangaList.length);
+        this.mangaList = mangaList;
         
-                    } catch (error) {
-                        console.error('fetchMangaList 發生錯誤:', error);
-                    }
-                },
-                async fetchTextFile(path) {
-                    try {
-                        const response = await fetch(`/myacg/${path}`); // 加入儲存庫名稱
-                        const text = await response.text();
-                        return text.trim();
-                    } catch (error) {
-                        console.error(`Error fetching ${path}:`, error);
-                        return '';
-                    }
-                },
+    } catch (error) {
+        console.error('fetchMangaList 發生錯誤:', error);
+    }
+},
+async fetchTextFile(path) {
+    try {
+        const encodedPath = encodeURIComponent(path);
+        const response = await fetch(`/myacg/${encodedPath}`);
+        const text = await response.text();
+        return text.trim();
+    } catch (error) {
+        console.error(`Error fetching ${path}:`, error);
+        return '';
+    }
+},
                 async showMangaDetail(manga) {
                     try {
                         // 獲取漫畫信息
