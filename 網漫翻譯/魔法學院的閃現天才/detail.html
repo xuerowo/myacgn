@@ -209,7 +209,7 @@
                 },
                 isChapterRead(chapter) {
                     const key = this.manga.title;
-                    return this.readChapters[key]?.includes(chapter);
+                    window.location.href = `chapter.html?chapter=${chapter}`;
                 }
             },
             mounted() {
