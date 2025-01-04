@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>閱讀章節 - 魔法學院的閃現天才 - 網漫翻譯</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f5f5f5;
+            --background-color: #fff;
+        }
+
+        :root[data-theme="dark"] {
+            --primary-color: #64b5f6;
+            --secondary-color: #1a1a1a;
+            --background-color: #121212;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--secondary-color);
+        }
+
+        .reader-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding-bottom: 60px;
+        }
+
+        .manga-page {
+            width: 100%;
+            height: auto;
+            margin: 0;
+            display: block;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        .reader-controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.8);
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            transition: transform 0.3s;
+            z-index: 1000;
+        }
+
+        .reader-controls.hidden {
+            transform: translateY(100%);
+        }
+
+        .control-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            background: var(--primary-color);
+            color: #fff;
+            cursor: pointer;
+            min-width: 80px;
+        }
+
+        .control-btn:hover {
+            background: #357abd;
+        }
+
+        .control-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .chapter-info {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 0.5rem;
+            text-align: center;
+            z-index: 1000;
+            transition: transform 0.3s;
+        }
+
+        .chapter-info.hidden {
+            transform: translateY(-100%);
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="chapter-info" :class="{ hidden: hideControls }">
+            第{{ currentChapter }}話
+        </div>
+
+        <div v-if="loading" class="loading">
+            載入中...
+        </div>
+
+        <div v-else class="reader-container">
+            <img v-for="page in pages"
+                 :key="page"
+                 :src="page"
+                 class="manga-page"
+                 loading="lazy">
+        </div>
+
+        <div class="reader-controls" :class="{ hidden: hideControls }">
+            <button class="control-btn" 
+                    @click="goToPrevious"
+                    :disabled="!hasPrevious">
+                上一話
+            </button>
+            <button class="control-btn" 
+                    @click="goToManga">
+                返回
+            </button>
+            <button class="control-btn" 
+                    @click="goToNext"
+                    :disabled="!hasNext">
+                下一話
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const MANGA_INFO = {
+            title: '魔法學院的閃現天才'
+        };
+
+        const STORAGE_KEYS = {
+            READ_CHAPTERS: 'read_chapters',
+            CHAPTER_LIST: 'chapter_list'
+        };
+
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    currentChapter: 0,
+                    pages: [],
+                    hideControls: false,
+                    lastScrollTop: 0,
+                    scrollTimeout: null,
+                    loading: true,
+                    allChapters: []
+                }
+            },
+            computed: {
+                hasNext() {
+                    const nextChapter = this.currentChapter + 1;
+                    return this.allChapters.includes(nextChapter);
+                },
+                hasPrevious() {
+                    const prevChapter = this.currentChapter - 1;
+                    return this.allChapters.includes(prevChapter);
+                }
+            },
+            methods: {
+                async loadChapterList() {
+                    try {
+                        const response = await fetch('chapters.json');
+                        const data = await response.json();
+                        this.allChapters = data.chapters.sort((a, b) => a - b);
+                    } catch (error) {
+                        console.error('載入章節列表失敗:', error);
+                        this.allChapters = [];
+                    }
+                },
+                async loadChapter() {
+                    this.loading = true;
+                    this.pages = [];
+
+                    try {
+                        const pages = [];
+                        let pageIndex = 1;
+                        
+                        while (true) {
+                            try {
+                                const imgPath = `${this.currentChapter}/${pageIndex}.jpg`;
+                                const response = await fetch(imgPath);
+                                if (!response.ok) break;
+                                pages.push(imgPath);
+                                pageIndex++;
+                            } catch {
+                                break;
+                            }
+                        }
+
+                        if (pages.length === 0) {
+                            throw new Error('沒有找到圖片');
+                        }
+
+                        this.pages = pages;
+                        this.markAsRead();
+                    } catch (error) {
+                        console.error('載入章節失敗:', error);
+                        alert('載入章節失敗');
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+                goToManga() {
+                    window.location.href = 'detail.html';
+                },
+                goToNext() {
+                    if (this.hasNext) {
+                        window.location.href = `chapter.html?chapter=${this.currentChapter + 1}`;
+                    }
+                },
+                goToPrevious() {
+                    if (this.hasPrevious) {
+                        window.location.href = `chapter.html?chapter=${this.currentChapter - 1}`;
+                    }
+                },
+                handleScroll() {
+                    clearTimeout(this.scrollTimeout);
+
+                    const st = window.pageYOffset || document.documentElement.scrollTop;
+                    const isScrollingDown = st > this.lastScrollTop;
+                    const isAtBottom = window.innerHeight + window.pageYOffset >= document.body.offsetHeight - 100;
+
+                    if (isScrollingDown && !isAtBottom) {
+                        this.hideControls = true;
+                    } else {
+                        this.hideControls = false;
+                    }
+
+                    this.lastScrollTop = st;
+                    this.scrollTimeout = setTimeout(() => {
+                        this.hideControls = false;
+                    }, 3000);
+                },
+                markAsRead() {
+                    const readChapters = JSON.parse(localStorage.getItem(STORAGE_KEYS.READ_CHAPTERS) || '{}');
+                    if (!readChapters[MANGA_INFO.title]) {
+                        readChapters[MANGA_INFO.title] = [];
+                    }
+                    if (!readChapters[MANGA_INFO.title].includes(this.currentChapter)) {
+                        readChapters[MANGA_INFO.title].push(this.currentChapter);
+                        localStorage.setItem(STORAGE_KEYS.READ_CHAPTERS, JSON.stringify(readChapters));
+                    }
+                }
+            },
+            async mounted() {
+                // 從 URL 獲取章節號
+                const params = new URLSearchParams(window.location.search);
+                const chapter = parseInt(params.get('chapter'));
+                if (!chapter) {
+                    alert('無效的章節號');
+                    window.location.href = 'detail.html';
+                    return;
+                }
+
+                this.currentChapter = chapter;
+                document.title = `第${chapter}話 - ${MANGA_INFO.title} - 網漫翻譯`;
+
+                // 載入章節列表和內容
+                await this.loadChapterList();
+                await this.loadChapter();
+
+                // 設置事件監聽
+                window.addEventListener('scroll', this.handleScroll);
+            },
+            beforeUnmount() {
+                window.removeEventListener('scroll', this.handleScroll);
+                clearTimeout(this.scrollTimeout);
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
