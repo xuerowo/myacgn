@@ -6,7 +6,6 @@
     <title>閱讀章節 - 魔法學院的閃現天才 - 網漫翻譯</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js"></script>
     <style>
-        /* 保持原有的樣式 */
         :root {
             --primary-color: #4a90e2;
             --secondary-color: #f5f5f5;
@@ -107,7 +106,7 @@
 <body>
     <div id="app">
         <div class="chapter-info" :class="{ hidden: hideControls }">
-            {{ currentChapterTitle }}
+            第{{ currentChapter }}話
         </div>
 
         <div v-if="loading" class="loading">
@@ -119,8 +118,7 @@
                  :key="page"
                  :src="page"
                  class="manga-page"
-                 loading="lazy"
-                 @error="handleImageError(page)">
+                 loading="lazy">
         </div>
 
         <div class="reader-controls" :class="{ hidden: hideControls }">
@@ -156,53 +154,42 @@
             data() {
                 return {
                     currentChapter: 0,
-                    chapterData: null,
                     pages: [],
                     hideControls: false,
                     lastScrollTop: 0,
                     scrollTimeout: null,
                     loading: true,
-                    imageData: null,
-                    failedImages: new Set()
+                    chaptersData: null
                 }
             },
             computed: {
                 hasNext() {
-                    const nextChapter = (this.currentChapter + 1).toString();
-                    return this.imageData && nextChapter in this.imageData;
+                    return this.chaptersData && 
+                           this.chaptersData[this.currentChapter + 1] !== undefined;
                 },
                 hasPrevious() {
-                    const prevChapter = (this.currentChapter - 1).toString();
-                    return this.imageData && prevChapter in this.imageData;
-                },
-                currentChapterTitle() {
-                    return this.chapterData?.title || `第${this.currentChapter}話`;
+                    return this.chaptersData && 
+                           this.chaptersData[this.currentChapter - 1] !== undefined;
                 }
             },
             methods: {
                 async loadChapterData() {
                     try {
-                        // 載入圖片資訊
-                        if (!this.imageData) {
+                        if (!this.chaptersData) {
                             const response = await fetch('images.json');
-                            this.imageData = await response.json();
+                            this.chaptersData = await response.json();
                         }
 
-                        const chapterKey = this.currentChapter.toString();
-                        this.chapterData = this.imageData[chapterKey];
-
-                        if (!this.chapterData) {
+                        const chapterInfo = this.chaptersData[this.currentChapter];
+                        if (!chapterInfo) {
                             throw new Error('找不到此章節');
                         }
 
-                        // 設置頁面
-                        this.pages = this.chapterData.images;
-                        
-                        // 預載入下一章
-                        const nextChapterKey = (this.currentChapter + 1).toString();
-                        if (this.imageData[nextChapterKey]) {
-                            this.preloadNextChapter(this.imageData[nextChapterKey].images);
-                        }
+                        // 一次性生成所有圖片路徑
+                        this.pages = Array.from(
+                            { length: chapterInfo.total },
+                            (_, i) => `${this.currentChapter}/${i + 1}.jpg`
+                        );
 
                         this.markAsRead();
                     } catch (error) {
@@ -212,17 +199,6 @@
                     } finally {
                         this.loading = false;
                     }
-                },
-                preloadNextChapter(images) {
-                    // 預載入下一章的圖片
-                    for (const imagePath of images) {
-                        const img = new Image();
-                        img.src = imagePath;
-                    }
-                },
-                handleImageError(page) {
-                    this.failedImages.add(page);
-                    console.error(`圖片載入失敗: ${page}`);
                 },
                 goToManga() {
                     window.location.href = 'detail.html';
