@@ -313,6 +313,20 @@
                     isDarkMode: localStorage.getItem(STORAGE_KEYS.DARK_MODE) === 'true'
                 }
             },
+            computed: {
+                hasNext() {
+                    // 找到當前章節在 allChapters 中的位置
+                    const currentIndex = this.allChapters.indexOf(this.currentChapter);
+                    // 如果不是最後一章就可以去下一話
+                    return currentIndex < this.allChapters.length - 1;
+                },
+                hasPrevious() {
+                    // 找到當前章節在 allChapters 中的位置
+                    const currentIndex = this.allChapters.indexOf(this.currentChapter);
+                    // 如果不是第一章就可以去上一話
+                    return currentIndex > 0;
+                }
+            },
             watch: {
                 isDarkMode(newValue) {
                     document.documentElement.setAttribute('data-theme', newValue ? 'dark' : 'light');
@@ -379,14 +393,18 @@
                 },
                 goToNext() {
                     if (this.hasNext) {
+                        const currentIndex = this.allChapters.indexOf(this.currentChapter);
+                        const nextChapter = this.allChapters[currentIndex + 1];
                         sessionStorage.removeItem(STORAGE_KEYS.SCROLL_POSITION);
-                        window.location.href = `chapter.html?chapter=${this.currentChapter + 1}`;
+                        window.location.href = `chapter.html?chapter=${nextChapter}`;
                     }
                 },
                 goToPrevious() {
                     if (this.hasPrevious) {
+                        const currentIndex = this.allChapters.indexOf(this.currentChapter);
+                        const prevChapter = this.allChapters[currentIndex - 1];
                         sessionStorage.removeItem(STORAGE_KEYS.SCROLL_POSITION);
-                        window.location.href = `chapter.html?chapter=${this.currentChapter - 1}`;
+                        window.location.href = `chapter.html?chapter=${prevChapter}`;
                     }
                 },
                 handleScroll() {
