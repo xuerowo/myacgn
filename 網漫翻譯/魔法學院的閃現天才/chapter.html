@@ -218,16 +218,13 @@
 </head>
 <body>
     <div id="app">
-        <div class="nav-controls" :class="{ hidden: hideControls }">
+        <div class="chapter-info" :class="{ hidden: hideControls }">
+            第{{ currentChapter }}話
             <label class="toggle-switch">
                 <input type="checkbox" v-model="isDarkMode">
                 <span class="toggle-slider"></span>
             </label>
             <span>夜間模式</span>
-        </div>
-
-        <div class="chapter-info" :class="{ hidden: hideControls }">
-            第{{ currentChapter }}話
         </div>
 
         <div v-if="loading" class="loading">
