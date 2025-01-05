@@ -116,9 +116,10 @@
         <div v-else class="reader-container">
             <img v-for="page in pages"
                  :key="page"
-                 :src="page"
+                 :src="page + '?v=' + Date.now()"
                  class="manga-page"
-                 loading="lazy">
+                 loading="lazy"
+                 @load="handleImageLoad">
         </div>
 
         <div class="reader-controls" :class="{ hidden: hideControls }">
@@ -145,7 +146,8 @@
         };
 
         const STORAGE_KEYS = {
-            READ_CHAPTERS: 'read_chapters'
+            READ_CHAPTERS: 'read_chapters',
+            SCROLL_POSITION: 'chapter_scroll_position'
         };
 
         const { createApp } = Vue;
@@ -159,7 +161,8 @@
                     lastScrollTop: 0,
                     scrollTimeout: null,
                     loading: true,
-                    chaptersData: null
+                    chaptersData: null,
+                    loadedImages: 0
                 }
             },
             computed: {
@@ -185,7 +188,6 @@
                             throw new Error('找不到此章節');
                         }
 
-                        // 一次性生成所有圖片路徑
                         this.pages = Array.from(
                             { length: chapterInfo.total },
                             (_, i) => `${this.currentChapter}/${i + 1}.jpg`
@@ -200,16 +202,33 @@
                         this.loading = false;
                     }
                 },
+                handleImageLoad() {
+                    this.loadedImages++;
+                    if (this.loadedImages === this.pages.length) {
+                        this.restoreScrollPosition();
+                    }
+                },
+                saveScrollPosition() {
+                    sessionStorage.setItem(STORAGE_KEYS.SCROLL_POSITION, window.pageYOffset);
+                },
+                restoreScrollPosition() {
+                    const savedPosition = sessionStorage.getItem(STORAGE_KEYS.SCROLL_POSITION);
+                    if (savedPosition) {
+                        window.scrollTo(0, parseInt(savedPosition));
+                    }
+                },
                 goToManga() {
                     window.location.href = 'detail.html';
                 },
                 goToNext() {
                     if (this.hasNext) {
+                        sessionStorage.removeItem(STORAGE_KEYS.SCROLL_POSITION);
                         window.location.href = `chapter.html?chapter=${this.currentChapter + 1}`;
                     }
                 },
                 goToPrevious() {
                     if (this.hasPrevious) {
+                        sessionStorage.removeItem(STORAGE_KEYS.SCROLL_POSITION);
                         window.location.href = `chapter.html?chapter=${this.currentChapter - 1}`;
                     }
                 },
@@ -227,6 +246,8 @@
                     }
 
                     this.lastScrollTop = st;
+                    this.saveScrollPosition();
+
                     this.scrollTimeout = setTimeout(() => {
                         this.hideControls = false;
                     }, 3000);
