@@ -160,21 +160,16 @@
         }
 
         .nav-controls {
-            position: fixed;
-            top: 10px;
-            right: 10px;
             display: flex;
             gap: 1rem;
             align-items: center;
-            z-index: 1001;
-            color: white;
         }
 
         .toggle-switch {
             position: relative;
             display: inline-block;
             width: 50px;
-            height: 15px;
+            height: 24px;
         }
 
         .toggle-switch input {
@@ -218,13 +213,16 @@
 </head>
 <body>
     <div id="app">
-        <div class="chapter-info" :class="{ hidden: hideControls }">
-            第{{ currentChapter }}話
+        <div class="nav-controls">
             <label class="toggle-switch">
                 <input type="checkbox" v-model="isDarkMode">
                 <span class="toggle-slider"></span>
             </label>
             <span>夜間模式</span>
+        </div>
+
+        <div class="chapter-info" :class="{ hidden: hideControls }">
+            第{{ currentChapter }}話
         </div>
 
         <div v-if="loading" class="loading">
