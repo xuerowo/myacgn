@@ -58,6 +58,57 @@
             cursor: pointer;
         }
 
+        .nav-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            border-radius: 24px;
+            transition: .4s;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            border-radius: 50%;
+            transition: .4s;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
         .manga-detail {
             background: var(--background-color);
             border-radius: 8px;
@@ -153,6 +204,13 @@
     <div id="app">
         <nav class="navbar">
             <h1 @click="goHome">網漫翻譯</h1>
+            <div class="nav-controls">
+                <label class="toggle-switch">
+                    <input type="checkbox" v-model="isDarkMode">
+                    <span class="toggle-slider"></span>
+                </label>
+                <span>夜間模式</span>
+            </div>
         </nav>
 
         <div class="container">
@@ -206,7 +264,8 @@
         };
 
         const STORAGE_KEYS = {
-            READ_CHAPTERS: 'read_chapters'
+            READ_CHAPTERS: 'read_chapters',
+            DARK_MODE: 'dark_mode'
         };
 
         const { createApp } = Vue;
@@ -216,7 +275,14 @@
                 return {
                     manga: MANGA_INFO,
                     chapters: [],
-                    readChapters: JSON.parse(localStorage.getItem(STORAGE_KEYS.READ_CHAPTERS) || '{}')
+                    readChapters: JSON.parse(localStorage.getItem(STORAGE_KEYS.READ_CHAPTERS) || '{}'),
+                    isDarkMode: localStorage.getItem(STORAGE_KEYS.DARK_MODE) === 'true'
+                }
+            },
+            watch: {
+                isDarkMode(newValue) {
+                    document.documentElement.setAttribute('data-theme', newValue ? 'dark' : 'light');
+                    localStorage.setItem(STORAGE_KEYS.DARK_MODE, newValue);
                 }
             },
             methods: {
@@ -242,6 +308,7 @@
             },
             mounted() {
                 this.fetchChapters();
+                document.documentElement.setAttribute('data-theme', this.isDarkMode ? 'dark' : 'light');
             }
         }).mount('#app');
     </script>
