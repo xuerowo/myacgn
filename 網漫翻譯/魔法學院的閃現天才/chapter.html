@@ -97,7 +97,6 @@
             background: rgba(0,0,0,0.8);
             color: white;
             padding: 0.5rem;
-            text-align: center;
             z-index: 1000;
             transition: transform 0.3s;
         }
@@ -112,6 +111,13 @@
             align-items: center;
             max-width: 800px;
             margin: 0 auto;
+            position: relative;
+        }
+
+        .header-bar-inner > span {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         .chapter-menu {
@@ -172,6 +178,7 @@
             gap: 1rem;
             align-items: center;
             color: white;
+            margin-left: auto;
         }
 
         .toggle-switch {
