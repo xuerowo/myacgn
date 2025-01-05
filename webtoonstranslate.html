@@ -12,6 +12,8 @@
             --text-color: #333;
             --border-color: #ddd;
             --background-color: #fff;
+            --dropdown-background: #fff;
+            --dropdown-hover: #f0f0f0;
         }
 
         :root[data-theme="dark"] {
@@ -20,6 +22,8 @@
             --text-color: #e0e0e0;
             --border-color: #333;
             --background-color: #121212;
+            --dropdown-background: #1a1a1a;
+            --dropdown-hover: #2a2a2a;
         }
 
         * {
@@ -34,6 +38,7 @@
             line-height: 1.6;
             color: var(--text-color);
             background-color: var(--secondary-color);
+            padding-top: 60px;
         }
 
         .container {
@@ -42,27 +47,115 @@
             padding: 20px;
         }
 
+        /* 导航栏样式 */
         .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
             background-color: var(--background-color);
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             padding: 1rem;
-            margin-bottom: 2rem;
+            z-index: 1000;
+            transition: top 0.3s;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .navbar h1 {
-            color: var(--primary-color);
-            margin: 0;
-        }
-
-        .nav-controls {
+        .nav-links {
             display: flex;
-            gap: 1rem;
+            gap: 2rem;
             align-items: center;
         }
 
+        .nav-links > * {
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .dropdown-toggle {
+            cursor: pointer;
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: var(--text-color);
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            width: 100%;
+        }
+
+        .dropdown-toggle:after {
+            content: '▼';
+            font-size: 0.8em;
+            transition: transform 0.3s;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: var(--dropdown-background);
+            min-width: 160px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            border-radius: 4px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 0.8rem 1rem;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: var(--dropdown-hover);
+            color: var(--primary-color);
+        }
+
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown:hover .dropdown-toggle:after {
+            transform: rotate(180deg);
+        }
+
+        /* 原有的卡片网格样式 */
         .manga-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -119,62 +212,41 @@
             color: var(--primary-color);
         }
 
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-slider {
-            position: absolute;
+        /* 主题切换开关样式 */
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
             cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            border-radius: 24px;
-            transition: .4s;
+            padding: 0.5rem;
+            transition: transform 0.3s;
         }
 
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            border-radius: 50%;
-            transition: .4s;
-        }
-
-        input:checked + .toggle-slider {
-            background-color: var(--primary-color);
-        }
-
-        input:checked + .toggle-slider:before {
-            transform: translateX(26px);
+        .theme-toggle:hover {
+            transform: rotate(360deg);
         }
     </style>
 </head>
 <body>
     <div id="app">
         <nav class="navbar">
-            <h1>網漫翻譯</h1>
-            <div class="nav-controls">
-                <label class="toggle-switch">
-                    <input type="checkbox" v-model="isDarkMode">
-                    <span class="toggle-slider"></span>
-                </label>
-                <span>夜間模式</span>
+            <div class="nav-container">
+                <div class="nav-links">
+                    <a href="index.html">首頁</a>
+                    <div class="dropdown">
+                        <button class="dropdown-toggle">作品推薦</button>
+                        <div class="dropdown-menu">
+                            <a href="index.html#animations">動畫</a>
+                            <a href="index.html#webtoons">網漫</a>
+                            <a href="index.html#lightnovels">輕小說</a>
+                            <a href="index.html#visualnovels">視覺小說</a>
+                        </div>
+                    </div>
+                    <a href="webtoonstranslate.html" style="color: var(--primary-color)">網漫翻譯</a>
+                    <a href="commentsection.html">留言區</a>
+                </div>
+                <button class="theme-toggle" @click="toggleTheme">{{ isDarkMode ? '🌜' : '🌞' }}</button>
             </div>
         </nav>
 
@@ -260,11 +332,28 @@
                 },
                 getReadingProgress(manga) {
                     return this.readingProgress[manga.title];
+                },
+                toggleTheme() {
+                    this.isDarkMode = !this.isDarkMode;
                 }
             },
             mounted() {
                 this.fetchMangaList();
                 document.documentElement.setAttribute('data-theme', this.isDarkMode ? 'dark' : 'light');
+
+                // 导航栏滚动效果
+                let lastScrollTop = 0;
+                const navbar = document.querySelector('.navbar');
+                
+                window.addEventListener('scroll', () => {
+                    const currentScroll = window.pageYOffset;
+                    if (currentScroll > lastScrollTop) {
+                        navbar.style.top = '-80px';
+                    } else {
+                        navbar.style.top = '0';
+                    }
+                    lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+                });
             }
         }).mount('#app');
     </script>
