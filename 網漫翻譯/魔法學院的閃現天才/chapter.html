@@ -89,7 +89,7 @@
             cursor: not-allowed;
         }
 
-        .chapter-info {
+        .header-bar {
             position: fixed;
             top: 0;
             left: 0;
@@ -102,8 +102,16 @@
             transition: transform 0.3s;
         }
 
-        .chapter-info.hidden {
+        .header-bar.hidden {
             transform: translateY(-100%);
+        }
+
+        .header-bar-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
         .chapter-menu {
@@ -160,13 +168,9 @@
         }
 
         .nav-controls {
-            position: fixed;
-            top: 10px;
-            right: 10px;
             display: flex;
             gap: 1rem;
             align-items: center;
-            z-index: 1001;
             color: white;
         }
 
@@ -218,16 +222,17 @@
 </head>
 <body>
     <div id="app">
-        <div class="nav-controls">
-            <label class="toggle-switch">
-                <input type="checkbox" v-model="isDarkMode">
-                <span class="toggle-slider"></span>
-            </label>
-            <span>夜間模式</span>
-        </div>
-
-        <div class="chapter-info" :class="{ hidden: hideControls }">
-            第{{ currentChapter }}話
+        <div class="header-bar" :class="{ hidden: hideControls }">
+            <div class="header-bar-inner">
+                <span>第{{ currentChapter }}話</span>
+                <div class="nav-controls">
+                    <label class="toggle-switch">
+                        <input type="checkbox" v-model="isDarkMode">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <span>夜間模式</span>
+                </div>
+            </div>
         </div>
 
         <div v-if="loading" class="loading">
