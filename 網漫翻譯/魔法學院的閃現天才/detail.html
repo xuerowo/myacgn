@@ -93,6 +93,25 @@
             color: var(--text-color);
         }
 
+        .official-links {
+            margin-top: 0.5rem;
+        }
+
+        .official-link {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            margin-left: 0.5rem;
+            border-radius: 4px;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .official-link:hover {
+            background: #357abd;
+        }
+
         .chapter-list {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -145,6 +164,11 @@
                         <div class="manga-metadata">
                             <p><strong>作者：</strong>{{ manga.author }}</p>
                             <p><strong>類型：</strong>{{ manga.genres }}</p>
+                            <p class="official-links">
+                                <strong>正版連結：</strong>
+                                <a :href="manga.officialLinks.korean" target="_blank" class="official-link">韓文版</a>
+                                <a :href="manga.officialLinks.english" target="_blank" class="official-link">英文版</a>
+                            </p>
                         </div>
                         <p class="manga-description">我成為了最糟角色白流雪？<br>
                             在一個極度困難、效能最差的處境中。在人人都能使用魔法的世界裡，因為無法使用魔法而被連老手玩家都嫌棄的史上最糟糕廢物角色，白流雪。<br>
@@ -174,7 +198,11 @@
             title: '魔法學院的閃現天才',
             author: '서유,은밀히',
             genres: '遊戲,學院,生存,附身,天才,成長,魔法師',
-            coverUrl: 'cover.jpg'
+            coverUrl: 'cover.jpg',
+            officialLinks: {
+                korean: 'https://page.kakao.com/content/61321174', // Kakao Page 連結
+                english: 'https://www.webtoons.com/en/action/the-worst-magician/' // WEBTOON 連結
+            }
         };
 
         const STORAGE_KEYS = {
