@@ -218,7 +218,7 @@
 </head>
 <body>
     <div id="app">
-        <div class="nav-controls">
+        <div class="nav-controls" :class="{ hidden: hideControls }">
             <label class="toggle-switch">
                 <input type="checkbox" v-model="isDarkMode">
                 <span class="toggle-slider"></span>
