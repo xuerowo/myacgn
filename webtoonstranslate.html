@@ -230,11 +230,11 @@
             methods: {
                 async fetchMangaList() {
                     try {
-                        const response = await fetch('/myacg/mangalist.json');
+                        const response = await fetch('/mangalist.json');
                         const data = await response.json();
                         this.mangaList = data.mangaList.map(manga => ({
                             ...manga,
-                            coverUrl: `/myacg/${encodeURIComponent('網漫翻譯')}/${encodeURIComponent(manga.title)}/cover.jpg`
+                            coverUrl: `/${encodeURIComponent('網漫翻譯')}/${encodeURIComponent(manga.title)}/cover.jpg`
                         }));
                     } catch (error) {
                         console.error('讀取漫畫列表失敗:', error);
