@@ -183,7 +183,7 @@
 
         .container {
             display: flex;
-            align-items: flex-start;
+            align-items: stretch;;
             background-color: var(--background-color);
             box-shadow: var(--card-shadow);
             margin-bottom: 20px;
@@ -241,6 +241,7 @@
         .link-container {
             margin-top: auto;
             padding-top: 12px;
+            display: flex;
         }
 
         .link-style-1 {
@@ -324,6 +325,8 @@
             .content-text {
                 gap: 8px;
                 min-height: auto;
+                display: flex;
+                flex-direction: column;
             }
 
             .content-text h2 {
@@ -334,10 +337,18 @@
                 text-align: center;
             }
 
+            .series-description {
+                flex: 1;
+                margin-bottom: 12px;
+            }
+
             .link-container {
-                justify-content: center;  /* 在手機版讓按鈕置中 */
-                margin-top: 16px;
-            }      
+                display: flex;
+                justify-content: center;
+                width: 100%;
+                margin-top: auto;
+                padding-top: 12px;
+            }  
         }
     </style>
 </head>
