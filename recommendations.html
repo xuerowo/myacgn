@@ -311,45 +311,71 @@
         /* Responsive design */
         @media (max-width: 768px) {
             .container {
-                flex-direction: column;
-                padding: 16px;
-                min-height: auto;
+                flex-direction: row;
+                padding: 12px;
+                gap: 12px;
+                min-height: 200px;
             }
 
-            .container img {
-                width: auto;
-                max-width: 1000px;
-                height: 224px;
-                align-self: center;
+         .container img {
+                width: 100px;
+                height: 140px;
+                align-self: flex-start;
             }
 
             .content-text {
-                gap: 8px;
-                min-height: auto;
-                display: flex;
-                flex-direction: column;
+                gap: 6px;
+                min-height: 140px;
             }
 
             .content-text h2 {
-                text-align: center;
+                font-size: 1.2rem;
+                padding-bottom: 4px;
             }
 
             .series-info {
-                text-align: center;
+                font-size: 0.85rem;
+                padding: 4px 8px;
             }
 
             .series-description {
-                flex: 1;
-                margin-bottom: 12px;
+                font-size: 0.9rem;
+                line-height: 1.5;
             }
 
             .link-container {
-                display: flex;
-                justify-content: center;
-                width: 100%;
                 margin-top: auto;
-                padding-top: 12px;
-            }  
+                padding-top: 8px;
+            }
+
+            .link-style-1 {
+                padding: 6px 16px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+                gap: 10px;
+            }
+
+            .container img {
+                width: 80px;
+                height: 112px;
+            }
+
+            .content-text {
+                min-height: 112px;
+            }
+
+            .content-text h2 {
+                font-size: 1.1rem;
+            }
+
+            .series-info, .series-description {
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
@@ -530,7 +556,7 @@
             <h1>視覺小說推薦一覽</h1>
 
             <div class="container">
-                <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2593370/header_tchinese.jpg?t=1729664615" alt="餓殍：明末千里行">
+                <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2593370/header_tchinese.jpg?t=1729664615" alt=">餓殍：明末千里行">
                 <div class="content-text">
                     <h2>餓殍：明末千里行</h2>
                     <div class="series-description">
