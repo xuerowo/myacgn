@@ -413,7 +413,8 @@
                 },
                 goToChapter(chapter) {
                     if (chapter !== this.currentChapter) {
-                        sessionStorage.removeItem(STORAGE_KEYS.SCROLL_POSITION);
+                        // 保存當前滾動位置
+                        this.saveScrollPosition();
                         window.location.href = `chapter.html?chapter=${chapter}`;
                     }
                     this.showChapterMenu = false;
@@ -427,7 +428,8 @@
                             chapter => chapter.number === this.currentChapter
                         );
                         const nextChapter = this.allChapters[currentIndex + 1];
-                        sessionStorage.removeItem(STORAGE_KEYS.SCROLL_POSITION);
+                        // 保存當前滾動位置
+                        this.saveScrollPosition();
                         window.location.href = `chapter.html?chapter=${nextChapter.number}`;
                     }
                 },
@@ -437,7 +439,8 @@
                             chapter => chapter.number === this.currentChapter
                         );
                         const prevChapter = this.allChapters[currentIndex - 1];
-                        sessionStorage.removeItem(STORAGE_KEYS.SCROLL_POSITION);
+                        // 保存當前滾動位置
+                        this.saveScrollPosition();
                         window.location.href = `chapter.html?chapter=${prevChapter.number}`;
                     }
                 },
