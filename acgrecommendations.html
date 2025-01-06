@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.8">
+    <title>二次元作品推薦</title>
+    <link rel="icon" href="images/favicon.jpg" type="image/jpg">
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f5f5f5;
+            --text-color: #333;
+            --border-color: #ddd;
+            --background-color: #fff;
+            --dropdown-background: #fff;
+            --dropdown-hover: #f0f0f0;
+            --card-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            --transition-speed: 0.3s;
+        }
+
+        :root[data-theme="dark"] {
+            --primary-color: #64b5f6;
+            --secondary-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --border-color: #333;
+            --background-color: #121212;
+            --dropdown-background: #1a1a1a;
+            --dropdown-hover: #2a2a2a;
+            --card-shadow: 0 4px 8px rgba(255,255,255,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--secondary-color);
+            padding-top: 60px;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--text-color);
+            margin-bottom: 2rem;
+        }
+
+        /* Navigation styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--background-color);
+            padding: 1rem;
+            box-shadow: var(--card-shadow);
+            z-index: 1000;
+            transition: top var(--transition-speed);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links > * {
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+                /* 下拉菜單樣式 */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-toggle {
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-color);
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+        }
+
+        .dropdown-toggle:after {
+            content: '▼';
+            font-size: 0.8em;
+            transition: transform 0.3s;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: var(--dropdown-background);
+            min-width: 160px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            border-radius: 4px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 0.8rem 1rem;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: var(--dropdown-hover);
+            color: var(--primary-color);
+        }
+
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown:hover .dropdown-toggle:after {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu a.active {
+            background-color: var(--dropdown-hover);
+            color: var(--primary-color);
+        }
+
+        /* Tab styles */
+        .tab-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Content styles */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .container {
+            display: flex;
+            align-items: flex-start;
+            background-color: var(--background-color);
+            box-shadow: var(--card-shadow);
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            transition: transform var(--transition-speed);
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+        }
+
+        .container img {
+            width: 200px;
+            height: auto;
+            border-radius: 10px;
+            margin-right: 20px;
+            object-fit: cover;
+        }
+
+        .content-text {
+            flex: 1;
+        }
+
+        .content-text h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .link-style-1 {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color var(--transition-speed);
+        }
+
+        .link-style-1:hover {
+            background-color: #357ABD;
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Theme toggle */
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: transform var(--transition-speed);
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(360deg);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background-color: var(--background-color);
+            margin-top: 2rem;
+        }
+
+        /* Notes section */
+        .notes {
+            background-color: var(--background-color);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        .notes h5 {
+            margin-bottom: 0.5rem;
+        }
+
+        .notes a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .container img {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+        }
+
+        .dropdown-menu a.active {
+            background-color: var(--dropdown-hover);
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-links">
+                <a href="index.html">首頁</a>
+                <div class="dropdown">
+                    <button class="dropdown-toggle" style="color: var(--primary-color)">作品推薦</button>
+                    <div class="dropdown-menu">
+                        <a href="#animations" class="nav-link" onclick="showContent('animations')">動畫</a>
+                        <a href="#webtoons" class="nav-link" onclick="showContent('webtoons')">網漫</a>
+                        <a href="#lightnovels" class="nav-link" onclick="showContent('lightnovels')">輕小說</a>
+                        <a href="#visualnovels" class="nav-link" onclick="showContent('visualnovels')">視覺小說</a>
+                    </div>
+                </div>
+                <a href="webtoonstranslate.html">網漫翻譯</a>
+                <a href="commentsection.html">留言區</a>
+            </div>
+            <button class="theme-toggle" id="theme-toggle">🌞</button>
+        </div>
+    </nav>
+
+    <div class="tab-container">
+
+        <!-- 動畫內容 -->
+        <section id="animations" class="content-section active">
+
+            <h1>動畫推薦一覽</h1>
+
+            <div class="notes">
+                <h5>備註:日本動畫網站推薦用<a href="https://anime1.me" target="_blank">anime1.me</a>，日本和大陸動畫都有的網站推薦用<a href="https://www.xgcartoon.com/" target="_blank">西瓜卡通</a>。</h5>
+                <h5>備註2:集數狀態最後更新日期為2024/12/3</h5>
+            </div>
+
+            <div class="container">
+                <img src="https://p2.bahamut.com.tw/B/ACG/c/77/0000076677.JPG">
+                <div class="content-text">
+                    <h2>為美好的世界獻上祝福!</h2>
+                    <p><strong>集數:</strong>本傳第一、二季各10集+OVA1集，第三季共11集，外傳共12集，一部劇場版</p>
+                    <p><strong>簡介:</strong>從沒想過這個廢到不行的人生，就這樣以廢到不行的方式結束了……廢到連因為痛失愛子、本應傷心欲絕的父母，在聽了死因之後，卻不禁先笑了出來的程度！ 廢到無藥可救的繭居族 佐藤和真，轉生到了跟RPG遊戲畫面一模一樣的異世界，與作為特別附贈品一起同行、智商和運氣都差到教人傻眼地步的女神 阿克婭，姑且組成了一支（看起來）人模人樣的隊伍，引發接二連三的問題！</p>
+                    <a href="https://ani.gamer.com.tw/animeVideo.php?sn=7294" target="_blank" class="link-style-1">連結</a>
+                </div>
+            </div>
+
+            <div class="container">
+                <img src="https://p2.bahamut.com.tw/B/ACG/c/36/0000120336.JPG">
+                <div class="content-text">
+                    <h2>我想成為影之強者！</h2>
+                    <p><strong>集數:</strong>第一季共20集，第二季共12集</p>
+                    <p>少年席德憧憬著以路人身分隱藏自身力量，不為人知地介入故事，展現實力的「影之強者」。轉生到異世界後，企圖充分享受這種設定的席德，為了擊潰妄想中的敵人「黑暗教團」而暗中大顯身手。然而，這個教團似乎真的存在……？同時，因為他順勢收為部下的少女們「會錯意」，席德在一無所知的狀態下成了真正的「影之強者」，一行人建立起來的「闇影庭園」，將殲滅這世上的黑暗。</p>
+                    <a href="https://ani.gamer.com.tw/animeVideo.php?sn=31622" target="_blank" class="link-style-1">連結</a>
+                </div>
+            </div>
+
+            <div class="container">
+                <img src="https://p2.bahamut.com.tw/B/ACG/c/45/0000102845.JPG">
+                <div class="content-text">
+                    <h2>怕痛的我，把防禦力點滿就對了</h2>
+                    <p><strong>集數:</strong>第一、二季各12集</p>
+                    <p>梅普露缺乏一般遊戲常識，把所有配點都灌到防禦力（VIT）去了。動作緩慢，又不會用魔法，搞得連兔子都耍得她團團轉。『咦，可是完全不會痛耶……而且根本沒受傷？』 　　全點防禦力，使梅普露取得了特殊技能【絕對防禦】，甚至附送一擊必殺的反擊技──？能使任何攻擊打不出效果，以致命施毒技能蹂躪全場的「移動要塞型」新人，毫不覺得自己奇怪地出場走跳嘍！</p>
+                    <a href="https://ani.gamer.com.tw/animeVideo.php?sn=14499" target="_blank" class="link-style-1">連結</a>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- 網漫內容 -->
+        <section id="webtoons" class="content-section">
+
+            <h1>網漫推薦一覽</h1>
+
+            <div class="notes">
+                <h5>備註:網漫網站推薦用<a href="https://m.happymh.com" target="_blank">嗨皮漫畫</a>，用戶登錄後廣告顯示更友好。</h5>
+                <h5>備註2:話數狀態最後更新日期為2025/1/3</h5>
+            </div>
+
+            <div class="container">
+                <img src="https://page-images.kakaoentcdn.com/download/resource?kid=6ssep/hAd4PpwhQ7/g12K1th7rCpGImD7knHMO0&filename=o1/dims/resize/384">
+                <div class="content-text">
+                    <h2>無限魔法師(92)</h2>
+                    <p>棄養在馬廄,以平民身分長大的希洛涅。<br> 他藉由天生出色的洞察力自學識字,某天來到了城裡,體驗到自己極為好奇的魔法。<br>這使得希洛涅夢想成為魔法師,然而身分的高牆十分殘酷,他在長大成人前就明白了世界的黑暗面....<br> 在這個某些層面上有些扭曲的世界, 他能成為自己夢寐以求的魔法師嗎?</p>
+                    <a href="https://tw.kakaowebtoon.com/content/%E7%84%A1%E9%99%90%E9%AD%94%E6%B3%95%E5%B8%AB/512?tab=episode" target="_blank" class="link-style-1">連結</a>
+                </div>
+            </div>
+
+            <div class="container">
+                <img src="https://image-comic.pstatic.net/webtoon/747269/thumbnail/thumbnail_IMAG21_aabd9952-ff45-47a2-a543-33f19a5c6708.jpg">
+                <div class="content-text">
+                    <h2>全知讀者視角(241)</h2>
+         	        <p>「您收到了主線任務。」 長著角的妖怪，熟悉的人物登場…… 太扯了...這是我讀過的小說劇情！</p>
+         	        <a href="https://www.webtoons.com/zh-hant/fantasy/duzhe/list?title_no=2089" target="_blank" class="link-style-1">連結</a>
+                </div>
+            </div>
+
+            <div class="container">
+                <img src="https://comicthumb-phinf.pstatic.net/20221026_167/pocket_1666780641540T9FMq_JPEG/%BD%C3%B8%AE%C1%EE_%C7%A5%C1%F6_690x1000.jpg">
+                <div class="content-text">
+                    <h2>遊戲最強破壞玩家(115)</h2>
+         	        <p>世界上最有可能性的遊戲。 亞進電子、西里科夫工業公司、阿爾戈斯集團。由世界頂尖的大企業合作推出的人類史上首款虛擬現實遊戲《阿爾卡迪亞》。 【歡迎來到幻想的世界，阿爾卡迪亞。】 這裡充滿了各式各樣的瘋狂趣事， 現在馬上開始體驗！</p>
+         	        <a href="https://www.webtoons.com/zh-hant/fantasy/worlds-strongest-troll/list?title_no=5226" target="_blank" class="link-style-1">連結</a>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- 輕小說內容 -->
+        <section id="lightnovels" class="content-section">
+
+            <h1>輕小說推薦一覽</h1>
+
+            <div class="notes">
+                <h5>備註:輕小說網站推薦用<a href="https://www.lightnovel.us" target="_blank">LK輕之國度</a>和<a href="https://www.wenku8.net" target="_blank">輕小說文庫</a></h5>
+            </div>
+
+            <div class="container">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNMvZifiesrfVz-YthfhXQtTVV2eMjmdXSGQ&s">
+                <div class="content-text">
+                    <h2>在朋友背後與你悄悄牽手。談著無法言說的戀愛</h2>
+                    <p>青春可不只是戀愛。但是――。唯獨這份戀情不願被人知曉。<br>
+                    「青春＝交女朋友？再怎麼說那也不是青春的全部吧」<br>
+                    對戀愛有心理陰影的高中生，古賀純也認為比起戀愛，和朋友們在喧鬧中促進友誼才是青春。<br>
+                    在他看來，親密的五人男女時而仰望美麗的星空，時而在家庭餐廳暢談至天明的當下，才是包括自己在內大家的青春。<br>
+                    ――可是，為什麼我們面對身為朋友的對方，卻還是墜入愛河了呢。明明可能沒辦法維持一直以來的關係了。</p>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- 視覺小說內容 -->
+        <section id="visualnovels" class="content-section">
+
+            <h1>視覺小說推薦一覽</h1>
+
+            <div class="container">
+                <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2593370/header_tchinese.jpg?t=1729664615">
+                <div class="content-text">
+                    <h2>餓殍：明末千里行</h2>
+                    <p>明末崇禎五年（1632年），盜匪良和同夥接了人牙子的委託。<br>良需將四名小女孩從華州城運至洛陽城。<br>路途千里，一行人將走過華州、閿鄉、陝州、最終抵達洛陽。<br>起初，良以為被他運送的女孩會被賣到富人家裡作養女。<br>行至途中，名為"穗"的女孩告知良此次運送的"真相"。<br>原來，買走女孩的是一頭修行千年的豚妖。</p>
+                    <a href="https://store.steampowered.com/app/2593370/_/?l=tchinese" target="_blank" class="link-style-1">連結</a>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+    <footer>
+        <h4 id="lastModified"></h4>
+        <h6>網頁由 林雲 製作</h6>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        function showContent(contentId) {
+            // 隱藏所有內容區塊
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // 顯示選中的內容區塊
+            document.getElementById(contentId).classList.add('active');
+
+
+            // 更新選中的導航欄連結
+            const navLink = document.querySelector(`.nav-link[onclick*="${contentId}"]`);
+
+            if (navLink) {
+                document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+                navLink.classList.add('active');
+            }
+
+            // 阻止默認的錨點行為
+            if (event && event.preventDefault) event.preventDefault();
+
+            // 修改網址的hash值
+            window.location.hash = contentId;
+
+            // 延遲執行滾動到頂部
+            setTimeout(() => {
+                window.scrollTo(0, 0);
+            }, 0);
+        }
+
+        // 頁面載入時根據網址的hash值切換分頁
+        window.addEventListener('load', () => {
+            const hash = window.location.hash.substring(1);
+            if (hash) {
+                showContent(hash);
+            }
+
+            window.scrollTo(0, 0);
+            
+        });
+
+        window.addEventListener('popstate', () => {
+            const hash = window.location.hash.substring(1);
+            if (hash) {
+                showContent(hash);
+            } else {
+                // 如果沒有hash值,顯示默認的第一個分頁
+                showContent(document.querySelector('.content-section').id);
+            }
+        });
+
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('theme-toggle');
+        const root = document.documentElement;
+        
+        if (localStorage.getItem('theme') === 'dark') {
+            root.setAttribute('data-theme', 'dark');
+            themeToggle.textContent = '🌜';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = root.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            root.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeToggle.textContent = newTheme === 'dark' ? '🌜' : '🌞';
+        });
+
+        // Navbar scroll behavior
+        let lastScrollTop = 0;
+        const navbar = document.querySelector('.navbar');
+        
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            if (currentScroll > lastScrollTop) {
+                navbar.style.top = '-80px';
+            } else {
+                navbar.style.top = '0';
+            }
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+        });
+
+        // Last modified date
+        const repoOwner = "xuerowo";
+        const repoName = "myacg";
+        
+        fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/commits`)
+            .then(response => response.json())
+            .then(commits => {
+                if (commits.length > 0) {
+                    const lastCommitDate = new Date(commits[0].commit.committer.date).toLocaleString('zh-TW', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                    });
+                    document.getElementById("lastModified").innerText = `這裡最後打掃過的時間是：${lastCommitDate}`;
+                }
+            });
+    </script>
+</body>
+</html>

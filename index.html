@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.8">
+    <title>二次元作品推薦</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f5f5f5;
+            --text-color: #333;
+            --border-color: #ddd;
+            --background-color: #fff;
+            --dropdown-background: #fff;
+            --dropdown-hover: #f0f0f0;
+        }
+
+        :root[data-theme="dark"] {
+            --primary-color: #64b5f6;
+            --secondary-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --border-color: #333;
+            --background-color: #121212;
+            --dropdown-background: #1a1a1a;
+            --dropdown-hover: #2a2a2a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--secondary-color);
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--background-color);
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 1000;
+            transition: top 0.3s;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links > * {
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* 下拉菜單樣式 */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .dropdown-toggle {
+            cursor: pointer;
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: var(--text-color);
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            width: 100%;
+        }
+
+        .dropdown-toggle:after {
+            content: '▼';
+            font-size: 0.8em;
+            transition: transform 0.3s;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: var(--dropdown-background);
+            min-width: 160px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            border-radius: 4px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 0.8rem 1rem;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: var(--dropdown-hover);
+            color: var(--primary-color);
+        }
+
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown:hover .dropdown-toggle:after {
+            transform: rotate(180deg);
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            color: white;
+            padding: 2rem;
+            margin-top: 60px; /* 為導航欄留出空間 */
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .category-card {
+            background: var(--background-color);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .category-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: transform 0.3s;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(360deg);
+        }
+
+        footer {
+            background: var(--background-color);
+            padding: 2rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .cta-button:hover {
+            background-color: #357ABD;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-links">
+                <a href="index.html" style="color: var(--primary-color)">首頁</a>
+                <div class="dropdown">
+                    <button class="dropdown-toggle">作品推薦</button>
+                    <div class="dropdown-menu">
+                        <a href="acgrecommendations.html#animations" onclick="showContent('animations')">動畫</a>
+                        <a href="acgrecommendations.html#webtoons">網漫</a>
+                        <a href="acgrecommendations.html#lightnovels">輕小說</a>
+                        <a href="acgrecommendations.html#visualnovels">視覺小說</a>
+                    </div>
+                </div>
+                <a href="webtoonstranslate.html">網漫翻譯</a>
+                <a href="commentsection.html">留言區</a>
+            </div>
+            <button class="theme-toggle" id="theme-toggle">🌞</button>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>歡迎來到二次元世界</h1>
+            <p>探索精彩的動畫、網漫、輕小說和視覺小說推薦</p>
+            <a href="#categories" class="cta-button">開始探索</a>
+        </div>
+    </section>
+
+    <section id="categories" class="categories">
+        <div class="category-card">
+            <div class="category-icon">🎬</div>
+            <h2>動畫</h2>
+            <p>精選優質動畫作品推薦，包含日本動畫與中國動畫</p>
+            <a href="acgrecommendations.html#animations" class="cta-button">查看更多</a>
+        </div>
+        <div class="category-card">
+            <div class="category-icon">📚</div>
+            <h2>網漫</h2>
+            <p>熱門網路漫畫推薦，帶你進入精彩的故事世界</p>
+            <a href="acgrecommendations.html#webtoons" class="cta-button">查看更多</a>
+        </div>
+        <div class="category-card">
+            <div class="category-icon">📖</div>
+            <h2>輕小說</h2>
+            <p>精選輕小說作品推薦，豐富你的閱讀生活</p>
+            <a href="acgrecommendations.html#lightnovels" class="cta-button">查看更多</a>
+        </div>
+        <div class="category-card">
+            <div class="category-icon">🎮</div>
+            <h2>視覺小說</h2>
+            <p>優質視覺小說遊戲推薦，體驗互動式劇情</p>
+            <a href="acgrecommendations.html#visualnovels" class="cta-button">查看更多</a>
+        </div>
+    </section>
+
+    <footer>
+        <p>網站由 林雲 製作</p>
+        <p id="lastModified"></p>
+    </footer>
+
+    <script>
+        // 主題切換
+        const themeToggle = document.getElementById('theme-toggle');
+        const root = document.documentElement;
+        
+        // 檢查本地存儲的主題設置
+        if (localStorage.getItem('theme') === 'dark') {
+            root.setAttribute('data-theme', 'dark');
+            themeToggle.textContent = '🌜';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = root.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            root.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeToggle.textContent = newTheme === 'dark' ? '🌜' : '🌞';
+        });
+
+        // 導航欄滾動效果
+        let lastScrollTop = 0;
+        const navbar = document.querySelector('.navbar');
+        
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > lastScrollTop) {
+                navbar.style.top = '-80px';
+            } else {
+                navbar.style.top = '0';
+            }
+            
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+        });
+
+        // 更新最後修改時間
+        const lastModified = new Date(document.lastModified);
+        document.getElementById('lastModified').textContent = 
+            `最後更新：${lastModified.toLocaleString('zh-TW')}`;
+    </script>
+</body>
+</html>
