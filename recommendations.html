@@ -187,45 +187,75 @@
             background-color: var(--background-color);
             box-shadow: var(--card-shadow);
             margin-bottom: 20px;
-            padding: 20px;
-            border-radius: 10px;
-            transition: transform var(--transition-speed);
+            padding: 24px;
+            border-radius: 12px;
+            transition: all var(--transition-speed);
+            gap: 24px;
         }
 
         .container:hover {
             transform: translateY(-5px);
+            box-shadow: var(--card-shadow), 0 8px 16px rgba(0,0,0,0.1);
         }
 
         .container img {
             width: 200px;
-            height: auto;
-            border-radius: 10px;
-            margin-right: 20px;
+            height: 280px;
+            border-radius: 8px;
             object-fit: cover;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
         .content-text {
             flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
         .content-text h2 {
             color: var(--primary-color);
-            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            margin: 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .series-info {
+            font-size: 0.95rem;
+            padding: 8px 12px;
+            background-color: var(--secondary-color);
+            border-radius: 6px;
+            margin-bottom: 4px;
+        }
+
+        .series-description {
+            line-height: 1.7;
+            margin-bottom: 8px;
+            flex-grow: 1;
+        }
+
+        .link-container {
+            display: flex;
+            gap: 12px;
+            margin-top: auto;
         }
 
         .link-style-1 {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 10px 20px;
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 20px;
             background-color: var(--primary-color);
             color: white;
             text-decoration: none;
-            border-radius: 5px;
-            transition: background-color var(--transition-speed);
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            font-weight: 500;
         }
 
         .link-style-1:hover {
             background-color: #357ABD;
+            transform: translateY(-2px);
         }
 
         /* Animation */
@@ -279,12 +309,25 @@
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
-                align-items: center;
+                padding: 16px;
             }
 
             .container img {
-                margin-right: 0;
-                margin-bottom: 1rem;
+                width: 160px;
+                height: 224px;
+                align-self: center;
+            }
+
+            .content-text {
+                gap: 8px;
+            }
+
+            .content-text h2 {
+                text-align: center;
+            }
+
+            .series-info {
+                text-align: center;
             }
         }
 
@@ -324,32 +367,56 @@
             </div>
 
             <div class="container">
-                <img src="https://p2.bahamut.com.tw/B/ACG/c/77/0000076677.JPG">
+                <img src="https://p2.bahamut.com.tw/B/ACG/c/77/0000076677.JPG" alt="為美好的世界獻上祝福!">
                 <div class="content-text">
                     <h2>為美好的世界獻上祝福!</h2>
-                    <p><strong>集數:</strong>本傳第一、二季各10集+OVA1集，第三季共11集，外傳共12集，一部劇場版</p>
-                    <p>從沒想過這個廢到不行的人生，就這樣以廢到不行的方式結束了……廢到連因為痛失愛子、本應傷心欲絕的父母，在聽了死因之後，卻不禁先笑了出來的程度！ 廢到無藥可救的繭居族 佐藤和真，轉生到了跟RPG遊戲畫面一模一樣的異世界，與作為特別附贈品一起同行、智商和運氣都差到教人傻眼地步的女神 阿克婭，姑且組成了一支（看起來）人模人樣的隊伍，引發接二連三的問題！</p>
-                    <a href="https://ani.gamer.com.tw/animeVideo.php?sn=7294" target="_blank" class="link-style-1">連結</a>
+                    <div class="series-info">
+                        <strong>集數:</strong>本傳第一、二季各10集+OVA1集，第三季共11集，外傳共12集，一部劇場版
+                    </div>
+                    <div class="series-description">
+                        從沒想過這個廢到不行的人生，就這樣以廢到不行的方式結束了……廢到連因為痛失愛子、本應傷心欲絕的父母，在聽了死因之後，卻不禁先笑了出來的程度！ 廢到無藥可救的繭居族 佐藤和真，轉生到了跟RPG遊戲畫面一模一樣的異世界，與作為特別附贈品一起同行、智商和運氣都差到教人傻眼地步的女神 阿克婭，姑且組成了一支（看起來）人模人樣的隊伍，引發接二連三的問題！
+                    </div>
+                    <div class="link-container">
+                        <a href="https://ani.gamer.com.tw/animeVideo.php?sn=7294" target="_blank" class="link-style-1">
+                            觀看連結
+                        </a>
+                    </div>
                 </div>
             </div>
 
             <div class="container">
-                <img src="https://p2.bahamut.com.tw/B/ACG/c/36/0000120336.JPG">
+                <img src="https://p2.bahamut.com.tw/B/ACG/c/36/0000120336.JPG" alt="我想成為影之強者！">
                 <div class="content-text">
                     <h2>我想成為影之強者！</h2>
-                    <p><strong>集數:</strong>第一季共20集，第二季共12集</p>
-                    <p>少年席德憧憬著以路人身分隱藏自身力量，不為人知地介入故事，展現實力的「影之強者」。轉生到異世界後，企圖充分享受這種設定的席德，為了擊潰妄想中的敵人「黑暗教團」而暗中大顯身手。然而，這個教團似乎真的存在……？同時，因為他順勢收為部下的少女們「會錯意」，席德在一無所知的狀態下成了真正的「影之強者」，一行人建立起來的「闇影庭園」，將殲滅這世上的黑暗。</p>
-                    <a href="https://ani.gamer.com.tw/animeVideo.php?sn=31622" target="_blank" class="link-style-1">連結</a>
+                    <div class="series-info">
+                        <strong>集數:</strong>集數:第一季共20集，第二季共12集
+                    </div>
+                    <div class="series-description">
+                        少年席德憧憬著以路人身分隱藏自身力量，不為人知地介入故事，展現實力的「影之強者」。轉生到異世界後，企圖充分享受這種設定的席德，為了擊潰妄想中的敵人「黑暗教團」而暗中大顯身手。然而，這個教團似乎真的存在……？同時，因為他順勢收為部下的少女們「會錯意」，席德在一無所知的狀態下成了真正的「影之強者」，一行人建立起來的「闇影庭園」，將殲滅這世上的黑暗。
+                    </div>
+                    <div class="link-container">
+                        <a href="https://ani.gamer.com.tw/animeVideo.php?sn=31622" target="_blank" class="link-style-1">
+                            觀看連結
+                        </a>
+                    </div>
                 </div>
             </div>
 
             <div class="container">
-                <img src="https://p2.bahamut.com.tw/B/ACG/c/45/0000102845.JPG">
+                <img src="https://p2.bahamut.com.tw/B/ACG/c/45/0000102845.JPG" alt="怕痛的我，把防禦力點滿就對了">
                 <div class="content-text">
                     <h2>怕痛的我，把防禦力點滿就對了</h2>
-                    <p><strong>集數:</strong>第一、二季各12集</p>
-                    <p>梅普露缺乏一般遊戲常識，把所有配點都灌到防禦力（VIT）去了。動作緩慢，又不會用魔法，搞得連兔子都耍得她團團轉。『咦，可是完全不會痛耶……而且根本沒受傷？』 　　全點防禦力，使梅普露取得了特殊技能【絕對防禦】，甚至附送一擊必殺的反擊技──？能使任何攻擊打不出效果，以致命施毒技能蹂躪全場的「移動要塞型」新人，毫不覺得自己奇怪地出場走跳嘍！</p>
-                    <a href="https://ani.gamer.com.tw/animeVideo.php?sn=14499" target="_blank" class="link-style-1">連結</a>
+                    <div class="series-info">
+                        <strong>集數:</strong>集數:第一季共20集，第二季共12集
+                    </div>
+                    <div class="series-description">
+                        少年席德憧憬著以路人身分隱藏自身力量，不為人知地介入故事，展現實力的「影之強者」。轉生到異世界後，企圖充分享受這種設定的席德，為了擊潰妄想中的敵人「黑暗教團」而暗中大顯身手。然而，這個教團似乎真的存在……？同時，因為他順勢收為部下的少女們「會錯意」，席德在一無所知的狀態下成了真正的「影之強者」，一行人建立起來的「闇影庭園」，將殲滅這世上的黑暗。
+                    </div>
+                    <div class="link-container">
+                        <a href="https://ani.gamer.com.tw/animeVideo.php?sn=14499" target="_blank" class="link-style-1">
+                            觀看連結
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -366,29 +433,47 @@
             </div>
 
             <div class="container">
-                <img src="https://page-images.kakaoentcdn.com/download/resource?kid=6ssep/hAd4PpwhQ7/g12K1th7rCpGImD7knHMO0&filename=o1/dims/resize/384">
+                <img src="https://page-images.kakaoentcdn.com/download/resource?kid=6ssep/hAd4PpwhQ7/g12K1th7rCpGImD7knHMO0&filename=o1/dims/resize/384" alt="無限魔法師">
                 <div class="content-text">
                     <h2>無限魔法師(92)</h2>
-                    <p>棄養在馬廄,以平民身分長大的希洛涅。<br> 他藉由天生出色的洞察力自學識字,某天來到了城裡,體驗到自己極為好奇的魔法。<br>這使得希洛涅夢想成為魔法師,然而身分的高牆十分殘酷,他在長大成人前就明白了世界的黑暗面....<br> 在這個某些層面上有些扭曲的世界, 他能成為自己夢寐以求的魔法師嗎?</p>
-                    <a href="https://tw.kakaowebtoon.com/content/%E7%84%A1%E9%99%90%E9%AD%94%E6%B3%95%E5%B8%AB/512?tab=episode" target="_blank" class="link-style-1">連結</a>
+                    <div class="series-description">
+                        棄養在馬廄,以平民身分長大的希洛涅。<br> 他藉由天生出色的洞察力自學識字,某天來到了城裡,體驗到自己極為好奇的魔法。<br>這使得希洛涅夢想成為魔法師,然而身分的高牆十分殘酷,他在長大成人前就明白了世界的黑暗面....<br> 在這個某些層面上有些扭曲的世界, 他能成為自己夢寐以求的魔法師嗎?
+                    </div>
+                    <div class="link-container">
+                        <a href="https://tw.kakaowebtoon.com/content/%E7%84%A1%E9%99%90%E9%AD%94%E6%B3%95%E5%B8%AB/512?tab=episode" target="_blank" class="link-style-1">
+                            觀看連結
+                        </a>
+                    </div>
                 </div>
             </div>
 
             <div class="container">
-                <img src="https://image-comic.pstatic.net/webtoon/747269/thumbnail/thumbnail_IMAG21_aabd9952-ff45-47a2-a543-33f19a5c6708.jpg">
+                <img src="https://image-comic.pstatic.net/webtoon/747269/thumbnail/thumbnail_IMAG21_aabd9952-ff45-47a2-a543-33f19a5c6708.jpg" alt="全知讀者視角">
                 <div class="content-text">
                     <h2>全知讀者視角(241)</h2>
-         	        <p>「您收到了主線任務。」 長著角的妖怪，熟悉的人物登場…… 太扯了...這是我讀過的小說劇情！</p>
-         	        <a href="https://www.webtoons.com/zh-hant/fantasy/duzhe/list?title_no=2089" target="_blank" class="link-style-1">連結</a>
+                    <div class="series-description">
+                        「您收到了主線任務。」 長著角的妖怪，熟悉的人物登場…… 太扯了...這是我讀過的小說劇情！
+                    </div>
+                    <div class="link-container">
+         	            <a href="https://www.webtoons.com/zh-hant/fantasy/duzhe/list?title_no=2089" target="_blank" class="link-style-1">
+                            觀看連結
+                        </a>
+                    </div>
                 </div>
             </div>
 
             <div class="container">
-                <img src="https://comicthumb-phinf.pstatic.net/20221026_167/pocket_1666780641540T9FMq_JPEG/%BD%C3%B8%AE%C1%EE_%C7%A5%C1%F6_690x1000.jpg">
+                <img src="https://comicthumb-phinf.pstatic.net/20221026_167/pocket_1666780641540T9FMq_JPEG/%BD%C3%B8%AE%C1%EE_%C7%A5%C1%F6_690x1000.jpg" alt="遊戲最強破壞玩家">
                 <div class="content-text">
                     <h2>遊戲最強破壞玩家(115)</h2>
-         	        <p>世界上最有可能性的遊戲。 亞進電子、西里科夫工業公司、阿爾戈斯集團。由世界頂尖的大企業合作推出的人類史上首款虛擬現實遊戲《阿爾卡迪亞》。 【歡迎來到幻想的世界，阿爾卡迪亞。】 這裡充滿了各式各樣的瘋狂趣事， 現在馬上開始體驗！</p>
-         	        <a href="https://www.webtoons.com/zh-hant/fantasy/worlds-strongest-troll/list?title_no=5226" target="_blank" class="link-style-1">連結</a>
+                    <div class="series-description">
+                        世界上最有可能性的遊戲。 亞進電子、西里科夫工業公司、阿爾戈斯集團。由世界頂尖的大企業合作推出的人類史上首款虛擬現實遊戲《阿爾卡迪亞》。 【歡迎來到幻想的世界，阿爾卡迪亞。】 這裡充滿了各式各樣的瘋狂趣事， 現在馬上開始體驗！
+                    </div>
+                    <div class="link-container">
+         	            <a href="https://www.webtoons.com/zh-hant/fantasy/worlds-strongest-troll/list?title_no=5226" target="_blank" class="link-style-1">
+                            觀看連結
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -404,14 +489,16 @@
             </div>
 
             <div class="container">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNMvZifiesrfVz-YthfhXQtTVV2eMjmdXSGQ&s">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNMvZifiesrfVz-YthfhXQtTVV2eMjmdXSGQ&s" alt="在朋友背後與你悄悄牽手。談著無法言說的戀愛">
                 <div class="content-text">
                     <h2>在朋友背後與你悄悄牽手。談著無法言說的戀愛</h2>
-                    <p>青春可不只是戀愛。但是――。唯獨這份戀情不願被人知曉。<br>
-                    「青春＝交女朋友？再怎麼說那也不是青春的全部吧」<br>
-                    對戀愛有心理陰影的高中生，古賀純也認為比起戀愛，和朋友們在喧鬧中促進友誼才是青春。<br>
-                    在他看來，親密的五人男女時而仰望美麗的星空，時而在家庭餐廳暢談至天明的當下，才是包括自己在內大家的青春。<br>
-                    ――可是，為什麼我們面對身為朋友的對方，卻還是墜入愛河了呢。明明可能沒辦法維持一直以來的關係了。</p>
+                    <div class="series-description">
+                        青春可不只是戀愛。但是――。唯獨這份戀情不願被人知曉。<br>
+                        「青春＝交女朋友？再怎麼說那也不是青春的全部吧」<br>
+                        對戀愛有心理陰影的高中生，古賀純也認為比起戀愛，和朋友們在喧鬧中促進友誼才是青春。<br>
+                        在他看來，親密的五人男女時而仰望美麗的星空，時而在家庭餐廳暢談至天明的當下，才是包括自己在內大家的青春。<br>
+                        ――可是，為什麼我們面對身為朋友的對方，卻還是墜入愛河了呢。明明可能沒辦法維持一直以來的關係了。
+                    </div>
                 </div>
             </div>
 
@@ -423,11 +510,22 @@
             <h1>視覺小說推薦一覽</h1>
 
             <div class="container">
-                <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2593370/header_tchinese.jpg?t=1729664615">
+                <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2593370/header_tchinese.jpg?t=1729664615" alt=">餓殍：明末千里行">
                 <div class="content-text">
                     <h2>餓殍：明末千里行</h2>
-                    <p>明末崇禎五年（1632年），盜匪良和同夥接了人牙子的委託。<br>良需將四名小女孩從華州城運至洛陽城。<br>路途千里，一行人將走過華州、閿鄉、陝州、最終抵達洛陽。<br>起初，良以為被他運送的女孩會被賣到富人家裡作養女。<br>行至途中，名為"穗"的女孩告知良此次運送的"真相"。<br>原來，買走女孩的是一頭修行千年的豚妖。</p>
-                    <a href="https://store.steampowered.com/app/2593370/_/?l=tchinese" target="_blank" class="link-style-1">連結</a>
+                    <div class="series-description">
+                        明末崇禎五年（1632年），盜匪良和同夥接了人牙子的委託。<br>
+                        良需將四名小女孩從華州城運至洛陽城。<br>
+                        路途千里，一行人將走過華州、閿鄉、陝州、最終抵達洛陽。<br>
+                        起初，良以為被他運送的女孩會被賣到富人家裡作養女。<br>
+                        行至途中，名為"穗"的女孩告知良此次運送的"真相"。<br>
+                        原來，買走女孩的是一頭修行千年的豚妖。
+                    </div>
+                    <div class="link-container">
+                        <a href="https://store.steampowered.com/app/2593370/_/?l=tchinese" target="_blank" class="link-style-1">
+                            購買連結
+                        </a>
+                    </div>
                 </div>
             </div>
 
