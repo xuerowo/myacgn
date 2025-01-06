@@ -1,24 +1,24 @@
 {
     "chapters": [
       {
-        "number": 45,
+        "number": 42,
+        "date": "2025-01-05",
+        "total": 9
+      },
+      {
+        "number": 43,
         "date": "2025-01-05",
         "total": 13
       },
       {
         "number": 44,
-        "date": "2025-01-05",
+        "date": "2025-01-04",
         "total": 10
       },
       {
-        "number": 43,
+        "number": 45,
         "date": "2025-01-04",
         "total": 13
-      },
-      {
-        "number": 42,
-        "date": "2025-01-04",
-        "total": 9
       }
     ]
   }
