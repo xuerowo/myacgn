@@ -191,6 +191,7 @@
             border-radius: 12px;
             transition: all var(--transition-speed);
             gap: 24px;
+            min-height: 320px;
         }
 
         .container:hover {
@@ -200,7 +201,7 @@
 
         .container img {
             width: 200px;
-            height: 280px;
+            height: auto;
             border-radius: 8px;
             object-fit: cover;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -211,6 +212,8 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
+            height: 100%; 
+            min-height: 280px;
         }
 
         .content-text h2 {
@@ -236,9 +239,8 @@
         }
 
         .link-container {
-            display: flex;
-            gap: 12px;
             margin-top: auto;
+            padding-top: 12px;
         }
 
         .link-style-1 {
@@ -310,6 +312,7 @@
             .container {
                 flex-direction: column;
                 padding: 16px;
+                min-height: auto;
             }
 
             .container img {
@@ -320,6 +323,7 @@
 
             .content-text {
                 gap: 8px;
+                min-height: auto;
             }
 
             .content-text h2 {
@@ -329,8 +333,12 @@
             .series-info {
                 text-align: center;
             }
-        }
 
+            .link-container {
+                justify-content: center;  /* 在手機版讓按鈕置中 */
+                margin-top: 16px;
+            }      
+        }
     </style>
 </head>
 <body>
