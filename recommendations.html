@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=0.7">
+    <meta name="viewport" content="width=device-width, initial-scale=0.8">
     <title>二次元作品推薦</title>
     <link rel="icon" href="images/favicon.jpg" type="image/jpg">
     <style>
@@ -435,8 +435,8 @@
     </div>
 
     <footer>
-        <h4 id="lastModified"></h4>
-        <h6>網頁由 林雲 製作</h6>
+        <p>網頁由 林雲 製作</p>
+        <p id="lastModified"></p>
     </footer>
 
     <script>
@@ -523,26 +523,11 @@
             }
             lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
         });
-
-        // Last modified date
-        const repoOwner = "xuerowo";
-        const repoName = "myacg";
         
-        fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/commits`)
-            .then(response => response.json())
-            .then(commits => {
-                if (commits.length > 0) {
-                    const lastCommitDate = new Date(commits[0].commit.committer.date).toLocaleString('zh-TW', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit',
-                    });
-                    document.getElementById("lastModified").innerText = `這裡最後打掃過的時間是：${lastCommitDate}`;
-                }
-            });
+        // 更新最後修改時間
+        const lastModified = new Date(document.lastModified);
+        document.getElementById('lastModified').textContent = 
+            `最後更新：${lastModified.toLocaleString('zh-TW')}`;
     </script>
 </body>
 </html>
