@@ -439,10 +439,7 @@
                     
                     // 如果有保存的位置，恢復到該位置
                     if (savedPosition !== undefined) {
-                        // 使用 setTimeout 確保在頁面完全加載後再滾動
-                        setTimeout(() => {
-                            window.scrollTo(0, parseInt(savedPosition));
-                        }, 100);
+                        window.scrollTo(0, parseInt(savedPosition));
                     }
                 },
 
