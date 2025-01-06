@@ -155,7 +155,6 @@
             transform: rotate(180deg);
         }
 
-        /* 原有的卡片网格样式 */
         .manga-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -280,22 +279,23 @@
         const STORAGE_KEYS = {
             READING_PROGRESS: 'reading_progress',
             BOOKMARKS: 'manga_bookmarks',
-            DARK_MODE: 'dark_mode'
+            THEME: 'theme'
         };
 
         createApp({
             data() {
                 return {
                     mangaList: [],
-                    isDarkMode: localStorage.getItem(STORAGE_KEYS.DARK_MODE) === 'true',
+                    isDarkMode: localStorage.getItem(STORAGE_KEYS.THEME) === 'dark',
                     bookmarks: JSON.parse(localStorage.getItem(STORAGE_KEYS.BOOKMARKS) || '[]'),
                     readingProgress: JSON.parse(localStorage.getItem(STORAGE_KEYS.READING_PROGRESS) || '{}')
                 }
             },
             watch: {
                 isDarkMode(newValue) {
-                    document.documentElement.setAttribute('data-theme', newValue ? 'dark' : 'light');
-                    localStorage.setItem(STORAGE_KEYS.DARK_MODE, newValue);
+                    const theme = newValue ? 'dark' : 'light';
+                    document.documentElement.setAttribute('data-theme', theme);
+                    localStorage.setItem(STORAGE_KEYS.THEME, theme);  // 存儲 'dark' 或 'light'
                 }
             },
             methods: {
@@ -339,9 +339,12 @@
             },
             mounted() {
                 this.fetchMangaList();
-                document.documentElement.setAttribute('data-theme', this.isDarkMode ? 'dark' : 'light');
+                // 在掛載時設置初始主題
+                const theme = localStorage.getItem(STORAGE_KEYS.THEME) || 'light';
+                document.documentElement.setAttribute('data-theme', theme);
+                this.isDarkMode = theme === 'dark';
 
-                // 导航栏滚动效果
+                // 導航欄滾動效果
                 let lastScrollTop = 0;
                 const navbar = document.querySelector('.navbar');
                 
