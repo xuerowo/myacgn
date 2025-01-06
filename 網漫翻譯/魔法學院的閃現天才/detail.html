@@ -265,7 +265,7 @@
 
         const STORAGE_KEYS = {
             READ_CHAPTERS: 'read_chapters',
-            DARK_MODE: 'dark_mode'
+            THEME: 'theme'
         };
 
         const { createApp } = Vue;
@@ -276,13 +276,14 @@
                     manga: MANGA_INFO,
                     chapters: [],
                     readChapters: JSON.parse(localStorage.getItem(STORAGE_KEYS.READ_CHAPTERS) || '{}'),
-                    isDarkMode: localStorage.getItem(STORAGE_KEYS.DARK_MODE) === 'true'
+                    isDarkMode: localStorage.getItem(STORAGE_KEYS.THEME) === 'dark'
                 }
             },
             watch: {
                 isDarkMode(newValue) {
-                    document.documentElement.setAttribute('data-theme', newValue ? 'dark' : 'light');
-                    localStorage.setItem(STORAGE_KEYS.DARK_MODE, newValue);
+                    const theme = newValue ? 'dark' : 'light';
+                    document.documentElement.setAttribute('data-theme', theme);
+                    localStorage.setItem(STORAGE_KEYS.THEME, theme);
                 }
             },
             methods: {
@@ -308,7 +309,10 @@
             },
             mounted() {
                 this.fetchChapters();
-                document.documentElement.setAttribute('data-theme', this.isDarkMode ? 'dark' : 'light');
+                // 在掛載時設置初始主題
+                const theme = localStorage.getItem(STORAGE_KEYS.THEME) || 'light';
+                document.documentElement.setAttribute('data-theme', theme);
+                this.isDarkMode = theme === 'dark';
             }
         }).mount('#app');
     </script>
