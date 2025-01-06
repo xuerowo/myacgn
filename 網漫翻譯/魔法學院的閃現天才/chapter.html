@@ -395,58 +395,62 @@
                     }
                 },
                 saveScrollPosition() {
-                    sessionStorage.setItem(STORAGE_KEYS.SCROLL_POSITION, window.pageYOffset);
+                    // 獲取當前所有章節的滾動位置
+                    const scrollPositions = JSON.parse(sessionStorage.getItem(STORAGE_KEYS.SCROLL_POSITION) || '{}');
+                    // 更新當前章節的滾動位置
+                    scrollPositions[this.currentChapter] = window.pageYOffset;
+                    // 保存回 sessionStorage
+                    sessionStorage.setItem(STORAGE_KEYS.SCROLL_POSITION, JSON.stringify(scrollPositions));
                 },
+
                 restoreScrollPosition() {
-                    const savedPosition = sessionStorage.getItem(STORAGE_KEYS.SCROLL_POSITION);
-                    if (savedPosition) {
+                    // 獲取所有章節的滾動位置
+                    const scrollPositions = JSON.parse(sessionStorage.getItem(STORAGE_KEYS.SCROLL_POSITION) || '{}');
+                    // 獲取當前章節的滾動位置
+                    const savedPosition = scrollPositions[this.currentChapter];
+                    // 如果有保存的位置，恢復到該位置
+                    if (savedPosition !== undefined) {
                         window.scrollTo(0, parseInt(savedPosition));
                     }
                 },
-                toggleChapterMenu() {
-                    this.showChapterMenu = !this.showChapterMenu;
-                },
+
                 goToChapter(chapter) {
                     if (chapter !== this.currentChapter) {
-                        // 保存當前滾動位置
+                        // 保存當前章節的滾動位置
                         this.saveScrollPosition();
                         window.location.href = `chapter.html?chapter=${chapter}`;
                     }
                     this.showChapterMenu = false;
                 },
-                goToManga() {
-                    window.location.href = 'detail.html';
-                },
+
                 goToNext() {
                     if (this.hasNext) {
-                        // 找出所有比當前章節號大的章節
                         const nextChapters = this.allChapters.filter(
                             chapter => chapter.number > this.currentChapter
                         );
-                        // 取最小的一個（最接近當前章節的下一話）
                         const nextChapter = nextChapters.reduce((min, chapter) => 
                             chapter.number < min.number ? chapter : min
                         );
-                        // 保存當前滾動位置
+                        // 保存當前章節的滾動位置
                         this.saveScrollPosition();
                         window.location.href = `chapter.html?chapter=${nextChapter.number}`;
                     }
                 },
+
                 goToPrevious() {
                     if (this.hasPrevious) {
-                        // 找出所有比當前章節號小的章節
                         const prevChapters = this.allChapters.filter(
                             chapter => chapter.number < this.currentChapter
                         );
-                        // 取最大的一個（最接近當前章節的上一話）
                         const prevChapter = prevChapters.reduce((max, chapter) => 
                             chapter.number > max.number ? chapter : max
                         );
-                        // 保存當前滾動位置
+                        // 保存當前章節的滾動位置
                         this.saveScrollPosition();
                         window.location.href = `chapter.html?chapter=${prevChapter.number}`;
                     }
                 },
+
                 handleScroll() {
                     clearTimeout(this.scrollTimeout);
 
@@ -461,6 +465,8 @@
                     }
 
                     this.lastScrollTop = st;
+                    
+                    // 保存當前章節的滾動位置
                     this.saveScrollPosition();
 
                     this.scrollTimeout = setTimeout(() => {
