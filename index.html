@@ -14,6 +14,8 @@
             --background-color: #fff;
             --dropdown-background: #fff;
             --dropdown-hover: #f0f0f0;
+            --card-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            --transition-speed: 0.3s;
         }
 
         :root[data-theme="dark"] {
@@ -24,13 +26,14 @@
             --background-color: #121212;
             --dropdown-background: #1a1a1a;
             --dropdown-hover: #2a2a2a;
+            --card-shadow: 0 4px 8px rgba(255,255,255,0.1);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            transition: background-color 0.3s, color 0.3s;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
         }
 
         body {
@@ -40,6 +43,7 @@
             background-color: var(--secondary-color);
         }
 
+        /* 導航欄樣式 */
         .navbar {
             position: fixed;
             top: 0;
@@ -148,60 +152,230 @@
             transform: rotate(180deg);
         }
 
+        /* Hero 區域樣式 */
         .hero {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            background: linear-gradient(45deg, #6a11cb, #2575fc);
-            color: white;
-            padding: 2rem;
-            margin-top: 60px; /* 為導航欄留出空間 */
-        }
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    margin-top: 60px;
+}
 
-        .hero-content {
-            max-width: 800px;
-        }
+/* 主背景漸層動畫 */
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(120deg, #4e54c8, #8f94fb, #4e54c8);
+    background-size: 300% 300%;
+    animation: gradientBG 15s ease infinite;
+    opacity: 0.9;
+    z-index: 1;
+}
 
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-        }
+/* 光效動畫 */
+.hero::after {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 60%);
+    animation: shine 20s linear infinite;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+}
 
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-        }
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
 
+@keyframes shine {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.hero-content {
+    max-width: 800px;
+    position: relative;
+    z-index: 3;
+    color: white;
+    padding: 2.5rem;
+}
+
+.hero h1 {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    animation: fadeInUp 1s ease-out;
+    letter-spacing: 2px;
+}
+
+.hero p {
+    font-size: 1.4rem;
+    margin-bottom: 2.5rem;
+    opacity: 0.95;
+    animation: fadeInUp 1s ease-out 0.3s both;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.1);
+}
+
+.hero .cta-button {
+    animation: fadeInUp 1s ease-out 0.6s both;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+        /* 分類卡片樣式 */
         .categories {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            padding: 4rem 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            padding: 6rem 2rem;
             max-width: 1200px;
             margin: 0 auto;
         }
 
         .category-card {
             background: var(--background-color);
-            border-radius: 10px;
-            padding: 2rem;
+            border-radius: 16px;
+            padding: 2.5rem;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
         }
 
         .category-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
         }
 
         .category-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
             color: var(--primary-color);
+            transition: transform 0.3s ease;
         }
 
+        .category-card:hover .category-icon {
+            transform: scale(1.1);
+        }
+
+        /* AI 作品展示區域樣式 */
+        .ai-works {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto 4rem;
+            background: var(--background-color);
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .section-title {
+            text-align: center;
+            color: var(--text-color);
+            margin-bottom: 3rem;
+            font-size: 2.5rem;
+        }
+
+        .work-icon {
+            font-size: 4rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .works-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2.5rem;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .work-card {
+            background: var(--background-color);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .work-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .work-card:hover .work-icon {
+            transform: scale(1.1);
+        }
+
+        .work-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .work-content {
+            padding: 1.5rem;
+        }
+
+        .work-title {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .work-description {
+            color: var(--text-color);
+            opacity: 0.8;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        /* 按鈕樣式 */
+        .cta-button, .work-link {
+            display: inline-flex;
+            align-items: center;
+            padding: 1rem 2.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .cta-button:hover, .work-link:hover {
+            background-color: #357ABD;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .work-link {
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+        }
+
+        /* 主題切換按鈕 */
         .theme-toggle {
             background: none;
             border: none;
@@ -216,25 +390,68 @@
             transform: rotate(360deg);
         }
 
+        /* 頁腳樣式 */
         footer {
             background: var(--background-color);
             padding: 2rem;
             text-align: center;
-            margin-top: 4rem;
+            color: var(--text-color);
         }
 
-        .cta-button {
-            display: inline-block;
-            padding: 1rem 2rem;
-            background-color: var(--primary-color);
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+    
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .categories {
+                padding: 4rem 1rem;
+                gap: 1.5rem;
+            }
+            
+            .category-card {
+                padding: 2rem;
+            }
+
+            .ai-works {
+                padding: 3rem 1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .works-grid {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+            }
         }
 
-        .cta-button:hover {
-            background-color: #357ABD;
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero-content {
+                padding: 1.5rem;
+            }
+            
+            .category-card {
+                padding: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .work-card {
+                margin: 0 auto;
+                max-width: 300px;
+            }
         }
     </style>
 </head>
@@ -246,7 +463,7 @@
                 <div class="dropdown">
                     <button class="dropdown-toggle">推薦</button>
                     <div class="dropdown-menu">
-                        <a href="recommendations.html#animations" onclick="showContent('animations')">動畫</a>
+                        <a href="recommendations.html#animations">動畫</a>
                         <a href="recommendations.html#webtoons">網漫</a>
                         <a href="recommendations.html#lightnovels">輕小說</a>
                         <a href="recommendations.html#visualnovels">視覺小說</a>
@@ -294,13 +511,40 @@
         </div>
     </section>
 
+    <section class="ai-works">
+        <h2 class="section-title">我的 AI 創作作品</h2>
+        <div class="works-grid">
+            <div class="work-card">
+                <div class="work-icon">📱</div>
+                <div class="work-content">
+                    <h3 class="work-title">輕小說閱讀 App</h3>
+                    <p class="work-description">專為閱讀 AI 輔助翻譯的輕小說開發的手機應用。使用 Claude 3.5 Sonnet 進行翻譯並整合到 App 中，提供流暢的閱讀體驗。支援離線閱讀、進度同步、書籤等功能。</p>
+                    <a href="https://expo.dev/artifacts/eas/66oSmLjwfUEx3zGuZSRQ72.apk" target="_blank" class="work-link">
+                        下載 App
+                    </a>
+                </div>
+            </div>
+            
+            <div class="work-card">
+                <div class="work-icon">🎵</div>
+                <div class="work-content">
+                    <h3 class="work-title">我的 AI 歌曲創作</h3>
+                    <p class="work-description">與 Claude 3.5 Sonnet 合作創作歌詞，再通過 Suno AI 製作成完整歌曲。展現 AI 輔助音樂創作的無限可能。</p>
+                    <a href="https://suno.com/@xuerowo" target="_blank" class="work-link">
+                        聆聽作品
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>網頁由林雲與 Claude AI 合作製作</p>
+        <p id="lastModified"></p>
+    </footer>
+
     <script>
-
-        // 立即設置初始主題
-        const initialTheme = localStorage.getItem('theme') === 'dark' ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', initialTheme);
-
-        // 主題切換
+        // 主題切換功能
         const themeToggle = document.getElementById('theme-toggle');
         const root = document.documentElement;
         
@@ -335,6 +579,10 @@
             lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
         });
 
+        // 更新最後修改時間
+        const lastModified = new Date(document.lastModified);
+        document.getElementById('lastModified').textContent = 
+            `最後更新：${lastModified.toLocaleString('zh-TW')}`;
     </script>
 </body>
 </html>
