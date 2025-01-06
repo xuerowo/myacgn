@@ -161,6 +161,7 @@
 
         .official-link:hover {
             background: #357abd;
+            color: #fff;
         }
 
         .chapter-list {
@@ -174,9 +175,12 @@
             background: var(--secondary-color);
             padding: 1rem;
             border-radius: 4px;
-            text-align: center;
+            text-align: left;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
         }
 
         .chapter-item.read {
@@ -186,6 +190,24 @@
         .chapter-item:hover {
             background: var(--primary-color);
             color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .chapter-title {
+            font-weight: 500;
+        }
+
+        .chapter-date {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        :root[data-theme="dark"] .chapter-date {
+            color: #999;
+        }
+
+        .chapter-item:hover .chapter-date {
+            color: rgba(255, 255, 255, 0.8);
         }
 
         @media (max-width: 768px) {
@@ -239,12 +261,13 @@
                     </div>
                 </div>
                 <div class="chapter-list">
-                    <div v-for="chapter in chapters" 
-                         :key="chapter"
+                    <div v-for="chapter in chaptersWithDates" 
+                         :key="chapter.number"
                          class="chapter-item"
-                         :class="{ read: isChapterRead(chapter) }"
-                         @click="goToChapter(chapter)">
-                        第{{ chapter }}話
+                         :class="{ read: isChapterRead(chapter.number) }"
+                         @click="goToChapter(chapter.number)">
+                        <div class="chapter-title">第{{ chapter.number }}話</div>
+                        <div class="chapter-date">{{ formatDate(chapter.date) }}</div>
                     </div>
                 </div>
             </div>
@@ -275,8 +298,17 @@
                 return {
                     manga: MANGA_INFO,
                     chapters: [],
+                    chapterDates: {},
                     readChapters: JSON.parse(localStorage.getItem(STORAGE_KEYS.READ_CHAPTERS) || '{}'),
                     isDarkMode: localStorage.getItem(STORAGE_KEYS.THEME) === 'dark'
+                }
+            },
+            computed: {
+                chaptersWithDates() {
+                    return this.chapters.map(chapter => ({
+                        number: chapter,
+                        date: this.chapterDates[chapter]?.date || ''
+                    })).sort((a, b) => b.number - a.number); // 按章節號降序排列
                 }
             },
             watch: {
@@ -287,13 +319,28 @@
                 }
             },
             methods: {
-                async fetchChapters() {
+                formatDate(dateStr) {
+                    if (!dateStr) return '';
+                    const date = new Date(dateStr);
+                    return date.toLocaleDateString('zh-TW', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit'
+                    }).replace(/\//g, '-');
+                },
+                async fetchChapterData() {
                     try {
-                        const response = await fetch('chapters.json');
-                        const data = await response.json();
-                        this.chapters = data.chapters.sort((a, b) => a - b);
+                        // 獲取章節列表
+                        const chaptersResponse = await fetch('chapters.json');
+                        const chaptersData = await chaptersResponse.json();
+                        this.chapters = chaptersData.chapters;
+
+                        // 獲取更新日期資料
+                        const datesResponse = await fetch('chapter-dates.json');
+                        const datesData = await datesResponse.json();
+                        this.chapterDates = datesData.chapters;
                     } catch (error) {
-                        console.error('讀取章節清單失敗:', error);
+                        console.error('讀取章節資料失敗:', error);
                     }
                 },
                 goHome() {
@@ -308,7 +355,7 @@
                 }
             },
             mounted() {
-                this.fetchChapters();
+                this.fetchChapterData();
                 // 在掛載時設置初始主題
                 const theme = localStorage.getItem(STORAGE_KEYS.THEME) || 'light';
                 document.documentElement.setAttribute('data-theme', theme);
