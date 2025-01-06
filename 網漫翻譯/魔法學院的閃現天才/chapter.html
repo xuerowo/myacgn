@@ -6,7 +6,6 @@
     <title>閱讀章節 - 魔法學院的閃現天才 - 網漫翻譯</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js"></script>
     <style>
-        /* 保留原有的所有樣式 */
         :root {
             --primary-color: #4a90e2;
             --secondary-color: #f5f5f5;
@@ -336,16 +335,12 @@
             },
             computed: {
                 hasNext() {
-                    const currentIndex = this.allChapters.findIndex(
-                        chapter => chapter.number === this.currentChapter
-                    );
-                    return currentIndex < this.allChapters.length - 1;
+                    // 檢查是否有章節號比當前大的章節
+                    return this.allChapters.some(chapter => chapter.number > this.currentChapter);
                 },
                 hasPrevious() {
-                    const currentIndex = this.allChapters.findIndex(
-                        chapter => chapter.number === this.currentChapter
-                    );
-                    return currentIndex > 0;
+                    // 檢查是否有章節號比當前小的章節
+                    return this.allChapters.some(chapter => chapter.number < this.currentChapter);
                 }
             },
             watch: {
@@ -424,10 +419,14 @@
                 },
                 goToNext() {
                     if (this.hasNext) {
-                        const currentIndex = this.allChapters.findIndex(
-                            chapter => chapter.number === this.currentChapter
+                        // 找出所有比當前章節號大的章節
+                        const nextChapters = this.allChapters.filter(
+                            chapter => chapter.number > this.currentChapter
                         );
-                        const nextChapter = this.allChapters[currentIndex + 1];
+                        // 取最小的一個（最接近當前章節的下一話）
+                        const nextChapter = nextChapters.reduce((min, chapter) => 
+                            chapter.number < min.number ? chapter : min
+                        );
                         // 保存當前滾動位置
                         this.saveScrollPosition();
                         window.location.href = `chapter.html?chapter=${nextChapter.number}`;
@@ -435,10 +434,14 @@
                 },
                 goToPrevious() {
                     if (this.hasPrevious) {
-                        const currentIndex = this.allChapters.findIndex(
-                            chapter => chapter.number === this.currentChapter
+                        // 找出所有比當前章節號小的章節
+                        const prevChapters = this.allChapters.filter(
+                            chapter => chapter.number < this.currentChapter
                         );
-                        const prevChapter = this.allChapters[currentIndex - 1];
+                        // 取最大的一個（最接近當前章節的上一話）
+                        const prevChapter = prevChapters.reduce((max, chapter) => 
+                            chapter.number > max.number ? chapter : max
+                        );
                         // 保存當前滾動位置
                         this.saveScrollPosition();
                         window.location.href = `chapter.html?chapter=${prevChapter.number}`;
