@@ -6,6 +6,7 @@
     <title>閱讀章節 - 魔法學院的閃現天才 - 網漫翻譯</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js"></script>
     <style>
+        /* 保留原有的所有樣式 */
         :root {
             --primary-color: #4a90e2;
             --secondary-color: #f5f5f5;
@@ -159,6 +160,9 @@
             border-radius: 4px;
             color: white;
             margin-bottom: 0.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
         }
 
         .chapter-menu-item:hover {
@@ -171,6 +175,11 @@
 
         .chapter-menu-item.read {
             opacity: 0.7;
+        }
+
+        .chapter-date {
+            font-size: 0.85rem;
+            opacity: 0.8;
         }
 
         .nav-controls {
@@ -262,14 +271,15 @@
             </div>
             <div class="chapter-menu-list">
                 <div v-for="chapter in allChapters" 
-                     :key="chapter"
+                     :key="chapter.number"
                      class="chapter-menu-item"
                      :class="{
-                         current: chapter === currentChapter,
-                         read: isChapterRead(chapter)
+                         current: chapter.number === currentChapter,
+                         read: isChapterRead(chapter.number)
                      }"
-                     @click="goToChapter(chapter)">
-                    第{{ chapter }}話
+                     @click="goToChapter(chapter.number)">
+                    <div>第{{ chapter.number }}話</div>
+                    <div class="chapter-date">{{ formatDate(chapter.date) }}</div>
                 </div>
             </div>
         </div>
@@ -318,7 +328,6 @@
                     lastScrollTop: 0,
                     scrollTimeout: null,
                     loading: true,
-                    chaptersData: null,
                     loadedImages: 0,
                     showChapterMenu: false,
                     allChapters: [],
@@ -327,15 +336,15 @@
             },
             computed: {
                 hasNext() {
-                    // 找到當前章節在 allChapters 中的位置
-                    const currentIndex = this.allChapters.indexOf(this.currentChapter);
-                    // 如果不是最後一章就可以去下一話
+                    const currentIndex = this.allChapters.findIndex(
+                        chapter => chapter.number === this.currentChapter
+                    );
                     return currentIndex < this.allChapters.length - 1;
                 },
                 hasPrevious() {
-                    // 找到當前章節在 allChapters 中的位置
-                    const currentIndex = this.allChapters.indexOf(this.currentChapter);
-                    // 如果不是第一章就可以去上一話
+                    const currentIndex = this.allChapters.findIndex(
+                        chapter => chapter.number === this.currentChapter
+                    );
                     return currentIndex > 0;
                 }
             },
@@ -347,23 +356,31 @@
                 }
             },
             methods: {
+                formatDate(dateStr) {
+                    if (!dateStr) return '';
+                    const date = new Date(dateStr);
+                    return date.toLocaleDateString('zh-TW', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit'
+                    }).replace(/\//g, '-');
+                },
                 async loadChapterData() {
                     try {
-                        if (!this.chaptersData) {
-                            const response = await fetch('images.json');
-                            this.chaptersData = await response.json();
-                            this.allChapters = Object.keys(this.chaptersData)
-                                .map(Number)
-                                .sort((a, b) => a - b);
-                        }
+                        const response = await fetch('chapters.json');
+                        const data = await response.json();
+                        this.allChapters = data.chapters.sort((a, b) => b.number - a.number);
 
-                        const chapterInfo = this.chaptersData[this.currentChapter];
-                        if (!chapterInfo) {
+                        const currentChapterData = this.allChapters.find(
+                            chapter => chapter.number === this.currentChapter
+                        );
+
+                        if (!currentChapterData) {
                             throw new Error('找不到此章節');
                         }
 
                         this.pages = Array.from(
-                            { length: chapterInfo.total },
+                            { length: currentChapterData.total },
                             (_, i) => `${this.currentChapter}/${i + 1}.jpg`
                         );
 
@@ -406,18 +423,22 @@
                 },
                 goToNext() {
                     if (this.hasNext) {
-                        const currentIndex = this.allChapters.indexOf(this.currentChapter);
+                        const currentIndex = this.allChapters.findIndex(
+                            chapter => chapter.number === this.currentChapter
+                        );
                         const nextChapter = this.allChapters[currentIndex + 1];
                         sessionStorage.removeItem(STORAGE_KEYS.SCROLL_POSITION);
-                        window.location.href = `chapter.html?chapter=${nextChapter}`;
+                        window.location.href = `chapter.html?chapter=${nextChapter.number}`;
                     }
                 },
                 goToPrevious() {
                     if (this.hasPrevious) {
-                        const currentIndex = this.allChapters.indexOf(this.currentChapter);
+                        const currentIndex = this.allChapters.findIndex(
+                            chapter => chapter.number === this.currentChapter
+                        );
                         const prevChapter = this.allChapters[currentIndex - 1];
                         sessionStorage.removeItem(STORAGE_KEYS.SCROLL_POSITION);
-                        window.location.href = `chapter.html?chapter=${prevChapter}`;
+                        window.location.href = `chapter.html?chapter=${prevChapter.number}`;
                     }
                 },
                 handleScroll() {
@@ -478,6 +499,10 @@
 
                 // 設置事件監聽
                 window.addEventListener('scroll', this.handleScroll);
+            },
+            unmounted() {
+                // 移除事件監聽
+                window.removeEventListener('scroll', this.handleScroll);
             }
         }).mount('#app');
     </script>
