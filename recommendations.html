@@ -94,22 +94,26 @@
             color: var(--primary-color);
         }
 
-                /* 下拉菜單樣式 */
+        /* 下拉菜單樣式 */
         .dropdown {
             position: relative;
             display: inline-block;
+            min-width: 80px;
+            text-align: center;
         }
 
         .dropdown-toggle {
             cursor: pointer;
-            padding: 0.5rem 1rem;
+            padding: 0.5rem 0;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 0.5rem;
             color: var(--text-color);
             background: none;
             border: none;
             font-size: 1.1rem;
+            width: 100%;
         }
 
         .dropdown-toggle:after {
@@ -284,10 +288,6 @@
             }
         }
 
-        .dropdown-menu a.active {
-            background-color: var(--dropdown-hover);
-            color: var(--primary-color);
-        }
     </style>
 </head>
 <body>
