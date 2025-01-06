@@ -233,11 +233,6 @@
         <div id="disqus_thread"></div>
     </div>
 
-    <footer>
-        <h4 id="lastModified"></h4>
-        <h6>網頁由 林雲 製作</h6>
-    </footer>
-
     <script>
         // Disqus 配置
         (function() {
@@ -279,26 +274,6 @@
             lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
         });
 
-        // 更新最後修改時間
-        const repoOwner = "xuerowo";
-        const repoName = "myacg";
-        const filePath = "commentsection.html";
-        
-        fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/commits?path=${filePath}`)
-            .then(response => response.json())
-            .then(commits => {
-                if (commits.length > 0) {
-                    const lastCommitDate = new Date(commits[0].commit.committer.date).toLocaleString('zh-TW', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit',
-                    });
-                    document.getElementById("lastModified").innerText = `這裡最後打掃過的時間是：${lastCommitDate}`;
-                }
-            });
     </script>
     <script id="dsq-count-scr" src="//https-xuerowo-github-io-myacg-commentsection-html.disqus.com/count.js" async></script>
 </body>
