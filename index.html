@@ -243,7 +243,7 @@
             <div class="nav-links">
                 <a href="index.html" style="color: var(--primary-color)">首頁</a>
                 <div class="dropdown">
-                    <button class="dropdown-toggle">作品推薦</button>
+                    <button class="dropdown-toggle">推薦</button>
                     <div class="dropdown-menu">
                         <a href="recommendations.html#animations" onclick="showContent('animations')">動畫</a>
                         <a href="recommendations.html#webtoons">網漫</a>
@@ -299,6 +299,11 @@
     </footer>
 
     <script>
+
+        // 立即設置初始主題
+        const initialTheme = localStorage.getItem('theme') === 'dark' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', initialTheme);
+
         // 主題切換
         const themeToggle = document.getElementById('theme-toggle');
         const root = document.documentElement;
