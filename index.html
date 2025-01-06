@@ -293,11 +293,6 @@
         </div>
     </section>
 
-    <footer>
-        <p>網站由 林雲 製作</p>
-        <p id="lastModified"></p>
-    </footer>
-
     <script>
 
         // 立即設置初始主題
@@ -339,10 +334,6 @@
             lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
         });
 
-        // 更新最後修改時間
-        const lastModified = new Date(document.lastModified);
-        document.getElementById('lastModified').textContent = 
-            `最後更新：${lastModified.toLocaleString('zh-TW')}`;
     </script>
 </body>
 </html>
