@@ -394,23 +394,54 @@
                         this.restoreScrollPosition();
                     }
                 },
+                goToManga() {
+                    // 清除滾動位置並返回
+                    sessionStorage.removeItem(STORAGE_KEYS.SCROLL_POSITION);
+                    window.location.href = 'detail.html';
+                },
+
+                toggleChapterMenu() {
+                    this.showChapterMenu = !this.showChapterMenu;
+                    // 如果打開目錄，確保控制列顯示
+                    if (this.showChapterMenu) {
+                        this.hideControls = false;
+                    }
+                },
+
                 saveScrollPosition() {
                     // 獲取當前所有章節的滾動位置
+                    const manga = MANGA_INFO.title;
                     const scrollPositions = JSON.parse(sessionStorage.getItem(STORAGE_KEYS.SCROLL_POSITION) || '{}');
+                    
+                    // 確保每部漫畫都有自己的滾動位置記錄
+                    if (!scrollPositions[manga]) {
+                        scrollPositions[manga] = {};
+                    }
+                    
                     // 更新當前章節的滾動位置
-                    scrollPositions[this.currentChapter] = window.pageYOffset;
+                    scrollPositions[manga][this.currentChapter] = window.pageYOffset;
+                    
                     // 保存回 sessionStorage
                     sessionStorage.setItem(STORAGE_KEYS.SCROLL_POSITION, JSON.stringify(scrollPositions));
                 },
 
                 restoreScrollPosition() {
                     // 獲取所有章節的滾動位置
+                    const manga = MANGA_INFO.title;
                     const scrollPositions = JSON.parse(sessionStorage.getItem(STORAGE_KEYS.SCROLL_POSITION) || '{}');
+                    
+                    // 獲取當前漫畫的滾動位置
+                    const mangaPositions = scrollPositions[manga] || {};
+                    
                     // 獲取當前章節的滾動位置
-                    const savedPosition = scrollPositions[this.currentChapter];
+                    const savedPosition = mangaPositions[this.currentChapter];
+                    
                     // 如果有保存的位置，恢復到該位置
                     if (savedPosition !== undefined) {
-                        window.scrollTo(0, parseInt(savedPosition));
+                        // 使用 setTimeout 確保在頁面完全加載後再滾動
+                        setTimeout(() => {
+                            window.scrollTo(0, parseInt(savedPosition));
+                        }, 100);
                     }
                 },
 
