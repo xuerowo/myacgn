@@ -304,7 +304,7 @@
         const STORAGE_KEYS = {
             READ_CHAPTERS: 'read_chapters',
             SCROLL_POSITION: 'chapter_scroll_position',
-            DARK_MODE: 'dark_mode'
+            DARK_MODE: 'theme'
         };
 
         const { createApp } = Vue;
@@ -322,7 +322,7 @@
                     loadedImages: 0,
                     showChapterMenu: false,
                     allChapters: [],
-                    isDarkMode: localStorage.getItem(STORAGE_KEYS.DARK_MODE) === 'true'
+                    isDarkMode: localStorage.getItem(STORAGE_KEYS.DARK_MODE) === 'dark'
                 }
             },
             computed: {
@@ -341,8 +341,9 @@
             },
             watch: {
                 isDarkMode(newValue) {
-                    document.documentElement.setAttribute('data-theme', newValue ? 'dark' : 'light');
-                    localStorage.setItem(STORAGE_KEYS.DARK_MODE, newValue);
+                    const theme = newValue ? 'dark' : 'light';
+                    document.documentElement.setAttribute('data-theme', theme);
+                    localStorage.setItem(STORAGE_KEYS.THEME, theme);
                 }
             },
             methods: {
@@ -456,7 +457,9 @@
             },
             async mounted() {
                 // 設置初始主題
-                document.documentElement.setAttribute('data-theme', this.isDarkMode ? 'dark' : 'light');
+                const theme = localStorage.getItem(STORAGE_KEYS.THEME) || 'light';
+                document.documentElement.setAttribute('data-theme', theme);
+                this.isDarkMode = theme === 'dark';
 
                 // 從 URL 獲取章節號
                 const params = new URLSearchParams(window.location.search);
@@ -475,10 +478,6 @@
 
                 // 設置事件監聽
                 window.addEventListener('scroll', this.handleScroll);
-            },
-            beforeUnmount() {
-                window.removeEventListener('scroll', this.handleScroll);
-                clearTimeout(this.scrollTimeout);
             }
         }).mount('#app');
     </script>
