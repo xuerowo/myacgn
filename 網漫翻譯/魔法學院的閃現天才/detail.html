@@ -298,17 +298,13 @@
                 return {
                     manga: MANGA_INFO,
                     chapters: [],
-                    chapterDates: {},
                     readChapters: JSON.parse(localStorage.getItem(STORAGE_KEYS.READ_CHAPTERS) || '{}'),
                     isDarkMode: localStorage.getItem(STORAGE_KEYS.THEME) === 'dark'
                 }
             },
             computed: {
                 chaptersWithDates() {
-                    return this.chapters.map(chapter => ({
-                        number: chapter,
-                        date: this.chapterDates[chapter]?.date || ''
-                    })).sort((a, b) => b.number - a.number); // 按章節號降序排列
+                    return this.chapters.sort((a, b) => b.number - a.number);
                 }
             },
             watch: {
@@ -330,15 +326,9 @@
                 },
                 async fetchChapterData() {
                     try {
-                        // 獲取章節列表
-                        const chaptersResponse = await fetch('chapters.json');
-                        const chaptersData = await chaptersResponse.json();
-                        this.chapters = chaptersData.chapters;
-
-                        // 獲取更新日期資料
-                        const datesResponse = await fetch('chapter-dates.json');
-                        const datesData = await datesResponse.json();
-                        this.chapterDates = datesData.chapters;
+                        const response = await fetch('chapters.json');
+                        const data = await response.json();
+                        this.chapters = data.chapters;
                     } catch (error) {
                         console.error('讀取章節資料失敗:', error);
                     }
@@ -349,14 +339,13 @@
                 goToChapter(chapter) {
                     window.location.href = `chapter.html?chapter=${chapter}`;
                 },
-                isChapterRead(chapter) {
+                isChapterRead(chapterNumber) {
                     const key = this.manga.title;
-                    return this.readChapters[key]?.includes(chapter);
+                    return this.readChapters[key]?.includes(chapterNumber);
                 }
             },
             mounted() {
                 this.fetchChapterData();
-                // 在掛載時設置初始主題
                 const theme = localStorage.getItem(STORAGE_KEYS.THEME) || 'light';
                 document.documentElement.setAttribute('data-theme', theme);
                 this.isDarkMode = theme === 'dark';
