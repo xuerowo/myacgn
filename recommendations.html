@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=0.8">
     <title>二次元作品推薦</title>
-    <meta name="description" content="精選推薦動畫、網路漫畫、輕小說、視覺小說等二次元作品。">
-    <meta name="keywords" content="二次元,ACG,動畫推薦,網漫推薦,輕小說推薦,視覺小說,日本動畫,網路漫畫,anime,網漫翻譯">
     <link rel="icon" href="images/favicon.jpg" type="image/jpg">
     <style>
         :root {
@@ -309,6 +307,33 @@
             text-decoration: none;
         }
 
+        .category-title {
+            background: var(--background-color);
+            padding: 1rem 1.5rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-title h3 {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            margin: 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .category-title.japan {
+            background: linear-gradient(90deg, rgba(0, 204, 255, 0.1) 0%, var(--background-color) 100%);
+        }
+
+        .category-title.china {
+            background: linear-gradient(90deg, rgba(0, 204, 255, 0.1) 0%, var(--background-color) 100%);
+            margin-top: 3rem;
+        }
+
         /* Responsive design */
         @media (max-width: 768px) {
             .container {
@@ -412,7 +437,9 @@
                 <h5>備註2:集數狀態最後更新日期為2024/12/3</h5>
             </div>
 
-            <h3>【日本動畫】</h3>
+            <div class="category-title japan">
+                <h3>【日本動畫】</h3>
+            </div>
 
             <div class="container">
                 <img src="https://p2.bahamut.com.tw/B/ACG/c/77/0000076677.JPG" alt="為美好的世界獻上祝福!">
@@ -576,8 +603,11 @@
                 </div>
             </div>
 
-            <hr style="border: none; height: 2px; background: linear-gradient(to right, #ff0000, #00ff00); margin: 20px 0;">
-            <h3>【大陸動畫】</h3>
+            <div class="section-divider"></div>
+
+            <div class="category-title china">
+                <h3>【大陸動畫】</h3>
+            </div>
 
             <div class="container">
                 <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3yrSUIdLy_d9V7uJ6Z7DH_LPHYwo5OEVALw&s" alt="大王饒命">
