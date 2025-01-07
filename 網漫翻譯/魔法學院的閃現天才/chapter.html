@@ -44,6 +44,13 @@
             height: auto;
             margin: 0;
             display: block;
+            -webkit-touch-callout: none;  /* iOS Safari */
+            -webkit-user-select: none;    /* Safari */
+            -khtml-user-select: none;     /* Konqueror HTML */
+            -moz-user-select: none;       /* Firefox */
+            -ms-user-select: none;        /* Internet Explorer/Edge */
+            user-select: none;            /* Non-prefixed version */
+            pointer-events: none;         /* 禁用點擊事件 */
         }
 
         .loading {
@@ -261,7 +268,10 @@
                  :src="page + '?v=' + Date.now()"
                  class="manga-page"
                  loading="lazy"
-                 @load="handleImageLoad">
+                 @load="handleImageLoad"contextmenu="return false;"
+                 oncontextmenu="return false;"
+                 onselectstart="return false;"
+                 ondragstart="return false;">
         </div>
 
         <!-- 章節目錄 -->
