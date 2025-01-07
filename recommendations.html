@@ -367,14 +367,6 @@
             max-width: 100%;
             max-height: 85vh;
             object-fit: contain;
-            min-width: 800px; /* 確保圖片有最小寬度 */
-        }
-
-        @media (max-width: 900px) {
-            .lightbox img {
-                max-height: 95vh;
-                min-width: unset; /* 在小螢幕上取消最小寬度限制 */
-            }
         }
 
         .close-lightbox {
@@ -427,6 +419,7 @@
 
          .container img {
                 width: 150px;
+                max-height: 85vh;
                 align-self: flex-start;
             }
 
