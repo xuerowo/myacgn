@@ -162,9 +162,25 @@
     position: relative;
     overflow: hidden;
     margin-top: 60px;
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
 }
 
-/* 主背景漸層動畫 */
+/* 主背景動畫效果 */
+@keyframes gradientBG {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* 浮動粒子效果 */
 .hero::before {
     content: '';
     position: absolute;
@@ -172,50 +188,69 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(120deg, #4e54c8, #8f94fb, #4e54c8);
-    background-size: 300% 300%;
-    animation: gradientBG 15s ease infinite;
-    opacity: 0.9;
-    z-index: 1;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.2) 1px, transparent 1px),
+        radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
+    background-size: 100px 100px;
+    animation: particles 20s linear infinite;
+    opacity: 0.5;
 }
 
-/* 光效動畫 */
+@keyframes particles {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-100px);
+    }
+}
+
+/* 光暈效果 */
 .hero::after {
     content: '';
     position: absolute;
+    top: -50%;
+    left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 60%);
-    animation: shine 20s linear infinite;
-    transform: translate(-50%, -50%);
-    z-index: 2;
+    background: radial-gradient(
+        circle at center,
+        rgba(255, 255, 255, 0.1) 0%,
+        rgba(255, 255, 255, 0.05) 25%,
+        transparent 70%
+    );
+    animation: rotate 30s linear infinite;
 }
 
-@keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-@keyframes shine {
-    from { transform: translate(-50%, -50%) rotate(0deg); }
-    to { transform: translate(-50%, -50%) rotate(360deg); }
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .hero-content {
-    max-width: 800px;
     position: relative;
     z-index: 3;
     color: white;
     padding: 2.5rem;
+    max-width: 800px;
 }
 
 .hero h1 {
     font-size: 4rem;
     margin-bottom: 1.5rem;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
     animation: fadeInUp 1s ease-out;
     letter-spacing: 2px;
+    background: linear-gradient(120deg, #fff, #f0f0f0);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
 .hero p {
@@ -223,21 +258,93 @@
     margin-bottom: 2.5rem;
     opacity: 0.95;
     animation: fadeInUp 1s ease-out 0.3s both;
-    text-shadow: 0 1px 8px rgba(0,0,0,0.1);
-}
-
-.hero .cta-button {
-    animation: fadeInUp 1s ease-out 0.6s both;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
 }
 
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(30px);
     }
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+/* 按鈕動畫效果 */
+.hero .cta-button {
+    animation: fadeInUp 1s ease-out 0.6s both;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    background: linear-gradient(45deg, #4a90e2, #357ABD);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    padding: 1rem 2.5rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.hero .cta-button:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(45deg, #357ABD, #4a90e2);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.hero .cta-button:active {
+    transform: translateY(2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.hero .cta-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+    );
+    transition: 0.5s;
+}
+
+.hero .cta-button:hover::before {
+    left: 100%;
+    transition: 0.7s;
+}
+
+.hero .cta-button::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: 0.4s;
+}
+
+.hero .cta-button:hover::after {
+    opacity: 1;
+    animation: pulseGlow 2s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+    0% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.3;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0.5;
     }
 }
 
@@ -407,6 +514,11 @@
             .hero p {
                 font-size: 1.2rem;
             }
+
+            .hero-content {
+                padding: 2rem;
+                margin: 0 1rem;
+            }
             
             .categories {
                 padding: 4rem 1rem;
@@ -431,7 +543,7 @@
             }
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: 480px) {aa
             .hero h1 {
                 font-size: 2.2rem;
             }
@@ -517,8 +629,8 @@
             <div class="work-card">
                 <div class="work-icon">📱</div>
                 <div class="work-content">
-                    <h3 class="work-title">輕小說閱讀 App</h3>
-                    <p class="work-description">專為閱讀 AI 輔助翻譯的輕小說開發的手機應用。使用 Claude 3.5 Sonnet 進行翻譯並整合到 App 中，提供流暢的閱讀體驗。支援離線閱讀、進度同步、書籤等功能。</p>
+                    <h3 class="work-title">網路輕小說閱讀 App</h3>
+                    <p class="work-description">專為閱讀 AI 翻譯的網路輕小說的 AI 協助開發的手機應用。使用 Claude 3.5 Sonnet 進行翻譯並開發 App ，提供流暢的閱讀體驗。支援離線閱讀、進度同步、書籤等功能。</p>
                     <a href="https://expo.dev/artifacts/eas/66oSmLjwfUEx3zGuZSRQ72.apk" target="_blank" class="work-link">
                         下載 App
                     </a>
