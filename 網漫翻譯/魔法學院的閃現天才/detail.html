@@ -211,6 +211,88 @@
             color: rgba(255, 255, 255, 0.8);
         }
 
+        /* Lightbox 樣式 */
+.lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.lightbox.active {
+    display: flex;
+    opacity: 1;
+}
+
+.lightbox-content {
+    position: relative;
+    max-width: 95%;
+    max-height: 85vh;
+    animation: zoomIn 0.3s ease;
+}
+
+.lightbox img {
+    max-width: 100%;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: 4px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    min-width: 800px;
+}
+
+.close-lightbox {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 8px;
+    transition: transform 0.2s ease;
+}
+
+.close-lightbox:hover {
+    transform: scale(1.2);
+}
+
+@keyframes zoomIn {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 900px) {
+    .lightbox img {
+        min-width: unset;
+    }
+}
+
+/* 為可點擊的圖片添加懸停效果 */
+.manga-cover {
+    cursor: pointer;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.manga-cover:hover {
+    transform: scale(1.02);
+    filter: brightness(1.1);
+}
+
         @media (max-width: 768px) {
             .manga-info {
                 grid-template-columns: 1fr;
@@ -236,10 +318,17 @@
             </div>
         </nav>
 
+        <div class="lightbox" :class="{ active: isLightboxActive }" @click="closeLightbox">
+            <div class="lightbox-content">
+                <button class="close-lightbox" @click.stop="closeLightbox">✕</button>
+                <img :src="lightboxImage" alt="" @click.stop>
+            </div>
+        </div>
+
         <div class="container">
             <div class="manga-detail">
                 <div class="manga-info">
-                    <img :src="manga.coverUrl" :alt="manga.title" class="manga-cover">
+                    <img :src="manga.coverUrl" :alt="manga.title" class="manga-cover" @click="openLightbox(manga.coverUrl)">
                     <div>
                         <h2 class="manga-title">{{ manga.title }}</h2>
                         <div class="manga-metadata">
@@ -300,7 +389,9 @@
                     manga: MANGA_INFO,
                     chapters: [],
                     readChapters: JSON.parse(localStorage.getItem(STORAGE_KEYS.READ_CHAPTERS) || '{}'),
-                    isDarkMode: localStorage.getItem(STORAGE_KEYS.THEME) === 'dark'
+                    isDarkMode: localStorage.getItem(STORAGE_KEYS.THEME) === 'dark',
+                    isLightboxActive: false,
+                    lightboxImage: ''
                 }
             },
             computed: {
@@ -343,6 +434,16 @@
                 isChapterRead(chapterNumber) {
                     const key = this.manga.title;
                     return this.readChapters[key]?.includes(chapterNumber);
+                },
+                openLightbox(imageUrl) {
+                    this.lightboxImage = imageUrl;
+                    this.isLightboxActive = true;
+                    document.body.style.overflow = 'hidden';
+                },
+    
+                closeLightbox() {
+                    this.isLightboxActive = false;
+                    document.body.style.overflow = '';
                 }
             },
             mounted() {
@@ -350,6 +451,11 @@
                 const theme = localStorage.getItem(STORAGE_KEYS.THEME) || 'light';
                 document.documentElement.setAttribute('data-theme', theme);
                 this.isDarkMode = theme === 'dark';
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && this.isLightboxActive) {
+                        this.closeLightbox();
+                    }
+                });
             }
         }).mount('#app');
     </script>
