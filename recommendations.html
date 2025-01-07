@@ -41,16 +41,9 @@
             line-height: 1.6;
             color: var(--text-color);
             background-color: var(--secondary-color);
-            padding-top: 60px;
         }
 
-        h1 {
-            text-align: center;
-            color: var(--text-color);
-            margin-bottom: 2rem;
-        }
-
-        /* Navigation styles */
+        /* 導航欄樣式 */
         .navbar {
             position: fixed;
             top: 0;
@@ -159,115 +152,337 @@
             transform: rotate(180deg);
         }
 
-        .dropdown-menu a.active {
-            background-color: var(--dropdown-hover);
-            color: var(--primary-color);
-        }
+        /* Hero 區域樣式 */
+        .hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    margin-top: 60px;
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+}
 
-        /* Tab styles */
-        .tab-container {
+/* 主背景動畫效果 */
+@keyframes gradientBG {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* 浮動粒子效果 */
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.2) 1px, transparent 1px),
+        radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
+    background-size: 100px 100px;
+    animation: particles 20s linear infinite;
+    opacity: 0.5;
+}
+
+@keyframes particles {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-100px);
+    }
+}
+
+/* 光暈效果 */
+.hero::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+        circle at center,
+        rgba(255, 255, 255, 0.1) 0%,
+        rgba(255, 255, 255, 0.05) 25%,
+        transparent 70%
+    );
+    animation: rotate 30s linear infinite;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.hero-content {
+    position: relative;
+    z-index: 3;
+    color: white;
+    padding: 2.5rem;
+    max-width: 800px;
+}
+
+.hero h1 {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+    animation: fadeInUp 1s ease-out;
+    letter-spacing: 2px;
+    background: linear-gradient(120deg, #fff, #f0f0f0);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.hero p {
+    font-size: 1.4rem;
+    margin-bottom: 2.5rem;
+    opacity: 0.95;
+    animation: fadeInUp 1s ease-out 0.3s both;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 按鈕動畫效果 */
+.hero .cta-button {
+    animation: fadeInUp 1s ease-out 0.6s both;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    background: linear-gradient(45deg, #4a90e2, #357ABD);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    padding: 1rem 2.5rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.hero .cta-button:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(45deg, #357ABD, #4a90e2);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.hero .cta-button:active {
+    transform: translateY(2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.hero .cta-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+    );
+    transition: 0.5s;
+}
+
+.hero .cta-button:hover::before {
+    left: 100%;
+    transition: 0.7s;
+}
+
+.hero .cta-button::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: 0.4s;
+}
+
+.hero .cta-button:hover::after {
+    opacity: 1;
+    animation: pulseGlow 2s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+    0% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.3;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+}
+
+        /* 分類卡片樣式 */
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            padding: 6rem 2rem;
             max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
+            margin: 0 auto;
         }
 
-        /* Content styles */
-        .content-section {
-            display: none;
-            animation: fadeIn 0.5s ease-in;
+        .category-card {
+            background: var(--background-color);
+            border-radius: 16px;
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
         }
 
-        .content-section.active {
-            display: block;
+        .category-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
         }
 
-        .container {
-            display: flex;
-            align-items: stretch;
-            background-color: var(--background-color);
-            box-shadow: var(--card-shadow);
-            margin-bottom: 20px;
-            padding: 24px;
-            border-radius: 12px;
-            transition: all var(--transition-speed);
-            gap: 24px;
-            min-height: 320px;
-        }
-
-        .container:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--card-shadow), 0 8px 16px rgba(0,0,0,0.1);
-        }
-
-        .container img {
-            width: 200px;
-            height: auto;
-            border-radius: 8px;
-            object-fit: cover;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            align-self: flex-start;
-        }
-
-        .content-text {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            height: 100%; 
-            min-height: 280px;
-        }
-
-        .content-text h2 {
+        .category-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
             color: var(--primary-color);
-            font-size: 1.5rem;
-            margin: 0;
-            padding-bottom: 8px;
-            border-bottom: 2px solid var(--border-color);
+            transition: transform 0.3s ease;
         }
 
-        .series-info {
-            font-size: 0.95rem;
-            padding: 8px 12px;
-            background-color: var(--secondary-color);
-            border-radius: 6px;
-            margin-bottom: 4px;
+        .category-card:hover .category-icon {
+            transform: scale(1.1);
         }
 
-        .series-description {
-            line-height: 1.7;
-            flex-grow: 1;
+        /* AI 作品展示區域樣式 */
+        .ai-works {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto 4rem;
+            background: var(--background-color);
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
         }
 
-        .link-container {
-            margin-top: auto;
-            padding-top: 12px;
-            display: flex;
+        .section-title {
+            text-align: center;
+            color: var(--text-color);
+            margin-bottom: 3rem;
+            font-size: 2.5rem;
         }
 
-        .link-style-1 {
+        .work-icon {
+            font-size: 4rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .works-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2.5rem;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .work-card {
+            background: var(--background-color);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .work-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .work-card:hover .work-icon {
+            transform: scale(1.1);
+        }
+
+        .work-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .work-content {
+            padding: 1.5rem;
+        }
+
+        .work-title {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .work-description {
+            color: var(--text-color);
+            opacity: 0.8;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        /* 按鈕樣式 */
+        .cta-button, .work-link {
             display: inline-flex;
             align-items: center;
-            padding: 8px 20px;
+            padding: 1rem 2.5rem;
             background-color: var(--primary-color);
             color: white;
             text-decoration: none;
-            border-radius: 6px;
-            transition: all 0.2s ease;
+            border-radius: 50px;
+            transition: all 0.3s ease;
             font-weight: 500;
         }
 
-        .link-style-1:hover {
+        .cta-button:hover, .work-link:hover {
             background-color: #357ABD;
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
-        /* Animation */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .work-link {
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
         }
 
-        /* Theme toggle */
+        /* 主題切換按鈕 */
         .theme-toggle {
             background: none;
             border: none;
@@ -275,132 +490,79 @@
             font-size: 1.5rem;
             cursor: pointer;
             padding: 0.5rem;
-            transition: transform var(--transition-speed);
+            transition: transform 0.3s;
         }
 
         .theme-toggle:hover {
             transform: rotate(360deg);
         }
 
-        /* Footer */
+        /* 頁腳樣式 */
         footer {
-            text-align: center;
-            padding: 2rem;
-            background-color: var(--background-color);
-            margin-top: 2rem;
-        }
-
-        /* Notes section */
-        .notes {
-            background-color: var(--background-color);
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            box-shadow: var(--card-shadow);
-        }
-
-        .notes h5 {
-            margin-bottom: 0.5rem;
-        }
-
-        .notes a {
-            color: var(--primary-color);
-            text-decoration: none;
-        }
-
-        .category-title {
             background: var(--background-color);
-            padding: 1rem 1.5rem;
-            margin: 2rem 0;
-            border-radius: 8px;
-            box-shadow: var(--card-shadow);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .category-title h3 {
-            font-size: 1.5rem;
+            padding: 2rem;
+            text-align: center;
             color: var(--text-color);
-            margin: 0;
-            position: relative;
-            z-index: 2;
         }
 
-        .category-title.japan {
-            background: linear-gradient(90deg, rgba(0, 204, 255, 0.1) 0%, var(--background-color) 100%);
-        }
-
-        .category-title.china {
-            background: linear-gradient(90deg, rgba(0, 204, 255, 0.1) 0%, var(--background-color) 100%);
-            margin-top: 3rem;
-        }
-
-        /* Responsive design */
+        /* 響應式設計 */
         @media (max-width: 768px) {
-            .container {
-                flex-direction: row;
-                padding: 12px;
-                gap: 12px;
-                min-height: 160px;
+            .hero h1 {
+                font-size: 2.8rem;
             }
-
-         .container img {
-                width: 150px;
-                align-self: flex-start;
-            }
-
-            .content-text {
-                gap: 6px;
-                min-height: 190px;
-            }
-
-            .content-text h2 {
+    
+            .hero p {
                 font-size: 1.2rem;
-                padding-bottom: 4px;
             }
 
-            .series-info {
-                font-size: 0.85rem;
-                padding: 4px 8px;
+            .hero-content {
+                padding: 2rem;
+                margin: 0 1rem;
+            }
+            
+            .categories {
+                padding: 4rem 1rem;
+                gap: 1.5rem;
+            }
+            
+            .category-card {
+                padding: 2rem;
             }
 
-            .series-description {
-                font-size: 0.9rem;
-                line-height: 1.5;
-                flex-grow: 1;
+            .ai-works {
+                padding: 3rem 1rem;
             }
 
-            .link-container {
-                padding-top: 4px;
+            .section-title {
+                font-size: 2rem;
             }
 
-            .link-style-1 {
-                padding: 6px 16px;
-                font-size: 0.9rem;
+            .works-grid {
+                grid-template-columns: 1fr;
+                max-width: 500px;
             }
         }
 
-        @media (max-width: 480px) {
-            .container {
-                padding: 10px;
-                gap: 10px;
+        @media (max-width: 480px) {aa
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero-content {
+                padding: 1.5rem;
+            }
+            
+            .category-card {
+                padding: 1.5rem;
             }
 
-            .container img {
-                width: 80px;
-                height: 112px;
+            .section-title {
+                font-size: 1.8rem;
             }
 
-            .content-text {
-                min-height: 112px;
-            }
-
-            .content-text h2 {
-                font-size: 1.1rem;
-            }
-
-            .series-info, .series-description {
-                font-size: 0.85rem;
+            .work-card {
+                margin: 0 auto;
+                max-width: 300px;
             }
         }
     </style>
@@ -409,14 +571,14 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-links">
-                <a href="index.html">首頁</a>
+                <a href="index.html" style="color: var(--primary-color)">首頁</a>
                 <div class="dropdown">
-                    <button class="dropdown-toggle" style="color: var(--primary-color)">推薦</button>
+                    <button class="dropdown-toggle">推薦</button>
                     <div class="dropdown-menu">
-                        <a href="#animations" class="nav-link" onclick="showContent('animations')">動畫</a>
-                        <a href="#webtoons" class="nav-link" onclick="showContent('webtoons')">網漫</a>
-                        <a href="#lightnovels" class="nav-link" onclick="showContent('lightnovels')">輕小說</a>
-                        <a href="#visualnovels" class="nav-link" onclick="showContent('visualnovels')">視覺小說</a>
+                        <a href="recommendations.html#animations">動畫</a>
+                        <a href="recommendations.html#webtoons">網漫</a>
+                        <a href="recommendations.html#lightnovels">輕小說</a>
+                        <a href="recommendations.html#visualnovels">視覺小說</a>
                     </div>
                 </div>
                 <a href="webtoonstranslate.html">網漫翻譯</a>
@@ -426,339 +588,67 @@
         </div>
     </nav>
 
-    <div class="tab-container">
+    <section class="hero">
+        <div class="hero-content">
+            <h1>歡迎來到二次元世界</h1>
+            <p>探索精彩的動畫、網漫、輕小說和視覺小說推薦</p>
+            <a href="#categories" class="cta-button">開始探索</a>
+        </div>
+    </section>
 
-        <!-- 動畫內容 -->
-        <section id="animations" class="content-section active">
+    <section id="categories" class="categories">
+        <div class="category-card">
+            <div class="category-icon">🎬</div>
+            <h2>動畫</h2>
+            <p>精選優質動畫作品推薦，包含日本動畫與中國動畫</p>
+            <a href="recommendations.html#animations" class="cta-button">查看更多</a>
+        </div>
+        <div class="category-card">
+            <div class="category-icon">📚</div>
+            <h2>網漫</h2>
+            <p>熱門網路漫畫推薦，帶你進入精彩的故事世界</p>
+            <a href="recommendations.html#webtoons" class="cta-button">查看更多</a>
+        </div>
+        <div class="category-card">
+            <div class="category-icon">📖</div>
+            <h2>輕小說</h2>
+            <p>精選輕小說作品推薦，豐富你的閱讀生活</p>
+            <a href="recommendations.html#lightnovels" class="cta-button">查看更多</a>
+        </div>
+        <div class="category-card">
+            <div class="category-icon">🎮</div>
+            <h2>視覺小說</h2>
+            <p>優質視覺小說遊戲推薦，體驗互動式劇情</p>
+            <a href="recommendations.html#visualnovels" class="cta-button">查看更多</a>
+        </div>
+    </section>
 
-            <h1>動畫推薦一覽</h1>
-
-            <div class="notes">
-                <h5>備註:日本動畫網站推薦用<a href="https://anime1.me" target="_blank">anime1.me</a>，日本和大陸動畫都有的網站推薦用<a href="https://www.xgcartoon.com/" target="_blank">西瓜卡通</a>。</h5>
-                <h5>備註2:集數狀態最後更新日期為2024/12/3</h5>
-            </div>
-
-            <div class="category-title japan">
-                <h3>【日本動畫】</h3>
-            </div>
-
-            <div class="container">
-                <img src="https://p2.bahamut.com.tw/B/ACG/c/77/0000076677.JPG" alt="為美好的世界獻上祝福!">
-                <div class="content-text">
-                    <h2>為美好的世界獻上祝福!</h2>
-                    <div class="series-info">
-                        <strong>集數:</strong>本傳第一、二季各10集+OVA1集，第三季共11集，外傳共12集，一部劇場版
-                    </div>
-                    <div class="series-description">
-                        從沒想過這個廢到不行的人生，就這樣以廢到不行的方式結束了……廢到連因為痛失愛子、本應傷心欲絕的父母，在聽了死因之後，卻不禁先笑了出來的程度！ 廢到無藥可救的繭居族 佐藤和真，轉生到了跟RPG遊戲畫面一模一樣的異世界，與作為特別附贈品一起同行、智商和運氣都差到教人傻眼地步的女神 阿克婭，姑且組成了一支（看起來）人模人樣的隊伍，引發接二連三的問題！
-                    </div>
-                    <div class="link-container">
-                        <a href="https://ani.gamer.com.tw/animeVideo.php?sn=7294" target="_blank" class="link-style-1">
-                            觀看連結
-                        </a>
-                    </div>
+    <section class="ai-works">
+        <h2 class="section-title">我的 AI 創作作品</h2>
+        <div class="works-grid">
+            <div class="work-card">
+                <div class="work-icon">📱</div>
+                <div class="work-content">
+                    <h3 class="work-title">網路輕小說閱讀 App</h3>
+                    <p class="work-description">專為閱讀 AI 翻譯的網路輕小說的 AI 協助開發的手機應用。使用 Claude 3.5 Sonnet 進行翻譯並開發 App ，提供流暢的閱讀體驗。支援離線閱讀、進度同步、書籤等功能。</p>
+                    <a href="https://expo.dev/artifacts/eas/66oSmLjwfUEx3zGuZSRQ72.apk" target="_blank" class="work-link">
+                        下載 App
+                    </a>
                 </div>
             </div>
-
-            <div class="container">
-                <img src="https://p2.bahamut.com.tw/B/ACG/c/36/0000120336.JPG" alt="我想成為影之強者！">
-                <div class="content-text">
-                    <h2>我想成為影之強者！</h2>
-                    <div class="series-info">
-                        <strong>集數:</strong>第一季共20集，第二季共12集
-                    </div>
-                    <div class="series-description">
-                        少年席德憧憬著以路人身分隱藏自身力量，不為人知地介入故事，展現實力的「影之強者」。轉生到異世界後，企圖充分享受這種設定的席德，為了擊潰妄想中的敵人「黑暗教團」而暗中大顯身手。然而，這個教團似乎真的存在……？同時，因為他順勢收為部下的少女們「會錯意」，席德在一無所知的狀態下成了真正的「影之強者」，一行人建立起來的「闇影庭園」，將殲滅這世上的黑暗。
-                    </div>
-                    <div class="link-container">
-                        <a href="https://ani.gamer.com.tw/animeVideo.php?sn=31622" target="_blank" class="link-style-1">
-                            觀看連結
-                        </a>
-                    </div>
+            
+            <div class="work-card">
+                <div class="work-icon">🎵</div>
+                <div class="work-content">
+                    <h3 class="work-title">我的 AI 歌曲創作</h3>
+                    <p class="work-description">與 Claude 3.5 Sonnet 合作創作歌詞，再通過 Suno AI 製作成完整歌曲。展現 AI 輔助音樂創作的無限可能。</p>
+                    <a href="https://suno.com/@xuerowo" target="_blank" class="work-link">
+                        聆聽作品
+                    </a>
                 </div>
             </div>
-
-            <div class="container">
-                <img src="https://p2.bahamut.com.tw/B/ACG/c/45/0000102845.JPG" alt="怕痛的我，把防禦力點滿就對了">
-                <div class="content-text">
-                    <h2>怕痛的我，把防禦力點滿就對了</h2>
-                    <div class="series-info">
-                        <strong>集數:</strong>第一、二季各12集
-                    </div>
-                    <div class="series-description">
-                        梅普露缺乏一般遊戲常識，把所有配點都灌到防禦力（VIT）去了。動作緩慢，又不會用魔法，搞得連兔子都耍得她團團轉。『咦，可是完全不會痛耶……而且根本沒受傷？』 　　全點防禦力，使梅普露取得了特殊技能【絕對防禦】，甚至附送一擊必殺的反擊技──？能使任何攻擊打不出效果，以致命施毒技能蹂躪全場的「移動要塞型」新人，毫不覺得自己奇怪地出場走跳嘍！
-                    </div>
-                    <div class="link-container">
-                        <a href="https://ani.gamer.com.tw/animeVideo.php?sn=14499" target="_blank" class="link-style-1">
-                            觀看連結
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="container">
-                <img src="https://p2.bahamut.com.tw/B/ACG/c/24/0000120624.JPG" alt="派對咖孔明">
-                <div class="content-text">
-                    <h2>派對咖孔明</h2>
-                    <div class="series-info">
-                        <strong>集數:</strong>第一季共12集
-                    </div>
-                    <div class="series-description">
-                        《派對咖孔明》描述三國時代知名軍師．諸葛孔明在五度北伐失敗的打擊及病情加劇最終星落五丈原，享年 54 歲……但卻不知為何重生穿越來到現代日本。三國時代為人民、為天下太平奮鬥的諸葛孔明，意外得到的第二人生，遇上了與創作歌手月見英子，為了實現她的夢想，孔明這次將以軍師身分在音樂界活躍。
-                    </div>
-                    <div class="link-container">
-                        <a href="https://ani.gamer.com.tw/animeVideo.php?sn=30695" target="_blank" class="link-style-1">
-                            觀看連結
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="container">
-                <img src="https://p2.bahamut.com.tw/B/ACG/c/00/0000104400.JPG" alt="入間同學入魔了！">
-                <div class="content-text">
-                    <h2>入間同學入魔了！</h2>
-                    <div class="series-info">
-                        <strong>集數:</strong>第一季共23集，第二、三季各21集
-                    </div>
-                    <div class="series-description">
-                        無法拒絕任何拜託的老好人鈴木入間，是個從 1 歲開始就踏入社會、為了金錢東奔西走、在修羅場求升的十四歲少年，他的父母為了金錢將他賣給了惡魔！陰差陽錯之下他簽下了惡魔契約、進入了惡魔學院、成為了特待生，並且即將與學院第一的新生代表決鬥
-                    </div>
-                    <div class="link-container">
-                        <a href="https://ani.gamer.com.tw/animeVideo.php?sn=13809" target="_blank" class="link-style-1">
-                            觀看連結
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="container">
-                <img src="https://p2.bahamut.com.tw/B/ACG/c/34/0000105434.JPG" alt="這個勇者明明超 TUEEE 卻過度謹慎！">
-                <div class="content-text">
-                    <h2>這個勇者明明超 TUEEE 卻過度謹慎！</h2>
-                    <div class="series-info">
-                        <strong>集數:</strong>第一季共12集
-                    </div>
-                    <div class="series-description">
-                        廢柴女神莉絲塔要負責拯救超難模式的世界。雖然成功召喚出能力值高到犯規的勇者聖哉，沒想到他卻謹慎到超乎想像……「我要三副盔甲。一副拿來穿，一副備用，還有一副是備用不見時的備用。」不僅囤積異常的庫存，還自主訓練到滿等為止，謹慎到連打史萊姆都全力以赴！如此謹慎的勇者和被他耍得團團轉的女神，即將展開冒險旅程！
-                    </div>
-                    <div class="link-container">
-                        <a href="https://ani.gamer.com.tw/animeVideo.php?sn=13869" target="_blank" class="link-style-1">
-                            觀看連結
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="container">
-                <img src="https://p2.bahamut.com.tw/B/ACG/c/56/0000126156.JPG" alt="我內心的糟糕念頭">
-                <div class="content-text">
-                    <h2>我內心的糟糕念頭</h2>
-                    <div class="series-info">
-                        <strong>集數:</strong>第一季共12集，第二季共13集
-                    </div>
-                    <div class="series-description">
-                        個性陰沉、凡事都往負面想的陰鬱少年男主角「市川京太郎」，因為很看不慣高高在上的美少女，也是站在校園階級金字塔頂端的陽光角色「山田杏奈」，每天都在妄想著要怎麼結束掉她的性命。沒想到在一次偶然情況下撞見杏奈不為人知的一面，愛吃零食的她常躲進京太郎的聖地「圖書室」偷吃零食，就這樣圖書室變成了他們兩個交集的秘密基地。兩個極端對比的人，就這樣展開了青澀的校園愛情喜劇。
-                    </div>
-                    <div class="link-container">
-                        <a href="https://ani.gamer.com.tw/animeVideo.php?sn=33250" target="_blank" class="link-style-1">
-                            觀看連結
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="container">
-                <img src="https://pic7.iqiyipic.com/image/20220331/e6/06/a_100488819_m_601_en_260_360.jpg" alt="中二病也想談戀愛！">
-                <div class="content-text">
-                    <h2>中二病也想談戀愛！</h2>
-                    <div class="series-info">
-                        <strong>集數:</strong>第一季共13集，第二季共13集+7SP，一部劇場版
-                    </div>
-                    <div class="series-description">
-                        富樫勇太於初中畢業的時候，決定同時為自己舉辦中二病畢業的儀式。打算順利度過高中生活的勇太，在開學日以最後的中二語錄完全封鎖這段黑歷史。可惜天意弄人，勇太遇上了現任中二病患者暨同班同學小鳥遊六花，更被六花看出中二病的殘餘症狀。六花於是以此威逼勇太與她“立下契約”。六花的行為舉止惹來了勇太的不少同學、家人、甚至初中好友的注目，使勇太在享受現充生活時充滿著難言之隱。
-                    </div>
-                    <div class="link-container">
-                        <a href="https://www.iq.com/album/%E4%B8%AD%E4%BA%8C%E7%97%85%E4%B9%9F%E6%83%B3%E8%AB%87%E6%88%80%E6%84%9B-2012-27scw4d42fl?lang=zh_tw" target="_blank" class="link-style-1">
-                            觀看連結
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="container">
-                <img src="https://p2.bahamut.com.tw/B/ACG/c/68/0000136968.JPG" alt="敗北女角太多了！">
-                <div class="content-text">
-                    <h2>敗北女角太多了！</h2>
-                    <div class="series-info">
-                        <strong>集數:</strong>第一季共12集
-                    </div>
-                    <div class="series-description">
-                        平常擔任班上背景人物的「溫水和彥」，偶然目擊人氣女同學八奈見杏菜被男生甩掉的失戀現場。以此為契機，愛吃的青梅竹馬系女角「八奈見杏菜」、活力充沛的運動系女角「燒鹽檸檬」、怕生的小動物系女角「小鞠知花」等洋溢著敗北感的女生接連登場——？……但願這些因為敗北而閃耀的少女們都能幸福。被有點缺憾的敗北女角──敗女們環繞，新感覺、亂糟糟的敗走系青春故事就此揭幕！
-                    </div>
-                    <div class="link-container">
-                        <a href="https://ani.gamer.com.tw/animeVideo.php?sn=38881" target="_blank" class="link-style-1">
-                            觀看連結
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="section-divider"></div>
-
-            <div class="category-title china">
-                <h3>【大陸動畫】</h3>
-            </div>
-
-            <div class="container">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3yrSUIdLy_d9V7uJ6Z7DH_LPHYwo5OEVALw&s" alt="大王饒命">
-                <div class="content-text">
-                    <h2>大王饒命</h2>
-                    <div class="series-info">
-                        <strong>集數:</strong>第一、二季各12集
-                    </div>
-                    <div class="series-description">
-                        高中生呂樹自小和妹妹呂小魚一起生活，卻在一場車禍中獲得了與眾不同的超能力，從此開啟了「氣死人不償命」的大魔王生涯。在經歷過種種意外的磨練與成長之後，呂樹跟隨學校的道元班，進入了神秘的北邙山遺跡，開始探索這個世界的真相…
-                    </div>
-                    <div class="link-container">
-                        <a href="https://ani.gamer.com.tw/animeVideo.php?sn=38881" target="_blank" class="link-style-1">
-                            觀看連結
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="container">
-                <img src="https://i.ytimg.com/vi/OhKByslNnG4/hqdefault.jpg?sqp=-oaymwEcCPYBEIoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLANBvh0xo6pmU2pdv6aVOo3M4shnQ" alt="虧成首富從遊戲開始">
-                <div class="content-text">
-                    <h2>虧成首富從遊戲開始</h2>
-                    <div class="series-info">
-                        <strong>集數:</strong>第一季共16集
-                    </div>
-                    <div class="series-description">
-                        平凡打工人裴謙意外綁定財富轉換繫統，擁有了重來人生的好機會。然而繫統規定盈利一百才掙一塊，虧錢卻能全歸自己。為了虧錢，他選擇了風險高，燒錢快的遊戲行業，故意制作了一款款違背市場規律的“另類”遊戲，卻一次次意外走紅，掙得盆滿缽滿，成為了眾人崇拜的“商業奇才”，可只有裴謙心理清楚，我真的只想虧錢啊......
-                    </div>
-                    <div class="link-container">
-                        <a href="https://www.youtube.com/playlist?list=PLOiKcI1nP-Vg6JzClElcnMZR2VvdFEbdn" target="_blank" class="link-style-1">
-                            觀看連結
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-
-
-        </section>
-
-        <!-- 網漫內容 -->
-        <section id="webtoons" class="content-section">
-
-            <h1>網漫推薦一覽</h1>
-
-            <div class="notes">
-                <h5>備註:網漫網站推薦用<a href="https://m.happymh.com" target="_blank">嗨皮漫畫</a>，用戶登錄後廣告顯示更友好。</h5>
-                <h5>備註2:話數狀態最後更新日期為2025/1/3</h5>
-            </div>
-
-            <div class="container">
-                <img src="https://page-images.kakaoentcdn.com/download/resource?kid=6ssep/hAd4PpwhQ7/g12K1th7rCpGImD7knHMO0&filename=o1/dims/resize/384" alt="無限魔法師">
-                <div class="content-text">
-                    <h2>無限魔法師(92)</h2>
-                    <div class="series-description">
-                        棄養在馬廄,以平民身分長大的希洛涅。<br> 他藉由天生出色的洞察力自學識字,某天來到了城裡,體驗到自己極為好奇的魔法。<br>這使得希洛涅夢想成為魔法師,然而身分的高牆十分殘酷,他在長大成人前就明白了世界的黑暗面....<br> 在這個某些層面上有些扭曲的世界, 他能成為自己夢寐以求的魔法師嗎?
-                    </div>
-                    <div class="link-container">
-                        <a href="https://tw.kakaowebtoon.com/content/%E7%84%A1%E9%99%90%E9%AD%94%E6%B3%95%E5%B8%AB/512?tab=episode" target="_blank" class="link-style-1">
-                            觀看連結
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="container">
-                <img src="https://image-comic.pstatic.net/webtoon/747269/thumbnail/thumbnail_IMAG21_aabd9952-ff45-47a2-a543-33f19a5c6708.jpg" alt="全知讀者視角">
-                <div class="content-text">
-                    <h2>全知讀者視角(241)</h2>
-                    <div class="series-description">
-                        「您收到了主線任務。」 長著角的妖怪，熟悉的人物登場…… 太扯了...這是我讀過的小說劇情！
-                    </div>
-                    <div class="link-container">
-         	            <a href="https://www.webtoons.com/zh-hant/fantasy/duzhe/list?title_no=2089" target="_blank" class="link-style-1">
-                            觀看連結
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="container">
-                <img src="https://comicthumb-phinf.pstatic.net/20221026_167/pocket_1666780641540T9FMq_JPEG/%BD%C3%B8%AE%C1%EE_%C7%A5%C1%F6_690x1000.jpg" alt="遊戲最強破壞玩家">
-                <div class="content-text">
-                    <h2>遊戲最強破壞玩家(115)</h2>
-                    <div class="series-description">
-                        世界上最有可能性的遊戲。 亞進電子、西里科夫工業公司、阿爾戈斯集團。由世界頂尖的大企業合作推出的人類史上首款虛擬現實遊戲《阿爾卡迪亞》。 【歡迎來到幻想的世界，阿爾卡迪亞。】 這裡充滿了各式各樣的瘋狂趣事， 現在馬上開始體驗！
-                    </div>
-                    <div class="link-container">
-         	            <a href="https://www.webtoons.com/zh-hant/fantasy/worlds-strongest-troll/list?title_no=5226" target="_blank" class="link-style-1">
-                            觀看連結
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-        </section>
-
-        <!-- 輕小說內容 -->
-        <section id="lightnovels" class="content-section">
-
-            <h1>輕小說推薦一覽</h1>
-
-            <div class="notes">
-                <h5>備註:輕小說網站推薦用<a href="https://www.lightnovel.us" target="_blank">LK輕之國度</a>和<a href="https://www.wenku8.net" target="_blank">輕小說文庫</a></h5>
-            </div>
-
-            <div class="container">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNMvZifiesrfVz-YthfhXQtTVV2eMjmdXSGQ&s" alt="在朋友背後與你悄悄牽手。談著無法言說的戀愛">
-                <div class="content-text">
-                    <h2>在朋友背後與你悄悄牽手。談著無法言說的戀愛</h2>
-                    <div class="series-description">
-                        青春可不只是戀愛。但是――。唯獨這份戀情不願被人知曉。<br>
-                        「青春＝交女朋友？再怎麼說那也不是青春的全部吧」<br>
-                        對戀愛有心理陰影的高中生，古賀純也認為比起戀愛，和朋友們在喧鬧中促進友誼才是青春。<br>
-                        在他看來，親密的五人男女時而仰望美麗的星空，時而在家庭餐廳暢談至天明的當下，才是包括自己在內大家的青春。<br>
-                        ――可是，為什麼我們面對身為朋友的對方，卻還是墜入愛河了呢。明明可能沒辦法維持一直以來的關係了。
-                    </div>
-                </div>
-            </div>
-
-        </section>
-
-        <!-- 視覺小說內容 -->
-        <section id="visualnovels" class="content-section">
-
-            <h1>視覺小說推薦一覽</h1>
-
-            <div class="container">
-                <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2593370/header_tchinese.jpg?t=1729664615" alt=">餓殍：明末千里行">
-                <div class="content-text">
-                    <h2>餓殍：明末千里行</h2>
-                    <div class="series-description">
-                        明末崇禎五年（1632年），盜匪良和同夥接了人牙子的委託。<br>
-                        良需將四名小女孩從華州城運至洛陽城。<br>
-                        路途千里，一行人將走過華州、閿鄉、陝州、最終抵達洛陽。<br>
-                        起初，良以為被他運送的女孩會被賣到富人家裡作養女。<br>
-                        行至途中，名為"穗"的女孩告知良此次運送的"真相"。<br>
-                        原來，買走女孩的是一頭修行千年的豚妖。
-                    </div>
-                    <div class="link-container">
-                        <a href="https://store.steampowered.com/app/2593370/_/?l=tchinese" target="_blank" class="link-style-1">
-                            購買連結
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-        </section>
-    </div>
+        </div>
+    </section>
 
     <footer>
         <p>網頁由林雲與 Claude AI 合作製作</p>
@@ -766,62 +656,11 @@
     </footer>
 
     <script>
-        // Tab switching functionality
-        function showContent(contentId) {
-            // 隱藏所有內容區塊
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.classList.remove('active');
-            });
-
-            // 顯示選中的內容區塊
-            document.getElementById(contentId).classList.add('active');
-
-
-            // 更新選中的導航欄連結
-            const navLink = document.querySelector(`.nav-link[onclick*="${contentId}"]`);
-
-            if (navLink) {
-                document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-                navLink.classList.add('active');
-            }
-
-            // 阻止默認的錨點行為
-            if (event && event.preventDefault) event.preventDefault();
-
-            // 修改網址的hash值
-            window.location.hash = contentId;
-
-            // 延遲執行滾動到頂部
-            setTimeout(() => {
-                window.scrollTo(0, 0);
-            }, 0);
-        }
-
-        // 頁面載入時根據網址的hash值切換分頁
-        window.addEventListener('load', () => {
-            const hash = window.location.hash.substring(1);
-            if (hash) {
-                showContent(hash);
-            }
-
-            window.scrollTo(0, 0);
-            
-        });
-
-        window.addEventListener('popstate', () => {
-            const hash = window.location.hash.substring(1);
-            if (hash) {
-                showContent(hash);
-            } else {
-                // 如果沒有hash值,顯示默認的第一個分頁
-                showContent(document.querySelector('.content-section').id);
-            }
-        });
-
-        // Theme toggle functionality
+        // 主題切換功能
         const themeToggle = document.getElementById('theme-toggle');
         const root = document.documentElement;
         
+        // 檢查本地存儲的主題設置
         if (localStorage.getItem('theme') === 'dark') {
             root.setAttribute('data-theme', 'dark');
             themeToggle.textContent = '🌜';
@@ -836,20 +675,22 @@
             themeToggle.textContent = newTheme === 'dark' ? '🌜' : '🌞';
         });
 
-        // Navbar scroll behavior
+        // 導航欄滾動效果
         let lastScrollTop = 0;
         const navbar = document.querySelector('.navbar');
         
         window.addEventListener('scroll', () => {
             const currentScroll = window.pageYOffset;
+            
             if (currentScroll > lastScrollTop) {
                 navbar.style.top = '-80px';
             } else {
                 navbar.style.top = '0';
             }
+            
             lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
         });
-        
+
         // 更新最後修改時間
         const lastModified = new Date(document.lastModified);
         document.getElementById('lastModified').textContent = 
