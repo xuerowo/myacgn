@@ -229,6 +229,125 @@
         .theme-toggle:hover {
             transform: rotate(360deg);
         }
+
+        /* 響應式設計 */
+        /* 平板設備 */
+        @media (max-width: 1024px) {
+            .container {
+                padding: 16px;
+            }
+
+            .manga-grid {
+                gap: 1.5rem;
+            }
+
+            .manga-card {
+                width: 180px;
+            }
+
+            .manga-card img {
+                width: 180px;
+                height: 257px;
+            }
+
+            .manga-card-title {
+                font-size: 1rem;
+            }
+        }
+
+        /* 手機設備 */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0.8rem;
+            }
+
+            .nav-links {
+                gap: 1.2rem;
+            }
+
+            .nav-links > * {
+                min-width: 60px;
+            }
+
+            .nav-links a {
+                font-size: 1rem;
+            }
+
+            .container {
+                padding: 12px;
+                margin-top: 1rem;
+            }
+
+            .manga-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .manga-card {
+                width: 165px;
+            }
+
+            .manga-card img {
+                width: 165px;
+                height: 235px;
+            }
+
+            .manga-card-content {
+                padding: 0.8rem;
+            }
+
+            .manga-card-title {
+                font-size: 0.95rem;
+            }
+
+            .reading-progress {
+                font-size: 0.85rem;
+            }
+        }
+
+        /* 小型手機設備 */
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 0.6rem;
+            }
+
+            .nav-links {
+                gap: 0.8rem;
+            }
+
+            .nav-links a, .dropdown-toggle {
+                font-size: 0.9rem;
+            }
+
+            .container {
+                padding: 8px;
+            }
+
+            .manga-grid {
+                gap: 0.8rem;
+            }
+
+            .manga-card {
+                width: 150px;
+            }
+
+            .manga-card img {
+                width: 150px;
+                height: 214px;
+            }
+
+            .manga-card-content {
+                padding: 0.6rem;
+            }
+
+            .manga-card-title {
+                font-size: 0.85rem;
+            }
+
+            .reading-progress {
+                font-size: 0.8rem;
+            }
+        }
     </style>
 </head>
 <body>
