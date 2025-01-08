@@ -286,73 +286,40 @@
             filter: brightness(1.1);
         }
 
-        @media (max-width: 768px) {
+        @media (min-width: 768px) {
             .manga-info {
-                grid-template-columns: 1fr;
-                gap: 1rem;
+                grid-template-columns: 300px 1fr;
+                gap: 2rem;
             }
 
             .manga-cover {
-                max-width: 200px;
-                margin: 0 auto;
-            }
-
-            .manga-title {
-                font-size: 1.5rem;
-                text-align: center;
-            }
-
-            .manga-metadata {
-                text-align: center;
+                margin: 0;
             }
 
             .container {
-                padding: 10px;
-            }
-
-            .manga-detail {
-                padding: 1rem;
-            }
-
-            .chapter-list {
-                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-                gap: 0.5rem;
-            }
-
-            .chapter-item {
-                padding: 0.75rem;
-            }
-
-            .chapter-title {
-                font-size: 0.9rem;
-            }
-
-            .chapter-date {
-                font-size: 0.8rem;
+                padding: 20px;
             }
 
             .navbar {
-                padding: 0.5rem;
-                flex-direction: column;
-                gap: 0.5rem;
+                padding: 1rem;
+                margin-bottom: 2rem;
             }
 
-            .nav-controls {
-                width: 100%;
-                justify-content: center;
+            .manga-detail {
+                padding: 2rem;
             }
 
-            .official-links {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 0.5rem;
-                margin-top: 1rem;
+            .manga-title {
+                font-size: 1.8rem;
             }
 
-            .official-link {
-                margin: 0;
-                font-size: 0.9rem;
+            .chapter-list {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 1rem;
+            }
+
+            .chapter-title {
+                font-size: 1rem;
             }
         }
     </style>
