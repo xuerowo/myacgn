@@ -286,14 +286,82 @@
             filter: brightness(1.1);
         }
 
-        @media (max-width: 768px) {
-            .manga-info {
-                grid-template-columns: 1fr;
+        /* 響應式設計 */
+        /* 平板設備 */
+        @media (max-width: 1024px) {
+            .container {
+                padding: 16px;
             }
 
-            .manga-cover {
-                max-width: 300px;
-                margin: 0 auto;
+            .manga-grid {
+                gap: 1.5rem;
+            }
+        }
+
+        /* 手機設備 */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0.8rem;
+            }
+
+            .nav-links {
+                gap: 1.2rem;
+            }
+
+            .nav-links > * {
+                min-width: 60px;
+            }
+
+            .nav-links a {
+                font-size: 1rem;
+            }
+
+            .container {
+                padding: 12px;
+                margin-top: 1rem;
+            }
+
+            .manga-grid {
+                gap: 1rem;
+            }
+
+            .manga-card-content {
+                padding: 0.8rem;
+            }
+
+            .manga-card-title {
+                font-size: 1rem;
+            }
+        }
+
+        /* 小型手機設備 */
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 0.6rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .nav-links a, .dropdown-toggle {
+                font-size: 0.9rem;
+            }
+
+            .container {
+                padding: 8px;
+            }
+
+            .manga-grid {
+                gap: 0.8rem;
+            }
+
+            .manga-card-content {
+                padding: 0.6rem;
+            }
+
+            .reading-progress {
+                font-size: 0.8rem;
             }
         }
     </style>
