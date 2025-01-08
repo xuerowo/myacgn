@@ -287,39 +287,15 @@
         }
 
         @media (min-width: 768px) {
-            .manga-info {
-                grid-template-columns: 300px 1fr;
-                gap: 2rem;
-            }
-
-            .manga-cover {
-                margin: 0;
-            }
-
-            .container {
-                padding: 20px;
-            }
-
-            .navbar {
-                padding: 1rem;
-                margin-bottom: 2rem;
-            }
-
-            .manga-detail {
-                padding: 2rem;
-            }
-
-            .manga-title {
-                font-size: 1.8rem;
-            }
-
-            .chapter-list {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                gap: 1rem;
-            }
-
             .chapter-title {
-                font-size: 1rem;
+                font-weight: 400;
+            }
+
+            .lightbox-content {
+                position: relative;
+                max-width: 95%;
+                max-height: 85vh;
+                animation: zoomIn 0.3s ease;
             }
         }
     </style>
