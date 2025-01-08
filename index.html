@@ -594,9 +594,13 @@
             }
 
             .works-grid {
-                grid-template-columns: 1fr;
-                max-width: 500px;
-                gap: 1.8rem;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+                padding: 0 0.5rem;
+            }
+            
+            .work-description {
+                font-size: 0.9rem;
             }
 
             .work-card {
@@ -653,6 +657,16 @@
                 margin-bottom: 1rem;
             }
 
+        }
+
+        /* 超小型手機設備 (375px) */
+        @media (max-width: 375px) {
+            .works-grid {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+                gap: 1.5rem;
+            }
+            
             .work-card {
                 padding: 1.5rem;
             }
