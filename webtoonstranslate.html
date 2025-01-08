@@ -229,7 +229,6 @@
         .theme-toggle:hover {
             transform: rotate(360deg);
         }
-
         /* 響應式設計 */
         /* 平板設備 */
         @media (max-width: 1024px) {
@@ -239,6 +238,19 @@
 
             .manga-grid {
                 gap: 1.5rem;
+            }
+
+            .manga-card {
+                width: 180px;
+            }
+
+            .manga-card img {
+                width: 180px;
+                height: 257px;
+            }
+
+            .manga-card-title {
+                font-size: 1rem;
             }
         }
 
@@ -266,7 +278,17 @@
             }
 
             .manga-grid {
+                grid-template-columns: repeat(2, 1fr);
                 gap: 1rem;
+            }
+
+            .manga-card {
+                width: 160px;
+            }
+
+            .manga-card img {
+                width: 160px;
+                height: 228px;
             }
 
             .manga-card-content {
@@ -274,38 +296,11 @@
             }
 
             .manga-card-title {
-                font-size: 1rem;
-            }
-        }
-
-        /* 小型手機設備 */
-        @media (max-width: 480px) {
-            .navbar {
-                padding: 0.6rem;
-            }
-
-            .nav-links {
-                gap: 1rem;
-            }
-
-            .nav-links a, .dropdown-toggle {
-                font-size: 0.9rem;
-            }
-
-            .container {
-                padding: 8px;
-            }
-
-            .manga-grid {
-                gap: 0.8rem;
-            }
-
-            .manga-card-content {
-                padding: 0.6rem;
+                font-size: 0.95rem;
             }
 
             .reading-progress {
-                font-size: 0.8rem;
+                font-size: 0.85rem;
             }
         }
     </style>
