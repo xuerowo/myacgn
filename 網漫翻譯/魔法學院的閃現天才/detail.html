@@ -287,13 +287,35 @@
         }
 
         @media (max-width: 768px) {
+            .navbar {
+                padding: 0.8rem;
+            }
+
+            .manga-detail {
+                padding: 1rem;
+            }
+
             .manga-info {
                 grid-template-columns: 1fr;
             }
 
             .manga-cover {
-                max-width: 300px;
+                max-width: 280px;
                 margin: 0 auto;
+            }
+
+            .manga-title {
+                font-size: 1.6rem;
+                margin-top: 1rem;
+            }
+
+            .chapter-list {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.8rem;
+            }
+
+            .chapter-item {
+                padding: 0.8rem;
             }
         }
     </style>
