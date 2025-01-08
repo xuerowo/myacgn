@@ -286,9 +286,17 @@
             filter: brightness(1.1);
         }
 
-        @media (max-width: 768px) {
+        @media(max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
             .navbar {
                 padding: 0.8rem;
+            }
+
+            .navbar h1 {
+                font-size: 1.2rem;
             }
 
             .manga-detail {
@@ -297,25 +305,58 @@
 
             .manga-info {
                 grid-template-columns: 1fr;
+                gap: 1rem;
             }
 
             .manga-cover {
-                max-width: 280px;
+                max-width: 250px;
                 margin: 0 auto;
+                display: block;
             }
 
             .manga-title {
-                font-size: 1.6rem;
+                font-size: 1.5rem;
+                text-align: center;
+            }
+
+            .manga-metadata {
+                text-align: center;
+            }
+
+            .official-links {
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 0.5rem;
                 margin-top: 1rem;
             }
 
+            .official-link {
+                margin: 0;
+                font-size: 0.9rem;
+            }
+
+            .manga-description {
+                font-size: 0.95rem;
+                text-align: justify;
+                padding: 0 0.5rem;
+            }
+
             .chapter-list {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
                 gap: 0.8rem;
             }
 
             .chapter-item {
                 padding: 0.8rem;
+            }
+
+            .chapter-title {
+                font-size: 0.9rem;
+            }
+
+            .chapter-date {
+                font-size: 0.8rem;
             }
         }
     </style>
