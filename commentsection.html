@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=0.8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>留言區</title>
     <link rel="icon" href="images/favicon.jpg" type="image/jpg">
     <style>
@@ -203,6 +203,22 @@
         footer h6 {
             color: var(--text-color);
             font-size: 0.9rem;
+        }
+
+        /* 響應式設計 */
+        /* 手機設備 */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0.8rem;
+            }
+
+            .nav-links {
+                gap: 1.2rem;
+            }
+
+            .nav-links > * {
+                min-width: 60px;
+            }
         }
     </style>
 </head>
