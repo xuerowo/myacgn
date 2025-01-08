@@ -285,6 +285,17 @@
             transform: scale(1.02);
             filter: brightness(1.1);
         }
+
+        @media (max-width: 768px) {
+            .manga-info {
+                grid-template-columns: 1fr;
+            }
+
+            .manga-cover {
+                max-width: 300px;
+                margin: 0 auto;
+            }
+        }
     </style>
 </head>
 <body>
