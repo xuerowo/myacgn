@@ -6,242 +6,8 @@
     <title>閱讀章節 - 魔法學院的閃現天才 - 網漫翻譯</title>
     <link rel="icon" href="/images/favicon.jpg" type="image/jpg">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js"></script>
-    <style>
-        :root {
-            --primary-color: #4a90e2;
-            --secondary-color: #f5f5f5;
-            --text-color: #333;
-            --background-color: #fff;
-        }
+</style>
 
-        :root[data-theme="dark"] {
-            --primary-color: #64b5f6;
-            --secondary-color: #1a1a1a;
-            --text-color: #e0e0e0;
-            --background-color: #121212;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            transition: background-color 0.3s;
-        }
-
-        body {
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-        }
-
-        .reader-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding-bottom: 60px;
-        }
-
-        .manga-page {
-            width: 100%;
-            height: auto;
-            margin: 0;
-            display: block;
-            -webkit-touch-callout: none;  /* iOS Safari */
-            -webkit-user-select: none;    /* Safari */
-            -khtml-user-select: none;     /* Konqueror HTML */
-            -moz-user-select: none;       /* Firefox */
-            -ms-user-select: none;        /* Internet Explorer/Edge */
-            user-select: none;            /* Non-prefixed version */
-            pointer-events: none;         /* 禁用點擊事件 */
-        }
-
-        .loading {
-            text-align: center;
-            padding: 2rem;
-            color: var(--text-color);
-            font-size: 1.2rem;
-        }
-
-        .reader-controls {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0,0,0,0.8);
-            padding: 1rem;
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            transition: transform 0.3s;
-            z-index: 1000;
-        }
-
-        .reader-controls.hidden {
-            transform: translateY(100%);
-        }
-
-        .control-btn {
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 4px;
-            background: var(--primary-color);
-            color: #fff;
-            cursor: pointer;
-            min-width: 80px;
-        }
-
-        .control-btn:hover {
-            background: #357abd;
-        }
-
-        .control-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .header-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0,0,0,0.8);
-            color: white;
-            padding: 0.5rem;
-            z-index: 1000;
-            transition: transform 0.3s;
-        }
-
-        .header-bar.hidden {
-            transform: translateY(-100%);
-        }
-
-        .header-bar-inner {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 800px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .header-bar-inner > span {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .chapter-menu {
-            position: fixed;
-            bottom: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 300px;
-            max-height: 400px;
-            background: rgba(0,0,0,0.9);
-            border-radius: 8px;
-            overflow-y: auto;
-            z-index: 1000;
-            transition: transform 0.3s ease-out;
-        }
-
-        .chapter-menu.hidden {
-            transform: translate(-50%, 200%);
-        }
-
-        .chapter-menu-header {
-            position: sticky;
-            top: 0;
-            padding: 1rem;
-            background: rgba(0,0,0,0.9);
-            border-bottom: 1px solid #444;
-            font-weight: bold;
-            text-align: center;
-            color: white;
-        }
-
-        .chapter-menu-list {
-            padding: 0.5rem;
-        }
-
-        .chapter-menu-item {
-            padding: 0.75rem 1rem;
-            cursor: pointer;
-            border-radius: 4px;
-            color: white;
-            margin-bottom: 0.25rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-        }
-
-        .chapter-menu-item:hover {
-            background: var(--primary-color);
-        }
-
-        .chapter-menu-item.current {
-            background: var(--primary-color);
-        }
-
-        .chapter-menu-item.read {
-            opacity: 0.7;
-        }
-
-        .chapter-date {
-            font-size: 0.85rem;
-            opacity: 0.8;
-        }
-
-        .nav-controls {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-            color: white;
-            margin-left: auto;
-        }
-
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            border-radius: 24px;
-            transition: .4s;
-        }
-
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            border-radius: 50%;
-            transition: .4s;
-        }
-
-        input:checked + .toggle-slider {
-            background-color: var(--primary-color);
-        }
-
-        input:checked + .toggle-slider:before {
-            transform: translateX(26px);
-        }
-    </style>
 </head>
 <body>
     <div id="app">
@@ -263,12 +29,17 @@
         </div>
 
         <div v-else class="reader-container">
+            <div v-if="error" class="error-message">
+                {{ error }}
+            </div>
             <img v-for="page in pages"
                  :key="page"
-                 :src="page + '?v=' + Date.now()"
+                 :src="page"
                  class="manga-page"
                  loading="lazy"
-                 @load="handleImageLoad"contextmenu="return false;"
+                 @load="handleImageLoad"
+                 @error="handleImageError($event, page)"
+                 contextmenu="return false;"
                  oncontextmenu="return false;"
                  onselectstart="return false;"
                  ondragstart="return false;">
@@ -318,7 +89,8 @@
 
     <script>
         const MANGA_INFO = {
-            title: '魔法學院的閃現天才'
+            title: '魔法學院的閃現天才',
+            baseUrl: `https://xuerowo.com/${encodeURIComponent('魔法學院的閃現天才')}`
         };
 
         const STORAGE_KEYS = {
@@ -341,16 +113,17 @@
                     loadedImages: 0,
                     showChapterMenu: false,
                     allChapters: [],
-                    isDarkMode: localStorage.getItem(STORAGE_KEYS.THEME) === 'dark'
+                    isDarkMode: localStorage.getItem(STORAGE_KEYS.THEME) === 'dark',
+                    error: null,
+                    retryCount: {},
+                    maxRetries: 3
                 }
             },
             computed: {
                 hasNext() {
-                    // 檢查是否有章節號比當前大的章節
                     return this.allChapters.some(chapter => chapter.number > this.currentChapter);
                 },
                 hasPrevious() {
-                    // 檢查是否有章節號比當前小的章節
                     return this.allChapters.some(chapter => chapter.number < this.currentChapter);
                 }
             },
@@ -385,16 +158,19 @@
                             throw new Error('找不到此章節');
                         }
 
+                        // 使用 R2 的基礎 URL
                         this.pages = Array.from(
                             { length: currentChapterData.total },
-                            (_, i) => `${this.currentChapter}/${i + 1}.jpg`
+                            (_, i) => `${MANGA_INFO.baseUrl}/${this.currentChapter}/${i + 1}.jpg?v=${Date.now()}`
                         );
 
                         this.markAsRead();
                     } catch (error) {
                         console.error('載入章節失敗:', error);
-                        alert('載入章節失敗');
-                        window.location.href = 'detail.html';
+                        this.error = '載入章節失敗，請稍後再試';
+                        setTimeout(() => {
+                            window.location.href = 'detail.html';
+                        }, 3000);
                     } finally {
                         this.loading = false;
                     }
@@ -405,20 +181,27 @@
                         this.restoreScrollPosition();
                     }
                 },
+                handleImageError(event, page) {
+                    this.retryCount[page] = (this.retryCount[page] || 0) + 1;
+                    
+                    if (this.retryCount[page] <= this.maxRetries) {
+                        // 添加新的時間戳重試載入
+                        event.target.src = `${page.split('?')[0]}?v=${Date.now()}`;
+                    } else {
+                        console.error('圖片載入失敗:', page);
+                        this.error = '部分圖片載入失敗，請稍後重試';
+                    }
+                },
                 goToManga() {
-                    // 清除滾動位置並返回
                     sessionStorage.removeItem(STORAGE_KEYS.SCROLL_POSITION);
                     window.location.href = 'detail.html';
                 },
-
                 toggleChapterMenu() {
                     this.showChapterMenu = !this.showChapterMenu;
-                    // 如果打開目錄，確保控制列顯示
                     if (this.showChapterMenu) {
                         this.hideControls = false;
                     }
                 },
-
                 saveScrollPosition() {
                     // 獲取當前所有章節的滾動位置
                     const manga = MANGA_INFO.title;
@@ -528,31 +311,27 @@
                 }
             },
             async mounted() {
-                // 設置初始主題
                 const theme = localStorage.getItem(STORAGE_KEYS.THEME) || 'light';
                 document.documentElement.setAttribute('data-theme', theme);
                 this.isDarkMode = theme === 'dark';
 
-                // 從 URL 獲取章節號
                 const params = new URLSearchParams(window.location.search);
                 const chapter = parseInt(params.get('chapter'));
                 if (!chapter) {
-                    alert('無效的章節號');
-                    window.location.href = 'detail.html';
+                    this.error = '無效的章節號';
+                    setTimeout(() => {
+                        window.location.href = 'detail.html';
+                    }, 3000);
                     return;
                 }
 
                 this.currentChapter = chapter;
                 document.title = `第${chapter}話 - ${MANGA_INFO.title} - 網漫翻譯`;
 
-                // 載入章節內容
                 await this.loadChapterData();
-
-                // 設置事件監聽
                 window.addEventListener('scroll', this.handleScroll);
             },
             unmounted() {
-                // 移除事件監聽
                 window.removeEventListener('scroll', this.handleScroll);
             }
         }).mount('#app');
