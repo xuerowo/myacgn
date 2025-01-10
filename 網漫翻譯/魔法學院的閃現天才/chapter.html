@@ -263,12 +263,17 @@
         </div>
 
         <div v-else class="reader-container">
+            <div v-if="error" class="error-message">
+                {{ error }}
+            </div>
             <img v-for="page in pages"
                  :key="page"
-                 :src="page + '?v=' + Date.now()"
+                 :src="page"
                  class="manga-page"
                  loading="lazy"
-                 @load="handleImageLoad"contextmenu="return false;"
+                 @load="handleImageLoad"
+                 @error="handleImageError($event, page)"
+                 contextmenu="return false;"
                  oncontextmenu="return false;"
                  onselectstart="return false;"
                  ondragstart="return false;">
@@ -318,7 +323,8 @@
 
     <script>
         const MANGA_INFO = {
-            title: '魔法學院的閃現天才'
+            title: '魔法學院的閃現天才',
+            baseUrl: `https://pub-1439fd98492f4d39a19299ba219c45de.r2.dev/${encodeURIComponent('魔法學院的閃現天才')}`
         };
 
         const STORAGE_KEYS = {
@@ -341,16 +347,17 @@
                     loadedImages: 0,
                     showChapterMenu: false,
                     allChapters: [],
-                    isDarkMode: localStorage.getItem(STORAGE_KEYS.THEME) === 'dark'
+                    isDarkMode: localStorage.getItem(STORAGE_KEYS.THEME) === 'dark',
+                    error: null,
+                    retryCount: {},
+                    maxRetries: 3
                 }
             },
             computed: {
                 hasNext() {
-                    // 檢查是否有章節號比當前大的章節
                     return this.allChapters.some(chapter => chapter.number > this.currentChapter);
                 },
                 hasPrevious() {
-                    // 檢查是否有章節號比當前小的章節
                     return this.allChapters.some(chapter => chapter.number < this.currentChapter);
                 }
             },
@@ -385,16 +392,19 @@
                             throw new Error('找不到此章節');
                         }
 
+                        // 使用 R2 的基礎 URL
                         this.pages = Array.from(
                             { length: currentChapterData.total },
-                            (_, i) => `${this.currentChapter}/${i + 1}.jpg`
+                            (_, i) => `${MANGA_INFO.baseUrl}/${this.currentChapter}/${i + 1}.jpg?v=${Date.now()}`
                         );
 
                         this.markAsRead();
                     } catch (error) {
                         console.error('載入章節失敗:', error);
-                        alert('載入章節失敗');
-                        window.location.href = 'detail.html';
+                        this.error = '載入章節失敗，請稍後再試';
+                        setTimeout(() => {
+                            window.location.href = 'detail.html';
+                        }, 3000);
                     } finally {
                         this.loading = false;
                     }
@@ -405,20 +415,27 @@
                         this.restoreScrollPosition();
                     }
                 },
+                handleImageError(event, page) {
+                    this.retryCount[page] = (this.retryCount[page] || 0) + 1;
+                    
+                    if (this.retryCount[page] <= this.maxRetries) {
+                        // 添加新的時間戳重試載入
+                        event.target.src = `${page.split('?')[0]}?v=${Date.now()}`;
+                    } else {
+                        console.error('圖片載入失敗:', page);
+                        this.error = '部分圖片載入失敗，請稍後重試';
+                    }
+                },
                 goToManga() {
-                    // 清除滾動位置並返回
                     sessionStorage.removeItem(STORAGE_KEYS.SCROLL_POSITION);
                     window.location.href = 'detail.html';
                 },
-
                 toggleChapterMenu() {
                     this.showChapterMenu = !this.showChapterMenu;
-                    // 如果打開目錄，確保控制列顯示
                     if (this.showChapterMenu) {
                         this.hideControls = false;
                     }
                 },
-
                 saveScrollPosition() {
                     // 獲取當前所有章節的滾動位置
                     const manga = MANGA_INFO.title;
@@ -528,31 +545,27 @@
                 }
             },
             async mounted() {
-                // 設置初始主題
                 const theme = localStorage.getItem(STORAGE_KEYS.THEME) || 'light';
                 document.documentElement.setAttribute('data-theme', theme);
                 this.isDarkMode = theme === 'dark';
 
-                // 從 URL 獲取章節號
                 const params = new URLSearchParams(window.location.search);
                 const chapter = parseInt(params.get('chapter'));
                 if (!chapter) {
-                    alert('無效的章節號');
-                    window.location.href = 'detail.html';
+                    this.error = '無效的章節號';
+                    setTimeout(() => {
+                        window.location.href = 'detail.html';
+                    }, 3000);
                     return;
                 }
 
                 this.currentChapter = chapter;
                 document.title = `第${chapter}話 - ${MANGA_INFO.title} - 網漫翻譯`;
 
-                // 載入章節內容
                 await this.loadChapterData();
-
-                // 設置事件監聽
                 window.addEventListener('scroll', this.handleScroll);
             },
             unmounted() {
-                // 移除事件監聽
                 window.removeEventListener('scroll', this.handleScroll);
             }
         }).mount('#app');
