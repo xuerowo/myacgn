@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>魔法學院的閃現天才 - 網漫翻譯</title>
+    <meta name="description" content="魔法學院的閃現天才在線看。個人嵌字,使用 Claude 3.5 Sonnet 進行翻譯。">
+    <meta name="keywords" content="魔法學院的閃現天才, 魔法學院的閃現天才在線看">
+    <link rel="icon" href="/images/favicon.jpg" type="image/jpg">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f5f5f5;
+            --text-color: #333;
+            --border-color: #ddd;
+            --background-color: #fff;
+        }
+
+        :root[data-theme="dark"] {
+            --primary-color: #64b5f6;
+            --secondary-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --border-color: #333;
+            --background-color: #121212;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--secondary-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .navbar {
+            background-color: var(--background-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 1rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h1 {
+            color: var(--primary-color);
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .nav-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            border-radius: 24px;
+            transition: .4s;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            border-radius: 50%;
+            transition: .4s;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        .manga-detail {
+            background: var(--background-color);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .manga-info {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+
+        .manga-cover {
+            width: 100%;
+            border-radius: 4px;
+        }
+
+        .manga-description {
+            margin-top: 1rem;
+            line-height: 1.8;
+            white-space: pre-line;
+        }
+
+        .manga-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .manga-metadata {
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .official-links {
+            margin-top: 0.5rem;
+        }
+
+        .official-link {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            margin-left: 0.5rem;
+            border-radius: 4px;
+            color: var(--text-color);
+            background: var(--secondary-color);
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .official-link:hover {
+            background: #357abd;
+            color: #fff;
+        }
+
+        .chapter-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .chapter-item {
+            background: var(--secondary-color);
+            padding: 1rem;
+            border-radius: 4px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .chapter-item.read {
+            opacity: 0.7;
+        }
+
+        .chapter-item:hover {
+            background: var(--primary-color);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .chapter-title {
+            font-weight: 500;
+        }
+
+        .chapter-date {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        :root[data-theme="dark"] .chapter-date {
+            color: #999;
+        }
+
+        .chapter-item:hover .chapter-date {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Lightbox 樣式 */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 95%;
+            max-height: 85vh;
+            animation: zoomIn 0.3s ease;
+        }
+
+        .lightbox img {
+            max-width: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+        }
+
+        .close-lightbox {
+            position: absolute;
+            top: -40px;
+            right: 0px;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 8px;
+            transition: transform 0.2s ease;
+        }
+
+        .close-lightbox:hover {
+            transform: scale(1.2);
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* 為可點擊的圖片添加懸停效果 */
+        .manga-cover {
+            cursor: pointer;
+            transition: transform 0.2s ease, filter 0.2s ease;
+        }
+
+        .manga-cover:hover {
+            transform: scale(1.02);
+            filter: brightness(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .manga-info {
+                grid-template-columns: 1fr;
+            }
+
+            .manga-cover {
+                max-width: 300px;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <nav class="navbar">
+            <h1 @click="goHome">網漫翻譯</h1>
+            <div class="nav-controls">
+                <label class="toggle-switch">
+                    <input type="checkbox" v-model="isDarkMode">
+                    <span class="toggle-slider"></span>
+                </label>
+                <span>夜間模式</span>
+            </div>
+        </nav>
+
+        <div class="lightbox" :class="{ active: isLightboxActive }" @click="closeLightbox">
+            <div class="lightbox-content">
+                <button class="close-lightbox" @click.stop="closeLightbox">✕</button>
+                <img :src="lightboxImage" alt="" @click.stop>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="manga-detail">
+                <div class="manga-info">
+                    <img :src="manga.coverUrl" :alt="manga.title" class="manga-cover" @click="openLightbox(manga.coverUrl)">
+                    <div>
+                        <h2 class="manga-title">{{ manga.title }}</h2>
+                        <div class="manga-metadata">
+                            <p><strong>作者：</strong>{{ manga.author }}</p>
+                            <p><strong>類型：</strong>{{ manga.genres }}</p>
+                            <p class="official-links">
+                                <strong>正版連結：</strong>
+                                <a :href="manga.officialLinks.korean" target="_blank" class="official-link">韓文版</a>
+                                <a :href="manga.officialLinks.english" target="_blank" class="official-link">英文版</a>
+                            </p>
+                        </div>
+                        <p class="manga-description">我成為了最糟角色白流雪？<br>
+                            在一個極度困難、效能最差的處境中。在人人都能使用魔法的世界裡，因為無法使用魔法而被連老手玩家都嫌棄的史上最糟糕廢物角色，白流雪。<br>
+                            【因為走向了錯誤的結局，艾特爾世界的90%都被摧毀了。】<br>
+                            【但願您能夠抵達真正的結局。】<br>
+                            我附身在這樣的白流雪身上。<br>
+                            我唯一擁有的魔法技能，【閃現】。<br>
+                            我是世界上最快的法師。<br>
+                            在天才法師橫行的史黛拉學院中存活下去吧！</p>
+                    </div>
+                </div>
+                <div class="chapter-list">
+                    <div v-for="chapter in chaptersWithDates" 
+                         :key="chapter.number"
+                         class="chapter-item"
+                         :class="{ read: isChapterRead(chapter.number) }"
+                         @click="goToChapter(chapter.number)">
+                        <div class="chapter-title">第{{ chapter.number }}話</div>
+                        <div class="chapter-date">{{ formatDate(chapter.date) }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const MANGA_INFO = {
+            title: '魔法學院的閃現天才',
+            author: '서유,은밀히',
+            genres: '遊戲,學院,生存,附身,天才,成長,魔法師',
+            coverUrl: 'cover.jpg',
+            officialLinks: {
+                korean: 'https://page.kakao.com/content/64227839',
+                english: 'https://tapas.io/series/blink-master-of-the-magic-academy/info'
+            }
+        };
+
+        const STORAGE_KEYS = {
+            READ_CHAPTERS: 'read_chapters',
+            THEME: 'theme'
+        };
+
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    manga: MANGA_INFO,
+                    chapters: [],
+                    readChapters: JSON.parse(localStorage.getItem(STORAGE_KEYS.READ_CHAPTERS) || '{}'),
+                    isDarkMode: localStorage.getItem(STORAGE_KEYS.THEME) === 'dark',
+                    isLightboxActive: false,
+                    lightboxImage: ''
+                }
+            },
+            computed: {
+                chaptersWithDates() {
+                    return this.chapters.sort((a, b) => b.number - a.number);
+                }
+            },
+            watch: {
+                isDarkMode(newValue) {
+                    const theme = newValue ? 'dark' : 'light';
+                    document.documentElement.setAttribute('data-theme', theme);
+                    localStorage.setItem(STORAGE_KEYS.THEME, theme);
+                }
+            },
+            methods: {
+                formatDate(dateStr) {
+                    if (!dateStr) return '';
+                    const date = new Date(dateStr);
+                    return date.toLocaleDateString('zh-TW', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit'
+                    }).replace(/\//g, '-');
+                },
+                async fetchChapterData() {
+                    try {
+                        const response = await fetch('chapters.json');
+                        const data = await response.json();
+                        this.chapters = data.chapters;
+                    } catch (error) {
+                        console.error('讀取章節資料失敗:', error);
+                    }
+                },
+                goHome() {
+                    window.location.href = '/webtoonstranslate.html';
+                },
+                goToChapter(chapter) {
+                    window.location.href = `chapter.html?chapter=${chapter}`;
+                },
+                isChapterRead(chapterNumber) {
+                    const key = this.manga.title;
+                    return this.readChapters[key]?.includes(chapterNumber);
+                },
+                openLightbox(imageUrl) {
+                    this.lightboxImage = imageUrl;
+                    this.isLightboxActive = true;
+                    document.body.style.overflow = 'hidden';
+                },
+    
+                closeLightbox() {
+                    this.isLightboxActive = false;
+                    document.body.style.overflow = '';
+                }
+            },
+            mounted() {
+                this.fetchChapterData();
+                const theme = localStorage.getItem(STORAGE_KEYS.THEME) || 'light';
+                document.documentElement.setAttribute('data-theme', theme);
+                this.isDarkMode = theme === 'dark';
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && this.isLightboxActive) {
+                        this.closeLightbox();
+                    }
+                });
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
