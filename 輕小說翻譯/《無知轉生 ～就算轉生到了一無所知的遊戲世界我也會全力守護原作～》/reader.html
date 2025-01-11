@@ -175,6 +175,17 @@
             cursor: not-allowed;
         }
 
+        .back-btn {
+            background: transparent;
+            min-width: auto;
+            padding: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background: transparent;
+            color: var(--primary-color);
+        }
+
         /* Reader Controls Styles */
         .reader-controls {
             position: fixed;
@@ -299,7 +310,7 @@
     <div id="app">
         <div class="header-bar" :class="{ hidden: hideControls }">
             <div class="header-bar-inner">
-                <button class="control-btn" @click="goToDetail">&lt;</button>
+                <button class="control-btn back-btn" @click="goToDetail">&lt;</button>
                 <div class="chapter-title">{{ currentChapter && currentChapter.title }}</div>
             </div>
         </div>
