@@ -318,8 +318,6 @@
                              @click="goToDetail(item)">
                         <div class="content-card-info" @click="goToDetail(item)">
                             <div class="content-title">{{ item.title }}</div>
-                            <div v-if="getReadingProgress(item)" class="reading-progress">
-                                已讀到：第{{ getReadingProgress(item) }}話
                             </div>
                         </div>
                     </div>
@@ -353,7 +351,6 @@
         const { createApp } = Vue;
 
         const STORAGE_KEYS = {
-            READING_PROGRESS: 'reading_progress',
             BOOKMARKS: 'bookmarks',
             THEME: 'theme'
         };
@@ -365,8 +362,7 @@
                     mangaList: [],
                     novelList: [],
                     isDarkMode: localStorage.getItem(STORAGE_KEYS.THEME) === 'dark',
-                    bookmarks: JSON.parse(localStorage.getItem(STORAGE_KEYS.BOOKMARKS) || '[]'),
-                    readingProgress: JSON.parse(localStorage.getItem(STORAGE_KEYS.READING_PROGRESS) || '{}')
+                    bookmarks: JSON.parse(localStorage.getItem(STORAGE_KEYS.BOOKMARKS) || '[]')
                 }
             },
             watch: {
