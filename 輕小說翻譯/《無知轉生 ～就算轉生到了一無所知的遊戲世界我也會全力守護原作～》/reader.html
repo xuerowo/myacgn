@@ -411,6 +411,7 @@
                     currentImage: '',
                     lastScrollTop: 0,
                     scrollTimeout: null,
+                    scrollPosition: 0,
                     isDarkMode: localStorage.getItem(STORAGE_KEYS.THEME) === 'dark',
                     fontSize: parseInt(localStorage.getItem(STORAGE_KEYS.FONT_SIZE)) || 18,
                     lineHeight: parseFloat(localStorage.getItem(STORAGE_KEYS.LINE_HEIGHT)) || 1.8,
@@ -517,6 +518,8 @@
                     this.scrollTimeout = setTimeout(() => {
                         this.hideControls = false;
                     }, 3000);
+
+                    this.saveScrollPosition(); 
                 },
                 toggleSettings() {
                     this.showSettings = !this.showSettings;
@@ -528,6 +531,7 @@
                 },
                 goToChapter(number) {
                     if (number !== this.currentChapter.number) {
+                        this.saveScrollPosition();
                         window.location.href = `reader.html?chapter=${number}`;
                     }
                     this.showChapterMenu = false;
@@ -543,6 +547,7 @@
                         const nextChapter = nextChapters.reduce((min, chapter) => 
                             chapter.number < min.number ? chapter : min
                         );
+                        this.saveScrollPosition(); 
                         window.location.href = `reader.html?chapter=${nextChapter.number}`;
                     }
                 },
@@ -554,12 +559,24 @@
                         const prevChapter = prevChapters.reduce((max, chapter) => 
                             chapter.number > max.number ? chapter : max
                         );
+                        this.saveScrollPosition();
                         window.location.href = `reader.html?chapter=${prevChapter.number}`;
                     }
                 },
                 scrollToTop() {
                     window.scrollTo(0, 0);
-                }
+                },
+                saveScrollPosition() {
+                    // 保存當前章節的滾動位置
+                    localStorage.setItem(`scrollPosition_${this.currentChapter.number}`, window.pageYOffset);
+                },
+                restoreScrollPosition() {
+                    // 恢復上一次的滾動位置
+                    const savedPosition = localStorage.getItem(`scrollPosition_${this.currentChapter.number}`);
+                    if (savedPosition !== null) {
+                    window.scrollTo(0, parseInt(savedPosition));
+                    }
+                },
             },
             mounted() {
                 this.fetchChapterData();
@@ -617,9 +634,11 @@
                         }
                     }
                 });
+                this.restoreScrollPosition();
             },
             beforeUnmount() {
                 window.removeEventListener('scroll', this.handleScroll);
+                this.saveScrollPosition();
             }
         }).mount('#app');
     </script>
