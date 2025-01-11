@@ -185,68 +185,24 @@
             cursor: not-allowed;
         }
 
-        .chapter-list {
-            position: fixed;
-            bottom: 60px;
-            left: 50%;
-            transform: translate(-50%, 0);
-            width: 300px;
-            max-height: 400px;
-            background: rgba(0,0,0,0.9);
-            border-radius: 8px;
-            padding: 1rem;
-            color: white;
-            z-index: 1000;
-            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-            overflow-y: auto;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .chapter-list.active {
-            transform: translate(-50%, 0);
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .chapter-list-header {
-            font-size: 1.2rem;
-            font-weight: bold;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #444;
-            text-align: center;
-        }
-
-        .chapter-item {
-            padding: 0.5rem;
-            cursor: pointer;
-        }
-
-        .chapter-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
         .settings-modal {
             position: fixed;
             bottom: 60px;
             left: 50%;
-            transform: translate(-50%, 0);
+            transform: translate(-50%, 200%);
             width: 300px;
             background: rgba(0,0,0,0.9);
             border-radius: 8px;
             padding: 1.5rem;
             color: white;
             z-index: 1000;
-            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-            opacity: 0;
-            pointer-events: none;
+            transition: transform 0.3s ease-out;
         }
 
         .settings-modal.active {
             transform: translate(-50%, 0);
-            opacity: 1;
-            pointer-events: auto;
         }
+
         .settings-modal-header {
             position: sticky;
             top: 0;
@@ -324,20 +280,6 @@
             <img :src="currentImage" alt="" @click.stop>
         </div>
 
-        <div class="chapter-list" :class="{ active: showChapterList }">
-            <div class="chapter-list-header">
-                章節目錄
-            </div>
-            <div class="chapter-list-content">
-                <div v-for="chapter in allChapters" 
-                     :key="chapter.number"
-                     class="chapter-item"
-                     @click="goToChapter(chapter.number)">
-                    {{ chapter.title }}
-                </div>
-            </div>
-        </div>
-
         <div class="settings-modal" :class="{ active: showSettings }">
             <div class="settings-modal-header">
                 閱讀設置
@@ -367,10 +309,6 @@
             <button class="control-btn" 
                     @click="goToDetail">
                 返回
-            </button>
-            <button class="control-btn"
-                    @click="toggleChapterList">
-                目錄
             </button>
             <button class="control-btn"
                     @click="toggleSettings">
@@ -404,7 +342,6 @@
                     chapterContent: '',
                     hideControls: false,
                     showSettings: false,
-                    showChapterList: false,
                     showImageLightbox: false,
                     currentImage: '',
                     lastScrollTop: 0,
@@ -514,20 +451,11 @@
                         this.hideControls = false;
                     }, 3000);
                 },
-                toggleChapterList() {
-                    this.showChapterList = !this.showChapterList;
-                },
                 toggleSettings() {
                     this.showSettings = !this.showSettings;
-                    if (this.showSettings) {
-                        this.showChapterList = false;
-                    }
                 },
                 goToDetail() {
                     window.location.href = 'detail.html';
-                },
-                goToChapter(chapterNumber) {
-                    window.location.href = `reader.html?chapter=${chapterNumber}`;
                 },
                 goToNext() {
                     if (this.hasNext) {
