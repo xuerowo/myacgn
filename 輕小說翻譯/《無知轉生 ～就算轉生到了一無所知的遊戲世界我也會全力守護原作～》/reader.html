@@ -3,24 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>閱讀章節 - 無知轉生 - 輕小說翻譯</title>
+    <title>閱讀章節 - 魔法學院的閃現天才 - 網漫翻譯</title>
     <link rel="icon" href="/images/favicon.jpg" type="image/jpg">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.2/marked.min.js"></script>
     <style>
-        /* Root Variables */
         :root {
             --primary-color: #4a90e2;
             --secondary-color: #f5f5f5;
             --text-color: #333;
             --background-color: #fff;
-            --font-size: 18px;
-            --line-height: 1.8;
-            --max-width: 800px;
-            --content-padding: 2rem;
         }
 
-        /* Dark Theme */
         :root[data-theme="dark"] {
             --primary-color: #64b5f6;
             --secondary-color: #1a1a1a;
@@ -28,7 +21,6 @@
             --background-color: #121212;
         }
 
-        /* Basic Reset */
         * {
             margin: 0;
             padding: 0;
@@ -37,131 +29,61 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            line-height: var(--line-height);
-            color: var(--text-color);
             background-color: var(--secondary-color);
+            color: var(--text-color);
         }
 
-        /* Header Styles */
-        .header-bar {
+        .reader-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding-bottom: 60px;
+        }
+
+        .manga-page {
+            width: 100%;
+            height: auto;
+            margin: 0;
+            display: block;
+            -webkit-touch-callout: none;  /* iOS Safari */
+            -webkit-user-select: none;    /* Safari */
+            -khtml-user-select: none;     /* Konqueror HTML */
+            -moz-user-select: none;       /* Firefox */
+            -ms-user-select: none;        /* Internet Explorer/Edge */
+            user-select: none;            /* Non-prefixed version */
+            pointer-events: none;         /* 禁用點擊事件 */
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-color);
+            font-size: 1.2rem;
+        }
+
+        .reader-controls {
             position: fixed;
-            top: 0;
+            bottom: 0;
             left: 0;
             right: 0;
             background: rgba(0,0,0,0.8);
-            color: white;
-            padding: 0.5rem;
-            z-index: 1000;
-            transition: transform 0.3s;
-        }
-
-        .header-bar.hidden {
-            transform: translateY(-100%);
-        }
-
-        .header-bar-inner {
+            padding: 1rem;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: var(--max-width);
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
-
-        .chapter-title {
-            text-align: center;
-            flex-grow: 1;
-            margin: 0 1rem;
-        }
-
-        /* Reader Container Styles */
-        .reader-container {
-            max-width: var(--max-width);
-            margin: 4rem auto 5rem;
-            padding: var(--content-padding);
-            background: var(--background-color);
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            font-size: var(--font-size);
-        }
-
-        /* Novel Content Styles */
-        .novel-content {
-            margin-bottom: 2rem;
-        }
-
-        .novel-content p {
-            margin-bottom: 1rem;
-        }
-
-        .novel-content a {
-            word-break: break-all;
-        }
-
-        .novel-content img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin: 1rem auto;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: transform 0.2s ease;
-        }
-
-        .novel-content img:hover {
-            transform: scale(1.02);
-        }
-
-        /* Image Lightbox Styles */
-        .image-lightbox {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            display: none;
             justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            gap: 1rem;
+            transition: transform 0.3s;
+            z-index: 1000;
         }
 
-        .image-lightbox.active {
-            display: flex;
-            opacity: 1;
+        .reader-controls.hidden {
+            transform: translateY(100%);
         }
 
-        .image-lightbox img {
-            max-width: 90%;
-            max-height: 90vh;
-            object-fit: contain;
-            border-radius: 4px;
-            animation: zoomIn 0.3s ease;
-        }
-
-        .close-lightbox {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            color: white;
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            z-index: 2001;
-            padding: 10px;
-        }
-
-        /* Control Button Styles */
         .control-btn {
             padding: 0.5rem 1rem;
             border: none;
             border-radius: 4px;
             background: var(--primary-color);
-            color: white;
+            color: #fff;
             cursor: pointer;
             min-width: 80px;
         }
@@ -186,128 +108,149 @@
             color: var(--primary-color);
         }
 
-        /* Reader Controls Styles */
-        .reader-controls {
+        .header-bar {
             position: fixed;
-            bottom: 0;
+            top: 0;
             left: 0;
             right: 0;
             background: rgba(0,0,0,0.8);
-            padding: 1rem;
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            transition: transform 0.3s;
+            color: white;
+            padding: 0.5rem;
             z-index: 1000;
+            transition: transform 0.3s;
         }
 
-        .reader-controls.hidden {
-            transform: translateY(100%);
+        .header-bar.hidden {
+            transform: translateY(-100%);
         }
 
-        /* Settings Modal Styles */
-        .settings-modal {
+        .header-bar-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .header-bar-inner > span {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .chapter-menu {
             position: fixed;
             bottom: 60px;
             left: 50%;
-            transform: translate(-50%, 200%);
+            transform: translateX(-50%);
             width: 300px;
+            max-height: 400px;
             background: rgba(0,0,0,0.9);
             border-radius: 8px;
-            padding: 1.5rem;
-            color: white;
+            overflow-y: auto;
             z-index: 1000;
             transition: transform 0.3s ease-out;
-            touch-action: none;
         }
 
-        .settings-modal:nth-child(6) {  
-            touch-action: none;
+        .chapter-menu.hidden {
+            transform: translate(-50%, 200%);
         }
 
-        .settings-modal.active {
-            transform: translate(-50%, 0);
-        }
-
-        .settings-modal-header {
+        .chapter-menu-header {
             position: sticky;
             top: 0;
-            padding: 0 0 1rem 0;
+            padding: 1rem;
+            background: rgba(0,0,0,0.9);
             border-bottom: 1px solid #444;
             font-weight: bold;
             text-align: center;
+            color: white;
         }
 
-        .settings-group {
-            margin: 1.5rem 0;
+        .chapter-menu-list {
+            padding: 0.5rem;
         }
 
-        .settings-group:last-child {
-            margin-bottom: 0;
-        }
-
-        .settings-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-
-        .settings-group input[type="range"] {
-            width: 100%;
-        }
-
-        .settings-group input[type="checkbox"] {
-            margin-right: 0.5rem;
-        }
-
-        /* Chapter Item Styles */
-        .chapter-item {
+        .chapter-menu-item {
             padding: 0.75rem 1rem;
             cursor: pointer;
-            border-bottom: 1px solid #444;
-            transition: background-color 0.2s;
+            border-radius: 4px;
+            color: white;
+            margin-bottom: 0.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
         }
 
-        .chapter-item:hover {
+        .chapter-menu-item:hover {
             background: var(--primary-color);
         }
 
-        .chapter-item.current {
+        .chapter-menu-item.current {
             background: var(--primary-color);
         }
 
-        /* Animation */
-        @keyframes zoomIn {
-            from {
-                transform: scale(0.9);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
+        .chapter-menu-item.read {
+            opacity: 0.7;
         }
 
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            :root {
-                --font-size: 16px;
-                --content-padding: 1rem;
-            }
+        .chapter-date {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
 
-            .reader-container {
-                margin: 3.5rem 0 5rem;
-                border-radius: 0;
-                box-shadow: none; 
-            }
+        .nav-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            color: white;
+            margin-left: auto;
+        }
 
-            .close-lightbox {
-                top: 10px;
-                right: 10px;
-            }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
 
-            .settings-modal {
-                width: 90%;
-            }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            border-radius: 24px;
+            transition: .4s;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            border-radius: 50%;
+            transition: .4s;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
         }
     </style>
 </head>
@@ -316,50 +259,49 @@
         <div class="header-bar" :class="{ hidden: hideControls }">
             <div class="header-bar-inner">
                 <button class="control-btn back-btn" @click="goToDetail">&lt;</button>
-                <div class="chapter-title">{{ currentChapter && currentChapter.title }}</div>
+                <span>第{{ currentChapter }}話</span>
+                <div class="nav-controls">
+                    <label class="toggle-switch">
+                        <input type="checkbox" v-model="isDarkMode">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <span>夜間模式</span>
+                </div>
             </div>
         </div>
 
-        <div class="reader-container">
-            <div class="novel-content" v-html="parsedContent"></div>
+        <div v-if="loading" class="loading">
+            載入中...
         </div>
 
-        <div class="image-lightbox" :class="{ active: showImageLightbox }" @click="closeImageLightbox">
-            <button class="close-lightbox" @click.stop="closeImageLightbox">✕</button>
-            <img :src="currentImage" alt="" @click.stop>
+        <div v-else class="reader-container">
+            <img v-for="page in pages"
+                 :key="page"
+                 :src="page + '?v=' + Date.now()"
+                 class="manga-page"
+                 loading="lazy"
+                 @load="handleImageLoad"contextmenu="return false;"
+                 oncontextmenu="return false;"
+                 onselectstart="return false;"
+                 ondragstart="return false;">
         </div>
 
-        <div class="settings-modal" :class="{ active: showSettings }">
-            <div class="settings-modal-header">
-                閱讀設置
-            </div>
-            <div class="settings-group">
-                <label>字體大小: {{ fontSize }}px</label>
-                <input type="range" v-model="fontSize" min="14" max="24" step="1">
-            </div>
-            <div class="settings-group">
-                <label>行距: {{ lineHeight }}</label>
-                <input type="range" v-model="lineHeight" min="1.5" max="2.5" step="0.1">
-            </div>
-            <div class="settings-group">
-                <label>
-                    <input type="checkbox" v-model="isDarkMode">
-                    夜間模式
-                </label>
-            </div>
-        </div>
-
-        <div class="settings-modal" :class="{ active: showChapterMenu }">
-            <div class="settings-modal-header">
+        <!-- 章節目錄 -->
+        <div v-if="showChapterMenu" class="chapter-menu" :class="{ hidden: hideControls }">
+            <div class="chapter-menu-header">
                 章節目錄
             </div>
-            <div class="settings-group">
+            <div class="chapter-menu-list">
                 <div v-for="chapter in allChapters" 
                      :key="chapter.number"
-                     class="chapter-item"
-                     :class="{ current: chapter.number === currentChapter.number }"
+                     class="chapter-menu-item"
+                     :class="{
+                         current: chapter.number === currentChapter,
+                         read: isChapterRead(chapter.number)
+                     }"
                      @click="goToChapter(chapter.number)">
-                    <div>{{ chapter.title }}</div>
+                    <div>第{{ chapter.number }}話</div>
+                    <div class="chapter-date">{{ formatDate(chapter.date) }}</div>
                 </div>
             </div>
         </div>
@@ -373,10 +315,6 @@
             <button class="control-btn"
                     @click="toggleChapterMenu">
                 目錄
-            </button>
-            <button class="control-btn"
-                    @click="toggleSettings">
-                設置
             </button>
             <button class="control-btn" 
                     @click="goToNext"
@@ -394,7 +332,8 @@
         const STORAGE_KEYS = {
             THEME: 'theme',
             FONT_SIZE: 'font_size',
-            LINE_HEIGHT: 'line_height'
+            LINE_HEIGHT: 'line_height',
+            SCROLL_POSITION: 'novel_scroll_position'
         };
 
         const { createApp } = Vue;
@@ -411,7 +350,6 @@
                     currentImage: '',
                     lastScrollTop: 0,
                     scrollTimeout: null,
-                    scrollPosition: 0,
                     isDarkMode: localStorage.getItem(STORAGE_KEYS.THEME) === 'dark',
                     fontSize: parseInt(localStorage.getItem(STORAGE_KEYS.FONT_SIZE)) || 18,
                     lineHeight: parseFloat(localStorage.getItem(STORAGE_KEYS.LINE_HEIGHT)) || 1.8,
@@ -478,6 +416,7 @@
                         this.scrollToTop();
                         this.$nextTick(() => {
                             this.setupImageViewer();
+                            this.restoreScrollPosition();
                         });
                     } catch (error) {
                         console.error('讀取章節內容失敗:', error);
@@ -498,6 +437,38 @@
                 closeImageLightbox() {
                     this.showImageLightbox = false;
                 },
+                saveScrollPosition() {
+                    // 獲取當前所有章節的滾動位置
+                    const novel = NOVEL_INFO.title;
+                    const scrollPositions = JSON.parse(sessionStorage.getItem(STORAGE_KEYS.SCROLL_POSITION) || '{}');
+                    
+                    // 確保每部小說都有自己的滾動位置記錄
+                    if (!scrollPositions[novel]) {
+                        scrollPositions[novel] = {};
+                    }
+                    
+                    // 更新當前章節的滾動位置
+                    scrollPositions[novel][this.currentChapter.number] = window.pageYOffset;
+                    
+                    // 保存回 sessionStorage
+                    sessionStorage.setItem(STORAGE_KEYS.SCROLL_POSITION, JSON.stringify(scrollPositions));
+                },
+                restoreScrollPosition() {
+                    // 獲取所有章節的滾動位置
+                    const novel = NOVEL_INFO.title;
+                    const scrollPositions = JSON.parse(sessionStorage.getItem(STORAGE_KEYS.SCROLL_POSITION) || '{}');
+                    
+                    // 獲取當前小說的滾動位置
+                    const novelPositions = scrollPositions[novel] || {};
+                    
+                    // 獲取當前章節的滾動位置
+                    const savedPosition = novelPositions[this.currentChapter.number];
+                    
+                    // 如果有保存的位置，恢復到該位置
+                    if (savedPosition !== undefined) {
+                        window.scrollTo(0, parseInt(savedPosition));
+                    }
+                },
                 handleScroll() {
                     clearTimeout(this.scrollTimeout);
 
@@ -514,12 +485,13 @@
                     }
 
                     this.lastScrollTop = st;
+                    
+                    // 保存當前章節的滾動位置
+                    this.saveScrollPosition();
 
                     this.scrollTimeout = setTimeout(() => {
                         this.hideControls = false;
                     }, 3000);
-
-                    this.saveScrollPosition(); 
                 },
                 toggleSettings() {
                     this.showSettings = !this.showSettings;
@@ -531,12 +503,15 @@
                 },
                 goToChapter(number) {
                     if (number !== this.currentChapter.number) {
+                        // 保存當前章節的滾動位置
                         this.saveScrollPosition();
                         window.location.href = `reader.html?chapter=${number}`;
                     }
                     this.showChapterMenu = false;
                 },
                 goToDetail() {
+                    // 清除滾動位置並返回
+                    sessionStorage.removeItem(STORAGE_KEYS.SCROLL_POSITION);
                     window.location.href = 'detail.html';
                 },
                 goToNext() {
@@ -547,7 +522,8 @@
                         const nextChapter = nextChapters.reduce((min, chapter) => 
                             chapter.number < min.number ? chapter : min
                         );
-                        this.saveScrollPosition(); 
+                        // 保存當前章節的滾動位置
+                        this.saveScrollPosition();
                         window.location.href = `reader.html?chapter=${nextChapter.number}`;
                     }
                 },
@@ -559,24 +535,14 @@
                         const prevChapter = prevChapters.reduce((max, chapter) => 
                             chapter.number > max.number ? chapter : max
                         );
+                        // 保存當前章節的滾動位置
                         this.saveScrollPosition();
                         window.location.href = `reader.html?chapter=${prevChapter.number}`;
                     }
                 },
                 scrollToTop() {
                     window.scrollTo(0, 0);
-                },
-                saveScrollPosition() {
-                    // 保存當前章節的滾動位置
-                    localStorage.setItem(`scrollPosition_${this.currentChapter.number}`, window.pageYOffset);
-                },
-                restoreScrollPosition() {
-                    // 恢復上一次的滾動位置
-                    const savedPosition = localStorage.getItem(`scrollPosition_${this.currentChapter.number}`);
-                    if (savedPosition !== null) {
-                    window.scrollTo(0, parseInt(savedPosition));
-                    }
-                },
+                }
             },
             mounted() {
                 this.fetchChapterData();
@@ -634,11 +600,9 @@
                         }
                     }
                 });
-                this.restoreScrollPosition();
             },
             beforeUnmount() {
                 window.removeEventListener('scroll', this.handleScroll);
-                this.saveScrollPosition();
             }
         }).mount('#app');
     </script>
