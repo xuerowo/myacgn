@@ -158,6 +158,11 @@
             transform: rotate(180deg);
         }
 
+        .dropdown-menu a.active {
+            background-color: var(--dropdown-hover);
+            color: var(--primary-color);
+        }
+
         .content-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -337,8 +342,6 @@
                              @click="goToDetail(item)">
                         <div class="content-card-info" @click="goToDetail(item)">
                             <div class="content-title">{{ item.title }}</div>
-                            <div v-if="getReadingProgress(item)" class="reading-progress">
-                                已讀到：第{{ getReadingProgress(item) }}話
                             </div>
                         </div>
                     </div>
