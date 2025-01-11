@@ -158,6 +158,11 @@
             transform: rotate(180deg);
         }
 
+        .dropdown-menu a.active {
+            background-color: var(--dropdown-hover);
+            color: var(--primary-color);
+        }
+
         .content-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -292,8 +297,8 @@
                     <div class="dropdown">
                         <button class="dropdown-toggle" style="color: var(--primary-color)">ACG翻譯</button>
                         <div class="dropdown-menu">
-                            <a href="#webtoons" @click="switchContent('webtoons')">網漫</a>
-                            <a href="#novels" @click="switchContent('novels')">輕小說</a>
+                            <a href="#webtoons" @click="switchContent('webtoons')" :class="{ active: currentContent === 'webtoons' }">網漫</a>
+                            <a href="#novels" @click="switchContent('novels')" :class="{ active: currentContent === 'novels' }">輕小說</a>
                         </div>
                     </div>
                     <a href="commentsection.html">留言區</a>
@@ -368,6 +373,12 @@
                     const theme = newValue ? 'dark' : 'light';
                     document.documentElement.setAttribute('data-theme', theme);
                     localStorage.setItem(STORAGE_KEYS.THEME, theme);
+                },
+                '$route.hash'(newHash) {
+                    const hash = newHash.substring(1);
+                    if (hash === 'novels' || hash === 'webtoons') {
+                        this.switchContent(hash);
+                    }
                 }
             },
             methods: {
