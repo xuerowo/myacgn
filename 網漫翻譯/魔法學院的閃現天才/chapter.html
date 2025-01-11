@@ -317,10 +317,6 @@
                     :disabled="!hasPrevious">
                 上一話
             </button>
-            <button class="control-btn" 
-                    @click="goToManga">
-                返回
-            </button>
             <button class="control-btn"
                     @click="toggleChapterMenu">
                 目錄
@@ -438,7 +434,7 @@
                         this.error = '部分圖片載入失敗，請稍後重試';
                     }
                 },
-                goToManga() {
+                goToDetail() {
                     sessionStorage.removeItem(STORAGE_KEYS.SCROLL_POSITION);
                     window.location.href = 'detail.html';
                 },
