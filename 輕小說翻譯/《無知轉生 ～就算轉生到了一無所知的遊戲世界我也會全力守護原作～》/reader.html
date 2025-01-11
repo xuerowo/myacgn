@@ -189,7 +189,7 @@
             position: fixed;
             bottom: 60px;
             left: 50%;
-            transform: translate(-50%, 200%);
+            transform: translate(-50%, 0);
             width: 300px;
             max-height: 400px;
             background: rgba(0,0,0,0.9);
@@ -197,12 +197,16 @@
             padding: 1rem;
             color: white;
             z-index: 1000;
-            transition: transform 0.3s ease-out;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
             overflow-y: auto;
+            opacity: 0;
+            pointer-events: none;
         }
 
         .chapter-list.active {
             transform: translate(-50%, 0);
+            opacity: 1;
+            pointer-events: auto;
         }
 
         .chapter-list-header {
@@ -226,20 +230,23 @@
             position: fixed;
             bottom: 60px;
             left: 50%;
-            transform: translate(-50%, 200%);
+            transform: translate(-50%, 0);
             width: 300px;
             background: rgba(0,0,0,0.9);
             border-radius: 8px;
             padding: 1.5rem;
             color: white;
             z-index: 1000;
-            transition: transform 0.3s ease-out;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+            opacity: 0;
+            pointer-events: none;
         }
 
         .settings-modal.active {
             transform: translate(-50%, 0);
+            opacity: 1;
+            pointer-events: auto;
         }
-
         .settings-modal-header {
             position: sticky;
             top: 0;
