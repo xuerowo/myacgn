@@ -127,20 +127,35 @@
             cursor: not-allowed;
         }
 
-        .settings-panel {
+        .settings-modal {
             position: fixed;
-            top: 50%;
-            right: 0;
-            transform: translateY(-50%);
-            background: rgba(0,0,0,0.8);
-            padding: 1rem;
-            border-radius: 8px 0 0 8px;
+            bottom: 60px;
+            left: 50%;
+            transform: translate(-50%, 200%);
+            width: 300px;
+            background: rgba(0,0,0,0.9);
+            border-radius: 8px;
+            padding: 1.5rem;
             color: white;
             z-index: 1000;
+            transition: transform 0.3s ease-out;
+        }
+
+        .settings-modal.active {
+            transform: translate(-50%, 0);
+        }
+
+        .settings-modal-header {
+            position: sticky;
+            top: 0;
+            padding: 0 0 1rem 0;
+            border-bottom: 1px solid #444;
+            font-weight: bold;
+            text-align: center;
         }
 
         .settings-group {
-            margin-bottom: 1rem;
+            margin: 1.5rem 0;
         }
 
         .settings-group:last-child {
@@ -156,13 +171,7 @@
             width: 100%;
         }
 
-        .theme-toggle {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .theme-toggle input[type="checkbox"] {
+        .settings-group input[type="checkbox"] {
             margin-right: 0.5rem;
         }
 
@@ -170,10 +179,6 @@
             :root {
                 --font-size: 16px;
                 --content-padding: 1rem;
-            }
-
-            .settings-panel {
-                display: none;
             }
 
             .reader-container {
@@ -194,7 +199,10 @@
             <div class="novel-content" v-html="parsedContent"></div>
         </div>
 
-        <div class="settings-panel">
+        <div class="settings-modal" :class="{ active: showSettings }">
+            <div class="settings-modal-header">
+                閱讀設置
+            </div>
             <div class="settings-group">
                 <label>字體大小: {{ fontSize }}px</label>
                 <input type="range" v-model="fontSize" min="14" max="24" step="1">
@@ -203,7 +211,7 @@
                 <label>行距: {{ lineHeight }}</label>
                 <input type="range" v-model="lineHeight" min="1.5" max="2.5" step="0.1">
             </div>
-            <div class="settings-group theme-toggle">
+            <div class="settings-group">
                 <label>
                     <input type="checkbox" v-model="isDarkMode">
                     夜間模式
@@ -220,6 +228,10 @@
             <button class="control-btn" 
                     @click="goToDetail">
                 返回
+            </button>
+            <button class="control-btn"
+                    @click="toggleSettings">
+                設置
             </button>
             <button class="control-btn" 
                     @click="goToNext"
@@ -248,6 +260,7 @@
                     currentChapter: null,
                     chapterContent: '',
                     hideControls: false,
+                    showSettings: false,
                     lastScrollTop: 0,
                     scrollTimeout: null,
                     isDarkMode: localStorage.getItem(STORAGE_KEYS.THEME) === 'dark',
@@ -328,6 +341,7 @@
 
                     if (isScrollingDown && !isAtBottom) {
                         this.hideControls = true;
+                        this.showSettings = false;
                     } else {
                         this.hideControls = false;
                     }
@@ -337,6 +351,9 @@
                     this.scrollTimeout = setTimeout(() => {
                         this.hideControls = false;
                     }, 3000);
+                },
+                toggleSettings() {
+                    this.showSettings = !this.showSettings;
                 },
                 goToDetail() {
                     window.location.href = 'detail.html';
@@ -378,6 +395,16 @@
 
                 // 設置滾動事件監聽
                 window.addEventListener('scroll', this.handleScroll);
+
+                // 監聽點擊事件來關閉設置面板
+                document.addEventListener('click', (e) => {
+                    const settingsModal = document.querySelector('.settings-modal');
+                    const settingsBtn = document.querySelector('.control-btn:nth-child(3)');
+                    
+                    if (!settingsModal.contains(e.target) && !settingsBtn.contains(e.target)) {
+                        this.showSettings = false;
+                    }
+                });
             },
             beforeUnmount() {
                 window.removeEventListener('scroll', this.handleScroll);
