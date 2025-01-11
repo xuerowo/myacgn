@@ -317,6 +317,20 @@
             <img :src="currentImage" alt="" @click.stop>
         </div>
 
+        <div class="chapter-list" :class="{ active: showChapterList }">
+            <div class="chapter-list-header">
+                章節目錄
+            </div>
+            <div class="chapter-list-content">
+                <div v-for="chapter in allChapters" 
+                     :key="chapter.number"
+                     class="chapter-item"
+                     @click="goToChapter(chapter.number)">
+                    {{ chapter.title }}
+                </div>
+            </div>
+        </div>
+
         <div class="settings-modal" :class="{ active: showSettings }">
             <div class="settings-modal-header">
                 閱讀設置
@@ -360,20 +374,6 @@
                     :disabled="!hasNext">
                 下一章
             </button>
-        </div>
-    </div>
-
-    <div class="chapter-list" :class="{ active: showChapterList }">
-        <div class="chapter-list-header">
-            章節目錄
-        </div>
-        <div class="chapter-list-content">
-            <div v-for="chapter in allChapters" 
-                 :key="chapter.number"
-                 class="chapter-item"
-                 @click="goToChapter(chapter.number)">
-                {{ chapter.title }}
-            </div>
         </div>
     </div>
 
