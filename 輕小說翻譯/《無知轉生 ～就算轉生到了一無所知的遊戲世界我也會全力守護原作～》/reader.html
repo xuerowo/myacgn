@@ -512,6 +512,9 @@
                 },
                 toggleSettings() {
                     this.showSettings = !this.showSettings;
+                    if (this.showSettings) {
+                        this.showChapterList = false;
+                    }
                 },
                 goToDetail() {
                     window.location.href = 'detail.html';
