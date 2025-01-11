@@ -97,6 +97,17 @@
             cursor: not-allowed;
         }
 
+        .back-btn {
+            background: transparent;
+            min-width: auto;
+            padding: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background: transparent;
+            color: var(--primary-color);
+        }
+
         .header-bar {
             position: fixed;
             top: 0;
@@ -247,6 +258,7 @@
     <div id="app">
         <div class="header-bar" :class="{ hidden: hideControls }">
             <div class="header-bar-inner">
+                <button class="control-btn back-btn" @click="goToDetail">&lt;</button>
                 <span>第{{ currentChapter }}話</span>
                 <div class="nav-controls">
                     <label class="toggle-switch">
