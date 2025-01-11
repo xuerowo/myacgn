@@ -533,10 +533,6 @@
                     
                     // 保存當前章節的滾動位置
                     this.saveScrollPosition();
-
-                    this.scrollTimeout = setTimeout(() => {
-                        this.hideControls = false;
-                    }, 3000);
                 },
                 isChapterRead(chapter) {
                     const readChapters = JSON.parse(localStorage.getItem(STORAGE_KEYS.READ_CHAPTERS) || '{}');
