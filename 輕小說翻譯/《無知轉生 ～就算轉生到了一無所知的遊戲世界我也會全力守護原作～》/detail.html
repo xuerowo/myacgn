@@ -276,6 +276,18 @@
             }
         }
 
+        .chapter-item.read {
+            opacity: 0.7;
+        }
+
+        .chapter-item.read .chapter-title {
+            color: #999;
+        }
+
+        :root[data-theme="dark"] .chapter-item.read .chapter-title {
+            color: #666;
+        }
+
         @media (max-width: 768px) {
             .novel-info {
                 grid-template-columns: 1fr;
@@ -329,6 +341,7 @@
                     <div v-for="chapter in chaptersWithDates" 
                          :key="chapter.number"
                          class="chapter-item"
+                         :class="{ read: isChapterRead(chapter.number) }"
                          @click="goToChapter(chapter.number)">
                         <div class="chapter-title">{{ chapter.title }}</div>
                         <div class="chapter-date">{{ formatDate(chapter.date) }}</div>
@@ -351,7 +364,8 @@
         };
 
         const STORAGE_KEYS = {
-            THEME: 'theme'
+            THEME: 'theme',
+            READ_CHAPTERS: 'read_chapters'
         };
 
         const { createApp } = Vue;
@@ -411,6 +425,10 @@
                 closeLightbox() {
                     this.isLightboxActive = false;
                     document.body.style.overflow = '';
+                },
+                isChapterRead(chapterNumber) {
+                    const readChapters = JSON.parse(localStorage.getItem(STORAGE_KEYS.READ_CHAPTERS) || '{}');
+                    return readChapters[this.novel.title]?.includes(chapterNumber);
                 }
             },
             mounted() {
