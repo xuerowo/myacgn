@@ -411,7 +411,7 @@
                         console.error('載入章節失敗:', error);
                         this.error = '載入章節失敗，請稍後再試';
                         setTimeout(() => {
-                            window.location.href = 'detail.html';
+                            window.location.href = 'webtoondetail.html';
                         }, 3000);
                     } finally {
                         this.loading = false;
@@ -436,7 +436,7 @@
                 },
                 goToDetail() {
                     sessionStorage.removeItem(STORAGE_KEYS.SCROLL_POSITION);
-                    window.location.href = 'detail.html';
+                    window.location.href = 'webtoondetail.html';
                 },
                 toggleChapterMenu() {
                     this.showChapterMenu = !this.showChapterMenu;
@@ -559,7 +559,7 @@
                 if (!chapter) {
                     this.error = '無效的章節號';
                     setTimeout(() => {
-                        window.location.href = 'detail.html';
+                        window.location.href = 'webtoondetail.html';
                     }, 3000);
                     return;
                 }
