@@ -219,6 +219,9 @@
             z-index: 1000;
             transition: transform 0.3s ease-out;
             touch-action: none;
+            max-height: 60vh;
+            display: flex;
+            flex-direction: column;
         }
 
         .settings-modal:nth-child(6) {  
@@ -236,10 +239,15 @@
             border-bottom: 1px solid #444;
             font-weight: bold;
             text-align: center;
+            background: rgba(0,0,0,0.9);
         }
 
         .settings-group {
             margin: 1.5rem 0;
+            overflow-y: auto;
+            flex: 1;
+            margin: 0;
+            padding: 1rem 0;
         }
 
         .settings-group:last-child {
@@ -257,6 +265,23 @@
 
         .settings-group input[type="checkbox"] {
             margin-right: 0.5rem;
+        }
+
+        .settings-group::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .settings-group::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.1);
+        }
+
+        .settings-group::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.3);
+            border-radius: 3px;
+        }
+
+        .settings-group::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.4);
         }
 
         /* Chapter Item Styles */
