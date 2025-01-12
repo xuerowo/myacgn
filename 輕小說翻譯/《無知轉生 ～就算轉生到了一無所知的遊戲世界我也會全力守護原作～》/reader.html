@@ -494,7 +494,7 @@
                     } catch (error) {
                         console.error('讀取章節失敗:', error);
                         alert('讀取章節失敗');
-                        window.location.href = 'detail.html';
+                        window.location.href = 'noveldetail.html';
                     }
                 },
                 async loadChapterContent() {
@@ -597,7 +597,7 @@
                 goToDetail() {
                     // 清除滾動位置並返回
                     sessionStorage.removeItem(STORAGE_KEYS.SCROLL_POSITION);
-                    window.location.href = 'detail.html';
+                    window.location.href = 'noveldetail.html';
                 },
                 goToNext() {
                     if (this.hasNext) {
