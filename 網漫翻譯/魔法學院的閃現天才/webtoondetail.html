@@ -295,13 +295,92 @@
         }
 
         @media (max-width: 768px) {
-            .manga-info {
-                grid-template-columns: 1fr;
+            .novel-info {
+                grid-template-columns: 200px 1fr;
+                gap: 1rem;
             }
 
-            .manga-cover {
-                max-width: 300px;
+            .novel-cover {
+                max-width: 200px;
                 margin: 0 auto;
+            }
+
+            .novel-title {
+                font-size: 1.3rem;
+            }
+
+            .novel-metadata {
+                font-size: 1rem;
+                margin-bottom: 0.7rem;
+            }
+
+            .novel-description {
+                font-size: 1rem;
+                margin-top: 0.7rem;
+                line-height: 1.2;
+            }
+
+            .chapter-list {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 0.6rem;
+                margin-top: 1.2rem;
+            }
+
+            .chapter-item {
+                padding: 0.6rem;
+            }
+
+            .chapter-title {
+                font-size: 0.9rem;
+            }
+
+            .chapter-date {
+                font-size: 0.7rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .novel-info {
+                grid-template-columns: 100px 1fr;
+                gap: 0.6rem;
+            }
+
+            .novel-cover {
+                max-width: 100px;
+                margin: 0 auto;
+            }
+
+            .novel-title {
+                font-size: 1.1rem;
+            }
+
+            .novel-metadata {
+                font-size: 0.8rem;
+                margin-bottom: 0.6rem;
+            }
+
+            .novel-description {
+                font-size: 0.8rem;
+                margin-top: 0.6rem;
+                line-height: 1.1;
+            }
+
+            .chapter-list {
+                grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+                gap: 0.5rem;
+                margin-top: 1rem;
+            }
+
+            .chapter-item {
+                padding: 0.5rem;
+            }
+
+            .chapter-title {
+                font-size: 0.8rem;
+            }
+            
+            .chapter-date {
+                font-size: 0.6rem;
             }
         }
     </style>
