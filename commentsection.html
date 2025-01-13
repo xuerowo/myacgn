@@ -1,1 +1,336 @@
-<!DOCTYPE html><html lang=zh-TW><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>留言區</title><link rel=icon href=images/favicon.jpg type=image/jpg><style>:root{--primary-color:#4a90e2;--secondary-color:#f5f5f5;--text-color:#333;--border-color:#ddd;--background-color:#fff;--dropdown-background:#fff;--dropdown-hover:#f0f0f0}:root[data-theme=dark]{--primary-color:#64b5f6;--secondary-color:#1a1a1a;--text-color:#e0e0e0;--border-color:#333;--background-color:#121212;--dropdown-background:#1a1a1a;--dropdown-hover:#2a2a2a}*{margin:0;padding:0;box-sizing:border-box;transition:background-color .3s,color .3s}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.6;color:var(--text-color);background-color:var(--secondary-color);padding-top:80px}.navbar{position:fixed;top:0;left:0;width:100%;background-color:var(--background-color);padding:1rem;box-shadow:0 2px 4px rgba(0,0,0,.1);z-index:1000;transition:top .3s}.nav-container{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}.nav-links{display:flex;gap:2rem;align-items:center}.nav-links>*{min-width:80px;text-align:center}.nav-links a{color:var(--text-color);text-decoration:none;font-size:1.1rem;transition:color .3s;padding:.5rem 0}.nav-links a:hover{color:var(--primary-color)}.dropdown{position:relative;display:inline-block;min-width:80px;text-align:center}.dropdown-toggle{cursor:pointer;padding:.5rem 0;display:flex;align-items:center;justify-content:center;gap:.5rem;color:var(--text-color);background:0 0;border:none;font-size:1.1rem;width:100%}.dropdown-toggle:after{content:'▼';font-size:.8em;transition:transform .3s}.dropdown-menu{position:absolute;top:100%;left:0;background-color:var(--dropdown-background);min-width:160px;box-shadow:0 2px 5px rgba(0,0,0,.2);border-radius:4px;opacity:0;visibility:hidden;transform:translateY(-10px);transition:all .3s ease}.dropdown-menu a{display:block;padding:.8rem 1rem;color:var(--text-color);text-decoration:none;transition:background-color .3s}.dropdown-menu a:hover{background-color:var(--dropdown-hover);color:var(--primary-color)}.dropdown:hover .dropdown-menu{opacity:1;visibility:visible;transform:translateY(0)}.dropdown:hover .dropdown-toggle:after{transform:rotate(180deg)}.theme-toggle{background:0 0;border:none;color:var(--text-color);font-size:1.5rem;cursor:pointer;padding:.5rem;transition:transform .3s}.theme-toggle:hover{transform:rotate(360deg)}.container{max-width:1200px;margin:0 auto;padding:2rem}h1{text-align:center;margin-bottom:2rem}#disqus_thread{background-color:var(--background-color);padding:2rem;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,.1);margin-bottom:2rem}footer{text-align:center;padding:2rem;background-color:var(--background-color);margin-top:2rem}footer h4{color:var(--text-color);margin-bottom:1rem}footer h6{color:var(--text-color);font-size:.9rem}@media (max-width:768px){.navbar{padding:.8rem}.nav-links{gap:1.2rem}.nav-links>*{min-width:60px}}@media (max-width:480px){.navbar{padding:.6rem}.nav-links{gap:.8rem}.nav-links>*{min-width:50px}.nav-links a{font-size:.95rem}.dropdown-toggle{font-size:.95rem}.dropdown-menu{min-width:140px}.dropdown-menu a{padding:.6rem .8rem;font-size:.95rem}h1{font-size:1.4rem}}</style></head><body><nav class=navbar><div class=nav-container><div class=nav-links><a href=index.html>首頁</a><div class=dropdown><button class=dropdown-toggle>推薦</button><div class=dropdown-menu><a href=recommendations.html#animations>動畫</a> <a href=recommendations.html#webtoons>網漫</a> <a href=recommendations.html#lightnovels>輕小說</a> <a href=recommendations.html#visualnovels>視覺小說</a></div></div><div class=dropdown><button class=dropdown-toggle>ACG翻譯</button><div class=dropdown-menu><a href=acgtranslate.html#webtoons>網漫</a> <a href=acgtranslate.html#novels>輕小說</a></div></div><a href=commentsection.html style=color:var(--primary-color)>留言區</a></div><button class=theme-toggle id=theme-toggle>🌞</button></div></nav><div class=container><h1>留言區</h1><div id=disqus_thread></div></div><script>(()=>{var t=document,e=t.createElement("script");e.src="https://xuerowo.disqus.com/embed.js",e.setAttribute("data-timestamp",+new Date),(t.head||t.body).appendChild(e)})();let themeToggle=document.getElementById("theme-toggle"),root=document.documentElement,lastScrollTop=("dark"===localStorage.getItem("theme")&&(root.setAttribute("data-theme","dark"),themeToggle.textContent="🌜"),themeToggle.addEventListener("click",()=>{var t="dark"===root.getAttribute("data-theme")?"light":"dark";root.setAttribute("data-theme",t),localStorage.setItem("theme",t),themeToggle.textContent="dark"==t?"🌜":"🌞"}),0),navbar=document.querySelector(".navbar");window.addEventListener("scroll",()=>{var t=window.pageYOffset;t>lastScrollTop?navbar.style.top="-80px":navbar.style.top="0",lastScrollTop=t<=0?0:t})</script><script id=dsq-count-scr src=//xuerowo.disqus.com/count.js async></script></body></html>
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>留言區</title>
+    <link rel="icon" href="images/favicon.jpg" type="image/jpg">
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f5f5f5;
+            --text-color: #333;
+            --border-color: #ddd;
+            --background-color: #fff;
+            --dropdown-background: #fff;
+            --dropdown-hover: #f0f0f0;
+        }
+
+        :root[data-theme="dark"] {
+            --primary-color: #64b5f6;
+            --secondary-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --border-color: #333;
+            --background-color: #121212;
+            --dropdown-background: #1a1a1a;
+            --dropdown-hover: #2a2a2a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--secondary-color);
+            padding-top: 80px;
+        }
+
+        /* 導航欄樣式 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--background-color);
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 1000;
+            transition: top 0.3s;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links > * {
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* 下拉菜單樣式 */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .dropdown-toggle {
+            cursor: pointer;
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: var(--text-color);
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            width: 100%;
+        }
+
+        .dropdown-toggle:after {
+            content: '▼';
+            font-size: 0.8em;
+            transition: transform 0.3s;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: var(--dropdown-background);
+            min-width: 160px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            border-radius: 4px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 0.8rem 1rem;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: var(--dropdown-hover);
+            color: var(--primary-color);
+        }
+
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown:hover .dropdown-toggle:after {
+            transform: rotate(180deg);
+        }
+
+        /* 主題切換按鈕 */
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: transform 0.3s;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(360deg);
+        }
+
+        /* 內容區域樣式 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        /* 評論區域樣式 */
+        #disqus_thread {
+            background-color: var(--background-color);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        /* 頁腳樣式 */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background-color: var(--background-color);
+            margin-top: 2rem;
+        }
+
+        footer h4 {
+            color: var(--text-color);
+            margin-bottom: 1rem;
+        }
+
+        footer h6 {
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        /* 響應式設計 */
+        /* 手機設備 */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0.8rem;
+            }
+
+            .nav-links {
+                gap: 1.2rem;
+            }
+
+            .nav-links > * {
+                min-width: 60px;
+            }
+        }
+
+        /* 超小型設備 (480px) */
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 0.6rem;
+            }
+
+            .nav-links {
+                gap: 0.8rem;
+            }
+
+            .nav-links > * {
+                min-width: 50px;
+            }
+    
+            .nav-links a {
+                font-size: 0.95rem;
+            }
+
+            .dropdown-toggle {
+                font-size: 0.95rem;
+            }
+
+            .dropdown-menu {
+                min-width: 140px;
+            }
+
+            .dropdown-menu a {
+                padding: 0.6rem 0.8rem;
+                font-size: 0.95rem;
+            }
+
+            h1 {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-links">
+                <a href="index.html">首頁</a>
+                <div class="dropdown">
+                    <button class="dropdown-toggle">推薦</button>
+                    <div class="dropdown-menu">
+                        <a href="recommendations.html#animations">動畫</a>
+                        <a href="recommendations.html#webtoons">網漫</a>
+                        <a href="recommendations.html#lightnovels">輕小說</a>
+                        <a href="recommendations.html#visualnovels">視覺小說</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button class="dropdown-toggle">ACG翻譯</button>
+                    <div class="dropdown-menu">
+                        <a href="acgtranslate.html#webtoons">網漫</a>
+                        <a href="acgtranslate.html#novels">輕小說</a>
+                    </div>
+                </div>
+                <a href="commentsection.html" style="color: var(--primary-color)">留言區</a>
+            </div>
+            <button class="theme-toggle" id="theme-toggle">🌞</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>留言區</h1>
+        <div id="disqus_thread"></div>
+    </div>
+
+    <script>
+        // Disqus 配置
+        (function() {
+            var d = document, s = d.createElement('script');
+            s.src = 'https://xuerowo.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+            })();
+
+        // 主題切換
+        const themeToggle = document.getElementById('theme-toggle');
+        const root = document.documentElement;
+        
+        if (localStorage.getItem('theme') === 'dark') {
+            root.setAttribute('data-theme', 'dark');
+            themeToggle.textContent = '🌜';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = root.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            root.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeToggle.textContent = newTheme === 'dark' ? '🌜' : '🌞';
+        });
+
+        // 導航欄滾動效果
+        let lastScrollTop = 0;
+        const navbar = document.querySelector('.navbar');
+        
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            if (currentScroll > lastScrollTop) {
+                navbar.style.top = '-80px';
+            } else {
+                navbar.style.top = '0';
+            }
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+        });
+
+    </script>
+    <script id="dsq-count-scr" src="//xuerowo.disqus.com/count.js" async></script>
+</body>
+</html>
