@@ -289,108 +289,15 @@
         }
 
         @media (max-width: 768px) {
-    .novel-info {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-    }
+            .novel-info {
+                grid-template-columns: 1fr;
+            }
 
-    .novel-cover {
-        max-width: 280px;
-        margin: 0 auto;
-    }
-
-    .novel-title {
-        font-size: 1.5rem;
-        text-align: center;
-    }
-
-    .novel-metadata {
-        text-align: center;
-    }
-
-    .source-links {
-        text-align: center;
-    }
-
-    .chapter-list {
-        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-        gap: 0.8rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .container {
-        padding: 0; /* 移除容器padding */
-    }
-
-    .novel-detail {
-        padding: 0; /* 移除小說詳情padding */
-        background: none; /* 移除背景 */
-        box-shadow: none; /* 移除陰影 */
-    }
-
-    .novel-info {
-        gap: 1rem;
-    }
-
-    .novel-cover {
-        width: 100%; /* 讓封面寬度充滿容器 */
-        max-width: none;
-        border-radius: 0; /* 移除圓角 */
-    }
-
-    .novel-title {
-        font-size: 1.2rem;
-        margin: 0 1rem;
-        line-height: 1.4;
-    }
-
-    .novel-metadata {
-        font-size: 0.9rem;
-        line-height: 1.8;
-        margin: 0 1rem;
-    }
-
-    .novel-metadata p {
-        margin-bottom: 0.2rem;
-    }
-
-    .source-link {
-        font-size: 0.85rem;
-        padding: 0.2rem 0.5rem;
-    }
-
-    .novel-description {
-        font-size: 0.9rem;
-        line-height: 1.6;
-        margin: 0.8rem 1rem;
-    }
-
-    .chapter-list {
-        grid-template-columns: 1fr;
-        gap: 0.5rem;
-        margin: 1.2rem 1rem;
-    }
-
-    .chapter-item {
-        padding: 0.7rem 1rem;
-    }
-
-    .chapter-title {
-        font-size: 0.9rem;
-    }
-
-    .chapter-date {
-        font-size: 0.8rem;
-        color: #888;
-    }
-
-    /* 調整導航欄 */
-    .navbar {
-        margin-bottom: 0;
-    }
-}
+            .novel-cover {
+                max-width: 300px;
+                margin: 0 auto;
+            }
+        }
     </style>
 </head>
 <body>
