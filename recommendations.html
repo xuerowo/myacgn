@@ -1355,7 +1355,7 @@
 
     <footer>
         <p>網頁由林雲與 Claude AI 合作製作</p>
-        <p id="lastModified"></p>
+        <p>最後更新：2025/1/17</p>
     </footer>
 
     <div class="lightbox">
@@ -1449,11 +1449,6 @@
             }
             lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
         });
-        
-        // 更新最後修改時間
-        const lastModified = new Date(document.lastModified);
-        document.getElementById('lastModified').textContent = 
-            `最後更新：${lastModified.toLocaleString('zh-TW')}`;
 
         // Lightbox 功能
         const lightbox = document.querySelector('.lightbox');
