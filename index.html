@@ -792,9 +792,36 @@
         });
 
         // 更新最後修改時間
-        const lastModified = new Date(document.lastModified);
-        document.getElementById('lastModified').textContent = 
-            `最後更新：${lastModified.toLocaleString('zh-TW')}`;
+        function detectLastUpdate() {
+            // 獲取需要監控的主要內容區塊
+            const mainContent = document.querySelector('.hero-content').textContent +
+                            document.querySelector('.categories').textContent +
+                            document.querySelector('.ai-works').textContent;
+                       
+            // 使用內容生成哈希值
+            const hash = btoa(mainContent);
+    
+            // 在 localStorage 中存儲和檢查內容哈希
+            const storedHash = localStorage.getItem('contentHash');
+            const storedDate = localStorage.getItem('lastModifiedDate');
+    
+            if (!storedHash || storedHash !== hash) {
+                // 內容有變化或首次訪問，更新時間戳
+                const currentDate = new Date();
+                localStorage.setItem('contentHash', hash);
+                localStorage.setItem('lastModifiedDate', currentDate.toISOString());
+                document.getElementById('lastModified').textContent = 
+                    `最後更新：${currentDate.toLocaleString('zh-TW')}`;
+            } else if (storedDate) {
+                // 使用存儲的時間
+                const lastModified = new Date(storedDate);
+                document.getElementById('lastModified').textContent = 
+                    `最後更新：${lastModified.toLocaleString('zh-TW')}`;
+            }
+        }
+
+        // 在頁面加載完成後執行檢測
+        window.addEventListener('load', detectLastUpdate);
     </script>
 </body>
 </html>
