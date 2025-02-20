@@ -451,8 +451,17 @@
     <script>
         const STORAGE_KEYS = {
             THEME: 'theme',
-            READ_CHAPTERS: 'read_chapters'
+            FONT_SIZE: 'fontSize',
+            LINE_HEIGHT: 'lineHeight',
+            READ_CHAPTERS: 'readChapters'
         };
+
+        // 從目錄路徑獲取小說標題
+        function getNovelTitle() {
+            const path = window.location.pathname;
+            const match = path.match(/《(.+?)》/);
+            return match ? match[1] : '';
+        }
 
         const { createApp } = Vue;
 
@@ -496,13 +505,12 @@
                     try {
                         const response = await fetch('../novels.json');
                         const data = await response.json();
-                        
-                        // 從當前 URL 路徑獲取小說標題
-                        const pathParts = window.location.pathname.split('/');
-                        const novelTitle = decodeURIComponent(pathParts[pathParts.length - 2].replace(/^《|》$/g, ''));
+                        const novelTitle = getNovelTitle();
+                        if (!novelTitle) {
+                            throw new Error('無法獲取小說標題');
+                        }
                         
                         const novelData = data.novels.find(novel => novel.title === novelTitle);
-                        
                         if (!novelData) {
                             throw new Error('找不到小說資料');
                         }
