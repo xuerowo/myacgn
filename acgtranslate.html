@@ -410,12 +410,15 @@
                     try {
                         const response = await fetch('/輕小說翻譯/novels.json');
                         const data = await response.json();
-                        this.novelList = data.novels.map(novel => ({
-                            title: novel.title,
-                            detailPage: novel.detailPage || `輕小說翻譯/${encodeURIComponent(novel.title)}/noveldetail.html`,
-                            coverUrl: `/${encodeURIComponent('輕小說翻譯')}/${encodeURIComponent(novel.title)}/cover.jpg`,
-                            type: 'novel'
-                        }));
+                        this.novelList = data.novels.map(novel => {
+                            const titleWithBrackets = novel.title.startsWith('《') ? novel.title : `《${novel.title}》`;
+                            return {
+                                title: titleWithBrackets,
+                                detailPage: `輕小說翻譯/${encodeURIComponent(titleWithBrackets)}/noveldetail.html`,
+                                coverUrl: `/輕小說翻譯/${encodeURIComponent(titleWithBrackets)}/cover.jpg`,
+                                type: 'novel'
+                            };
+                        });
                     } catch (error) {
                         console.error('讀取小說列表失敗:', error);
                     }
