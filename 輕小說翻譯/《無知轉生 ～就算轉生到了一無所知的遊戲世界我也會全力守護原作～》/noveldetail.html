@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>無知轉生 ～就算轉生到了一無所知的遊戲世界我也會全力守護原作～ - 輕小說翻譯</title>
+    <title v-text="pageTitle"></title>
     <meta name="description" content="輕小說在線閱讀。使用 Claude 3.5 Sonnet 進行翻譯。">
-    <meta name="keywords" content="輕小說翻譯, 無知轉生 ～就算轉生到了一無所知的遊戲世界我也會全力守護原作～, 輕小說閱讀">
+    <meta name="keywords" v-bind:content="'輕小說翻譯, ' + novel.title + ', 輕小說閱讀'">
     <link rel="icon" href="/images/favicon.jpg" type="image/jpg">
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -479,6 +479,9 @@
                 },
                 parsedDescription() {
                     return this.novel.description ? marked.parse(this.novel.description) : '';
+                },
+                pageTitle() {
+                    return this.novel.title ? `${this.novel.title} - 輕小說翻譯` : '輕小說翻譯';
                 }
             },
             watch: {
@@ -493,7 +496,12 @@
                     try {
                         const response = await fetch('../novels.json');
                         const data = await response.json();
-                        const novelData = data.novels.find(novel => novel.title === '無知轉生 ～就算轉生到了一無所知的遊戲世界我也會全力守護原作～');
+                        
+                        // 從當前 URL 路徑獲取小說標題
+                        const pathParts = window.location.pathname.split('/');
+                        const novelTitle = decodeURIComponent(pathParts[pathParts.length - 2].replace(/^《|》$/g, ''));
+                        
+                        const novelData = data.novels.find(novel => novel.title === novelTitle);
                         
                         if (!novelData) {
                             throw new Error('找不到小說資料');
