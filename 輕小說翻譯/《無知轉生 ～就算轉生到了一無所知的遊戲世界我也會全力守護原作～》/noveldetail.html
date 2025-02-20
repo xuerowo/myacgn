@@ -494,14 +494,17 @@
                         // 處理原連結
                         const sourceLinks = {};
                         if (novelData.originalUrl) {
-                            const url = novelData.originalUrl;
-                            if (url.includes('kakuyomu.jp')) {
-                                sourceLinks.kakuyomu = url;
-                            } else if (url.includes('syosetu.com')) {
-                                sourceLinks.syosetu = url;
-                            } else {
-                                sourceLinks.japanese = url;
-                            }
+                            // 分割多個 URL
+                            const urls = novelData.originalUrl.split('、');
+                            urls.forEach(url => {
+                                if (url.includes('kakuyomu.jp')) {
+                                    sourceLinks.kakuyomu = url;
+                                } else if (url.includes('syosetu.com')) {
+                                    sourceLinks.syosetu = url;
+                                } else {
+                                    sourceLinks.japanese = url;
+                                }
+                            });
                         }
 
                         this.novel = {
