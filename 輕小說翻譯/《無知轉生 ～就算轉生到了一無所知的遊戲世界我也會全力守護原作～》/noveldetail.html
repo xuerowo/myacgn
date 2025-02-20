@@ -7,7 +7,8 @@
     <meta name="description" content="輕小說在線閱讀。使用 Claude 3.5 Sonnet 進行翻譯。">
     <meta name="keywords" content="輕小說翻譯, 無知轉生 ～就算轉生到了一無所知的遊戲世界我也會全力守護原作～, 輕小說閱讀">
     <link rel="icon" href="/images/favicon.jpg" type="image/jpg">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         :root {
             --primary-color: #4a90e2;
@@ -37,6 +38,10 @@
             line-height: 1.6;
             color: var(--text-color);
             background-color: var(--secondary-color);
+        }
+
+        h2 {
+
         }
 
         .container {
@@ -137,7 +142,7 @@
         }
 
         .novel-title {
-            font-size: 1.8rem;
+            font-size: 3rem;
             margin-bottom: 1rem;
             color: var(--text-color);
         }
@@ -426,7 +431,7 @@
                                 </template>
                             </p>
                         </div>
-                        <p class="novel-description">{{ novel.description }}</p>
+                        <div class="novel-description" v-html="parsedDescription"></div>
                     </div>
                 </div>
                 <div class="chapter-list">
@@ -471,6 +476,9 @@
             computed: {
                 chaptersWithDates() {
                     return this.chapters.sort((a, b) => b.number - a.number);
+                },
+                parsedDescription() {
+                    return this.novel.description ? marked.parse(this.novel.description) : '';
                 }
             },
             watch: {
