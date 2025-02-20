@@ -524,7 +524,7 @@
                 },
                 async loadChapterContent() {
                     try {
-                        const response = await fetch(this.currentChapter.filename);
+                        const response = await fetch(`${this.currentChapter.number} ${this.currentChapter.filename}`);
                         this.chapterContent = await response.text();
                         this.scrollToTop();
                         this.$nextTick(() => {
