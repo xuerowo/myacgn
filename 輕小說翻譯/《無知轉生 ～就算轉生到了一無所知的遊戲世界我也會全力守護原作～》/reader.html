@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>閱讀章節 - 無知轉生 - 輕小說翻譯</title>
+    <title>閱讀章節 - 無知轉生 ～就算轉生到了一無所知的遊戲世界我也會全力守護原作～ - 輕小說翻譯</title>
     <link rel="icon" href="/images/favicon.jpg" type="image/jpg">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.2/marked.min.js"></script>
@@ -486,9 +486,18 @@
             methods: {
                 async fetchChapterData() {
                     try {
-                        const response = await fetch('chapters.json');
+                        const response = await fetch('../novels.json');
                         const data = await response.json();
-                        this.allChapters = data.chapters.sort((a, b) => a.number - b.number);
+                        const novelData = data.novels.find(novel => novel.title === '《無知轉生 ～就算轉生到了一無所知的遊戲世界我也會全力守護原作～》');
+                        if (!novelData) {
+                            throw new Error('找不到小說資料');
+                        }
+                        this.allChapters = novelData.chapters.map(chapter => ({
+                            number: chapter.number,
+                            title: chapter.title,
+                            filename: chapter.filename,
+                            date: chapter.date
+                        })).sort((a, b) => a.number - b.number);
 
                         const params = new URLSearchParams(window.location.search);
                         const chapterNumber = parseInt(params.get('chapter'));
