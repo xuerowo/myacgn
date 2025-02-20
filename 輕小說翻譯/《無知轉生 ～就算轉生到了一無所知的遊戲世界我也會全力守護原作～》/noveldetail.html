@@ -421,7 +421,9 @@
                             <p><strong>類型：</strong>{{ novel.genres }}</p>
                             <p class="source-links">
                                 <strong>原連結：</strong>
-                                <a :href="novel.sourceLinks.japanese" target="_blank" class="source-link">日文版</a>
+                                <template v-for="(link, key) in novel.sourceLinks" :key="key">
+                                    <a :href="link" target="_blank" class="source-link">{{ key }}</a>
+                                </template>
                             </p>
                         </div>
                         <p class="novel-description">{{ novel.description }}</p>
@@ -489,15 +491,25 @@
                             throw new Error('找不到小說資料');
                         }
 
+                        // 處理原連結
+                        const sourceLinks = {};
+                        if (novelData.originalUrl) {
+                            sourceLinks.japanese = novelData.originalUrl;
+                        }
+                        if (novelData.kakuyomuUrl) {
+                            sourceLinks.kakuyomu = novelData.kakuyomuUrl;
+                        }
+                        if (novelData.syosetuUrl) {
+                            sourceLinks.syosetu = novelData.syosetuUrl;
+                        }
+
                         this.novel = {
                             title: novelData.title,
                             author: novelData.author,
                             genres: novelData.tags.join('、'),
                             coverUrl: 'cover.jpg',
                             description: novelData.description,
-                            sourceLinks: {
-                                japanese: novelData.originalUrl
-                            }
+                            sourceLinks: sourceLinks
                         };
 
                         this.chapters = novelData.chapters
