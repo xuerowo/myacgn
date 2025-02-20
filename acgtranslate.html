@@ -408,10 +408,11 @@
                 },
                 async fetchNovelList() {
                     try {
-                        const response = await fetch('/novellist.json');
+                        const response = await fetch('/輕小說翻譯/novels.json');
                         const data = await response.json();
-                        this.novelList = data.novelList.map(novel => ({
-                            ...novel,
+                        this.novelList = data.novels.map(novel => ({
+                            title: novel.title,
+                            detailPage: novel.detailPage || `輕小說翻譯/${encodeURIComponent(novel.title)}/noveldetail.html`,
                             coverUrl: `/${encodeURIComponent('輕小說翻譯')}/${encodeURIComponent(novel.title)}/cover.jpg`,
                             type: 'novel'
                         }));
