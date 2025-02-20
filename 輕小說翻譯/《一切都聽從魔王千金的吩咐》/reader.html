@@ -503,7 +503,7 @@
                             .sort((a, b) => a.number - b.number);
 
                         const params = new URLSearchParams(window.location.search);
-                        const chapterNumber = parseInt(params.get('chapter'));
+                        const chapterNumber = parseFloat(params.get('chapter'));
                         
                         const currentChapterData = this.allChapters.find(
                             chapter => chapter.number === chapterNumber
@@ -524,7 +524,9 @@
                 },
                 async loadChapterContent() {
                     try {
-                        const response = await fetch(`${this.currentChapter.number} ${this.currentChapter.filename}`);
+                        // 使用正確的文件名格式：125.5 第二卷_短篇_優雅的特里夏小姐的日常.md
+                        const filename = `${this.currentChapter.number} ${this.currentChapter.title.replace(/^第\d+\.?\d*話\s+/, '')}.md`;
+                        const response = await fetch(filename);
                         this.chapterContent = await response.text();
                         this.scrollToTop();
                         this.$nextTick(() => {
