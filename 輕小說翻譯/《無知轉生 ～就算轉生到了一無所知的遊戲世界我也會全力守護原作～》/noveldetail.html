@@ -492,10 +492,12 @@
                         this.novel = {
                             title: novelData.title,
                             author: novelData.author,
-                            genres: novelData.genres.join(','),
+                            genres: novelData.tags.join('、'),
                             coverUrl: 'cover.jpg',
                             description: novelData.description,
-                            sourceLinks: novelData.sourceLinks || {}
+                            sourceLinks: {
+                                japanese: novelData.originalUrl
+                            }
                         };
 
                         this.chapters = novelData.chapters
