@@ -494,9 +494,18 @@
                 },
                 async fetchChapterData() {
                     try {
-                        const response = await fetch('chapters.json');
+                        const response = await fetch('../novels.json');
                         const data = await response.json();
-                        this.chapters = data.chapters;
+                        const novelData = data.novels.find(novel => novel.title === '《無知轉生 ～就算轉生到了一無所知的遊戲世界我也會全力守護原作～》');
+                        if (!novelData) {
+                            throw new Error('找不到小說資料');
+                        }
+                        this.chapters = novelData.chapters.map(chapter => ({
+                            number: chapter.number,
+                            title: chapter.title,
+                            filename: chapter.filename,
+                            date: chapter.date
+                        }));
                     } catch (error) {
                         console.error('讀取章節資料失敗:', error);
                     }
