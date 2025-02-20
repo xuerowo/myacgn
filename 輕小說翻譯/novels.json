@@ -8,16 +8,16 @@
       "originalUrl": "https://kakuyomu.jp/works/16817330647521646567",
       "chapters": [
         {
-          "id": -1.0,
-          "title": "簡介",
-          "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《一切都聽從魔王千金的吩咐》/00 簡介.md",
-          "lastUpdated": "2025-02-19 05:50:09"
-        },
-        {
           "id": 0.0,
           "title": "譯名",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《一切都聽從魔王千金的吩咐》/0 譯名.md",
           "lastUpdated": "2025-01-14 19:00:44"
+        },
+        {
+          "id": 0.0,
+          "title": "簡介",
+          "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《一切都聽從魔王千金的吩咐》/00 簡介.md",
+          "lastUpdated": "2025-02-20 09:45:37"
         },
         {
           "id": 40.0,
@@ -183,7 +183,7 @@
         },
         {
           "id": 67.0,
-          "title": "第67話 怪物、崛起",
+          "title": "第67話 怪物崛起",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《一切都聽從魔王千金的吩咐》/67 怪物、崛起.md",
           "lastUpdated": "2024-12-19 02:45:36"
         },
@@ -255,7 +255,7 @@
         },
         {
           "id": 79.0,
-          "title": "第79話 魔王國，撤退",
+          "title": "第79話 魔王國撤退",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《一切都聽從魔王千金的吩咐》/79 魔王國，撤退.md",
           "lastUpdated": "2024-12-19 02:46:20"
         },
@@ -381,7 +381,7 @@
         },
         {
           "id": 100.0,
-          "title": "第100話 龍之魔人，祖之勇者",
+          "title": "第100話 龍之魔人祖之勇者",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《一切都聽從魔王千金的吩咐》/100 龍之魔人，祖之勇者.md",
           "lastUpdated": "2024-12-20 20:41:26"
         },
@@ -429,7 +429,7 @@
         },
         {
           "id": 108.0,
-          "title": "第108話 族長會議，終幕",
+          "title": "第108話 族長會議終幕",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《一切都聽從魔王千金的吩咐》/108 族長會議，終幕.md",
           "lastUpdated": "2024-12-19 02:48:27"
         },
@@ -525,7 +525,7 @@
         },
         {
           "id": 124.0,
-          "title": "第124話 天地、人",
+          "title": "第124話 天地人",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《一切都聽從魔王千金的吩咐》/124 天地、人.md",
           "lastUpdated": "2024-12-23 04:03:53"
         },
@@ -633,7 +633,7 @@
         },
         {
           "id": 142.0,
-          "title": "第142話 露露諾亞大人的御前議決！聽說是這樣",
+          "title": "第142話 露露諾亞大人的御前議決聽說是這樣",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《一切都聽從魔王千金的吩咐》/142 露露諾亞大人的御前議決！聽說是這樣.md",
           "lastUpdated": "2025-01-13 16:34:22"
         },
@@ -711,7 +711,7 @@
         },
         {
           "id": 155.0,
-          "title": "第155話 正式開始......可能要結束了",
+          "title": "第155話 正式開始可能要結束了",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《一切都聽從魔王千金的吩咐》/155 正式開始......可能要結束了.md",
           "lastUpdated": "2025-01-14 00:55:45"
         },
@@ -747,7 +747,7 @@
         },
         {
           "id": 161.0,
-          "title": "",
+          "title": "第161話",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《一切都聽從魔王千金的吩咐》/161  .md",
           "lastUpdated": "2025-01-14 01:32:33"
         },
@@ -927,10 +927,12 @@
         }
       ],
       "tags": [
-        "異世界",
-        "奇幻"
-      ],
-      "lastUpdated": "2025-02-20 10:08:01"
+        "異世界轉移",
+        "執事",
+        "戀愛喜劇",
+        "後宮",
+        "魔王"
+      ]
     },
     {
       "title": "屍王的歸還～身為前勇者的我，為了阻止自己所創立的中二病秘密結社而再次被召喚到異世界～",
@@ -940,16 +942,16 @@
       "originalUrl": "https://kakuyomu.jp/works/16817330657849409243",
       "chapters": [
         {
-          "id": -1.0,
-          "title": "簡介",
-          "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《屍王的歸還～身為前勇者的我，為了阻止自己所創立的中二病秘密結社而再次被召喚到異世界～》/00 簡介.md",
-          "lastUpdated": "2025-02-19 05:52:08"
-        },
-        {
           "id": 0.0,
           "title": "譯名",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《屍王的歸還～身為前勇者的我，為了阻止自己所創立的中二病秘密結社而再次被召喚到異世界～》/0 譯名.md",
           "lastUpdated": "2025-01-01 03:25:25"
+        },
+        {
+          "id": 0.0,
+          "title": "簡介",
+          "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《屍王的歸還～身為前勇者的我，為了阻止自己所創立的中二病秘密結社而再次被召喚到異世界～》/00 簡介.md",
+          "lastUpdated": "2025-02-20 10:18:59"
         },
         {
           "id": 1.0,
@@ -965,7 +967,7 @@
         },
         {
           "id": 3.0,
-          "title": "第3話 屍王大人，再臨",
+          "title": "第3話 屍王大人再臨",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《屍王的歸還～身為前勇者的我，為了阻止自己所創立的中二病秘密結社而再次被召喚到異世界～》/3 屍王大人，再臨.md",
           "lastUpdated": "2024-12-23 18:04:28"
         },
@@ -1253,10 +1255,13 @@
         }
       ],
       "tags": [
-        "異世界",
-        "奇幻"
-      ],
-      "lastUpdated": "2025-02-20 10:08:01"
+        "主角最強",
+        "前勇者",
+        "再次召喚",
+        "秘密結社之旅",
+        "劍與魔法",
+        "黑歷史"
+      ]
     },
     {
       "title": "帝國最強天才騎士，嚮往冒險者生活",
@@ -1266,16 +1271,16 @@
       "originalUrl": "https://kakuyomu.jp/works/16817330667754113907",
       "chapters": [
         {
-          "id": -1.0,
-          "title": "簡介",
-          "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《帝國最強天才騎士，嚮往冒險者生活》/00 簡介.md",
-          "lastUpdated": "2025-02-19 05:52:50"
-        },
-        {
           "id": 0.0,
           "title": "譯名",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《帝國最強天才騎士，嚮往冒險者生活》/0 譯名.md",
           "lastUpdated": "2024-12-30 03:10:04"
+        },
+        {
+          "id": 0.0,
+          "title": "簡介",
+          "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《帝國最強天才騎士，嚮往冒險者生活》/00 簡介.md",
+          "lastUpdated": "2025-02-20 10:36:23"
         },
         {
           "id": 1.0,
@@ -1291,7 +1296,7 @@
         },
         {
           "id": 3.0,
-          "title": "第3話 此時，王宮中",
+          "title": "第3話 此時王宮中",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《帝國最強天才騎士，嚮往冒險者生活》/3 此時，王宮中.md",
           "lastUpdated": "2024-12-28 18:24:10"
         },
@@ -1339,7 +1344,7 @@
         },
         {
           "id": 11.0,
-          "title": "第11話 擊退與襲擊者的真相，然後前往海澤",
+          "title": "第11話 擊退與襲擊者的真相然後前往海澤",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《帝國最強天才騎士，嚮往冒險者生活》/11 擊退與襲擊者的真相，然後前往海澤.md",
           "lastUpdated": "2024-12-28 23:35:51"
         },
@@ -1423,13 +1428,13 @@
         },
         {
           "id": 25.0,
-          "title": "第25話 傳聞中的人物是犯人？",
+          "title": "第25話 傳聞中的人物是犯人",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《帝國最強天才騎士，嚮往冒險者生活》/25 傳聞中的人物是犯人？.md",
           "lastUpdated": "2024-12-29 06:36:00"
         },
         {
           "id": 26.0,
-          "title": "第26話 優秀的冒險者與考試合格？",
+          "title": "第26話 優秀的冒險者與考試合格",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《帝國最強天才騎士，嚮往冒險者生活》/26 優秀的冒險者與考試合格？.md",
           "lastUpdated": "2024-12-29 15:33:07"
         },
@@ -1525,7 +1530,7 @@
         },
         {
           "id": 42.0,
-          "title": "第42話 某位侯爵千金與女僕，以及王宮現況",
+          "title": "第42話 某位侯爵千金與女僕以及王宮現況",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《帝國最強天才騎士，嚮往冒險者生活》/42 某位侯爵千金與女僕，以及王宮現況.md",
           "lastUpdated": "2024-12-29 20:37:08"
         },
@@ -1555,7 +1560,7 @@
         },
         {
           "id": 47.0,
-          "title": "第47話 釣魚就會遭遇大型魔物？",
+          "title": "第47話 釣魚就會遭遇大型魔物",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《帝國最強天才騎士，嚮往冒險者生活》/47 釣魚就會遭遇大型魔物？.md",
           "lastUpdated": "2024-12-30 01:09:55"
         },
@@ -1741,24 +1746,22 @@
         }
       ],
       "tags": [
-        "異世界",
-        "奇幻"
-      ],
-      "lastUpdated": "2025-02-20 10:08:01"
+        "誤解",
+        "主角最強",
+        "超凡脫俗的天才",
+        "冒險者",
+        "騎士",
+        "貴族",
+        "本人只是在享受"
+      ]
     },
     {
       "title": "無知轉生 ～就算轉生到了一無所知的遊戲世界我也會全力守護原作～",
       "author": "ウスバー",
       "cover": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《無知轉生 ～就算轉生到了一無所知的遊戲世界我也會全力守護原作～》/cover.jpg",
       "description": "曾經比任何人都更投入、徹底了解到每個角落的靈魂遊戲......只是名字相似，但除了名字之外完全不了解一絲一毫的神祕遊戲中的神祕角色，主角就這樣轉生成他了！\n遊戲類型和系統、登場人物、本篇的開始時期和舞台，甚至連自己在作品中是什麼定位，全都是未知數。即便如此他還是拼命收集情報，好不容易確信自己是「學園戀愛RPG的主角」後，為了守護世界和自己，進行了超乎常軌的鍛鍊來迎接原作的到來！\n\n這是一個被丟到完全不了解一絲一毫的世界的主角，用努力和毅力全力逆行原作的故事！",
-      "originalUrl": "https://ncode.syosetu.com/n4744ia/?p=3 、 https://kakuyomu.jp/works/16818093089428947243",
+      "originalUrl": "https://ncode.syosetu.com/n4744ia/?p=3",
       "chapters": [
-        {
-          "id": -1.0,
-          "title": "簡介",
-          "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《無知轉生 ～就算轉生到了一無所知的遊戲世界我也會全力守護原作～》/00 簡介.md",
-          "lastUpdated": "2025-02-19 05:49:28"
-        },
         {
           "id": 0.0,
           "title": "譯名",
@@ -1767,13 +1770,19 @@
         },
         {
           "id": 0.0,
-          "title": "第二卷後記",
+          "title": "簡介",
+          "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《無知轉生 ～就算轉生到了一無所知的遊戲世界我也會全力守護原作～》/00 簡介.md",
+          "lastUpdated": "2025-02-20 09:45:32"
+        },
+        {
+          "id": 0.0,
+          "title": "第0話 第二卷後記",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《無知轉生 ～就算轉生到了一無所知的遊戲世界我也會全力守護原作～》/第二卷後記.md",
           "lastUpdated": "2025-02-11 06:25:39"
         },
         {
           "id": 0.0,
-          "title": "第二卷短篇和後記原文",
+          "title": "第0話 第二卷短篇和後記原文",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《無知轉生 ～就算轉生到了一無所知的遊戲世界我也會全力守護原作～》/第二卷短篇和後記原文.md",
           "lastUpdated": "2025-02-11 05:51:47"
         },
@@ -1821,7 +1830,7 @@
         },
         {
           "id": 197.0,
-          "title": "第197話 絕體絕命!被封印的力量!",
+          "title": "第197話 絕體絕命被封印的力量",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《無知轉生 ～就算轉生到了一無所知的遊戲世界我也會全力守護原作～》/197 絕體絕命!被封印的力量!.md",
           "lastUpdated": "2024-12-23 18:07:01"
         },
@@ -1899,7 +1908,7 @@
         },
         {
           "id": 210.0,
-          "title": "第210話 觸不及的手，觸及的魔法",
+          "title": "第210話 觸不及的手觸及的魔法",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《無知轉生 ～就算轉生到了一無所知的遊戲世界我也會全力守護原作～》/210 觸不及的手，觸及的魔法.md",
           "lastUpdated": "2025-02-12 10:10:33"
         },
@@ -1971,24 +1980,20 @@
         }
       ],
       "tags": [
-        "異世界",
-        "奇幻"
-      ],
-      "lastUpdated": "2025-02-20 10:08:01"
+        "主角最強",
+        "轉生",
+        "遊戲世界",
+        "後宮",
+        "原作崩壞"
+      ]
     },
     {
       "title": "獨自守住前線的我居然被說是廢物？算了,我要去尋找可愛老婆展開旅程 ～這次要在敵國成為英雄,對祖國露出獠牙～",
-      "author": "菊池 快晴",
+      "author": "ウスバー",
       "cover": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《獨自守住前線的我居然被說是廢物？算了,我要去尋找可愛老婆展開旅程 ～這次要在敵國成為英雄,對祖國露出獠牙～》/cover.jpg",
       "description": "## 咦？什麼？原來我在其他國家被稱為『狂亂的狂戰士』嗎？\n\n獨自守住前線的山岸,被長官強硬指控提交虛假報告。其實他是一位連其他國家都為之膽寒的狂戰士。山岸獨自一人守住前線,卻突然被出現的長官指責是「說謊的混蛋」。\n\n在完全不明所以的情況下被送上軍事法庭,還被栽贓一樁捏造的殺人案。然而這一切都是長官設下的圈套。\n\n「這樣啊,那我也沒有留在這裡的理由了。」\n\n恩將仇報的遭遇讓山岸選擇逃亡。但是那些長官們都太過輕敵了。他們本想設計陷害一個說謊的男人,沒想到他竟然真的獨自守住了前線,而且還是一位在其他國家被稱為「狂亂的狂戰士」而聞風喪膽的男人。\n\n這是一個被其他國家畏懼為狂戰士的男人,在異世界無雙闖蕩、報復那些傷害過他的人,同時也悠閒地當個冒險者的故事。",
       "originalUrl": "https://kakuyomu.jp/works/16818093090526914133",
       "chapters": [
-        {
-          "id": -1.0,
-          "title": "簡介",
-          "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《獨自守住前線的我居然被說是廢物？算了,我要去尋找可愛老婆展開旅程 ～這次要在敵國成為英雄,對祖國露出獠牙～》/00 簡介.md",
-          "lastUpdated": "2025-02-19 05:53:44"
-        },
         {
           "id": 0.0,
           "title": "譯名",
@@ -1996,8 +2001,14 @@
           "lastUpdated": "2025-01-16 22:17:58"
         },
         {
+          "id": 0.0,
+          "title": "簡介",
+          "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《獨自守住前線的我居然被說是廢物？算了,我要去尋找可愛老婆展開旅程 ～這次要在敵國成為英雄,對祖國露出獠牙～》/00 簡介.md",
+          "lastUpdated": "2025-02-20 10:47:14"
+        },
+        {
           "id": 1.0,
-          "title": "第1話 獨自守住前線的我居然被說是「廢物」？",
+          "title": "第1話 獨自守住前線的我居然被說是「廢物」",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《獨自守住前線的我居然被說是廢物？算了,我要去尋找可愛老婆展開旅程 ～這次要在敵國成為英雄,對祖國露出獠牙～》/1 獨自守住前線的我居然被說是「廢物」？.md",
           "lastUpdated": "2025-01-16 16:31:36"
         },
@@ -2009,19 +2020,19 @@
         },
         {
           "id": 3.0,
-          "title": "第3話 下一個流血的是誰？",
+          "title": "第3話 下一個流血的是誰",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《獨自守住前線的我居然被說是廢物？算了,我要去尋找可愛老婆展開旅程 ～這次要在敵國成為英雄,對祖國露出獠牙～》/3 下一個流血的是誰？.md",
           "lastUpdated": "2025-01-16 16:37:40"
         },
         {
           "id": 4.0,
-          "title": "第4話 那點事應該有想到吧......？",
+          "title": "第4話 那點事應該有想到吧",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《獨自守住前線的我居然被說是廢物？算了,我要去尋找可愛老婆展開旅程 ～這次要在敵國成為英雄,對祖國露出獠牙～》/4 那點事應該有想到吧......？.md",
           "lastUpdated": "2025-01-16 16:42:55"
         },
         {
           "id": 5.0,
-          "title": "第5話 一、二、三",
+          "title": "第5話 一二三",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《獨自守住前線的我居然被說是廢物？算了,我要去尋找可愛老婆展開旅程 ～這次要在敵國成為英雄,對祖國露出獠牙～》/5 一、二、三.md",
           "lastUpdated": "2025-01-16 16:46:29"
         },
@@ -2033,7 +2044,7 @@
         },
         {
           "id": 7.0,
-          "title": "第7話 我不是好人哦？",
+          "title": "第7話 我不是好人哦",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《獨自守住前線的我居然被說是廢物？算了,我要去尋找可愛老婆展開旅程 ～這次要在敵國成為英雄,對祖國露出獠牙～》/7 我不是好人哦？.md",
           "lastUpdated": "2025-01-16 17:36:41"
         },
@@ -2045,7 +2056,7 @@
         },
         {
           "id": 9.0,
-          "title": "第9話 冒險者、傭兵、還是反殺？",
+          "title": "第9話 冒險者傭兵還是反殺",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《獨自守住前線的我居然被說是廢物？算了,我要去尋找可愛老婆展開旅程 ～這次要在敵國成為英雄,對祖國露出獠牙～》/9 冒險者、傭兵、還是反殺？.md",
           "lastUpdated": "2025-01-16 17:41:10"
         },
@@ -2081,7 +2092,7 @@
         },
         {
           "id": 15.0,
-          "title": "第15話 你會騎獨角獸嗎？",
+          "title": "第15話 你會騎獨角獸嗎",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《獨自守住前線的我居然被說是廢物？算了,我要去尋找可愛老婆展開旅程 ～這次要在敵國成為英雄,對祖國露出獠牙～》/15 你會騎獨角獸嗎？.md",
           "lastUpdated": "2025-01-16 18:03:31"
         },
@@ -2129,7 +2140,7 @@
         },
         {
           "id": 23.0,
-          "title": "第23話 敵人、朋友，還是隱形",
+          "title": "第23話 敵人朋友還是隱形",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《獨自守住前線的我居然被說是廢物？算了,我要去尋找可愛老婆展開旅程 ～這次要在敵國成為英雄,對祖國露出獠牙～》/23 敵人、朋友，還是隱形.md",
           "lastUpdated": "2025-01-24 21:59:06"
         },
@@ -2141,7 +2152,7 @@
         },
         {
           "id": 25.0,
-          "title": "第25話 你是誰？",
+          "title": "第25話 你是誰",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《獨自守住前線的我居然被說是廢物？算了,我要去尋找可愛老婆展開旅程 ～這次要在敵國成為英雄,對祖國露出獠牙～》/25 你是誰？.md",
           "lastUpdated": "2025-01-16 21:32:01"
         },
@@ -2159,19 +2170,19 @@
         },
         {
           "id": 27.5,
-          "title": "第27.5話 沒有xxx就出不去的房間with山岸＆菲爾恩",
+          "title": "第27.5話 沒有xxx就出不去的房間山岸＆菲爾恩",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《獨自守住前線的我居然被說是廢物？算了,我要去尋找可愛老婆展開旅程 ～這次要在敵國成為英雄,對祖國露出獠牙～》/27.5 沒有xxx就出不去的房間with山岸＆菲爾恩（限定）.md",
           "lastUpdated": "2025-01-16 22:11:00"
         },
         {
           "id": 28.0,
-          "title": "第28話 喂，夥伴",
+          "title": "第28話 喂夥伴",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《獨自守住前線的我居然被說是廢物？算了,我要去尋找可愛老婆展開旅程 ～這次要在敵國成為英雄,對祖國露出獠牙～》/28 喂，夥伴.md",
           "lastUpdated": "2025-01-16 21:56:00"
         },
         {
           "id": 28.5,
-          "title": "第28.5話 沒有xxx就出不去的房間with小偷＆後輩",
+          "title": "第28.5話 沒有xxx就出不去的房間小偷＆後輩",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《獨自守住前線的我居然被說是廢物？算了,我要去尋找可愛老婆展開旅程 ～這次要在敵國成為英雄,對祖國露出獠牙～》/28.5 沒有xxx就出不去的房間with小偷＆後輩.md",
           "lastUpdated": "2025-01-24 22:00:43"
         },
@@ -2195,35 +2206,40 @@
         },
         {
           "id": 31.5,
-          "title": "第31.5話 閒話：波利・科隆，直到能聽見頭髮的聲音為止",
+          "title": "第31.5話 閒話：波利・科隆直到能聽見頭髮的聲音為止",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《獨自守住前線的我居然被說是廢物？算了,我要去尋找可愛老婆展開旅程 ～這次要在敵國成為英雄,對祖國露出獠牙～》/31.5 閒話：波利・科隆，直到能聽見頭髮的聲音為止.md",
           "lastUpdated": "2025-01-18 21:06:44"
         }
       ],
       "tags": [
-        "異世界",
-        "奇幻"
-      ],
-      "lastUpdated": "2025-02-20 10:08:01"
+        "平步青雲",
+        "男主角",
+        "戰爭",
+        "報應",
+        "魔法",
+        "劍",
+        "半精靈",
+        "狂戰士"
+      ]
     },
     {
       "title": "當內向的我在換座位時被S級美少女包圍，祕密關係就此開始。",
-      "author": "星野星野",
+      "author": "ウスバー",
       "cover": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《當內向的我在換座位時被S級美少女包圍，祕密關係就此開始。》/cover.jpg",
       "description": "## 【電擊文庫2025年2月7日發售！】從換座位開始和美少女們……\n\n【電擊文庫2025年2月7日第1集發售！】【第2集續作確定！漫畫化也確定！】一個因為換座位而被班上的S級美少女團團包圍的故事。\n原標題：內向的我在換座位時被班級地位第一的S級美少女團團包圍的那件事。",
       "originalUrl": "https://kakuyomu.jp/works/16818093076268902095",
       "chapters": [
         {
-          "id": -1.0,
-          "title": "簡介",
-          "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《當內向的我在換座位時被S級美少女包圍，祕密關係就此開始。》/00 簡介.md",
-          "lastUpdated": "2025-02-19 05:47:50"
-        },
-        {
           "id": 0.0,
           "title": "譯名",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《當內向的我在換座位時被S級美少女包圍，祕密關係就此開始。》/0 譯名.md",
           "lastUpdated": "2025-02-19 15:02:35"
+        },
+        {
+          "id": 0.0,
+          "title": "簡介",
+          "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《當內向的我在換座位時被S級美少女包圍，祕密關係就此開始。》/00 簡介.md",
+          "lastUpdated": "2025-02-20 10:39:51"
         },
         {
           "id": 1.0,
@@ -2329,7 +2345,7 @@
         },
         {
           "id": 18.0,
-          "title": "第18話 朋友？還是沉重的愛？",
+          "title": "第18話 朋友還是沉重的愛",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《當內向的我在換座位時被S級美少女包圍，祕密關係就此開始。》/18 朋友？還是沉重的愛？.md",
           "lastUpdated": "2025-02-19 07:32:28"
         },
@@ -2371,7 +2387,7 @@
         },
         {
           "id": 25.0,
-          "title": "第25話 叫錯名字又引起漣漪......",
+          "title": "第25話 叫錯名字又引起漣漪",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《當內向的我在換座位時被S級美少女包圍，祕密關係就此開始。》/25 叫錯名字又引起漣漪.......md",
           "lastUpdated": "2025-02-19 15:06:49"
         },
@@ -2383,7 +2399,7 @@
         },
         {
           "id": 27.0,
-          "title": "第27話 誤會是戀愛喜劇的開始？",
+          "title": "第27話 誤會是戀愛喜劇的開始",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《當內向的我在換座位時被S級美少女包圍，祕密關係就此開始。》/27 誤會是戀愛喜劇的開始？.md",
           "lastUpdated": "2025-02-19 15:10:32"
         },
@@ -2395,7 +2411,7 @@
         },
         {
           "id": 29.0,
-          "title": "第29話 間接接吻是戀愛的滋味？",
+          "title": "第29話 間接接吻是戀愛的滋味",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《當內向的我在換座位時被S級美少女包圍，祕密關係就此開始。》/29 間接接吻是戀愛的滋味？.md",
           "lastUpdated": "2025-02-19 15:11:24"
         },
@@ -2425,29 +2441,32 @@
         }
       ],
       "tags": [
-        "異世界",
-        "奇幻"
-      ],
-      "lastUpdated": "2025-02-20 10:08:01"
+        "病嬌",
+        "戀愛喜劇",
+        "輕小說",
+        "後宮",
+        "傲嬌",
+        "性春"
+      ]
     },
     {
       "title": "身為高中老師的我和學生們集體傳送到有最強排行榜的異世界，從路人角色晉升為劍聖",
-      "author": "逆霧",
+      "author": "ウスバー",
       "cover": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《身為高中老師的我和學生們集體傳送到有最強排行榜的異世界，從路人角色晉升為劍聖》/cover.jpg",
       "description": "## 以為集體轉移的教師只是路人角色就放棄了……結果收到了女高中生熾熱的目光。\n\n＜已由Fantasia文庫出版實體書＞\n＜已由SQUARE ENIX開始連載漫畫版＞\n承蒙各位支持，第二卷已經發售。至於第三卷……可能要再多賣一點吧。\n不賣座的話就無法出續集。小說就是一場戰鬥。\n\n楠木重人突然與數名學生一同被轉移到異世界。\n那是一個來自各個世界的轉位者齊聚的世界。\n轉位時從神那裡獲得的能力，年輕人越容易適應，而已過三十的主角只得到了微不足道的能力。被當作路人角色對待，失去容身之處的我，就靠著從原本世界帶來的技能，一把刀過活。\n而且，這個世界存在著競爭最強排名的系統。",
       "originalUrl": "https://kakuyomu.jp/works/16817139555430939815",
       "chapters": [
         {
-          "id": -1.0,
-          "title": "簡介",
-          "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《身為高中老師的我和學生們集體傳送到有最強排行榜的異世界，從路人角色晉升為劍聖》/00 簡介.md",
-          "lastUpdated": "2025-02-19 05:50:56"
-        },
-        {
           "id": 0.0,
           "title": "譯名",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《身為高中老師的我和學生們集體傳送到有最強排行榜的異世界，從路人角色晉升為劍聖》/0 譯名.md",
           "lastUpdated": "2025-01-17 08:37:50"
+        },
+        {
+          "id": 0.0,
+          "title": "簡介",
+          "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《身為高中老師的我和學生們集體傳送到有最強排行榜的異世界，從路人角色晉升為劍聖》/00 簡介.md",
+          "lastUpdated": "2025-02-20 10:32:26"
         },
         {
           "id": 45.5,
@@ -2577,29 +2596,32 @@
         }
       ],
       "tags": [
-        "異世界",
-        "奇幻"
-      ],
-      "lastUpdated": "2025-02-20 10:08:01"
+        "異世界轉移",
+        "路人",
+        "最強排名",
+        "劍與魔法",
+        "居合斬",
+        "女高中生"
+      ]
     },
     {
       "title": "轉生成為邪惡騎士團長的我",
-      "author": "酒本アズサ",
+      "author": "蒼井美紗",
       "cover": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《轉生成為邪惡騎士團長的我》/cover.jpg",
       "description": "八兄弟中的長子，在父親去世後，代替工作的母親打理家務，每天照顧七個弟弟。某天為了救即將被車撞到的弟弟而喪命。再次睜開眼睛時，竟然成為了一本讀過的小說世界中的騎士團長！\n\n等等，這個騎士團長不就是因為太過邪惡最後被主角處決的那個嗎！？而且因為過去的我太過分，導致手下的教養比我的弟弟們還差！這樣下去不就直奔處決結局而去了嗎！？\n\n從今以後我要重新教育他們，別小看當過七個弟弟的好哥哥啊！\n\n這是一個操心系男子的奮鬥記錄。\n\n◇    ◇    ◇\n\n歡迎追蹤、推薦評論、❤應援、⭐評論和感想留言！這些都會成為作者更大的動力！\n（惡意留言可能會被刪除）\n\n【關於回覆讀者感想】\n請參考第42、43話的文末說明。\n\n絕對不會......絕對不會寫成BL的！！\n\n為什麼標註web版......因為書籍版有完全不同的篇章，還加入了許多新內容，保證值得二刷！？\n\n預計每週至少更新一次。\nKADOKAWA BOOKS將於2024年11月9日開始發售。\n2025年2月起將在Kadokomi、niconico漫畫開始連載漫畫版。",
       "originalUrl": "https://kakuyomu.jp/works/16817330667905655948",
       "chapters": [
         {
-          "id": -1.0,
-          "title": "簡介",
-          "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《轉生成為邪惡騎士團長的我》/00 簡介.md",
-          "lastUpdated": "2025-02-19 05:54:29"
-        },
-        {
           "id": 0.0,
           "title": "譯名",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《轉生成為邪惡騎士團長的我》/0 譯名.md",
           "lastUpdated": "2025-02-17 09:06:23"
+        },
+        {
+          "id": 0.0,
+          "title": "簡介",
+          "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《轉生成為邪惡騎士團長的我》/00 簡介.md",
+          "lastUpdated": "2025-02-20 10:47:10"
         },
         {
           "id": 1.0,
@@ -2753,7 +2775,7 @@
         },
         {
           "id": 26.0,
-          "title": "第26話 祝杯？",
+          "title": "第26話 祝杯",
           "url": "https://raw.githubusercontent.com/xuerowo/myacg/main/輕小說翻譯/《轉生成為邪惡騎士團長的我》/26 祝杯？.md",
           "lastUpdated": "2025-02-16 04:40:09"
         },
@@ -3083,10 +3105,15 @@
         }
       ],
       "tags": [
-        "異世界",
-        "奇幻"
-      ],
-      "lastUpdated": "2025-02-20 10:08:02"
+        "惡役轉生",
+        "美食誘惑",
+        "異世界奇幻",
+        "騎士團長",
+        "魔法",
+        "外掛",
+        "媽媽型男子",
+        "搞笑"
+      ]
     }
   ]
 }
