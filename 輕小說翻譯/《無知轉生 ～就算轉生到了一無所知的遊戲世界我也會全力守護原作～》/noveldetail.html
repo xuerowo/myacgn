@@ -422,7 +422,7 @@
                             <p class="source-links">
                                 <strong>原連結：</strong>
                                 <template v-for="(link, key) in novel.sourceLinks" :key="key">
-                                    <a :href="link" target="_blank" class="source-link">{{ key }}</a>
+                                    <a :href="link" target="_blank" class="source-link">{{ getSourceLinkName(key) }}</a>
                                 </template>
                             </p>
                         </div>
@@ -494,13 +494,14 @@
                         // 處理原連結
                         const sourceLinks = {};
                         if (novelData.originalUrl) {
-                            sourceLinks.japanese = novelData.originalUrl;
-                        }
-                        if (novelData.kakuyomuUrl) {
-                            sourceLinks.kakuyomu = novelData.kakuyomuUrl;
-                        }
-                        if (novelData.syosetuUrl) {
-                            sourceLinks.syosetu = novelData.syosetuUrl;
+                            const url = novelData.originalUrl;
+                            if (url.includes('kakuyomu.jp')) {
+                                sourceLinks.kakuyomu = url;
+                            } else if (url.includes('syosetu.com')) {
+                                sourceLinks.syosetu = url;
+                            } else {
+                                sourceLinks.japanese = url;
+                            }
                         }
 
                         this.novel = {
@@ -525,6 +526,14 @@
                         console.error('讀取小說資料失敗:', error);
                         alert('讀取小說資料失敗');
                     }
+                },
+                getSourceLinkName(key) {
+                    const names = {
+                        kakuyomu: 'カクヨム',
+                        syosetu: '小説家になろう',
+                        japanese: '日文原文'
+                    };
+                    return names[key] || key;
                 },
                 formatDate(dateStr) {
                     if (!dateStr) return '';
