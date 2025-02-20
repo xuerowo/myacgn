@@ -503,7 +503,7 @@
                             .sort((a, b) => a.number - b.number);
 
                         const params = new URLSearchParams(window.location.search);
-                        const chapterNumber = parseInt(params.get('chapter'));
+                        const chapterNumber = parseFloat(params.get('chapter'));
                         
                         const currentChapterData = this.allChapters.find(
                             chapter => chapter.number === chapterNumber
