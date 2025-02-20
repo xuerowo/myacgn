@@ -442,17 +442,6 @@
     </div>
 
     <script>
-        const NOVEL_INFO = {
-            title: '無知轉生 ～就算轉生到了一無所知的遊戲世界我也會全力守護原作～',
-            author: 'ウスバー',
-            genres: '主角最強,轉生,遊戲世界,後宮,原作崩壞',
-            coverUrl: 'cover.jpg',
-            description: '主人公轉生到了曾比任何人都要沉迷、對每個角落都了如指掌的魂之遊戲里......其實是轉生到了只有名字相似,除名字以外一無所知的謎之遊戲里,成了謎之角色!\n遊戲類型、系統、登場人物、主線的開始時間、舞台、甚至連自己在作品當中的角色定位都不清楚。\n即便如此,他仍拚命地收集情報,總算確認了自己就是「學園戀愛RPG的主人公」,為了守護世界 和自己的小命,他超脫常軌精進不懈地迎擊原作!\n這是轉生到一無所知的世界的主人公、用努力和毅力全力顛覆原作的故事!',
-            sourceLinks: {
-                japanese: 'https://ncode.syosetu.com/n4744ia/'
-            }
-        };
-
         const STORAGE_KEYS = {
             THEME: 'theme',
             READ_CHAPTERS: 'read_chapters'
@@ -463,7 +452,14 @@
         createApp({
             data() {
                 return {
-                    novel: NOVEL_INFO,
+                    novel: {
+                        title: '',
+                        author: '',
+                        genres: '',
+                        coverUrl: 'cover.jpg',
+                        description: '',
+                        sourceLinks: {}
+                    },
                     chapters: [],
                     isDarkMode: localStorage.getItem(STORAGE_KEYS.THEME) === 'dark',
                     isLightboxActive: false,
@@ -483,25 +479,27 @@
                 }
             },
             methods: {
-                formatDate(dateStr) {
-                    if (!dateStr) return '';
-                    const date = new Date(dateStr);
-                    return date.toLocaleDateString('zh-TW', {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit'
-                    }).replace(/\//g, '-');
-                },
-                async fetchChapterData() {
+                async fetchNovelData() {
                     try {
                         const response = await fetch('../novels.json');
                         const data = await response.json();
                         const novelData = data.novels.find(novel => novel.title === '無知轉生 ～就算轉生到了一無所知的遊戲世界我也會全力守護原作～');
+                        
                         if (!novelData) {
                             throw new Error('找不到小說資料');
                         }
+
+                        this.novel = {
+                            title: novelData.title,
+                            author: novelData.author,
+                            genres: novelData.genres.join(','),
+                            coverUrl: 'cover.jpg',
+                            description: novelData.description,
+                            sourceLinks: novelData.sourceLinks || {}
+                        };
+
                         this.chapters = novelData.chapters
-                            .filter(chapter => chapter.id >= 0)  // 排除簡介等特殊章節
+                            .filter(chapter => chapter.id >= 0)
                             .map(chapter => ({
                                 number: chapter.id,
                                 title: chapter.title,
@@ -510,8 +508,18 @@
                             }))
                             .sort((a, b) => a.number - b.number);
                     } catch (error) {
-                        console.error('讀取章節資料失敗:', error);
+                        console.error('讀取小說資料失敗:', error);
+                        alert('讀取小說資料失敗');
                     }
+                },
+                formatDate(dateStr) {
+                    if (!dateStr) return '';
+                    const date = new Date(dateStr);
+                    return date.toLocaleDateString('zh-TW', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit'
+                    }).replace(/\//g, '-');
                 },
                 goHome() {
                     window.location.href = '/acgtranslate.html#novels';
@@ -534,15 +542,10 @@
                 }
             },
             mounted() {
-                this.fetchChapterData();
-                const theme = localStorage.getItem(STORAGE_KEYS.THEME) || 'light';
-                document.documentElement.setAttribute('data-theme', theme);
-                this.isDarkMode = theme === 'dark';
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'Escape' && this.isLightboxActive) {
-                        this.closeLightbox();
-                    }
-                });
+                this.fetchNovelData();
+                if (this.isDarkMode) {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                }
             }
         }).mount('#app');
     </script>
