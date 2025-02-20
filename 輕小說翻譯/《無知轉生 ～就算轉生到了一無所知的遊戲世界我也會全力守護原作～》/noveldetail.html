@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title v-text="pageTitle"></title>
+    <title>無知轉生 ～就算轉生到了一無所知的遊戲世界我也會全力守護原作～ - 輕小說翻譯</title>
     <meta name="description" content="輕小說在線閱讀。使用 Claude 3.5 Sonnet 進行翻譯。">
-    <meta name="keywords" v-bind:content="'輕小說翻譯, ' + novel.title + ', 輕小說閱讀'">
+    <meta name="keywords" content="輕小說翻譯, 無知轉生 ～就算轉生到了一無所知的遊戲世界我也會全力守護原作～, 輕小說閱讀">
     <link rel="icon" href="/images/favicon.jpg" type="image/jpg">
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -451,17 +451,8 @@
     <script>
         const STORAGE_KEYS = {
             THEME: 'theme',
-            FONT_SIZE: 'fontSize',
-            LINE_HEIGHT: 'lineHeight',
-            READ_CHAPTERS: 'readChapters'
+            READ_CHAPTERS: 'read_chapters'
         };
-
-        // 從目錄路徑獲取小說標題
-        function getNovelTitle() {
-            const path = window.location.pathname;
-            const match = path.match(/《(.+?)》/);
-            return match ? match[1] : '';
-        }
 
         const { createApp } = Vue;
 
@@ -488,9 +479,6 @@
                 },
                 parsedDescription() {
                     return this.novel.description ? marked.parse(this.novel.description) : '';
-                },
-                pageTitle() {
-                    return this.novel.title ? `${this.novel.title} - 輕小說翻譯` : '輕小說翻譯';
                 }
             },
             watch: {
@@ -505,12 +493,8 @@
                     try {
                         const response = await fetch('../novels.json');
                         const data = await response.json();
-                        const novelTitle = getNovelTitle();
-                        if (!novelTitle) {
-                            throw new Error('無法獲取小說標題');
-                        }
+                        const novelData = data.novels.find(novel => novel.title === '無知轉生 ～就算轉生到了一無所知的遊戲世界我也會全力守護原作～');
                         
-                        const novelData = data.novels.find(novel => novel.title === novelTitle);
                         if (!novelData) {
                             throw new Error('找不到小說資料');
                         }
