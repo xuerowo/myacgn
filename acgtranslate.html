@@ -428,7 +428,7 @@
                         const data = await response.json();
                         this.mangaList = data.manga.map(manga => ({
                             ...manga,
-                            detailPage: `網漫翻譯/${encodeURIComponent(manga.title)}/mangadetail.html`,
+                            detailPage: `網漫翻譯/${encodeURIComponent(manga.title)}/webtoondetail.html`,
                             type: 'manga'
                         }));
                     } catch (error) {
