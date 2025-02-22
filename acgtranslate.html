@@ -359,7 +359,7 @@
                     <div v-for="item in mangaList" 
                          :key="item.title" 
                          class="content-card">
-                        <img :src="item.coverUrl" 
+                        <img :src="item.cover" 
                              :alt="item.title" 
                              @click="goToDetail(item)">
                         <div class="content-card-info" @click="goToDetail(item)">
