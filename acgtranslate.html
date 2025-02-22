@@ -413,20 +413,15 @@
                         this.novelList = data.novels
                             .map(novel => {
                                 const titleWithBrackets = novel.title.startsWith('《') ? novel.title : `《${novel.title}》`;
-                                // 找出最新的章節更新時間
-                                const lastUpdated = novel.lastUpdated || 
-                                    (novel.chapters && novel.chapters.length > 0 
-                                        ? Math.max(...novel.chapters.map(ch => new Date(ch.lastUpdated).getTime()))
-                                        : new Date().getTime());
                                 return {
                                     title: titleWithBrackets,
                                     detailPage: `輕小說翻譯/${encodeURIComponent(titleWithBrackets)}/noveldetail.html`,
                                     coverUrl: `/輕小說翻譯/${encodeURIComponent(titleWithBrackets)}/cover.jpg`,
                                     type: 'novel',
-                                    lastUpdated: lastUpdated
+                                    lastUpdated: novel.lastUpdated || new Date().toISOString()
                                 };
                             })
-                            .sort((a, b) => b.lastUpdated - a.lastUpdated); // 按更新時間降序排序
+                            .sort((a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated)); // 按最後更新時間降序排序
                     } catch (error) {
                         console.error('讀取小說列表失敗:', error);
                     }
