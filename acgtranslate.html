@@ -182,6 +182,8 @@
             transition: transform 0.2s;
             cursor: pointer;
             position: relative;
+            display: flex;
+            flex-direction: column;
         }
 
         .content-card:hover {
@@ -197,26 +199,23 @@
         .content-card-info {
             padding: 1rem;
             background: var(--background-color);
-            position: relative;
-            min-height: 80px;
+            flex: 1;
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
         }
 
         .update-time {
-            position: absolute;
-            bottom: 0.5rem;
-            right: 0.5rem;
             font-size: 0.8rem;
             color: var(--text-color);
             opacity: 0.8;
-            margin-top: auto;
+            text-align: right;
+            margin-top: 0.5rem;
         }
 
         .content-title {
             font-size: 1.1rem;
             font-weight: bold;
-            margin-bottom: 1.5rem;
             color: var(--text-color);
         }
 
