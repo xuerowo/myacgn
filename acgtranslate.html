@@ -410,15 +410,19 @@
                     try {
                         const response = await fetch('/輕小說翻譯/novels.json');
                         const data = await response.json();
-                        this.novelList = data.novels.map(novel => {
-                            const titleWithBrackets = novel.title.startsWith('《') ? novel.title : `《${novel.title}》`;
-                            return {
-                                title: titleWithBrackets,
-                                detailPage: `輕小說翻譯/${encodeURIComponent(titleWithBrackets)}/noveldetail.html`,
-                                coverUrl: `/輕小說翻譯/${encodeURIComponent(titleWithBrackets)}/cover.jpg`,
-                                type: 'novel'
-                            };
-                        });
+                        // 確保每個小說都有 updateTime 屬性，如果沒有則使用當前時間
+                        this.novelList = data.novels
+                            .map(novel => {
+                                const titleWithBrackets = novel.title.startsWith('《') ? novel.title : `《${novel.title}》`;
+                                return {
+                                    title: titleWithBrackets,
+                                    detailPage: `輕小說翻譯/${encodeURIComponent(titleWithBrackets)}/noveldetail.html`,
+                                    coverUrl: `/輕小說翻譯/${encodeURIComponent(titleWithBrackets)}/cover.jpg`,
+                                    type: 'novel',
+                                    updateTime: novel.updateTime || new Date().toISOString()
+                                };
+                            })
+                            .sort((a, b) => new Date(b.updateTime) - new Date(a.updateTime)); // 按更新時間降序排序
                     } catch (error) {
                         console.error('讀取小說列表失敗:', error);
                     }
