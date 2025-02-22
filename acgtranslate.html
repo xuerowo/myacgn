@@ -424,13 +424,12 @@
             methods: {
                 async fetchMangaList() {
                     try {
-                        const response = await fetch('/mangalist.json');
+                        const response = await fetch('/網漫翻譯/manga.json');
                         const data = await response.json();
-                        this.mangaList = data.mangaList.map(manga => ({
+                        this.mangaList = data.manga.map(manga => ({
                             ...manga,
-                            coverUrl: `/${encodeURIComponent('網漫翻譯')}/${encodeURIComponent(manga.title)}/cover.jpg`,
-                            type: 'manga',
-                            author: manga.author || '未知作者'
+                            detailPage: `網漫翻譯/${encodeURIComponent(manga.title)}/mangadetail.html`,
+                            type: 'manga'
                         }));
                     } catch (error) {
                         console.error('讀取漫畫列表失敗:', error);
