@@ -205,12 +205,22 @@
             justify-content: space-between;
         }
 
-        .update-time {
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.5rem;
             font-size: 0.8rem;
             color: var(--text-color);
             opacity: 0.8;
+        }
+
+        .author-name {
+            margin-right: 0.5rem;
+        }
+
+        .update-time {
             text-align: right;
-            margin-top: 0.5rem;
         }
 
         .content-title {
@@ -354,6 +364,9 @@
                              @click="goToDetail(item)">
                         <div class="content-card-info" @click="goToDetail(item)">
                             <div class="content-title">{{ item.title }}</div>
+                            <div class="card-footer">
+                                <span class="author-name">{{ item.author }}</span>
+                                <span class="update-time">{{ new Date(item.lastUpdated).toLocaleDateString() }}</span>
                             </div>
                         </div>
                     </div>
@@ -368,7 +381,10 @@
                              @click="goToDetail(item)">
                         <div class="content-card-info" @click="goToDetail(item)">
                             <div class="content-title">{{ item.title }}</div>
-                            <div class="update-time">{{ new Date(item.lastUpdated).toLocaleDateString() }}</div>
+                            <div class="card-footer">
+                                <span class="author-name">{{ item.author }}</span>
+                                <span class="update-time">{{ new Date(item.lastUpdated).toLocaleDateString() }}</span>
+                            </div>
                         </div>
                     </div>
                 </template>
