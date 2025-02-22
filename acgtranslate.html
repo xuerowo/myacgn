@@ -197,6 +197,16 @@
         .content-card-info {
             padding: 1rem;
             background: var(--background-color);
+            position: relative;
+        }
+
+        .update-time {
+            position: absolute;
+            bottom: 0.5rem;
+            right: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-color);
+            opacity: 0.8;
         }
 
         .content-title {
@@ -355,7 +365,7 @@
                              @click="goToDetail(item)">
                         <div class="content-card-info" @click="goToDetail(item)">
                             <div class="content-title">{{ item.title }}</div>
-                            </div>
+                            <div class="update-time">{{ new Date(item.lastUpdated).toLocaleDateString() }}</div>
                         </div>
                     </div>
                 </template>
