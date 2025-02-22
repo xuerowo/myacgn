@@ -195,20 +195,19 @@
         }
 
         .content-card-info {
-            padding: 1rem 1rem 2rem 1rem;
+            padding: 1rem;
             background: var(--background-color);
             position: relative;
+            min-height: 5rem;
         }
 
         .update-time {
             position: absolute;
-            bottom: 0;
-            right: 0;
-            font-size: 0.8rem;
+            bottom: 0.3rem;
+            right: 0.3rem;
+            font-size: 0.75rem;
             color: var(--text-color);
-            opacity: 0.8;
-            padding: 0.5rem;
-            background: var(--background-color);
+            opacity: 0.7;
         }
 
         .content-title {
@@ -219,8 +218,12 @@
         }
 
         .reading-progress {
-            font-size: 0.9rem;
-            color: var(--primary-color);
+            position: absolute;
+            bottom: 0.3rem;
+            left: 1rem;
+            font-size: 0.75rem;
+            color: var(--text-color);
+            opacity: 0.7;
         }
 
         .theme-toggle {
@@ -353,7 +356,7 @@
                              @click="goToDetail(item)">
                         <div class="content-card-info" @click="goToDetail(item)">
                             <div class="content-title">{{ item.title }}</div>
-                            </div>
+                            <div class="reading-progress">已更新 {{ item.chapterCount }} 章</div>
                         </div>
                     </div>
                 </template>
@@ -368,6 +371,7 @@
                         <div class="content-card-info" @click="goToDetail(item)">
                             <div class="content-title">{{ item.title }}</div>
                             <div class="update-time">{{ new Date(item.lastUpdated).toLocaleDateString() }}</div>
+                            <div class="reading-progress">已更新 {{ item.chapterCount }} 章</div>
                         </div>
                     </div>
                 </template>
