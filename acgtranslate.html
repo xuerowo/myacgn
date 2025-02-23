@@ -605,10 +605,10 @@
                                     coverUrl: `/輕小說翻譯/${encodeURIComponent(titleWithBrackets)}/cover.jpg`,
                                     type: 'novel',
                                     lastUpdated: novel.lastUpdated || new Date().toISOString(),
-                                    author: novel.author || '未知作者'
+                                    author: novel.author || '未知作者',
+                                    chapters: novel.chapters || []
                                 };
-                            })
-                            .sort((a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated));
+                            });
                     } catch (error) {
                         console.error('讀取小說列表失敗:', error);
                     }
@@ -639,6 +639,11 @@
                     this.currentSort = sortOption.value;
                     localStorage.setItem(STORAGE_KEYS.SORT, sortOption.value);
                     this.showSortMenu = false;
+                    if (this.currentContent === 'webtoons') {
+                        this.mangaList = [...this.mangaList];
+                    } else {
+                        this.novelList = [...this.novelList];
+                    }
                 },
                 getReadingTime(title) {
                     try {
