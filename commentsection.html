@@ -3,11 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ACG翻譯</title>
-    <meta name="description" content="網漫與輕小說中文翻譯閱讀網站。個人翻譯作品,使用 Claude 3.5 Sonnet 進行翻譯。">
-    <meta name="keywords" content="網漫, 輕小說, 漫畫, 網漫翻譯, 輕小說翻譯, 漫畫翻譯, 網路漫畫, 漫畫閱讀, 中文翻譯, 閱讀器, 漫畫網站, webtoon, 漫畫推薦">
+    <title>留言區</title>
     <link rel="icon" href="images/favicon.jpg" type="image/jpg">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js"></script>
     <style>
         :root {
             --primary-color: #4a90e2;
@@ -41,31 +38,23 @@
             line-height: 1.6;
             color: var(--text-color);
             background-color: var(--secondary-color);
-            padding-top: 60px;
+            padding-top: 80px;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            margin-top: 2rem;
-        }
-
+        /* 導航欄樣式 */
         .navbar {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             background-color: var(--background-color);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             z-index: 1000;
             transition: top 0.3s;
         }
 
-        .navbar[style*="-80px"] .dropdown-menu,
-        .navbar[style*="-80px"] .sort-menu,
-        .navbar[style*="-80px"] .app-info-tooltip {
+        .navbar[style*="-80px"] .dropdown-menu {
             display: none !important;
         }
 
@@ -75,28 +64,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            overflow-x: auto;
-            overflow-y: hidden;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: thin;
-            padding: 0 10px;
-            gap: 1rem;
-            scroll-behavior: auto;
-            white-space: nowrap;
-            position: relative;
-            -ms-overflow-style: none;  /* IE and Edge */
-            cursor: grab;
-        }
-
-        .nav-container:active {
-            cursor: grabbing;
         }
 
         .nav-links {
             display: flex;
             gap: 2rem;
             align-items: center;
-            flex-shrink: 0;
         }
 
         .nav-links > * {
@@ -116,19 +89,12 @@
             color: var(--primary-color);
         }
 
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            flex-shrink: 0;
-        }
-
+        /* 下拉菜單樣式 */
         .dropdown {
             position: relative;
             display: inline-block;
             min-width: 80px;
             text-align: center;
-            z-index: 1001;
         }
 
         .dropdown-toggle {
@@ -143,7 +109,6 @@
             border: none;
             font-size: 1.1rem;
             width: 100%;
-            user-select: none;
         }
 
         .dropdown-toggle:hover {
@@ -157,7 +122,9 @@
         }
 
         .dropdown-menu {
-            position: fixed;
+            position: absolute;
+            top: 100%;
+            left: 0;
             background-color: var(--dropdown-background);
             min-width: 160px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
@@ -166,13 +133,6 @@
             visibility: hidden;
             transform: translateY(-10px);
             transition: all 0.3s ease;
-            z-index: 1002;
-        }
-
-        .dropdown-menu.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
         }
 
         .dropdown-menu a {
@@ -188,161 +148,17 @@
             color: var(--primary-color);
         }
 
-        .dropdown-toggle.active:after {
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown:hover .dropdown-toggle:after {
             transform: rotate(180deg);
         }
 
-        .dropdown-menu a.active {
-            background-color: var(--dropdown-hover);
-            color: var(--primary-color);
-        }
-
-        .app-download-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--text-color);
-            text-decoration: none;
-            font-size: 1.1rem;
-            position: relative;
-            transition: none;
-        }
-
-        .app-download-button:hover {
-            color: var(--primary-color);
-        }
-
-        .app-download-button:hover .app-info-tooltip,
-        .app-info-tooltip:hover {
-            display: none;
-        }
-
-        .app-icon-small {
-            font-size: 1.2rem;
-        }
-
-        .app-info-tooltip {
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--background-color);
-            padding: 1rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            font-size: 0.9rem;
-            color: var(--text-color);
-            opacity: 0;
-            visibility: hidden;
-            z-index: 1000;
-            margin-top: 0.5rem;
-            border: 1px solid var(--border-color);
-            white-space: normal;
-            width: 200px;
-            text-align: center;
-            transition: opacity 0.3s, visibility 0.3s;
-        }
-
-        .app-info-tooltip::before {
-            content: '';
-            position: absolute;
-            top: -6px;
-            left: 50%;
-            transform: translateX(-50%) rotate(45deg);
-            width: 12px;
-            height: 12px;
-            background: var(--background-color);
-            border-left: 1px solid var(--border-color);
-            border-top: 1px solid var(--border-color);
-        }
-
-        .app-info-tooltip.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .qr-code-img {
-            width: 150px;
-            height: 150px;
-            margin: 0.8rem auto;
-            display: block;
-            border-radius: 4px;
-        }
-
-        .version-info {
-            color: var(--primary-color);
-            font-weight: 500;
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-
-        .content-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 2rem;
-        }
-
-        .content-card {
-            width: 196px;
-            background: var(--background-color);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
-            cursor: pointer;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .content-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .content-card img {
-            width: 196px;
-            height: 280px;
-            object-fit: cover;
-        }
-
-        .content-card-info {
-            padding: 1rem;
-            background: var(--background-color);
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 0.5rem;
-            font-size: 0.8rem;
-            color: var(--text-color);
-            opacity: 0.8;
-        }
-
-        .author-name {
-            margin-right: 0.5rem;
-        }
-
-        .update-time {
-            text-align: right;
-        }
-
-        .content-title {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: var(--text-color);
-        }
-
-        .reading-progress {
-            font-size: 0.9rem;
-            color: var(--primary-color);
-        }
-
+        /* 主題切換按鈕 */
         .theme-toggle {
             background: none;
             border: none;
@@ -357,92 +173,47 @@
             transform: rotate(360deg);
         }
 
-        /* 排序選擇器樣式 */
-        .sort-selector {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 4px;
-            transition: background-color 0.2s;
-            margin-right: 8px;
-            user-select: none;
-            z-index: 1001;
+        /* 內容區域樣式 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
         }
 
-        .sort-selector:hover {
-            background-color: var(--dropdown-hover);
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
         }
 
-        .sort-icon {
-            display: flex;
-            align-items: center;
-            margin-right: 4px;
-        }
-
-        .sort-text {
-            font-size: 14px;
-            color: var(--text-color);
-            margin-right: 4px;
-        }
-
-        .sort-chevron {
-            transition: transform 0.2s;
-        }
-
-        .sort-menu {
-            position: fixed;
-            background-color: var(--dropdown-background);
+        /* 評論區域樣式 */
+        #disqus_thread {
+            background-color: var(--background-color);
+            padding: 2rem;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            padding: 4px;
-            z-index: 1002;
-            min-width: 120px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
         }
 
-        .sort-menu.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
+        /* 頁腳樣式 */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background-color: var(--background-color);
+            margin-top: 2rem;
         }
 
-        .sort-option {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 8px 12px;
-            cursor: pointer;
-            border-radius: 4px;
+        footer h4 {
             color: var(--text-color);
+            margin-bottom: 1rem;
         }
 
-        .sort-option:hover {
-            background-color: var(--dropdown-hover);
+        footer h6 {
+            color: var(--text-color);
+            font-size: 0.9rem;
         }
 
-        .sort-option.selected {
-            background-color: var(--dropdown-hover);
-        }
-
-        .sort-option-text {
-            font-size: 14px;
-            margin-right: 8px;
-        }
-
-        .sort-option-check {
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        .sort-option.selected .sort-option-check {
-            opacity: 1;
-        }
-
+        /* 響應式設計 */
+        /* 手機設備 */
         @media (max-width: 768px) {
             .navbar {
                 padding: 0.8rem;
@@ -454,36 +225,6 @@
 
             .nav-links > * {
                 min-width: 60px;
-            }
-
-            .container {
-                padding: 12px;
-            }
-
-            .content-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1rem;
-            }
-
-            .content-card {
-                width: 165px;
-            }
-
-            .content-card img {
-                width: 165px;
-                height: 235px;
-            }
-
-            .content-card-info {
-                padding: 0.8rem;
-            }
-
-            .content-title {
-                font-size: 0.95rem;
-            }
-
-            .reading-progress {
-                font-size: 0.85rem;
             }
         }
 
@@ -500,7 +241,7 @@
             .nav-links > * {
                 min-width: 50px;
             }
-
+    
             .nav-links a {
                 font-size: 0.95rem;
             }
@@ -517,504 +258,87 @@
                 padding: 0.6rem 0.8rem;
                 font-size: 0.95rem;
             }
-        }
 
-        /* 添加新的滾動條樣式 */
-        .nav-container::-webkit-scrollbar {
-            height: 4px;
-        }
-
-        .nav-container::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .nav-container::-webkit-scrollbar-thumb {
-            background: var(--primary-color);
-            border-radius: 4px;
-        }
-
-        .nav-container::-webkit-scrollbar-thumb:hover {
-            background: var(--primary-color);
-        }
-
-        .dropdown:hover .dropdown-menu,
-        .dropdown-menu:hover {
-            display: none;
-        }
-
-        .sort-selector:hover .sort-menu,
-        .sort-menu:hover {
-            display: none;
+            h1 {
+                font-size: 1.4rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div id="app">
-        <nav class="navbar">
-            <div class="nav-container">
-                <div class="nav-links">
-                    <a href="index.html">首頁</a>
-                    <div class="dropdown">
-                        <button class="dropdown-toggle" 
-                                data-dropdown="recommendations"
-                                @mouseenter="activeDropdown = 'recommendations'"
-                                :class="{ active: activeDropdown === 'recommendations' }">推薦</button>
-                        <div class="dropdown-menu" 
-                             :class="{ show: activeDropdown === 'recommendations' }"
-                             :style="getDropdownPosition('recommendations')"
-                             @mouseenter="activeDropdown = 'recommendations'"
-                             @mouseleave="activeDropdown = null">
-                            <a href="recommendations.html#animations">動畫</a>
-                            <a href="recommendations.html#webtoons">網漫</a>
-                            <a href="recommendations.html#lightnovels">輕小說</a>
-                            <a href="recommendations.html#visualnovels">視覺小說</a>
-                        </div>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-links">
+                <a href="index.html">首頁</a>
+                <div class="dropdown">
+                    <button class="dropdown-toggle">推薦</button>
+                    <div class="dropdown-menu">
+                        <a href="recommendations.html#animations">動畫</a>
+                        <a href="recommendations.html#webtoons">網漫</a>
+                        <a href="recommendations.html#lightnovels">輕小說</a>
+                        <a href="recommendations.html#visualnovels">視覺小說</a>
                     </div>
-                    <div class="dropdown">
-                        <button class="dropdown-toggle" 
-                                data-dropdown="acg"
-                                @mouseenter="activeDropdown = 'acg'"
-                                :class="{ active: activeDropdown === 'acg' }"
-                                style="color: var(--primary-color)">ACG翻譯</button>
-                        <div class="dropdown-menu" 
-                             :class="{ show: activeDropdown === 'acg' }"
-                             :style="getDropdownPosition('acg')"
-                             @mouseenter="activeDropdown = 'acg'"
-                             @mouseleave="activeDropdown = null">
-                            <a href="#webtoons" 
-                               @click="switchContent('webtoons')" 
-                               :class="{ active: currentContent === 'webtoons' }">網漫</a>
-                            <a href="#novels" 
-                               @click="switchContent('novels')" 
-                               :class="{ active: currentContent === 'novels' }">輕小說</a>
-                        </div>
-                    </div>
-                    <a href="commentsection.html">留言區</a>
                 </div>
-                <div class="nav-right">
-                    <div v-if="currentContent === 'novels'" class="dropdown">
-                        <a class="app-download-button"
-                           @click.prevent="activeDropdown = activeDropdown === 'app' ? null : 'app'"
-                           href="https://expo.dev/artifacts/eas/mxSLMCW72kGzSLC6miv52i.apk"
-                           download="ACG閱讀器.apk">
-                            <span class="app-icon-small">📱</span>
-                            <span>下載輕小說閱讀 App</span>
-                        </a>
-                        <div class="app-info-tooltip"
-                             :class="{ show: activeDropdown === 'app' }"
-                             :style="getDropdownPosition('app')">
-                            <span class="version-info">v1.2.1</span>
-                            <span>更新於 2025/2/23</span>
-                            <img class="qr-code-img" 
-                                 src="images/app_download_qr_code.png" 
-                                 alt="掃描下載 App">
-                            <span style="margin-top: 10px; display: block;">掃描下載 App</span>
-                        </div>
+                <div class="dropdown">
+                    <button class="dropdown-toggle">ACG翻譯</button>
+                    <div class="dropdown-menu">
+                        <a href="acgtranslate.html#webtoons">網漫</a>
+                        <a href="acgtranslate.html#novels">輕小說</a>
                     </div>
-                    <div class="dropdown">
-                        <div class="sort-selector" 
-                             @click="activeDropdown = activeDropdown === 'sort' ? null : 'sort'">
-                            <div class="sort-icon">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M4 7h10M4 12h8M4 17h6"></path>
-                                    <path d="M17 13l3 3l3-3"></path>
-                                    <path d="M20 8v8"></path>
-                                </svg>
-                            </div>
-                            <span class="sort-text">{{ currentSortLabel }}</span>
-                            <span class="sort-chevron" 
-                                  :style="{ transform: activeDropdown === 'sort' ? 'rotate(180deg)' : 'rotate(0deg)' }">▼</span>
-                        </div>
-                        <div class="sort-menu" 
-                             :class="{ show: activeDropdown === 'sort' }"
-                             :style="getDropdownPosition('sort')">
-                            <div v-for="option in sortOptions" 
-                                 :key="option.value"
-                                 class="sort-option"
-                                 :class="{ selected: currentSort === option.value }"
-                                 @click="handleSortChange(option)">
-                                <span class="sort-option-text">{{ option.label }}</span>
-                                <span class="sort-option-check">✓</span>
-                            </div>
-                        </div>
-                    </div>
-                    <button class="theme-toggle" @click="toggleTheme">{{ isDarkMode ? '🌜' : '🌞' }}</button>
                 </div>
+                <a href="commentsection.html" style="color: var(--primary-color)">留言區</a>
             </div>
-        </nav>
-
-        <div class="container">
-            <div class="content-grid">
-                <template v-if="currentContent === 'webtoons'">
-                    <div v-for="item in sortedMangaList" 
-                         :key="item.title" 
-                         class="content-card">
-                        <img :src="item.cover" 
-                             :alt="item.title" 
-                             @click="goToDetail(item)">
-                        <div class="content-card-info" @click="goToDetail(item)">
-                            <div class="content-title">{{ item.title }}</div>
-                            <div class="card-footer">
-                                <span class="author-name">{{ item.author }}</span>
-                                <span class="update-time">{{ new Date(item.lastUpdated).toLocaleDateString() }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </template>
-
-                <template v-else>
-                    <div v-for="item in sortedNovelList" 
-                         :key="item.title" 
-                         class="content-card">
-                        <img :src="item.coverUrl" 
-                             :alt="item.title" 
-                             @click="goToDetail(item)">
-                        <div class="content-card-info" @click="goToDetail(item)">
-                            <div class="content-title">{{ item.title }}</div>
-                            <div class="card-footer">
-                                <span class="author-name">{{ item.author }}</span>
-                                <span class="update-time">{{ new Date(item.lastUpdated).toLocaleDateString() }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </template>
-            </div>
+            <button class="theme-toggle" id="theme-toggle">🌞</button>
         </div>
+    </nav>
+
+    <div class="container">
+        <h1>留言區</h1>
+        <div id="disqus_thread"></div>
     </div>
 
     <script>
-        const { createApp } = Vue;
+        // Disqus 配置
+        (function() {
+            var d = document, s = d.createElement('script');
+            s.src = 'https://xuerowo.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+            })();
 
-        const STORAGE_KEYS = {
-            THEME: 'theme',
-            SORT: 'content_sort'
-        };
+        // 主題切換
+        const themeToggle = document.getElementById('theme-toggle');
+        const root = document.documentElement;
+        
+        if (localStorage.getItem('theme') === 'dark') {
+            root.setAttribute('data-theme', 'dark');
+            themeToggle.textContent = '🌜';
+        }
 
-        createApp({
-            data() {
-                return {
-                    currentContent: 'webtoons',
-                    mangaList: [],
-                    novelList: [],
-                    isDarkMode: localStorage.getItem(STORAGE_KEYS.THEME) === 'dark',
-                    showSortMenu: false,
-                    currentSort: localStorage.getItem(STORAGE_KEYS.SORT) || 'lastUpdated',
-                    mangaSortOptions: [
-                        { value: 'lastUpdated', label: '最新更新' },
-                        { value: 'chapterCount', label: '章節數' }
-                    ],
-                    novelSortOptions: [
-                        { value: 'lastUpdated', label: '最新更新' },
-                        { value: 'chapterCount', label: '章節數' },
-                        { value: 'wordCount', label: '文字數' }
-                    ],
-                    isDragging: false,
-                    startX: 0,
-                    scrollLeft: 0,
-                    activeDropdown: null
-                }
-            },
-            computed: {
-                sortOptions() {
-                    return this.currentContent === 'webtoons' ? this.mangaSortOptions : this.novelSortOptions;
-                },
-                currentSortLabel() {
-                    return this.sortOptions.find(opt => opt.value === this.currentSort)?.label || '排序';
-                },
-                sortedMangaList() {
-                    return [...this.mangaList].sort((a, b) => {
-                        switch (this.currentSort) {
-                            case 'lastUpdated':
-                                return new Date(b.lastUpdated) - new Date(a.lastUpdated);
-                            case 'chapterCount':
-                                return b.chapters.length - a.chapters.length;
-                            default:
-                                return 0;
-                        }
-                    });
-                },
-                sortedNovelList() {
-                    return [...this.novelList].sort((a, b) => {
-                        switch (this.currentSort) {
-                            case 'lastUpdated':
-                                return new Date(b.lastUpdated) - new Date(a.lastUpdated);
-                            case 'chapterCount':
-                                return (b.chapters || []).length - (a.chapters || []).length;
-                            case 'wordCount':
-                                return (b.totalWordCount || 0) - (a.totalWordCount || 0);
-                            default:
-                                return 0;
-                        }
-                    });
-                }
-            },
-            watch: {
-                currentContent(newValue) {
-                    const availableOptions = newValue === 'webtoons' ? this.mangaSortOptions : this.novelSortOptions;
-                    if (!availableOptions.some(opt => opt.value === this.currentSort)) {
-                        this.currentSort = 'lastUpdated';
-                        localStorage.setItem(STORAGE_KEYS.SORT, 'lastUpdated');
-                    }
-                },
-                isDarkMode(newValue) {
-                    const theme = newValue ? 'dark' : 'light';
-                    document.documentElement.setAttribute('data-theme', theme);
-                    localStorage.setItem(STORAGE_KEYS.THEME, theme);
-                }
-            },
-            methods: {
-                async fetchMangaList() {
-                    try {
-                        const response = await fetch('/網漫翻譯/manga.json');
-                        const data = await response.json();
-                        this.mangaList = data.manga.map(manga => ({
-                            ...manga,
-                            detailPage: `網漫翻譯/${encodeURIComponent(manga.title)}/webtoondetail.html`,
-                            type: 'manga'
-                        }));
-                    } catch (error) {
-                        console.error('讀取漫畫列表失敗:', error);
-                    }
-                },
-                async fetchNovelList() {
-                    try {
-                        const response = await fetch('/輕小說翻譯/novels.json');
-                        const data = await response.json();
-                        this.novelList = data.novels
-                            .map(novel => {
-                                const titleWithBrackets = novel.title.startsWith('《') ? novel.title : `《${novel.title}》`;
-                                return {
-                                    title: titleWithBrackets,
-                                    detailPage: `輕小說翻譯/${encodeURIComponent(titleWithBrackets)}/noveldetail.html`,
-                                    coverUrl: `/輕小說翻譯/${encodeURIComponent(titleWithBrackets)}/cover.jpg`,
-                                    type: 'novel',
-                                    lastUpdated: novel.lastUpdated || new Date().toISOString(),
-                                    author: novel.author || '未知作者',
-                                    chapters: novel.chapters || [],
-                                    totalWordCount: novel.totalWordCount || 0
-                                };
-                            });
-                    } catch (error) {
-                        console.error('讀取小說列表失敗:', error);
-                    }
-                },
-                switchContent(type) {
-                    this.currentContent = type;
-                    if (type === 'webtoons') {
-                        this.fetchMangaList();
-                        window.location.hash = 'webtoons';
-                    } else {
-                        this.fetchNovelList();
-                        window.location.hash = 'novels';
-                    }
-                },
-                goToDetail(item) {
-                    window.location.href = item.detailPage;
-                },
-                getReadingProgress(item) {
-                    return this.readingProgress[`${item.type}_${item.title}`];
-                },
-                toggleTheme() {
-                    this.isDarkMode = !this.isDarkMode;
-                },
-                toggleSortMenu() {
-                    this.showSortMenu = !this.showSortMenu;
-                },
-                handleSortChange(sortOption) {
-                    this.currentSort = sortOption.value;
-                    localStorage.setItem(STORAGE_KEYS.SORT, sortOption.value);
-                    this.showSortMenu = false;
-                    if (this.currentContent === 'webtoons') {
-                        this.mangaList = [...this.mangaList];
-                    } else {
-                        this.novelList = [...this.novelList];
-                    }
-                },
-                getReadingTime(title) {
-                    try {
-                        const readingTimes = JSON.parse(localStorage.getItem('reader_settings'))?.readingTime || {};
-                        return readingTimes[title] || 0;
-                    } catch {
-                        return 0;
-                    }
-                },
-                toggleDropdown(dropdownId) {
-                    if (this.isDragging) {
-                        return;
-                    }
-                    
-                    if (this.activeDropdown === dropdownId) {
-                        this.activeDropdown = null;
-                    } else {
-                        this.activeDropdown = dropdownId;
-                    }
-                },
-                getDropdownPosition(dropdownId) {
-                    let element;
-                    switch(dropdownId) {
-                        case 'recommendations':
-                        case 'acg':
-                            element = document.querySelector(`button[data-dropdown="${dropdownId}"]`);
-                            break;
-                        case 'app':
-                            element = document.querySelector('.app-download-button');
-                            break;
-                        case 'sort':
-                            element = document.querySelector('.sort-selector');
-                            break;
-                        default:
-                            return {};
-                    }
-                    
-                    if (!element) return {};
-                    
-                    const rect = element.getBoundingClientRect();
-                    const position = {
-                        position: 'fixed',
-                        top: `${rect.bottom + 5}px`
-                    };
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = root.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            root.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeToggle.textContent = newTheme === 'dark' ? '🌜' : '🌞';
+        });
 
-                    if (dropdownId === 'sort') {
-                        position.right = `${window.innerWidth - rect.right}px`;
-                    } else if (dropdownId === 'app') {
-                        position.left = `${rect.left + (rect.width / 2)}px`;
-                        position.transform = 'translateX(-50%)';
-                    } else {
-                        position.left = `${rect.left}px`;
-                        position.transform = 'none';
-                    }
-
-                    return position;
-                },
-                closeDropdowns(e) {
-                    if (!e.target.closest('.dropdown')) {
-                        this.activeDropdown = null;
-                    }
-                },
-                startDragging(e) {
-                    if (e.target.closest('.dropdown-menu') || 
-                        e.target.closest('.dropdown-toggle') ||
-                        e.target.closest('.theme-toggle')) {
-                        return;
-                    }
-                    
-                    const navContainer = document.querySelector('.nav-container');
-                    this.isDragging = true;
-                    this.startX = e.type === 'mousedown' ? e.pageX - navContainer.offsetLeft : e.touches[0].pageX - navContainer.offsetLeft;
-                    this.scrollLeft = navContainer.scrollLeft;
-                    document.body.style.userSelect = 'none';
-                    document.body.style.cursor = 'grabbing';
-
-                    this.activeDropdown = null;
-
-                    if (e.type === 'mousedown') {
-                        e.preventDefault();
-                    }
-                },
-                stopDragging() {
-                    this.isDragging = false;
-                    document.body.style.userSelect = '';
-                    document.body.style.cursor = '';
-                },
-                drag(e) {
-                    if (!this.isDragging) return;
-
-                    e.preventDefault();
-                    
-                    const navContainer = document.querySelector('.nav-container');
-                    const x = e.type === 'mousemove' 
-                        ? e.pageX - navContainer.offsetLeft 
-                        : e.touches[0].pageX - navContainer.offsetLeft;
-                    const walk = (x - this.startX) * 1.5;
-                    navContainer.scrollLeft = this.scrollLeft - walk;
-
-                    if (this.activeDropdown !== null) {
-                        this.activeDropdown = null;
-                    }
-                },
-            },
-            mounted() {
-                const hash = window.location.hash.substring(1);
-                if (hash === 'novels' || hash === 'webtoons') {
-                    this.switchContent(hash);
-                } else {
-                    this.fetchMangaList();
-                }
-                
-                const theme = localStorage.getItem(STORAGE_KEYS.THEME) || 'light';
-                document.documentElement.setAttribute('data-theme', theme);
-                this.isDarkMode = theme === 'dark';
-
-                let lastScrollTop = 0;
-                const navbar = document.querySelector('.navbar');
-                
-                window.addEventListener('scroll', () => {
-                    const currentScroll = window.pageYOffset;
-                    if (currentScroll > lastScrollTop) {
-                        navbar.style.top = '-80px';
-                        this.activeDropdown = null;
-                    } else {
-                        navbar.style.top = '0';
-                    }
-                    lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
-                });
-
-                window.addEventListener('hashchange', () => {
-                    const newHash = window.location.hash.substring(1);
-                    if (newHash === 'novels' || newHash === 'webtoons') {
-                        this.switchContent(newHash);
-                    }
-                });
-
-                document.addEventListener('click', (e) => {
-                    const sortSelector = document.querySelector('.sort-selector');
-                    if (sortSelector && !sortSelector.contains(e.target)) {
-                        this.showSortMenu = false;
-                    }
-                });
-
-                const navContainer = document.querySelector('.nav-container');
-                
-                const handleScroll = () => {
-                    if (this.activeDropdown !== null) {
-                        this.activeDropdown = null;
-                    }
-                };
-
-                const handleMouseLeave = () => {
-                    if (this.isDragging) {
-                        this.stopDragging();
-                    }
-                };
-
-                navContainer.addEventListener('scroll', handleScroll);
-                navContainer.addEventListener('mouseleave', handleMouseLeave);
-                
-                navContainer.addEventListener('mousedown', this.startDragging, { passive: false });
-                window.addEventListener('mousemove', this.drag, { passive: false });
-                window.addEventListener('mouseup', this.stopDragging);
-                
-                navContainer.addEventListener('touchstart', this.startDragging, { passive: true });
-                window.addEventListener('touchmove', this.drag, { passive: false });
-                window.addEventListener('touchend', this.stopDragging);
-                
-                document.addEventListener('click', this.closeDropdowns);
-                
-                this.$nextTick(() => {
-                    this.$once('hook:beforeDestroy', () => {
-                        navContainer.removeEventListener('scroll', handleScroll);
-                        navContainer.removeEventListener('mouseleave', handleMouseLeave);
-                        navContainer.removeEventListener('mousedown', this.startDragging);
-                        window.removeEventListener('mousemove', this.drag);
-                        window.removeEventListener('mouseup', this.stopDragging);
-                        navContainer.removeEventListener('touchstart', this.startDragging);
-                        window.removeEventListener('touchmove', this.drag);
-                        window.removeEventListener('touchend', this.stopDragging);
-                        document.removeEventListener('click', this.closeDropdowns);
-                    });
-                });
+        // 導航欄滾動效果
+        let lastScrollTop = 0;
+        const navbar = document.querySelector('.navbar');
+        
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            if (currentScroll > lastScrollTop) {
+                navbar.style.top = '-80px';
+            } else {
+                navbar.style.top = '0';
             }
-        }).mount('#app');
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+        });
+
     </script>
+    <script id="dsq-count-scr" src="//xuerowo.disqus.com/count.js" async></script>
 </body>
 </html>
