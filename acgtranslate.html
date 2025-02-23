@@ -64,38 +64,17 @@
         }
 
         .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 1rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            height: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none; /* Firefox */
-            -ms-overflow-style: none; /* IE and Edge */
-        }
-
-        .nav-container::-webkit-scrollbar {
-            display: none; /* Chrome, Safari, Opera */
         }
 
         .nav-links {
             display: flex;
+            gap: 2rem;
             align-items: center;
-            gap: 1.5rem;
-            white-space: nowrap;
-            padding-right: 1rem;
-        }
-
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            white-space: nowrap;
-            margin-left: auto;
-            padding-left: 1rem;
         }
 
         .nav-links > * {
@@ -113,6 +92,12 @@
 
         .nav-links a:hover {
             color: var(--primary-color);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
         }
 
         .dropdown {
