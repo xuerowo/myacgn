@@ -701,7 +701,8 @@
                                     type: 'novel',
                                     lastUpdated: novel.lastUpdated || new Date().toISOString(),
                                     author: novel.author || '未知作者',
-                                    chapters: novel.chapters || []
+                                    chapters: novel.chapters || [],
+                                    totalWordCount: novel.totalWordCount || 0
                                 };
                             });
                     } catch (error) {
