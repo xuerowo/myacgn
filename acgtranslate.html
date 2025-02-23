@@ -519,15 +519,21 @@
                     isDarkMode: localStorage.getItem(STORAGE_KEYS.THEME) === 'dark',
                     showSortMenu: false,
                     currentSort: localStorage.getItem(STORAGE_KEYS.SORT) || 'lastUpdated',
-                    sortOptions: [
+                    mangaSortOptions: [
+                        { value: 'lastUpdated', label: '最新更新' },
+                        { value: 'chapterCount', label: '章節數' }
+                    ],
+                    novelSortOptions: [
                         { value: 'lastUpdated', label: '最新更新' },
                         { value: 'chapterCount', label: '章節數' },
-                        { value: 'wordCount', label: '文字數' },
-                        { value: 'readingTime', label: '閱讀時間' }
+                        { value: 'wordCount', label: '文字數' }
                     ]
                 }
             },
             computed: {
+                sortOptions() {
+                    return this.currentContent === 'webtoons' ? this.mangaSortOptions : this.novelSortOptions;
+                },
                 currentSortLabel() {
                     return this.sortOptions.find(opt => opt.value === this.currentSort)?.label || '排序';
                 },
@@ -538,12 +544,6 @@
                                 return new Date(b.lastUpdated) - new Date(a.lastUpdated);
                             case 'chapterCount':
                                 return b.chapters.length - a.chapters.length;
-                            case 'wordCount':
-                                return (b.wordCount || 0) - (a.wordCount || 0);
-                            case 'readingTime':
-                                const readingTimeA = this.getReadingTime(a.title) || 0;
-                                const readingTimeB = this.getReadingTime(b.title) || 0;
-                                return readingTimeB - readingTimeA;
                             default:
                                 return 0;
                         }
@@ -558,14 +558,21 @@
                                 return b.chapters.length - a.chapters.length;
                             case 'wordCount':
                                 return (b.wordCount || 0) - (a.wordCount || 0);
-                            case 'readingTime':
-                                const readingTimeA = this.getReadingTime(a.title) || 0;
-                                const readingTimeB = this.getReadingTime(b.title) || 0;
-                                return readingTimeB - readingTimeA;
                             default:
                                 return 0;
                         }
                     });
+                }
+            },
+            watch: {
+                currentContent(newValue) {
+                    // 切換內容類型時，檢查當前排序選項是否可用
+                    const availableOptions = newValue === 'webtoons' ? this.mangaSortOptions : this.novelSortOptions;
+                    if (!availableOptions.some(opt => opt.value === this.currentSort)) {
+                        // 如果當前排序選項在新的內容類型中不可用，切換到預設排序
+                        this.currentSort = 'lastUpdated';
+                        localStorage.setItem(STORAGE_KEYS.SORT, 'lastUpdated');
+                    }
                 }
             },
             methods: {
