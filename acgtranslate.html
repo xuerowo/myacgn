@@ -359,7 +359,6 @@
 
         /* 排序選擇器樣式 */
         .sort-selector {
-            position: relative;
             display: inline-flex;
             align-items: center;
             cursor: pointer;
@@ -368,11 +367,15 @@
             transition: background-color 0.2s;
             margin-right: 8px;
             user-select: none;
-            z-index: 1001;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.1rem;
         }
 
         .sort-selector:hover {
             background-color: var(--dropdown-hover);
+            color: var(--primary-color);
         }
 
         .sort-icon {
@@ -382,13 +385,15 @@
         }
 
         .sort-text {
-            font-size: 14px;
+            font-size: 1.1rem;
             color: var(--text-color);
             margin-right: 4px;
         }
 
         .sort-chevron {
-            transition: transform 0.2s;
+            font-size: 0.9rem;
+            transition: transform 0.3s;
+            margin-left: 4px;
         }
 
         .sort-menu {
@@ -412,21 +417,24 @@
         }
 
         .sort-option {
-            display: flex;
+            display: flex !important;
             align-items: center;
             justify-content: space-between;
             padding: 8px 12px;
             cursor: pointer;
             border-radius: 4px;
             color: var(--text-color);
+            text-decoration: none;
         }
 
         .sort-option:hover {
             background-color: var(--dropdown-hover);
+            color: var(--primary-color);
         }
 
         .sort-option.selected {
             background-color: var(--dropdown-hover);
+            color: var(--primary-color);
         }
 
         .sort-option-text {
@@ -441,6 +449,10 @@
 
         .sort-option.selected .sort-option-check {
             opacity: 1;
+        }
+
+        .dropdown-toggle.sort-selector:after {
+            content: none;
         }
 
         @media (max-width: 768px) {
@@ -485,9 +497,16 @@
             .reading-progress {
                 font-size: 0.85rem;
             }
+
+            .sort-text {
+                font-size: 0.95rem;
+            }
+            
+            .sort-chevron {
+                font-size: 0.8rem;
+            }
         }
 
-        /* 超小型設備 (480px) */
         @media (max-width: 480px) {
             .navbar {
                 padding: 0.6rem;
@@ -515,6 +534,18 @@
 
             .dropdown-menu a {
                 padding: 0.6rem 0.8rem;
+                font-size: 0.95rem;
+            }
+
+            .sort-text {
+                font-size: 0.95rem;
+            }
+            
+            .sort-chevron {
+                font-size: 0.8rem;
+            }
+            
+            .sort-option-text {
                 font-size: 0.95rem;
             }
         }
@@ -607,9 +638,11 @@
                         </div>
                     </div>
                     <div class="dropdown">
-                        <div class="sort-selector" 
-                             @mouseenter="!isMobile && (activeDropdown = 'sort')"
-                             @click="isMobile && (activeDropdown = activeDropdown === 'sort' ? null : 'sort')">
+                        <button class="dropdown-toggle sort-selector" 
+                                data-dropdown="sort"
+                                @mouseenter="!isMobile && (activeDropdown = 'sort')"
+                                @click="isMobile && (activeDropdown = activeDropdown === 'sort' ? null : 'sort')"
+                                :class="{ active: activeDropdown === 'sort' }">
                             <div class="sort-icon">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M4 7h10M4 12h8M4 17h6"></path>
@@ -618,22 +651,21 @@
                                 </svg>
                             </div>
                             <span class="sort-text">{{ currentSortLabel }}</span>
-                            <span class="sort-chevron" 
-                                  :style="{ transform: activeDropdown === 'sort' ? 'rotate(180deg)' : 'rotate(0deg)' }">▼</span>
-                        </div>
-                        <div class="sort-menu" 
+                            <span class="sort-chevron" :style="{ transform: activeDropdown === 'sort' ? 'rotate(180deg)' : 'rotate(0deg)' }">▼</span>
+                        </button>
+                        <div class="dropdown-menu" 
                              :class="{ show: activeDropdown === 'sort' }"
                              :style="getDropdownPosition('sort')"
                              @mouseenter="!isMobile && (activeDropdown = 'sort')"
                              @mouseleave="!isMobile && (activeDropdown = null)">
-                            <div v-for="option in sortOptions" 
-                                 :key="option.value"
-                                 class="sort-option"
-                                 :class="{ selected: currentSort === option.value }"
-                                 @click="handleSortChange(option)">
+                            <a v-for="option in sortOptions" 
+                               :key="option.value"
+                               class="sort-option"
+                               :class="{ selected: currentSort === option.value }"
+                               @click="handleSortChange(option)">
                                 <span class="sort-option-text">{{ option.label }}</span>
                                 <span class="sort-option-check">✓</span>
-                            </div>
+                            </a>
                         </div>
                     </div>
                     <button class="theme-toggle" @click="toggleTheme">{{ isDarkMode ? '🌜' : '🌞' }}</button>
@@ -831,7 +863,8 @@
                 handleSortChange(sortOption) {
                     this.currentSort = sortOption.value;
                     localStorage.setItem(STORAGE_KEYS.SORT, sortOption.value);
-                    this.showSortMenu = false;
+                    this.activeDropdown = null;
+
                     if (this.currentContent === 'webtoons') {
                         this.mangaList = [...this.mangaList];
                     } else {
@@ -850,12 +883,7 @@
                     if (this.isDragging) {
                         return;
                     }
-                    
-                    if (this.activeDropdown === dropdownId) {
-                        this.activeDropdown = null;
-                    } else {
-                        this.activeDropdown = dropdownId;
-                    }
+                    this.activeDropdown = this.activeDropdown === dropdownId ? null : dropdownId;
                 },
                 getDropdownPosition(dropdownId) {
                     let element;
@@ -895,7 +923,8 @@
                     return position;
                 },
                 closeDropdowns(e) {
-                    if (!e.target.closest('.dropdown')) {
+                    const target = e.target;
+                    if (!target.closest('.dropdown')) {
                         this.activeDropdown = null;
                     }
                 },
@@ -974,13 +1003,17 @@
                     }
                 });
 
-                document.addEventListener('click', (e) => {
+                // 移除重複的事件監聽器
+                document.removeEventListener('click', (e) => {
                     const sortSelector = document.querySelector('.sort-selector');
                     if (sortSelector && !sortSelector.contains(e.target)) {
                         this.showSortMenu = false;
                     }
                 });
-
+                
+                // 添加全局點擊事件監聽器
+                document.addEventListener('click', this.closeDropdowns);
+                
                 const navContainer = document.querySelector('.nav-container');
                 
                 const handleScroll = () => {
@@ -1005,8 +1038,6 @@
                 navContainer.addEventListener('touchstart', this.startDragging, { passive: true });
                 window.addEventListener('touchmove', this.drag, { passive: false });
                 window.addEventListener('touchend', this.stopDragging);
-                
-                document.addEventListener('click', this.closeDropdowns);
                 
                 this.$nextTick(() => {
                     this.$once('hook:beforeDestroy', () => {
