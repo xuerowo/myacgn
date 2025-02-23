@@ -210,6 +210,7 @@
         .app-info-tooltip:hover {
             opacity: 1;
             visibility: visible;
+            transform: translateY(0);
         }
 
         .app-icon-small {
@@ -531,6 +532,20 @@
         .nav-container::-webkit-scrollbar-thumb:hover {
             background: var(--primary-color);
         }
+
+        .dropdown:hover .dropdown-menu,
+        .dropdown-menu:hover {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .sort-selector:hover .sort-menu,
+        .sort-menu:hover {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
@@ -542,11 +557,13 @@
                     <div class="dropdown">
                         <button class="dropdown-toggle" 
                                 data-dropdown="recommendations"
-                                @click="toggleDropdown('recommendations')"
+                                @mouseenter="activeDropdown = 'recommendations'"
                                 :class="{ active: activeDropdown === 'recommendations' }">推薦</button>
                         <div class="dropdown-menu" 
                              :class="{ show: activeDropdown === 'recommendations' }"
-                             :style="getDropdownPosition('recommendations')">
+                             :style="getDropdownPosition('recommendations')"
+                             @mouseenter="activeDropdown = 'recommendations'"
+                             @mouseleave="activeDropdown = null">
                             <a href="recommendations.html#animations">動畫</a>
                             <a href="recommendations.html#webtoons">網漫</a>
                             <a href="recommendations.html#lightnovels">輕小說</a>
@@ -556,12 +573,14 @@
                     <div class="dropdown">
                         <button class="dropdown-toggle" 
                                 data-dropdown="acg"
-                                @click="toggleDropdown('acg')"
+                                @mouseenter="activeDropdown = 'acg'"
                                 :class="{ active: activeDropdown === 'acg' }"
                                 style="color: var(--primary-color)">ACG翻譯</button>
                         <div class="dropdown-menu" 
                              :class="{ show: activeDropdown === 'acg' }"
-                             :style="getDropdownPosition('acg')">
+                             :style="getDropdownPosition('acg')"
+                             @mouseenter="activeDropdown = 'acg'"
+                             @mouseleave="activeDropdown = null">
                             <a href="#webtoons" 
                                @click="switchContent('webtoons')" 
                                :class="{ active: currentContent === 'webtoons' }">網漫</a>
@@ -576,7 +595,6 @@
                     <div v-if="currentContent === 'novels'" class="dropdown">
                         <a class="app-download-button"
                            @mouseenter="activeDropdown = 'app'"
-                           @mouseleave="activeDropdown = null"
                            href="https://expo.dev/artifacts/eas/mxSLMCW72kGzSLC6miv52i.apk"
                            download="ACG閱讀器.apk">
                             <span class="app-icon-small">📱</span>
@@ -586,7 +604,7 @@
                              :class="{ show: activeDropdown === 'app' }"
                              :style="getDropdownPosition('app')"
                              @mouseenter="activeDropdown = 'app'"
-                             >
+                             @mouseleave="activeDropdown = null">
                             <span class="version-info">v1.2.1</span>
                             <span>更新於 2025/2/23</span>
                             <img class="qr-code-img" 
@@ -597,7 +615,7 @@
                     </div>
                     <div class="dropdown">
                         <div class="sort-selector" 
-                             @click="toggleDropdown('sort')">
+                             @mouseenter="activeDropdown = 'sort'">
                             <div class="sort-icon">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M4 7h10M4 12h8M4 17h6"></path>
@@ -611,7 +629,9 @@
                         </div>
                         <div class="sort-menu" 
                              :class="{ show: activeDropdown === 'sort' }"
-                             :style="getDropdownPosition('sort')">
+                             :style="getDropdownPosition('sort')"
+                             @mouseenter="activeDropdown = 'sort'"
+                             @mouseleave="activeDropdown = null">
                             <div v-for="option in sortOptions" 
                                  :key="option.value"
                                  class="sort-option"
