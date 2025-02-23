@@ -956,6 +956,7 @@
                     const currentScroll = window.pageYOffset;
                     if (currentScroll > lastScrollTop) {
                         navbar.style.top = '-80px';
+                        this.activeDropdown = null;
                     } else {
                         navbar.style.top = '0';
                     }
