@@ -206,10 +206,10 @@
             color: var(--primary-color);
         }
 
-        .app-download-button:hover .app-info-tooltip {
+        .app-download-button:hover .app-info-tooltip,
+        .app-info-tooltip:hover {
             opacity: 1;
             visibility: visible;
-            transform: translateY(0);
         }
 
         .app-icon-small {
@@ -217,7 +217,10 @@
         }
 
         .app-info-tooltip {
-            position: fixed;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
             background: var(--background-color);
             padding: 1rem;
             border-radius: 8px;
@@ -226,18 +229,31 @@
             color: var(--text-color);
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s ease;
-            z-index: 1002;
+            z-index: 1000;
+            margin-top: 0.5rem;
             border: 1px solid var(--border-color);
             white-space: normal;
             width: 200px;
             text-align: center;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .app-info-tooltip::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%) rotate(45deg);
+            width: 12px;
+            height: 12px;
+            background: var(--background-color);
+            border-left: 1px solid var(--border-color);
+            border-top: 1px solid var(--border-color);
         }
 
         .app-info-tooltip.show {
             opacity: 1;
             visibility: visible;
-            transform: translateY(0);
         }
 
         .qr-code-img {
@@ -525,6 +541,7 @@
                     <a href="index.html">首頁</a>
                     <div class="dropdown">
                         <button class="dropdown-toggle" 
+                                data-dropdown="recommendations"
                                 @click="toggleDropdown('recommendations')"
                                 :class="{ active: activeDropdown === 'recommendations' }">推薦</button>
                         <div class="dropdown-menu" 
@@ -538,6 +555,7 @@
                     </div>
                     <div class="dropdown">
                         <button class="dropdown-toggle" 
+                                data-dropdown="acg"
                                 @click="toggleDropdown('acg')"
                                 :class="{ active: activeDropdown === 'acg' }"
                                 style="color: var(--primary-color)">ACG翻譯</button>
@@ -557,24 +575,24 @@
                 <div class="nav-right">
                     <div v-if="currentContent === 'novels'" class="dropdown">
                         <a class="app-download-button"
-                           @click="toggleDropdown('app')"
-                           href="javascript:void(0)">
+                           @mouseenter="activeDropdown = 'app'"
+                           @mouseleave="activeDropdown = null"
+                           href="https://expo.dev/artifacts/eas/mxSLMCW72kGzSLC6miv52i.apk"
+                           download="ACG閱讀器.apk">
                             <span class="app-icon-small">📱</span>
                             <span>下載輕小說閱讀 App</span>
                         </a>
                         <div class="app-info-tooltip"
                              :class="{ show: activeDropdown === 'app' }"
-                             :style="getDropdownPosition('app')">
+                             :style="getDropdownPosition('app')"
+                             @mouseenter="activeDropdown = 'app'"
+                             >
                             <span class="version-info">v1.2.1</span>
                             <span>更新於 2025/2/23</span>
                             <img class="qr-code-img" 
                                  src="images/app_download_qr_code.png" 
                                  alt="掃描下載 App">
-                            <a href="https://expo.dev/artifacts/eas/mxSLMCW72kGzSLC6miv52i.apk" 
-                               target="_blank"
-                               style="margin-top: 10px; display: block;">
-                               點擊下載 APK
-                            </a>
+                            <span style="margin-top: 10px; display: block;">掃描下載 App</span>
                         </div>
                     </div>
                     <div class="dropdown">
@@ -842,8 +860,12 @@
 
                     if (dropdownId === 'sort') {
                         position.right = `${window.innerWidth - rect.right}px`;
+                    } else if (dropdownId === 'app') {
+                        position.left = `${rect.left + (rect.width / 2)}px`;
+                        position.transform = 'translateX(-50%)';
                     } else {
                         position.left = `${rect.left}px`;
+                        position.transform = 'none';
                     }
 
                     return position;
