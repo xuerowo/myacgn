@@ -389,75 +389,6 @@
             transform: scale(1.1);
         }
 
-        /* AI 作品展示區域樣式 */
-        .ai-works {
-            padding: 4rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto 4rem;
-            background: var(--background-color);
-            border-radius: 16px;
-            box-shadow: var(--card-shadow);
-        }
-
-        .section-title {
-            text-align: center;
-            color: var(--text-color);
-            margin-bottom: 3rem;
-            font-size: 2.5rem;
-        }
-
-        .work-icon {
-            font-size: 4rem;
-            color: var(--primary-color);
-            margin-bottom: 1.5rem;
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
-
-        .works-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2.5rem;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 1rem;
-        }
-
-        .work-card {
-            background: var(--background-color);
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-
-        .work-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-        }
-
-        .work-card:hover .work-icon {
-            transform: scale(1.1);
-        }
-
-        .work-content {
-            padding: 1.5rem;
-        }
-
-        .work-title {
-            font-size: 1.4rem;
-            margin-bottom: 1rem;
-            color: var(--text-color);
-        }
-
-        .work-description {
-            color: var(--text-color);
-            opacity: 0.8;
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
-
         /* 按鈕樣式 */
         .cta-button, .work-link {
             display: inline-flex;
@@ -555,35 +486,6 @@
                 margin-bottom: 1.2rem;
             }
 
-            .ai-works {
-                padding: 2.5rem 1rem;
-                margin-bottom: 3rem;
-            }
-
-            .section-title {
-                font-size: 1.8rem;
-                margin-bottom: 2.5rem;
-            }
-
-            .works-grid {
-                grid-template-columns: 1fr;
-                max-width: 500px;
-                gap: 1.8rem;
-            }
-
-            .work-card {
-                padding: 1.8rem;
-            }
-
-            .work-icon {
-                font-size: 3.5rem;
-                margin-bottom: 1.2rem;
-            }
-
-            .work-title {
-                font-size: 1.3rem;
-            }
-
             .cta-button, .work-link {
                 padding: 0.8rem 2rem;
                 font-size: 0.95rem;
@@ -649,19 +551,33 @@
                 margin-bottom: 1rem;
             }
 
-            .section-title {
-                font-size: 1.6rem;
-                margin-bottom: 2rem;
-            }
-
-            .work-title {
-                font-size: 1.2rem;
-            }
-
             .cta-button, .work-link {
                 padding: 0.7rem 1.5rem;
                 font-size: 0.9rem;
             }
+        }
+
+        /* 版本資訊樣式 */
+        .version-info, .update-date {
+            display: inline-block;
+            padding: 6px 12px;
+            margin: 4px 0;
+            border-radius: 6px;
+            font-weight: 500;
+            background-color: white;
+            color: #444;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1), 0 0 1px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .version-info:hover, .update-date:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15), 0 0 2px rgba(0,0,0,0.1);
+            transform: translateY(-1px);
+        }
+        
+        .version-info strong, .update-date strong {
+            font-weight: 700;
+            color: #111;
         }
     </style>
 </head>
@@ -727,38 +643,6 @@
         </div>
     </section>
 
-    <section class="ai-works">
-        <h2 class="section-title">我的 AI 創作作品</h2>
-        <div class="works-grid">
-            <div class="work-card">
-                <div class="work-icon">📱</div>
-                <div class="work-content">
-                    <h3 class="work-title">網路輕小說閱讀 App</h3>
-                    <p class="work-description">專為閱讀 AI 翻譯的網路輕小說的 AI 協助開發的手機應用。使用 Claude 3.5 Sonnet 進行翻譯並開發 App ，提供流暢的閱讀體驗。支援離線閱讀、進度同步、書籤等功能。<br>目前版本:1.2.0<br>更新日期:2025/2/22</p>
-                    <a href="https://expo.dev/artifacts/eas/76sbgstzoiFZWgSfJSBAhM.apk" target="_blank" class="work-link">
-                        下載 App
-                    </a>
-                </div>
-            </div>
-            
-            <div class="work-card">
-                <div class="work-icon">🎵</div>
-                <div class="work-content">
-                    <h3 class="work-title">AI 歌曲創作</h3>
-                    <p class="work-description">與 Claude 3.5 Sonnet 合作創作歌詞，再通過 Suno AI 製作成完整歌曲。展現 AI 輔助音樂創作的無限可能。</p>
-                    <a href="https://suno.com/@xuerowo" target="_blank" class="work-link">
-                        聆聽作品
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        <p>網頁由林雲與 Claude AI 合作製作</p>
-        <p>最後更新：2025/1/17</p>
-    </footer>
-
     <script>
         // 主題切換功能
         const themeToggle = document.getElementById('theme-toggle');
@@ -795,5 +679,9 @@
             lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
         });
     </script>
+
+    <footer>
+        <p>最後更新：2025/1/17</p>
+    </footer>
 </body>
 </html>
