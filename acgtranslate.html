@@ -536,16 +536,6 @@
         .nav-container::-webkit-scrollbar-thumb:hover {
             background: var(--primary-color);
         }
-
-        .dropdown:hover .dropdown-menu,
-        .dropdown-menu:hover {
-            display: none;
-        }
-
-        .sort-selector:hover .sort-menu,
-        .sort-menu:hover {
-            display: none;
-        }
     </style>
 </head>
 <body>
@@ -557,13 +547,14 @@
                     <div class="dropdown">
                         <button class="dropdown-toggle" 
                                 data-dropdown="recommendations"
-                                @mouseenter="activeDropdown = 'recommendations'"
+                                @mouseenter="!isMobile && (activeDropdown = 'recommendations')"
+                                @click="isMobile && (activeDropdown = activeDropdown === 'recommendations' ? null : 'recommendations')"
                                 :class="{ active: activeDropdown === 'recommendations' }">推薦</button>
                         <div class="dropdown-menu" 
                              :class="{ show: activeDropdown === 'recommendations' }"
                              :style="getDropdownPosition('recommendations')"
-                             @mouseenter="activeDropdown = 'recommendations'"
-                             @mouseleave="activeDropdown = null">
+                             @mouseenter="!isMobile && (activeDropdown = 'recommendations')"
+                             @mouseleave="!isMobile && (activeDropdown = null)">
                             <a href="recommendations.html#animations">動畫</a>
                             <a href="recommendations.html#webtoons">網漫</a>
                             <a href="recommendations.html#lightnovels">輕小說</a>
@@ -573,14 +564,15 @@
                     <div class="dropdown">
                         <button class="dropdown-toggle" 
                                 data-dropdown="acg"
-                                @mouseenter="activeDropdown = 'acg'"
+                                @mouseenter="!isMobile && (activeDropdown = 'acg')"
+                                @click="isMobile && (activeDropdown = activeDropdown === 'acg' ? null : 'acg')"
                                 :class="{ active: activeDropdown === 'acg' }"
                                 style="color: var(--primary-color)">ACG翻譯</button>
                         <div class="dropdown-menu" 
                              :class="{ show: activeDropdown === 'acg' }"
                              :style="getDropdownPosition('acg')"
-                             @mouseenter="activeDropdown = 'acg'"
-                             @mouseleave="activeDropdown = null">
+                             @mouseenter="!isMobile && (activeDropdown = 'acg')"
+                             @mouseleave="!isMobile && (activeDropdown = null)">
                             <a href="#webtoons" 
                                @click="switchContent('webtoons')" 
                                :class="{ active: currentContent === 'webtoons' }">網漫</a>
@@ -594,7 +586,8 @@
                 <div class="nav-right">
                     <div v-if="currentContent === 'novels'" class="dropdown">
                         <a class="app-download-button"
-                           @click.prevent="activeDropdown = activeDropdown === 'app' ? null : 'app'"
+                           @mouseenter="!isMobile && (activeDropdown = 'app')"
+                           @click.prevent="isMobile ? (activeDropdown = activeDropdown === 'app' ? null : 'app') : null"
                            href="https://expo.dev/artifacts/eas/mxSLMCW72kGzSLC6miv52i.apk"
                            download="ACG閱讀器.apk">
                             <span class="app-icon-small">📱</span>
@@ -602,7 +595,9 @@
                         </a>
                         <div class="app-info-tooltip"
                              :class="{ show: activeDropdown === 'app' }"
-                             :style="getDropdownPosition('app')">
+                             :style="getDropdownPosition('app')"
+                             @mouseenter="!isMobile && (activeDropdown = 'app')"
+                             @mouseleave="!isMobile && (activeDropdown = null)">
                             <span class="version-info">v1.2.1</span>
                             <span>更新於 2025/2/23</span>
                             <img class="qr-code-img" 
@@ -613,7 +608,8 @@
                     </div>
                     <div class="dropdown">
                         <div class="sort-selector" 
-                             @click="activeDropdown = activeDropdown === 'sort' ? null : 'sort'">
+                             @mouseenter="!isMobile && (activeDropdown = 'sort')"
+                             @click="isMobile && (activeDropdown = activeDropdown === 'sort' ? null : 'sort')">
                             <div class="sort-icon">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M4 7h10M4 12h8M4 17h6"></path>
@@ -627,7 +623,9 @@
                         </div>
                         <div class="sort-menu" 
                              :class="{ show: activeDropdown === 'sort' }"
-                             :style="getDropdownPosition('sort')">
+                             :style="getDropdownPosition('sort')"
+                             @mouseenter="!isMobile && (activeDropdown = 'sort')"
+                             @mouseleave="!isMobile && (activeDropdown = null)">
                             <div v-for="option in sortOptions" 
                                  :key="option.value"
                                  class="sort-option"
@@ -711,8 +709,18 @@
                     isDragging: false,
                     startX: 0,
                     scrollLeft: 0,
-                    activeDropdown: null
+                    activeDropdown: null,
+                    isMobile: false
                 }
+            },
+            created() {
+                // 檢測是否為移動設備
+                this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+                
+                // 監聽視窗大小變化
+                window.addEventListener('resize', () => {
+                    this.isMobile = window.innerWidth <= 768;
+                });
             },
             computed: {
                 sortOptions() {
