@@ -69,12 +69,23 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            padding: 0 10px;
+            gap: 1rem;
+            scroll-behavior: smooth;
+            white-space: nowrap;
+            position: relative;
+            -ms-overflow-style: none;  /* IE and Edge */
         }
 
         .nav-links {
             display: flex;
             gap: 2rem;
             align-items: center;
+            flex-shrink: 0;
         }
 
         .nav-links > * {
@@ -98,6 +109,7 @@
             display: flex;
             align-items: center;
             gap: 1.5rem;
+            flex-shrink: 0;
         }
 
         .dropdown {
@@ -105,6 +117,7 @@
             display: inline-block;
             min-width: 80px;
             text-align: center;
+            z-index: 1001;
         }
 
         .dropdown-toggle {
@@ -119,6 +132,7 @@
             border: none;
             font-size: 1.1rem;
             width: 100%;
+            user-select: none;
         }
 
         .dropdown-toggle:hover {
@@ -132,9 +146,7 @@
         }
 
         .dropdown-menu {
-            position: absolute;
-            top: 100%;
-            left: 0;
+            position: fixed;
             background-color: var(--dropdown-background);
             min-width: 160px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
@@ -143,6 +155,13 @@
             visibility: hidden;
             transform: translateY(-10px);
             transition: all 0.3s ease;
+            z-index: 1002;
+        }
+
+        .dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
         }
 
         .dropdown-menu a {
@@ -158,13 +177,7 @@
             color: var(--primary-color);
         }
 
-        .dropdown:hover .dropdown-menu {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .dropdown:hover .dropdown-toggle:after {
+        .dropdown-toggle.active:after {
             transform: rotate(180deg);
         }
 
@@ -199,10 +212,7 @@
         }
 
         .app-info-tooltip {
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%) translateY(-10px);
+            position: fixed;
             background: var(--background-color);
             padding: 1rem;
             border-radius: 8px;
@@ -212,25 +222,17 @@
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
-            z-index: 1000;
-            margin-top: 0.5rem;
+            z-index: 1002;
             border: 1px solid var(--border-color);
             white-space: normal;
             width: 200px;
             text-align: center;
         }
 
-        .app-info-tooltip::before {
-            content: '';
-            position: absolute;
-            top: -6px;
-            left: 50%;
-            transform: translateX(-50%) rotate(45deg);
-            width: 12px;
-            height: 12px;
-            background: var(--background-color);
-            border-left: 1px solid var(--border-color);
-            border-top: 1px solid var(--border-color);
+        .app-info-tooltip.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
         }
 
         .qr-code-img {
@@ -340,6 +342,7 @@
             transition: background-color 0.2s;
             margin-right: 8px;
             user-select: none;
+            z-index: 1001;
         }
 
         .sort-selector:hover {
@@ -363,14 +366,12 @@
         }
 
         .sort-menu {
-            position: absolute;
-            top: 100%;
-            right: 0;
+            position: fixed;
             background-color: var(--dropdown-background);
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.2);
             padding: 4px;
-            z-index: 1000;
+            z-index: 1002;
             min-width: 120px;
             opacity: 0;
             visibility: hidden;
@@ -378,7 +379,7 @@
             transition: all 0.2s;
         }
 
-        .sort-menu.active {
+        .sort-menu.show {
             opacity: 1;
             visibility: visible;
             transform: translateY(0);
@@ -491,6 +492,24 @@
                 font-size: 0.95rem;
             }
         }
+
+        /* 添加新的滾動條樣式 */
+        .nav-container::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .nav-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .nav-container::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        .nav-container::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
+        }
     </style>
 </head>
 <body>
@@ -500,8 +519,12 @@
                 <div class="nav-links">
                     <a href="index.html">首頁</a>
                     <div class="dropdown">
-                        <button class="dropdown-toggle">推薦</button>
-                        <div class="dropdown-menu">
+                        <button class="dropdown-toggle" 
+                                @click="toggleDropdown('recommendations')"
+                                :class="{ active: activeDropdown === 'recommendations' }">推薦</button>
+                        <div class="dropdown-menu" 
+                             :class="{ show: activeDropdown === 'recommendations' }"
+                             :style="getDropdownPosition('recommendations')">
                             <a href="recommendations.html#animations">動畫</a>
                             <a href="recommendations.html#webtoons">網漫</a>
                             <a href="recommendations.html#lightnovels">輕小說</a>
@@ -509,40 +532,63 @@
                         </div>
                     </div>
                     <div class="dropdown">
-                        <button class="dropdown-toggle" style="color: var(--primary-color)">ACG翻譯</button>
-                        <div class="dropdown-menu">
-                            <a href="#webtoons" @click="switchContent('webtoons')" :class="{ active: currentContent === 'webtoons' }">網漫</a>
-                            <a href="#novels" @click="switchContent('novels')" :class="{ active: currentContent === 'novels' }">輕小說</a>
+                        <button class="dropdown-toggle" 
+                                @click="toggleDropdown('acg')"
+                                :class="{ active: activeDropdown === 'acg' }"
+                                style="color: var(--primary-color)">ACG翻譯</button>
+                        <div class="dropdown-menu" 
+                             :class="{ show: activeDropdown === 'acg' }"
+                             :style="getDropdownPosition('acg')">
+                            <a href="#webtoons" 
+                               @click="switchContent('webtoons')" 
+                               :class="{ active: currentContent === 'webtoons' }">網漫</a>
+                            <a href="#novels" 
+                               @click="switchContent('novels')" 
+                               :class="{ active: currentContent === 'novels' }">輕小說</a>
                         </div>
                     </div>
                     <a href="commentsection.html">留言區</a>
                 </div>
                 <div class="nav-right">
-                    <a v-if="currentContent === 'novels'" 
-                       href="https://expo.dev/artifacts/eas/mxSLMCW72kGzSLC6miv52i.apk" 
-                       target="_blank" 
-                       class="app-download-button">
-                        <span class="app-icon-small">📱</span>
-                        <span>下載輕小說閱讀 App</span>
-                        <div class="app-info-tooltip">
+                    <div v-if="currentContent === 'novels'" class="dropdown">
+                        <a class="app-download-button"
+                           @click="toggleDropdown('app')"
+                           href="javascript:void(0)">
+                            <span class="app-icon-small">📱</span>
+                            <span>下載輕小說閱讀 App</span>
+                        </a>
+                        <div class="app-info-tooltip"
+                             :class="{ show: activeDropdown === 'app' }"
+                             :style="getDropdownPosition('app')">
                             <span class="version-info">v1.2.1</span>
                             <span>更新於 2025/2/23</span>
                             <img class="qr-code-img" 
                                  src="images/app_download_qr_code.png" 
                                  alt="掃描下載 App">
+                            <a href="https://expo.dev/artifacts/eas/mxSLMCW72kGzSLC6miv52i.apk" 
+                               target="_blank"
+                               style="margin-top: 10px; display: block;">
+                               點擊下載 APK
+                            </a>
                         </div>
-                    </a>
-                    <div class="sort-selector" @click="toggleSortMenu">
-                        <div class="sort-icon">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M4 7h10M4 12h8M4 17h6"></path>
-                                <path d="M17 13l3 3l3-3"></path>
-                                <path d="M20 8v8"></path>
-                            </svg>
+                    </div>
+                    <div class="dropdown">
+                        <div class="sort-selector" 
+                             @click="toggleDropdown('sort')">
+                            <div class="sort-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 7h10M4 12h8M4 17h6"></path>
+                                    <path d="M17 13l3 3l3-3"></path>
+                                    <path d="M20 8v8"></path>
+                                </svg>
+                            </div>
+                            <span class="sort-text">{{ currentSortLabel }}</span>
+                            <span class="sort-chevron" 
+                                  :style="{ transform: activeDropdown === 'sort' ? 'rotate(180deg)' : 'rotate(0deg)' }">▼</span>
                         </div>
-                        <span class="sort-text">{{ currentSortLabel }}</span>
-                        <span class="sort-chevron" :style="{ transform: showSortMenu ? 'rotate(180deg)' : 'rotate(0deg)' }">▼</span>
-                        <div class="sort-menu" :class="{ active: showSortMenu }">
+                        <div class="sort-menu" 
+                             :class="{ show: activeDropdown === 'sort' }"
+                             :style="getDropdownPosition('sort')">
                             <div v-for="option in sortOptions" 
                                  :key="option.value"
                                  class="sort-option"
@@ -622,7 +668,11 @@
                         { value: 'lastUpdated', label: '最新更新' },
                         { value: 'chapterCount', label: '章節數' },
                         { value: 'wordCount', label: '文字數' }
-                    ]
+                    ],
+                    isDragging: false,
+                    startX: 0,
+                    scrollLeft: 0,
+                    activeDropdown: null
                 }
             },
             computed: {
@@ -748,7 +798,86 @@
                     } catch {
                         return 0;
                     }
-                }
+                },
+                toggleDropdown(dropdownId) {
+                    if (this.isDragging) {
+                        return;
+                    }
+                    
+                    if (this.activeDropdown === dropdownId) {
+                        this.activeDropdown = null;
+                    } else {
+                        this.activeDropdown = dropdownId;
+                    }
+                },
+                getDropdownPosition(dropdownId) {
+                    let element;
+                    switch(dropdownId) {
+                        case 'recommendations':
+                        case 'acg':
+                            element = document.querySelector(`button[data-dropdown="${dropdownId}"]`);
+                            break;
+                        case 'app':
+                            element = document.querySelector('.app-download-button');
+                            break;
+                        case 'sort':
+                            element = document.querySelector('.sort-selector');
+                            break;
+                        default:
+                            return {};
+                    }
+                    
+                    if (!element) return {};
+                    
+                    const rect = element.getBoundingClientRect();
+                    const position = {
+                        position: 'fixed',
+                        top: `${rect.bottom + 5}px`
+                    };
+
+                    if (dropdownId === 'sort') {
+                        position.right = `${window.innerWidth - rect.right}px`;
+                    } else {
+                        position.left = `${rect.left}px`;
+                    }
+
+                    return position;
+                },
+                closeDropdowns(e) {
+                    if (!e.target.closest('.dropdown')) {
+                        this.activeDropdown = null;
+                    }
+                },
+                startDragging(e) {
+                    if (e.target.closest('.dropdown-menu') || 
+                        e.target.closest('.dropdown-toggle')) {
+                        return;
+                    }
+                    
+                    const navContainer = document.querySelector('.nav-container');
+                    this.isDragging = true;
+                    this.startX = e.type === 'mousedown' ? e.pageX : e.touches[0].pageX;
+                    this.scrollLeft = navContainer.scrollLeft;
+                    document.body.style.userSelect = 'none';
+
+                    this.activeDropdown = null;
+                },
+                stopDragging() {
+                    this.isDragging = false;
+                    document.body.style.userSelect = '';
+                },
+                drag(e) {
+                    if (!this.isDragging) return;
+                    
+                    if (this.activeDropdown !== null) {
+                        this.activeDropdown = null;
+                    }
+                    
+                    const navContainer = document.querySelector('.nav-container');
+                    const x = e.type === 'mousemove' ? e.pageX : e.touches[0].pageX;
+                    const walk = x - this.startX;
+                    navContainer.scrollLeft = this.scrollLeft - walk;
+                },
             },
             mounted() {
                 const hash = window.location.hash.substring(1);
@@ -787,6 +916,39 @@
                     if (sortSelector && !sortSelector.contains(e.target)) {
                         this.showSortMenu = false;
                     }
+                });
+
+                const navContainer = document.querySelector('.nav-container');
+                
+                const handleScroll = () => {
+                    if (this.activeDropdown !== null) {
+                        this.activeDropdown = null;
+                    }
+                };
+
+                navContainer.addEventListener('scroll', handleScroll);
+                
+                navContainer.addEventListener('mousedown', this.startDragging);
+                window.addEventListener('mousemove', this.drag);
+                window.addEventListener('mouseup', this.stopDragging);
+                
+                navContainer.addEventListener('touchstart', this.startDragging);
+                window.addEventListener('touchmove', this.drag);
+                window.addEventListener('touchend', this.stopDragging);
+                
+                document.addEventListener('click', this.closeDropdowns);
+                
+                this.$nextTick(() => {
+                    this.$once('hook:beforeDestroy', () => {
+                        navContainer.removeEventListener('scroll', handleScroll);
+                        navContainer.removeEventListener('mousedown', this.startDragging);
+                        window.removeEventListener('mousemove', this.drag);
+                        window.removeEventListener('mouseup', this.stopDragging);
+                        navContainer.removeEventListener('touchstart', this.startDragging);
+                        window.removeEventListener('touchmove', this.drag);
+                        window.removeEventListener('touchend', this.stopDragging);
+                        document.removeEventListener('click', this.closeDropdowns);
+                    });
                 });
             }
         }).mount('#app');
