@@ -75,10 +75,15 @@
             scrollbar-width: thin;
             padding: 0 10px;
             gap: 1rem;
-            scroll-behavior: smooth;
+            scroll-behavior: auto;
             white-space: nowrap;
             position: relative;
             -ms-overflow-style: none;  /* IE and Edge */
+            cursor: grab;
+        }
+
+        .nav-container:active {
+            cursor: grabbing;
         }
 
         .nav-links {
@@ -850,33 +855,44 @@
                 },
                 startDragging(e) {
                     if (e.target.closest('.dropdown-menu') || 
-                        e.target.closest('.dropdown-toggle')) {
+                        e.target.closest('.dropdown-toggle') ||
+                        e.target.closest('.theme-toggle')) {
                         return;
                     }
                     
                     const navContainer = document.querySelector('.nav-container');
                     this.isDragging = true;
-                    this.startX = e.type === 'mousedown' ? e.pageX : e.touches[0].pageX;
+                    this.startX = e.type === 'mousedown' ? e.pageX - navContainer.offsetLeft : e.touches[0].pageX - navContainer.offsetLeft;
                     this.scrollLeft = navContainer.scrollLeft;
                     document.body.style.userSelect = 'none';
+                    document.body.style.cursor = 'grabbing';
 
                     this.activeDropdown = null;
+
+                    if (e.type === 'mousedown') {
+                        e.preventDefault();
+                    }
                 },
                 stopDragging() {
                     this.isDragging = false;
                     document.body.style.userSelect = '';
+                    document.body.style.cursor = '';
                 },
                 drag(e) {
                     if (!this.isDragging) return;
+
+                    e.preventDefault();
                     
+                    const navContainer = document.querySelector('.nav-container');
+                    const x = e.type === 'mousemove' 
+                        ? e.pageX - navContainer.offsetLeft 
+                        : e.touches[0].pageX - navContainer.offsetLeft;
+                    const walk = (x - this.startX) * 1.5;
+                    navContainer.scrollLeft = this.scrollLeft - walk;
+
                     if (this.activeDropdown !== null) {
                         this.activeDropdown = null;
                     }
-                    
-                    const navContainer = document.querySelector('.nav-container');
-                    const x = e.type === 'mousemove' ? e.pageX : e.touches[0].pageX;
-                    const walk = x - this.startX;
-                    navContainer.scrollLeft = this.scrollLeft - walk;
                 },
             },
             mounted() {
@@ -926,14 +942,21 @@
                     }
                 };
 
+                const handleMouseLeave = () => {
+                    if (this.isDragging) {
+                        this.stopDragging();
+                    }
+                };
+
                 navContainer.addEventListener('scroll', handleScroll);
+                navContainer.addEventListener('mouseleave', handleMouseLeave);
                 
-                navContainer.addEventListener('mousedown', this.startDragging);
-                window.addEventListener('mousemove', this.drag);
+                navContainer.addEventListener('mousedown', this.startDragging, { passive: false });
+                window.addEventListener('mousemove', this.drag, { passive: false });
                 window.addEventListener('mouseup', this.stopDragging);
                 
-                navContainer.addEventListener('touchstart', this.startDragging);
-                window.addEventListener('touchmove', this.drag);
+                navContainer.addEventListener('touchstart', this.startDragging, { passive: true });
+                window.addEventListener('touchmove', this.drag, { passive: false });
                 window.addEventListener('touchend', this.stopDragging);
                 
                 document.addEventListener('click', this.closeDropdowns);
@@ -941,6 +964,7 @@
                 this.$nextTick(() => {
                     this.$once('hook:beforeDestroy', () => {
                         navContainer.removeEventListener('scroll', handleScroll);
+                        navContainer.removeEventListener('mouseleave', handleMouseLeave);
                         navContainer.removeEventListener('mousedown', this.startDragging);
                         window.removeEventListener('mousemove', this.drag);
                         window.removeEventListener('mouseup', this.stopDragging);
