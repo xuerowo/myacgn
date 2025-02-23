@@ -214,9 +214,7 @@
 
         .app-download-button:hover .app-info-tooltip,
         .app-info-tooltip:hover {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
+            display: none;
         }
 
         .app-icon-small {
@@ -541,16 +539,12 @@
 
         .dropdown:hover .dropdown-menu,
         .dropdown-menu:hover {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
+            display: none;
         }
 
         .sort-selector:hover .sort-menu,
         .sort-menu:hover {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
+            display: none;
         }
     </style>
 </head>
@@ -600,7 +594,7 @@
                 <div class="nav-right">
                     <div v-if="currentContent === 'novels'" class="dropdown">
                         <a class="app-download-button"
-                           @mouseenter="activeDropdown = 'app'"
+                           @click.prevent="activeDropdown = activeDropdown === 'app' ? null : 'app'"
                            href="https://expo.dev/artifacts/eas/mxSLMCW72kGzSLC6miv52i.apk"
                            download="ACG閱讀器.apk">
                             <span class="app-icon-small">📱</span>
@@ -608,9 +602,7 @@
                         </a>
                         <div class="app-info-tooltip"
                              :class="{ show: activeDropdown === 'app' }"
-                             :style="getDropdownPosition('app')"
-                             @mouseenter="activeDropdown = 'app'"
-                             @mouseleave="activeDropdown = null">
+                             :style="getDropdownPosition('app')">
                             <span class="version-info">v1.2.1</span>
                             <span>更新於 2025/2/23</span>
                             <img class="qr-code-img" 
@@ -621,7 +613,7 @@
                     </div>
                     <div class="dropdown">
                         <div class="sort-selector" 
-                             @mouseenter="activeDropdown = 'sort'">
+                             @click="activeDropdown = activeDropdown === 'sort' ? null : 'sort'">
                             <div class="sort-icon">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M4 7h10M4 12h8M4 17h6"></path>
@@ -635,9 +627,7 @@
                         </div>
                         <div class="sort-menu" 
                              :class="{ show: activeDropdown === 'sort' }"
-                             :style="getDropdownPosition('sort')"
-                             @mouseenter="activeDropdown = 'sort'"
-                             @mouseleave="activeDropdown = null">
+                             :style="getDropdownPosition('sort')">
                             <div v-for="option in sortOptions" 
                                  :key="option.value"
                                  class="sort-option"
