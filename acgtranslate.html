@@ -248,6 +248,93 @@
             transform: rotate(360deg);
         }
 
+        /* 排序選擇器樣式 */
+        .sort-selector {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+            margin-right: 8px;
+            user-select: none;
+        }
+
+        .sort-selector:hover {
+            background-color: var(--dropdown-hover);
+        }
+
+        .sort-icon {
+            display: flex;
+            align-items: center;
+            margin-right: 4px;
+        }
+
+        .sort-text {
+            font-size: 14px;
+            color: var(--text-color);
+            margin-right: 4px;
+        }
+
+        .sort-chevron {
+            transition: transform 0.2s;
+        }
+
+        .sort-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: var(--dropdown-background);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            padding: 4px;
+            z-index: 1000;
+            min-width: 120px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s;
+        }
+
+        .sort-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .sort-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            color: var(--text-color);
+        }
+
+        .sort-option:hover {
+            background-color: var(--dropdown-hover);
+        }
+
+        .sort-option.selected {
+            background-color: var(--dropdown-hover);
+        }
+
+        .sort-option-text {
+            font-size: 14px;
+            margin-right: 8px;
+        }
+
+        .sort-option-check {
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .sort-option.selected .sort-option-check {
+            opacity: 1;
+        }
+
         @media (max-width: 768px) {
             .navbar {
                 padding: 0.8rem;
@@ -349,14 +436,37 @@
                     </div>
                     <a href="commentsection.html">留言區</a>
                 </div>
-                <button class="theme-toggle" @click="toggleTheme">{{ isDarkMode ? '🌜' : '🌞' }}</button>
+                <div style="display: flex; align-items: center;">
+                    <div class="sort-selector" @click="toggleSortMenu">
+                        <div class="sort-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 7h10M4 12h8M4 17h6"></path>
+                                <path d="M17 13l3 3l3-3"></path>
+                                <path d="M20 8v8"></path>
+                            </svg>
+                        </div>
+                        <span class="sort-text">{{ currentSortLabel }}</span>
+                        <span class="sort-chevron" :style="{ transform: showSortMenu ? 'rotate(180deg)' : 'rotate(0deg)' }">▼</span>
+                        <div class="sort-menu" :class="{ active: showSortMenu }">
+                            <div v-for="option in sortOptions" 
+                                 :key="option.value"
+                                 class="sort-option"
+                                 :class="{ selected: currentSort === option.value }"
+                                 @click="handleSortChange(option.value)">
+                                <span class="sort-option-text">{{ option.label }}</span>
+                                <span class="sort-option-check">✓</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="theme-toggle" @click="toggleTheme">{{ isDarkMode ? '🌜' : '🌞' }}</button>
+                </div>
             </div>
         </nav>
 
         <div class="container">
             <div class="content-grid">
                 <template v-if="currentContent === 'webtoons'">
-                    <div v-for="item in mangaList" 
+                    <div v-for="item in sortedMangaList" 
                          :key="item.title" 
                          class="content-card">
                         <img :src="item.cover" 
@@ -373,7 +483,7 @@
                 </template>
 
                 <template v-else>
-                    <div v-for="item in novelList" 
+                    <div v-for="item in sortedNovelList" 
                          :key="item.title" 
                          class="content-card">
                         <img :src="item.coverUrl" 
@@ -396,7 +506,8 @@
         const { createApp } = Vue;
 
         const STORAGE_KEYS = {
-            THEME: 'theme'
+            THEME: 'theme',
+            SORT: 'content_sort'
         };
 
         createApp({
@@ -405,20 +516,56 @@
                     currentContent: 'webtoons',
                     mangaList: [],
                     novelList: [],
-                    isDarkMode: localStorage.getItem(STORAGE_KEYS.THEME) === 'dark'
+                    isDarkMode: localStorage.getItem(STORAGE_KEYS.THEME) === 'dark',
+                    showSortMenu: false,
+                    currentSort: localStorage.getItem(STORAGE_KEYS.SORT) || 'lastUpdated',
+                    sortOptions: [
+                        { value: 'lastUpdated', label: '最新更新' },
+                        { value: 'chapterCount', label: '章節數' },
+                        { value: 'wordCount', label: '文字數' },
+                        { value: 'readingTime', label: '閱讀時間' }
+                    ]
                 }
             },
-            watch: {
-                isDarkMode(newValue) {
-                    const theme = newValue ? 'dark' : 'light';
-                    document.documentElement.setAttribute('data-theme', theme);
-                    localStorage.setItem(STORAGE_KEYS.THEME, theme);
+            computed: {
+                currentSortLabel() {
+                    return this.sortOptions.find(opt => opt.value === this.currentSort)?.label || '排序';
                 },
-                '$route.hash'(newHash) {
-                    const hash = newHash.substring(1);
-                    if (hash === 'novels' || hash === 'webtoons') {
-                        this.switchContent(hash);
-                    }
+                sortedMangaList() {
+                    return [...this.mangaList].sort((a, b) => {
+                        switch (this.currentSort) {
+                            case 'lastUpdated':
+                                return new Date(b.lastUpdated) - new Date(a.lastUpdated);
+                            case 'chapterCount':
+                                return b.chapters.length - a.chapters.length;
+                            case 'wordCount':
+                                return (b.wordCount || 0) - (a.wordCount || 0);
+                            case 'readingTime':
+                                const readingTimeA = this.getReadingTime(a.title) || 0;
+                                const readingTimeB = this.getReadingTime(b.title) || 0;
+                                return readingTimeB - readingTimeA;
+                            default:
+                                return 0;
+                        }
+                    });
+                },
+                sortedNovelList() {
+                    return [...this.novelList].sort((a, b) => {
+                        switch (this.currentSort) {
+                            case 'lastUpdated':
+                                return new Date(b.lastUpdated) - new Date(a.lastUpdated);
+                            case 'chapterCount':
+                                return b.chapters.length - a.chapters.length;
+                            case 'wordCount':
+                                return (b.wordCount || 0) - (a.wordCount || 0);
+                            case 'readingTime':
+                                const readingTimeA = this.getReadingTime(a.title) || 0;
+                                const readingTimeB = this.getReadingTime(b.title) || 0;
+                                return readingTimeB - readingTimeA;
+                            default:
+                                return 0;
+                        }
+                    });
                 }
             },
             methods: {
@@ -474,6 +621,22 @@
                 },
                 toggleTheme() {
                     this.isDarkMode = !this.isDarkMode;
+                },
+                toggleSortMenu() {
+                    this.showSortMenu = !this.showSortMenu;
+                },
+                handleSortChange(sortOption) {
+                    this.currentSort = sortOption;
+                    localStorage.setItem(STORAGE_KEYS.SORT, sortOption);
+                    this.showSortMenu = false;
+                },
+                getReadingTime(title) {
+                    try {
+                        const readingTimes = JSON.parse(localStorage.getItem('reader_settings'))?.readingTime || {};
+                        return readingTimes[title] || 0;
+                    } catch {
+                        return 0;
+                    }
                 }
             },
             mounted() {
@@ -509,6 +672,14 @@
                     const newHash = window.location.hash.substring(1);
                     if (newHash === 'novels' || newHash === 'webtoons') {
                         this.switchContent(newHash);
+                    }
+                });
+
+                // 點擊外部關閉排序選單
+                document.addEventListener('click', (e) => {
+                    const sortSelector = document.querySelector('.sort-selector');
+                    if (sortSelector && !sortSelector.contains(e.target)) {
+                        this.showSortMenu = false;
                     }
                 });
             }
