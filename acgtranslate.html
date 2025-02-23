@@ -452,7 +452,7 @@
                                  :key="option.value"
                                  class="sort-option"
                                  :class="{ selected: currentSort === option.value }"
-                                 @click="handleSortChange(option.value)">
+                                 @click="handleSortChange(option)">
                                 <span class="sort-option-text">{{ option.label }}</span>
                                 <span class="sort-option-check">✓</span>
                             </div>
@@ -543,9 +543,7 @@
                             case 'lastUpdated':
                                 return new Date(b.lastUpdated) - new Date(a.lastUpdated);
                             case 'chapterCount':
-                                const maxChapterA = Math.max(...a.chapters.map(c => c.id));
-                                const maxChapterB = Math.max(...b.chapters.map(c => c.id));
-                                return maxChapterB - maxChapterA;
+                                return b.chapters.length - a.chapters.length;
                             default:
                                 return 0;
                         }
@@ -557,9 +555,7 @@
                             case 'lastUpdated':
                                 return new Date(b.lastUpdated) - new Date(a.lastUpdated);
                             case 'chapterCount':
-                                const maxChapterA = Math.max(...(a.chapters || []).map(c => c.id));
-                                const maxChapterB = Math.max(...(b.chapters || []).map(c => c.id));
-                                return maxChapterB - maxChapterA;
+                                return (b.chapters || []).length - (a.chapters || []).length;
                             case 'wordCount':
                                 return (b.totalWordCount || 0) - (a.totalWordCount || 0);
                             default:
@@ -640,8 +636,8 @@
                     this.showSortMenu = !this.showSortMenu;
                 },
                 handleSortChange(sortOption) {
-                    this.currentSort = sortOption;
-                    localStorage.setItem(STORAGE_KEYS.SORT, sortOption);
+                    this.currentSort = sortOption.value;
+                    localStorage.setItem(STORAGE_KEYS.SORT, sortOption.value);
                     this.showSortMenu = false;
                 },
                 getReadingTime(title) {
