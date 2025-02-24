@@ -205,60 +205,19 @@
             text-decoration: none;
             font-size: 1.1rem;
             position: relative;
-            transition: none;
         }
 
         .app-download-button:hover {
             color: var(--primary-color);
         }
 
-        .app-download-button:hover .app-info-tooltip,
-        .app-info-tooltip:hover {
-            display: none;
-        }
-
         .app-icon-small {
             font-size: 1.2rem;
         }
 
-        .app-info-tooltip {
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--background-color);
+        .app-info-content {
             padding: 1rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            font-size: 0.9rem;
-            color: var(--text-color);
-            opacity: 0;
-            visibility: hidden;
-            z-index: 1000;
-            margin-top: 0.5rem;
-            border: 1px solid var(--border-color);
-            white-space: normal;
-            width: 200px;
             text-align: center;
-            transition: opacity 0.3s, visibility 0.3s;
-        }
-
-        .app-info-tooltip::before {
-            content: '';
-            position: absolute;
-            top: -6px;
-            left: 50%;
-            transform: translateX(-50%) rotate(45deg);
-            width: 12px;
-            height: 12px;
-            background: var(--background-color);
-            border-left: 1px solid var(--border-color);
-            border-top: 1px solid var(--border-color);
-        }
-
-        .app-info-tooltip.show {
-            opacity: 1;
-            visibility: visible;
         }
 
         .qr-code-img {
@@ -567,6 +526,30 @@
         .nav-container::-webkit-scrollbar-thumb:hover {
             background: var(--primary-color);
         }
+
+        .app-download-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1rem;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s;
+            border-top: 1px solid var(--border-color);
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        .app-download-link:hover {
+            background-color: var(--dropdown-hover);
+            color: var(--primary-color);
+        }
+
+        .app-download-link svg {
+            width: 16px;
+            height: 16px;
+        }
     </style>
 </head>
 <body>
@@ -616,25 +599,32 @@
                 </div>
                 <div class="nav-right">
                     <div v-if="currentContent === 'novels'" class="dropdown">
-                        <a class="app-download-button"
-                           @mouseenter="!isMobile && (activeDropdown = 'app')"
-                           @click.prevent="isMobile ? (activeDropdown = activeDropdown === 'app' ? null : 'app') : null"
-                           href="https://expo.dev/artifacts/eas/btrM9N9mukTLhJj6YcVGdQ.apk"
-                           download="ACG閱讀器.apk">
+                        <button class="dropdown-toggle app-download-button" 
+                                data-dropdown="app"
+                                @mouseenter="!isMobile && (activeDropdown = 'app')"
+                                @click="isMobile && (activeDropdown = activeDropdown === 'app' ? null : 'app')"
+                                :class="{ active: activeDropdown === 'app' }">
                             <span class="app-icon-small">📱</span>
                             <span>下載輕小說閱讀 App</span>
-                        </a>
-                        <div class="app-info-tooltip"
+                        </button>
+                        <div class="dropdown-menu" 
                              :class="{ show: activeDropdown === 'app' }"
                              :style="getDropdownPosition('app')"
                              @mouseenter="!isMobile && (activeDropdown = 'app')"
                              @mouseleave="!isMobile && (activeDropdown = null)">
-                            <span class="version-info">v1.2.2</span>
-                            <span>更新於 2025/2/24</span>
-                            <img class="qr-code-img" 
-                                 src="images/app_download_qr_code.png" 
-                                 alt="掃描下載 App">
-                            <span style="margin-top: 10px; display: block;">掃描下載 App</span>
+                            <div class="app-info-content">
+                                <span class="version-info">v1.2.2</span>
+                                <span>更新於 2025/2/24</span>
+                                <img class="qr-code-img" 
+                                     src="images/app_download_qr_code.png" 
+                                     alt="掃描下載 App">
+                                <span style="margin-top: 10px; display: block;">掃描下載 App</span>
+                                <a href="https://expo.dev/artifacts/eas/btrM9N9mukTLhJj6YcVGdQ.apk"
+                                   download="ACG閱讀器.apk"
+                                   class="app-download-link">
+                                   點擊下載 App
+                                </a>
+                            </div>
                         </div>
                     </div>
                     <div class="dropdown">
