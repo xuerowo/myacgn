@@ -532,13 +532,17 @@
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
-            padding: 0.8rem 1rem;
+            padding: 0 1rem;
             color: var(--text-color);
             text-decoration: none;
             transition: background-color 0.3s, color 0.3s;
             border-top: 1px solid var(--border-color);
-            margin-top: 1rem;
+            margin-top: 0;
+            margin-bottom: 0;
             width: 100%;
+            height: 40px;
+            box-sizing: border-box;
+            line-height: 1;
         }
 
         .app-download-link:hover {
@@ -619,6 +623,10 @@
                                      src="images/app_download_qr_code.png" 
                                      alt="掃描下載 App">
                                 <span style="margin-top: 10px; display: block;">掃描下載 App</span>
+                                <a href="輕小說翻譯/changelog.html"
+                                   class="app-download-link">
+                                   查看更新日誌
+                                </a>
                                 <a href="https://expo.dev/artifacts/eas/pkUSVK2vp8i7ksWEtkFBqT.apk"
                                    download="ACG閱讀器.apk"
                                    class="app-download-link">
