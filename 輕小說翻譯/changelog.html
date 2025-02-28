@@ -16,6 +16,8 @@
       --card-shadow: 0 10px 20px rgba(0,0,0,0.1);
       --timeline-width: 4px;
       --timeline-circle-size: 16px;
+      --particle-color: rgba(74, 144, 226, 0.6);
+      --particle-color-alt: rgba(124, 77, 255, 0.4);
     }
 
     [data-theme="dark"] {
@@ -26,6 +28,8 @@
       --border-color: #333;
       --background-color: #121212;
       --card-shadow: 0 10px 20px rgba(0,0,0,0.3);
+      --particle-color: rgba(100, 181, 246, 0.4);
+      --particle-color-alt: rgba(187, 134, 252, 0.3);
     }
 
     * {
@@ -42,6 +46,17 @@
       background-color: var(--secondary-color);
       padding-top: 40px;
       padding-bottom: 80px;
+      overflow-x: hidden;
+    }
+
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      opacity: 0.5;
     }
 
     .header {
@@ -50,6 +65,7 @@
       position: relative;
       margin-bottom: 2rem;
       overflow: hidden;
+      z-index: 1;
     }
 
     .header:before {
@@ -62,11 +78,22 @@
       background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
     }
 
+    .header:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+    }
+
     .container {
       max-width: 800px;
       margin: 0 auto;
       padding: 0 20px;
       position: relative;
+      z-index: 2;
     }
 
     h1 {
@@ -164,6 +191,8 @@
       background-color: var(--primary-color);
       transform: translateX(-50%);
       border-radius: 2px;
+      transition: all 0.3s ease;
+      background-image: linear-gradient(to bottom, var(--accent-color), var(--primary-color), var(--accent-color));
     }
 
     .version {
@@ -190,6 +219,7 @@
       transform: translateY(30px);
       animation: fadeIn 0.8s forwards;
       animation-delay: calc(var(--delay) * 0.1s);
+      backface-visibility: hidden;
     }
 
     .version-inner:hover {
@@ -199,10 +229,17 @@
 
     .version:nth-child(odd) .version-inner {
       margin-left: auto;
+      transform-origin: left center;
     }
 
     .version:nth-child(even) .version-inner {
       margin-right: auto;
+      transform-origin: right center;
+    }
+
+    .version:hover ~ .version:before {
+      transform: translateX(-50%) scale(1.2);
+      background-color: var(--accent-color);
     }
 
     .version:before {
@@ -217,12 +254,13 @@
       transform: translateX(-50%);
       z-index: 1;
       box-shadow: 0 0 0 4px rgba(124, 77, 255, 0.2);
-      transition: background-color 0.3s, box-shadow 0.3s;
+      transition: all 0.3s;
     }
 
     .version:hover:before {
       background-color: var(--primary-color);
-      box-shadow: 0 0 0 6px rgba(74, 144, 226, 0.3);
+      box-shadow: 0 0 0 6px rgba(74, 144, 226, 0.3), 0 0 20px rgba(74, 144, 226, 0.6);
+      transform: translateX(-50%) scale(1.3);
     }
 
     .version:after {
@@ -233,6 +271,12 @@
       height: 2px;
       background-color: var(--primary-color);
       z-index: 0;
+      transition: all 0.3s;
+    }
+
+    .version:hover:after {
+      width: 50px;
+      background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
     }
 
     .version:nth-child(odd):after {
@@ -263,6 +307,13 @@
       padding: 3px 10px;
       border-radius: 15px;
       background-color: var(--secondary-color);
+      transition: all 0.3s;
+    }
+
+    .version-inner:hover .date {
+      opacity: 1;
+      transform: scale(1.05);
+      background: linear-gradient(to right, var(--background-color), var(--secondary-color));
     }
 
     .version ul {
@@ -274,6 +325,11 @@
       margin-bottom: 10px;
       position: relative;
       padding-left: 5px;
+      transition: transform 0.2s ease;
+    }
+
+    .version li:hover {
+      transform: translateX(5px);
     }
 
     .version li:before {
@@ -282,6 +338,12 @@
       position: absolute;
       left: -15px;
       font-size: 1.2em;
+      transition: all 0.3s;
+    }
+
+    .version li:hover:before {
+      color: var(--primary-color);
+      transform: scale(1.4);
     }
 
     .version-badge {
@@ -292,6 +354,13 @@
       font-weight: 600;
       color: white;
       background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: all 0.3s;
+    }
+
+    .version-inner:hover .version-badge {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
 
     .current {
@@ -303,19 +372,48 @@
       border-image: linear-gradient(135deg, var(--accent-color), var(--primary-color));
       border-image-slice: 1;
       box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+      animation: pulse 2s infinite alternate;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      }
+      100% {
+        box-shadow: 0 15px 35px rgba(124, 77, 255, 0.3);
+      }
     }
 
     .current:before {
       background-color: var(--primary-color);
-      box-shadow: 0 0 0 6px rgba(74, 144, 226, 0.3);
+      box-shadow: 0 0 0 6px rgba(74, 144, 226, 0.3), 0 0 15px var(--primary-color);
+      animation: pulse-circle 2s infinite alternate;
+    }
+
+    @keyframes pulse-circle {
+      0% {
+        box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.3), 0 0 10px var(--primary-color);
+      }
+      100% {
+        box-shadow: 0 0 0 8px rgba(74, 144, 226, 0.4), 0 0 20px var(--primary-color);
+      }
     }
 
     .current:after {
       background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
+      height: 3px;
     }
 
     .current .version-badge {
       background: linear-gradient(135deg, #ff9d00, #ff6b6b);
+      animation: shine 2s infinite linear;
+      background-size: 200% auto;
+    }
+
+    @keyframes shine {
+      to {
+        background-position: 200% center;
+      }
     }
 
     .tooltip {
@@ -383,6 +481,24 @@
       font-size: 0.8em;
       margin-right: 8px;
       font-weight: 600;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-type:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background-color: currentColor;
+      transition: width 0.3s;
+    }
+
+    .version li:hover .feature-type:after {
+      width: 100%;
     }
 
     .feature-new {
@@ -398,6 +514,80 @@
     .feature-fix {
       background-color: rgba(231, 76, 60, 0.2);
       color: #e74c3c;
+    }
+
+    .version-controls {
+      text-align: center;
+      padding-top: 20px;
+      margin-top: 40px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .scroll-top {
+      background: var(--background-color);
+      color: var(--primary-color);
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.5rem;
+      margin: 0 auto;
+      box-shadow: var(--card-shadow);
+      transition: all 0.3s;
+      opacity: 0;
+      transform: scale(0.8);
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 99;
+    }
+
+    .scroll-top.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .scroll-top:hover {
+      transform: translateY(-5px) scale(1.1);
+      color: var(--accent-color);
+    }
+
+    .version-count {
+      position: absolute;
+      top: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.7rem;
+      color: white;
+      background-color: var(--primary-color);
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+
+    .tilt-effect {
+      transform-style: preserve-3d;
+      transform: perspective(1000px);
+    }
+
+    .tilt-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      transform: translateZ(-10px);
+      background: linear-gradient(135deg, rgba(124, 77, 255, 0.1), rgba(74, 144, 226, 0.1));
+      border-radius: 12px;
+      pointer-events: none;
     }
 
     @keyframes fadeIn {
@@ -421,6 +611,10 @@
       .version:before {
         left: 30px;
         transform: none;
+      }
+
+      .version:hover:before {
+        transform: scale(1.3);
       }
       
       .version:after {
@@ -448,6 +642,11 @@
       .subtitle {
         font-size: 1rem;
       }
+
+      .version-count {
+        left: 30px;
+        transform: none;
+      }
     }
 
     @media (max-width: 480px) {
@@ -471,12 +670,22 @@
         height: 40px;
         font-size: 1.2rem;
       }
+
+      .scroll-top {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+        right: 20px;
+        bottom: 20px;
+      }
     }
   </style>
 </head>
 <body>
+  <div id="particles-js"></div>
   <button class="back-button" onclick="window.history.back()">←</button>
   <button class="theme-toggle" onclick="toggleTheme()">🌞</button>
+  <button class="scroll-top" onclick="scrollToTop()">↑</button>
 
   <div class="header">
     <div class="container">
@@ -494,12 +703,20 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.0/dist/vanilla-tilt.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       // 檢查並設置主題
       const savedTheme = localStorage.getItem('theme') || 'light';
       document.documentElement.setAttribute('data-theme', savedTheme);
       updateThemeToggle(savedTheme);
+
+      // 初始化滾動至頂按鈕
+      initScrollTop();
+
+      // 初始化粒子背景
+      initParticles(savedTheme);
 
       // 獲取更新日誌數據
       fetch('version.json')
@@ -511,6 +728,8 @@
         })
         .then(data => {
           displayChangelog(data);
+          // 初始化 3D 效果
+          setTimeout(initTiltEffect, 500);
         })
         .catch(error => {
           const changelogDiv = document.getElementById('changelog');
@@ -518,12 +737,148 @@
         });
     });
 
+    function initTiltEffect() {
+      if (window.innerWidth > 768) {
+        VanillaTilt.init(document.querySelectorAll(".version-inner"), {
+          max: 5,
+          speed: 400,
+          glare: true,
+          "max-glare": 0.2,
+          scale: 1.02
+        });
+      }
+    }
+
+    function initParticles(theme) {
+      const isDark = theme === 'dark';
+      
+      particlesJS('particles-js', {
+        "particles": {
+          "number": {
+            "value": 30,
+            "density": {
+              "enable": true,
+              "value_area": 800
+            }
+          },
+          "color": {
+            "value": isDark ? "#64b5f6" : "#4a90e2"
+          },
+          "shape": {
+            "type": "circle",
+            "stroke": {
+              "width": 0,
+              "color": "#000000"
+            },
+            "polygon": {
+              "nb_sides": 5
+            }
+          },
+          "opacity": {
+            "value": 0.3,
+            "random": true,
+            "anim": {
+              "enable": true,
+              "speed": 1,
+              "opacity_min": 0.1,
+              "sync": false
+            }
+          },
+          "size": {
+            "value": 5,
+            "random": true,
+            "anim": {
+              "enable": true,
+              "speed": 2,
+              "size_min": 0.1,
+              "sync": false
+            }
+          },
+          "line_linked": {
+            "enable": true,
+            "distance": 150,
+            "color": isDark ? "#64b5f6" : "#4a90e2",
+            "opacity": 0.2,
+            "width": 1
+          },
+          "move": {
+            "enable": true,
+            "speed": 1,
+            "direction": "none",
+            "random": true,
+            "straight": false,
+            "out_mode": "out",
+            "bounce": false,
+            "attract": {
+              "enable": false,
+              "rotateX": 600,
+              "rotateY": 1200
+            }
+          }
+        },
+        "interactivity": {
+          "detect_on": "canvas",
+          "events": {
+            "onhover": {
+              "enable": true,
+              "mode": "grab"
+            },
+            "onclick": {
+              "enable": true,
+              "mode": "push"
+            },
+            "resize": true
+          },
+          "modes": {
+            "grab": {
+              "distance": 140,
+              "line_linked": {
+                "opacity": 0.6
+              }
+            },
+            "push": {
+              "particles_nb": 3
+            }
+          }
+        },
+        "retina_detect": true
+      });
+    }
+
+    function initScrollTop() {
+      const scrollTopBtn = document.querySelector('.scroll-top');
+      
+      window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 300) {
+          scrollTopBtn.classList.add('visible');
+        } else {
+          scrollTopBtn.classList.remove('visible');
+        }
+      });
+    }
+
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+
     function updateThemeToggle(theme) {
       const toggleBtn = document.querySelector('.theme-toggle');
       if (theme === 'dark') {
         toggleBtn.textContent = '🌜';
       } else {
         toggleBtn.textContent = '🌞';
+      }
+
+      // 更新粒子效果
+      if (window.pJSDom && window.pJSDom.length > 0) {
+        // 移除現有粒子
+        window.pJSDom[0].pJS.fn.vendors.destroypJS();
+        window.pJSDom = [];
+        // 重新初始化
+        initParticles(theme);
       }
     }
 
@@ -586,9 +941,20 @@
           versionDiv.className = index === 0 ? 'version current' : 'version';
           versionDiv.style.setProperty('--delay', index);
           
+          // 添加版本序號
+          const versionCount = document.createElement('div');
+          versionCount.className = 'version-count';
+          versionCount.textContent = index + 1;
+          versionDiv.appendChild(versionCount);
+          
           // 創建版本內部容器
           const versionInner = document.createElement('div');
           versionInner.className = 'version-inner';
+
+          // 添加3D傾斜效果背景
+          const tiltBg = document.createElement('div');
+          tiltBg.className = 'tilt-bg';
+          versionInner.appendChild(tiltBg);
 
           // 添加工具提示
           const tooltip = document.createElement('div');
