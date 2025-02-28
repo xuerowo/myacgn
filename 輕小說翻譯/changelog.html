@@ -18,6 +18,8 @@
       --timeline-circle-size: 16px;
       --particle-color: rgba(74, 144, 226, 0.6);
       --particle-color-alt: rgba(124, 77, 255, 0.4);
+      --typewriter-speed: 2s; /* 打字機基本速度 */
+      --typewriter-char-count: 1; /* 字符數量，將由JS動態設置 */
     }
 
     [data-theme="dark"] {
@@ -121,6 +123,29 @@
       opacity: 0.8;
       font-size: 1.1rem;
       margin-top: 1rem;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    /* 打字機效果 */
+    .typewriter {
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 2px solid var(--primary-color);
+      width: 0;
+      animation: typing calc(var(--typewriter-speed) * var(--typewriter-char-count) / 20) steps(var(--typewriter-char-count), end),
+                blink-caret 0.75s step-end infinite;
+    }
+
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+
+    @keyframes blink-caret {
+      from, to { border-color: transparent }
+      50% { border-color: var(--primary-color) }
     }
 
     .theme-toggle {
@@ -694,7 +719,7 @@
   <div class="header">
     <div class="container">
       <h1>輕小說閱讀器</h1>
-      <p class="subtitle">持續精進的應用，為您帶來更好的閱讀體驗</p>
+      <p class="subtitle"><span class="typewriter">持續精進的應用，為您帶來更好的閱讀體驗</span></p>
     </div>
   </div>
 
@@ -711,6 +736,13 @@
   <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.0/dist/vanilla-tilt.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      // 設置打字機效果的字符數量
+      const typewriterEl = document.querySelector('.typewriter');
+      if (typewriterEl) {
+        const charCount = typewriterEl.textContent.length;
+        document.documentElement.style.setProperty('--typewriter-char-count', charCount);
+      }
+
       // 檢查並設置主題
       const savedTheme = localStorage.getItem('theme') || 'light';
       document.documentElement.setAttribute('data-theme', savedTheme);
