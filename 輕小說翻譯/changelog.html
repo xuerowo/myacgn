@@ -222,10 +222,8 @@
       width: calc(50% - 30px);
       transform-style: preserve-3d;
       transition: transform 0.6s, box-shadow 0.3s;
-      opacity: 0;
-      transform: translateY(30px);
-      animation: fadeIn 0.8s forwards;
-      animation-delay: calc(var(--delay) * 0.1s);
+      opacity: 1;
+      transform: translateY(0);
       backface-visibility: hidden;
       cursor: pointer;
       overflow: hidden;
@@ -472,16 +470,18 @@
       background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
       z-index: -1;
       border-radius: 15px;
-      opacity: 0.3;
-      animation: border-pulse 2s infinite alternate;
+      opacity: 0.15;
+      animation: border-pulse 3s ease-in-out infinite alternate;
     }
 
     @keyframes border-pulse {
       0% {
-        opacity: 0.2;
+        opacity: 0.05;
+        box-shadow: 0 0 5px rgba(124, 77, 255, 0.1);
       }
       100% {
-        opacity: 0.4;
+        opacity: 0.2;
+        box-shadow: 0 0 10px rgba(74, 144, 226, 0.15);
       }
     }
 
@@ -797,37 +797,37 @@
       }
     }
 
-    /* 彩虹光波效果 */
+    /* 彩虹光波效果 - 調整為更柔和的效果 */
     .rainbow-glow {
       position: absolute;
       top: 0;
       left: -100%;
-      width: 50%;
+      width: 30%;
       height: 100%;
       background: linear-gradient(
         90deg,
         transparent,
-        rgba(255, 255, 255, 0.05),
-        rgba(255, 255, 255, 0.1),
-        rgba(255, 255, 255, 0.05),
+        rgba(255, 255, 255, 0.03),
+        rgba(255, 255, 255, 0.07),
+        rgba(255, 255, 255, 0.03),
         transparent
       );
       z-index: 1;
-      animation: rainbow-slide 8s ease-in-out infinite;
+      animation: rainbow-slide 12s ease-in-out infinite;
       pointer-events: none;
     }
 
     @keyframes rainbow-slide {
       0% {
-        left: -100%;
-        opacity: 0.3;
+        left: -30%;
+        opacity: 0.1;
       }
       48% {
-        opacity: 0.5;
+        opacity: 0.3;
       }
       50% {
         left: 100%;
-        opacity: 0.3;
+        opacity: 0.1;
       }
       100% {
         left: 100%;
@@ -1214,122 +1214,137 @@
       let versionCreated = false;
       
       // 添加所有版本信息
-      if (data && data.history && Array.isArray(data.history) && data.history.length > 0) {
-        data.history.forEach((version, index) => {
-          const versionDiv = document.createElement('div');
-          // 強制第一個項目為最新版本
-          versionDiv.className = index === 0 ? 'version current animate-in failsafe-visible' : 'version animate-in failsafe-visible';
-          versionDiv.style.setProperty('--delay', index);
-          
-          // 添加版本序號
-          const versionCount = document.createElement('div');
-          versionCount.className = 'version-count';
-          versionCount.textContent = index + 1;
-          versionDiv.appendChild(versionCount);
-          
-          // 創建版本內部容器
-          const versionInner = document.createElement('div');
-          versionInner.className = 'version-inner';
-
-          // 添加視差背景效果
-          const parallaxBg = document.createElement('div');
-          parallaxBg.className = 'parallax-bg';
-          versionInner.appendChild(parallaxBg);
-
-          // 添加3D傾斜效果背景
-          const tiltBg = document.createElement('div');
-          tiltBg.className = 'tilt-bg';
-          versionInner.appendChild(tiltBg);
-
-          // 添加版本日期作為靜態內容而不是懸停提示
-          if (version.date) {
-            const dateDiv = document.createElement('div');
-            dateDiv.className = 'date';
-            dateDiv.textContent = formatVersionDate(version.date);
-            versionInner.appendChild(dateDiv);
-          }
-          
-          // 版本標題
-          const versionTitle = document.createElement('h2');
-          
-          const versionNum = document.createElement('span');
-          versionNum.textContent = `版本 ${version.version}`;
-          versionTitle.appendChild(versionNum);
-          
-          const versionBadge = document.createElement('span');
-          versionBadge.className = 'version-badge';
-          versionBadge.textContent = index === 0 ? '最新版本' : '舊版本';
-          versionTitle.appendChild(versionBadge);
-          
-          versionInner.appendChild(versionTitle);
-          
-          if (version.changes) {
-            const changesList = document.createElement('ul');
+      try {
+        if (data && data.history && Array.isArray(data.history) && data.history.length > 0) {
+          data.history.forEach((version, index) => {
+            const versionDiv = document.createElement('div');
+            // 強制第一個項目為最新版本
+            versionDiv.className = index === 0 ? 'version current failsafe-visible' : 'version failsafe-visible';
+            versionDiv.style.setProperty('--delay', index);
             
-            // 如果 changes 是字符串
-            if (typeof version.changes === 'string') {
-              const changeItem = document.createElement('li');
-              const typeLabel = getChangeTypeLabel(version.changes);
-              changeItem.innerHTML = typeLabel + version.changes;
-              changesList.appendChild(changeItem);
-            } 
-            // 如果 changes 是数组
-            else if (Array.isArray(version.changes)) {
-              // 只顯示前3個更新，其餘放入可展開區域
-              const mainChanges = version.changes.slice(0, 3);
-              const detailChanges = version.changes.length > 3 ? version.changes.slice(3) : [];
+            // 添加版本序號
+            const versionCount = document.createElement('div');
+            versionCount.className = 'version-count';
+            versionCount.textContent = index + 1;
+            versionDiv.appendChild(versionCount);
+            
+            // 創建版本內部容器
+            const versionInner = document.createElement('div');
+            versionInner.className = 'version-inner failsafe-visible';
+
+            // 添加視差背景效果
+            const parallaxBg = document.createElement('div');
+            parallaxBg.className = 'parallax-bg';
+            versionInner.appendChild(parallaxBg);
+
+            // 添加3D傾斜效果背景
+            const tiltBg = document.createElement('div');
+            tiltBg.className = 'tilt-bg';
+            versionInner.appendChild(tiltBg);
+
+            // 添加版本日期作為靜態內容而不是懸停提示
+            if (version.date) {
+              const dateDiv = document.createElement('div');
+              dateDiv.className = 'date';
+              dateDiv.textContent = formatVersionDate(version.date);
+              versionInner.appendChild(dateDiv);
+            }
+            
+            // 版本標題
+            const versionTitle = document.createElement('h2');
+            
+            const versionNum = document.createElement('span');
+            versionNum.textContent = `版本 ${version.version}`;
+            versionTitle.appendChild(versionNum);
+            
+            const versionBadge = document.createElement('span');
+            versionBadge.className = 'version-badge';
+            versionBadge.textContent = index === 0 ? '最新版本' : '舊版本';
+            versionTitle.appendChild(versionBadge);
+            
+            versionInner.appendChild(versionTitle);
+            
+            if (version.changes) {
+              const changesList = document.createElement('ul');
               
-              mainChanges.forEach(change => {
+              // 如果 changes 是字符串
+              if (typeof version.changes === 'string') {
                 const changeItem = document.createElement('li');
-                const typeLabel = getChangeTypeLabel(change);
-                changeItem.innerHTML = typeLabel + change;
+                const typeLabel = getChangeTypeLabel(version.changes);
+                changeItem.innerHTML = typeLabel + version.changes;
                 changesList.appendChild(changeItem);
-              });
-              
-              // 如果有更多更新，添加展開按鈕和詳情區域
-              if (detailChanges.length > 0) {
-                versionInner.appendChild(changesList);
+              } 
+              // 如果 changes 是数组
+              else if (Array.isArray(version.changes)) {
+                // 只顯示前3個更新，其餘放入可展開區域
+                const mainChanges = version.changes.slice(0, 3);
+                const detailChanges = version.changes.length > 3 ? version.changes.slice(3) : [];
                 
-                // 添加展開按鈕
-                const expandButton = document.createElement('button');
-                expandButton.className = 'expand-button';
-                expandButton.innerHTML = '<span class="expand-icon">▼</span> <span class="expand-text">展開詳情</span>';
-                versionInner.appendChild(expandButton);
-                
-                // 添加詳情區域
-                const detailDiv = document.createElement('div');
-                detailDiv.className = 'changelog-detail';
-                detailDiv.dataset.loaded = 'false';
-                
-                const detailList = document.createElement('ul');
-                detailChanges.forEach(change => {
+                mainChanges.forEach(change => {
                   const changeItem = document.createElement('li');
                   const typeLabel = getChangeTypeLabel(change);
                   changeItem.innerHTML = typeLabel + change;
-                  detailList.appendChild(changeItem);
+                  changesList.appendChild(changeItem);
                 });
                 
-                detailDiv.appendChild(detailList);
-                versionInner.appendChild(detailDiv);
-              } else {
-                versionInner.appendChild(changesList);
+                // 如果有更多更新，添加展開按鈕和詳情區域
+                if (detailChanges.length > 0) {
+                  versionInner.appendChild(changesList);
+                  
+                  // 添加展開按鈕
+                  const expandButton = document.createElement('button');
+                  expandButton.className = 'expand-button';
+                  expandButton.innerHTML = '<span class="expand-icon">▼</span> <span class="expand-text">展開詳情</span>';
+                  versionInner.appendChild(expandButton);
+                  
+                  // 添加詳情區域
+                  const detailDiv = document.createElement('div');
+                  detailDiv.className = 'changelog-detail';
+                  detailDiv.dataset.loaded = 'false';
+                  
+                  const detailList = document.createElement('ul');
+                  detailChanges.forEach(change => {
+                    const changeItem = document.createElement('li');
+                    const typeLabel = getChangeTypeLabel(change);
+                    changeItem.innerHTML = typeLabel + change;
+                    detailList.appendChild(changeItem);
+                  });
+                  
+                  detailDiv.appendChild(detailList);
+                  versionInner.appendChild(detailDiv);
+                } else {
+                  versionInner.appendChild(changesList);
+                }
               }
             }
-          }
-          
-          versionDiv.appendChild(versionInner);
-          timelineDiv.appendChild(versionDiv);
-          versionCreated = true;
-        });
+            
+            versionDiv.appendChild(versionInner);
+            timelineDiv.appendChild(versionDiv);
+            versionCreated = true;
+          });
+        } else {
+          // 數據無效，添加默認版本
+          console.warn('版本數據無效或為空');
+          throw new Error('版本數據無效');
+        }
+      } catch (error) {
+        console.error('處理版本數據時出錯:', error);
+        versionCreated = false; // 確保創建默認卡片
       }
       
       // 如果沒有成功創建任何版本卡片，創建一個預設卡片
       if (!versionCreated) {
+        console.log('創建默認版本卡片');
         const versionDiv = document.createElement('div');
-        versionDiv.className = 'version current animate-in failsafe-visible';
+        versionDiv.className = 'version current failsafe-visible';
+        
+        const versionCount = document.createElement('div');
+        versionCount.className = 'version-count';
+        versionCount.textContent = '1';
+        versionDiv.appendChild(versionCount);
         
         const versionInner = document.createElement('div');
-        versionInner.className = 'version-inner';
+        versionInner.className = 'version-inner failsafe-visible';
 
         // 添加視差背景效果
         const parallaxBg = document.createElement('div');
@@ -1362,19 +1377,45 @@
       
       changelogDiv.appendChild(timelineDiv);
       
-      // 確保第一個版本有特殊樣式，即使沒有在迴圈中正確設置
-      const firstVersion = timelineDiv.querySelector('.version');
-      if (firstVersion) {
-        firstVersion.classList.add('current');
-      }
+      // 確保所有卡片可見
+      document.querySelectorAll('.version, .version-inner').forEach(el => {
+        el.classList.add('failsafe-visible');
+      });
       
-      // 強制讓所有卡片立即可見
-      setTimeout(function() {
-        document.querySelectorAll('.version').forEach(el => {
+      // 延遲執行，確保卡片顯示
+      setTimeout(() => {
+        document.querySelectorAll('.version, .version-inner').forEach(el => {
           el.classList.add('failsafe-visible');
         });
       }, 100);
+      
+      // 再次延遲執行，確保卡片顯示
+      setTimeout(() => {
+        document.querySelectorAll('.version, .version-inner').forEach(el => {
+          el.classList.add('failsafe-visible');
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        });
+      }, 500);
     }
+
+    // 添加確保卡片顯示的CSS類別
+    document.addEventListener('DOMContentLoaded', function() {
+      // 在文檔頭部添加一個保險樣式
+      const style = document.createElement('style');
+      style.textContent = `
+        .failsafe-visible {
+          opacity: 1 !important;
+          transform: translateY(0) !important;
+          visibility: visible !important;
+          display: block !important;
+        }
+      `;
+      document.head.appendChild(style);
+      
+      // 其他初始化代碼...
+      // ... existing code ...
+    });
   </script>
 </body>
 </html>
