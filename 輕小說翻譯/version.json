@@ -1,5 +1,53 @@
 {
   "version": "1.2.6",
-  "downloadUrl": "https://expo.dev/artifacts/eas/qSFVm8h8cBUT1fkA2BmcJ8.apk",
-  "releaseNotes": "更新內容說明：\n1. 修復了部分問題"
+  "releaseNotes": "新增了檢查app更新功能",
+  "downloadUrl": "https://your-download-link.com",
+  "fullChangelogUrl": "https://your-website.com/changelog.html",
+  "history": [
+    {
+      "version": "1.2.6",
+      "date": "2025-02-28",
+      "changes": "新增了檢查app更新功能"
+    },
+    {
+      "version": "1.2.5",
+      "date": "2025-02-27",
+      "changes": "修復問題"
+    },
+    {
+      "version": "1.2.4",
+      "date": "2025-02-26",
+      "changes": "修復問題"
+    },
+    {
+      "version": "1.2.3",
+      "date": "2025-02-25",
+      "changes": "修復問題"
+    },
+    {
+      "version": "1.2.2",
+      "date": "未知時間",
+      "changes": "修復問題"
+    },
+    {
+      "version": "1.2.1",
+      "date": "未知時間",
+      "changes": "修復問題"
+    },
+    {
+      "version": "1.2.0",
+      "date": "未知時間",
+      "changes": "添加閱讀設定的切換主題顏色"
+    },
+    {
+      "version": "1.1.0",
+      "date": "未知時間",
+      "changes": "添加了排序器和章節列表簡介"
+    },
+    {
+      "version": "1.0.0",
+      "date": "未知時間",
+      "changes": "初始版本發布"
+    }
+  ]
 }
