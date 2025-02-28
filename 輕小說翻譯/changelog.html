@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>輕小說閱讀器 - 更新日誌</title>
+  <style>
+    body {
+      font-family: 'Microsoft JhengHei', Arial, sans-serif;
+      line-height: 1.6;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    .version {
+      margin-bottom: 30px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 15px;
+    }
+    .version h2 {
+      color: #3498db;
+      margin-bottom: 5px;
+    }
+    .version .date {
+      color: #7f8c8d;
+      font-size: 0.9em;
+      margin-bottom: 10px;
+      font-style: italic;
+    }
+    .version ul {
+      padding-left: 20px;
+    }
+    .version li {
+      margin-bottom: 5px;
+    }
+    .current {
+      background-color: #f0f8ff;
+      border-radius: 5px;
+      padding: 10px;
+    }
+    .loading {
+      text-align: center;
+      padding: 50px;
+      font-size: 1.2em;
+      color: #7f8c8d;
+    }
+    .error {
+      color: #e74c3c;
+      text-align: center;
+      padding: 20px;
+      border: 1px solid #e74c3c;
+      border-radius: 5px;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>輕小說閱讀器 - 更新日誌</h1>
+  
+  <div id="changelog">
+    <div class="loading">載入更新日誌中...</div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 獲取更新日誌數據
+      fetch('version.json')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('無法加載更新日誌數據');
+          }
+          return response.json();
+        })
+        .then(data => {
+          displayChangelog(data);
+        })
+        .catch(error => {
+          const changelogDiv = document.getElementById('changelog');
+          changelogDiv.innerHTML = `<div class="error">加載更新日誌時出錯: ${error.message}</div>`;
+        });
+    });
+
+    function displayChangelog(data) {
+      const changelogDiv = document.getElementById('changelog');
+      
+      // 清空載入提示
+      changelogDiv.innerHTML = '';
+      
+      // 添加所有版本信息
+      if (data.history && Array.isArray(data.history)) {
+        data.history.forEach((version, index) => {
+          const versionDiv = document.createElement('div');
+          versionDiv.className = index === 0 ? 'version current' : 'version';
+          
+          const versionTitle = document.createElement('h2');
+          versionTitle.textContent = `版本 ${version.version}`;
+          versionDiv.appendChild(versionTitle);
+          
+          if (version.date) {
+            const dateDiv = document.createElement('div');
+            dateDiv.className = 'date';
+            dateDiv.textContent = version.date;
+            versionDiv.appendChild(dateDiv);
+          }
+          
+          if (version.changes) {
+            const changesList = document.createElement('ul');
+            
+            // 如果 changes 是字符串，則添加為單個項目
+            if (typeof version.changes === 'string') {
+              const changeItem = document.createElement('li');
+              changeItem.textContent = version.changes;
+              changesList.appendChild(changeItem);
+            } 
+            // 如果 changes 是數組，則添加多個項目
+            else if (Array.isArray(version.changes)) {
+              version.changes.forEach(change => {
+                const changeItem = document.createElement('li');
+                changeItem.textContent = change;
+                changesList.appendChild(changeItem);
+              });
+            }
+            
+            versionDiv.appendChild(changesList);
+          }
+          
+          changelogDiv.appendChild(versionDiv);
+        });
+      } else {
+        changelogDiv.innerHTML = '<div class="error">更新日誌數據格式不正確</div>';
+      }
+    }
+  </script>
+</body>
+</html>
