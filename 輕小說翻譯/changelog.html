@@ -18,7 +18,7 @@
       --timeline-circle-size: 16px;
       --particle-color: rgba(74, 144, 226, 0.6);
       --particle-color-alt: rgba(124, 77, 255, 0.4);
-      --typewriter-speed: 2s; /* 打字機基本速度 */
+      --typewriter-speed: 4s; /* 打字機基本速度，從2s增加到4s */
       --typewriter-char-count: 1; /* 字符數量，將由JS動態設置 */
     }
 
@@ -133,7 +133,7 @@
       overflow: hidden;
       white-space: nowrap;
       border-right: 2px solid var(--primary-color);
-      animation: typing calc(var(--typewriter-speed) * var(--typewriter-char-count) / 20) steps(var(--typewriter-char-count), end) forwards,
+      animation: typing calc(var(--typewriter-speed) * var(--typewriter-char-count) / 12) steps(var(--typewriter-char-count), end) forwards,
                 blink-caret 0.75s step-end infinite;
       max-width: 0;
     }
@@ -520,6 +520,8 @@
       transition: all 0.3s;
       position: relative;
       overflow: hidden;
+      vertical-align: middle;
+      transform: translateY(-1px);
     }
 
     .feature-type:after {
