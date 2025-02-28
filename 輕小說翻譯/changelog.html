@@ -554,14 +554,18 @@
     }
 
     function formatVersionDate(dateStr) {
-      if (!dateStr) return '';
+      if (!dateStr) return '未知時間';
       
       const options = { year: 'numeric', month: 'long', day: 'numeric' };
       try {
         const date = new Date(dateStr);
+        // 檢查是否為無效日期
+        if (isNaN(date.getTime())) {
+          return '未知時間';
+        }
         return date.toLocaleDateString('zh-TW', options);
       } catch (e) {
-        return dateStr;
+        return '未知時間';
       }
     }
 
