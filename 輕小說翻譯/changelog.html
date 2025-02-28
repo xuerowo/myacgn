@@ -4,70 +4,503 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>輕小說閱讀器 - 更新日誌</title>
+  <link rel="icon" href="/images/favicon.jpg" type="image/jpg">
   <style>
+    :root {
+      --primary-color: #4a90e2;
+      --secondary-color: #f5f5f5;
+      --accent-color: #7c4dff;
+      --text-color: #333;
+      --border-color: #ddd;
+      --background-color: #fff;
+      --card-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      --timeline-width: 4px;
+      --timeline-circle-size: 16px;
+    }
+
+    [data-theme="dark"] {
+      --primary-color: #64b5f6;
+      --secondary-color: #1a1a1a;
+      --accent-color: #bb86fc;
+      --text-color: #e0e0e0;
+      --border-color: #333;
+      --background-color: #121212;
+      --card-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
     body {
       font-family: 'Microsoft JhengHei', Arial, sans-serif;
       line-height: 1.6;
+      color: var(--text-color);
+      background-color: var(--secondary-color);
+      padding-top: 40px;
+      padding-bottom: 80px;
+    }
+
+    .header {
+      text-align: center;
+      padding: 30px 0;
+      position: relative;
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+
+    .header:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
+    }
+
+    .container {
       max-width: 800px;
       margin: 0 auto;
-      padding: 20px;
-      color: #333;
+      padding: 0 20px;
+      position: relative;
     }
+
     h1 {
-      text-align: center;
-      color: #2c3e50;
+      color: var(--text-color);
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      position: relative;
+      display: inline-block;
     }
+
+    h1:after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
+      border-radius: 2px;
+    }
+
+    .subtitle {
+      color: var(--text-color);
+      opacity: 0.8;
+      font-size: 1.1rem;
+      margin-top: 1rem;
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: var(--text-color);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 50%;
+      background-color: var(--background-color);
+      box-shadow: var(--card-shadow);
+      z-index: 100;
+      transition: transform 0.3s, background-color 0.3s;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .theme-toggle:hover {
+      transform: rotate(360deg);
+    }
+
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: none;
+      border: none;
+      color: var(--text-color);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 50%;
+      background-color: var(--background-color);
+      box-shadow: var(--card-shadow);
+      z-index: 100;
+      transition: transform 0.3s, background-color 0.3s;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .back-button:hover {
+      transform: translateX(-5px);
+    }
+
+    .timeline {
+      position: relative;
+      padding: 60px 0;
+      width: 100%;
+    }
+
+    .timeline:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: var(--timeline-width);
+      background-color: var(--primary-color);
+      transform: translateX(-50%);
+      border-radius: 2px;
+    }
+
     .version {
-      margin-bottom: 30px;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 15px;
+      position: relative;
+      margin-bottom: 60px;
+      width: 100%;
+      perspective: 1000px;
     }
+
+    .version:last-child {
+      margin-bottom: 0;
+    }
+
+    .version-inner {
+      background-color: var(--background-color);
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: var(--card-shadow);
+      position: relative;
+      width: calc(50% - 30px);
+      transform-style: preserve-3d;
+      transition: transform 0.6s, box-shadow 0.3s;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeIn 0.8s forwards;
+      animation-delay: calc(var(--delay) * 0.1s);
+    }
+
+    .version-inner:hover {
+      transform: translateY(-5px) rotateY(5deg);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+
+    .version:nth-child(odd) .version-inner {
+      margin-left: auto;
+    }
+
+    .version:nth-child(even) .version-inner {
+      margin-right: auto;
+    }
+
+    .version:before {
+      content: '';
+      position: absolute;
+      top: 25px;
+      width: var(--timeline-circle-size);
+      height: var(--timeline-circle-size);
+      background-color: var(--accent-color);
+      border-radius: 50%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+      box-shadow: 0 0 0 4px rgba(124, 77, 255, 0.2);
+      transition: background-color 0.3s, box-shadow 0.3s;
+    }
+
+    .version:hover:before {
+      background-color: var(--primary-color);
+      box-shadow: 0 0 0 6px rgba(74, 144, 226, 0.3);
+    }
+
+    .version:after {
+      content: '';
+      position: absolute;
+      top: 25px;
+      width: 30px;
+      height: 2px;
+      background-color: var(--primary-color);
+      z-index: 0;
+    }
+
+    .version:nth-child(odd):after {
+      left: 50%;
+    }
+
+    .version:nth-child(even):after {
+      right: 50%;
+    }
+
     .version h2 {
-      color: #3498db;
-      margin-bottom: 5px;
-    }
-    .version .date {
-      color: #7f8c8d;
-      font-size: 0.9em;
+      color: var(--primary-color);
       margin-bottom: 10px;
-      font-style: italic;
+      font-size: 1.5rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
+
+    .version .date {
+      color: var(--text-color);
+      opacity: 0.7;
+      font-size: 0.9em;
+      margin-bottom: 15px;
+      font-style: italic;
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 15px;
+      background-color: var(--secondary-color);
+    }
+
     .version ul {
       padding-left: 20px;
+      margin-top: 15px;
     }
+
     .version li {
-      margin-bottom: 5px;
+      margin-bottom: 10px;
+      position: relative;
+      padding-left: 5px;
     }
+
+    .version li:before {
+      content: '•';
+      color: var(--accent-color);
+      position: absolute;
+      left: -15px;
+      font-size: 1.2em;
+    }
+
+    .version-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8em;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+    }
+
     .current {
-      background-color: #f0f8ff;
-      border-radius: 5px;
-      padding: 10px;
+      position: relative;
     }
+
+    .current .version-inner {
+      border: 2px solid transparent;
+      border-image: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+      border-image-slice: 1;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    }
+
+    .current:before {
+      background-color: var(--primary-color);
+      box-shadow: 0 0 0 6px rgba(74, 144, 226, 0.3);
+    }
+
+    .current:after {
+      background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
+    }
+
+    .current .version-badge {
+      background: linear-gradient(135deg, #ff9d00, #ff6b6b);
+    }
+
+    .tooltip {
+      position: absolute;
+      background-color: var(--background-color);
+      padding: 10px 15px;
+      border-radius: 5px;
+      box-shadow: var(--card-shadow);
+      font-size: 0.9em;
+      top: -40px;
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      transform: translateY(10px);
+      pointer-events: none;
+      z-index: 10;
+      white-space: nowrap;
+    }
+
+    .version:hover .tooltip {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .version:nth-child(odd) .tooltip {
+      right: 0;
+    }
+
+    .version:nth-child(even) .tooltip {
+      left: 0;
+    }
+
     .loading {
       text-align: center;
       padding: 50px;
       font-size: 1.2em;
-      color: #7f8c8d;
+      color: var(--text-color);
+      opacity: 0.7;
     }
+
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid var(--secondary-color);
+      border-top-color: var(--primary-color);
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      animation: spin 1s infinite linear;
+    }
+
     .error {
       color: #e74c3c;
       text-align: center;
       padding: 20px;
       border: 1px solid #e74c3c;
       border-radius: 5px;
-      margin: 20px 0;
+      margin: 20px auto;
+      max-width: 80%;
+      background-color: rgba(231, 76, 60, 0.1);
+    }
+
+    .feature-type {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.8em;
+      margin-right: 8px;
+      font-weight: 600;
+    }
+
+    .feature-new {
+      background-color: rgba(46, 204, 113, 0.2);
+      color: #2ecc71;
+    }
+
+    .feature-improvement {
+      background-color: rgba(52, 152, 219, 0.2);
+      color: #3498db;
+    }
+
+    .feature-fix {
+      background-color: rgba(231, 76, 60, 0.2);
+      color: #e74c3c;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .timeline:before {
+        left: 30px;
+      }
+      
+      .version:before {
+        left: 30px;
+        transform: none;
+      }
+      
+      .version:after {
+        display: none;
+      }
+      
+      .version-inner {
+        width: calc(100% - 60px);
+        margin-left: 60px !important;
+      }
+
+      .tooltip {
+        left: 60px !important;
+        right: auto !important;
+      }
+
+      .header {
+        padding: 20px 0;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      .subtitle {
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .version-inner {
+        padding: 15px;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      .version h2 {
+        font-size: 1.2rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .theme-toggle, .back-button {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>輕小說閱讀器 - 更新日誌</h1>
-  
-  <div id="changelog">
-    <div class="loading">載入更新日誌中...</div>
+  <button class="back-button" onclick="window.history.back()">←</button>
+  <button class="theme-toggle" onclick="toggleTheme()">🌞</button>
+
+  <div class="header">
+    <div class="container">
+      <h1>輕小說閱讀器</h1>
+      <p class="subtitle">持續精進的應用，為您帶來更好的閱讀體驗</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div id="changelog">
+      <div class="loading">
+        <div class="loading-spinner"></div>
+        <p>載入更新日誌中...</p>
+      </div>
+    </div>
   </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      // 檢查並設置主題
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      updateThemeToggle(savedTheme);
+
       // 獲取更新日誌數據
       fetch('version.json')
         .then(response => {
@@ -85,55 +518,133 @@
         });
     });
 
+    function updateThemeToggle(theme) {
+      const toggleBtn = document.querySelector('.theme-toggle');
+      if (theme === 'dark') {
+        toggleBtn.textContent = '🌜';
+      } else {
+        toggleBtn.textContent = '🌞';
+      }
+    }
+
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      
+      updateThemeToggle(newTheme);
+    }
+
+    function getChangeTypeLabel(change) {
+      if (typeof change !== 'string') return '';
+      
+      const lowerChange = change.toLowerCase();
+      
+      if (lowerChange.includes('新增') || lowerChange.includes('新功能') || lowerChange.includes('添加')) {
+        return '<span class="feature-type feature-new">新增</span>';
+      } else if (lowerChange.includes('優化') || lowerChange.includes('改進') || lowerChange.includes('提升')) {
+        return '<span class="feature-type feature-improvement">優化</span>';
+      } else if (lowerChange.includes('修復') || lowerChange.includes('修正') || lowerChange.includes('解決')) {
+        return '<span class="feature-type feature-fix">修復</span>';
+      }
+      
+      return '';
+    }
+
+    function formatVersionDate(dateStr) {
+      if (!dateStr) return '';
+      
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      try {
+        const date = new Date(dateStr);
+        return date.toLocaleDateString('zh-TW', options);
+      } catch (e) {
+        return dateStr;
+      }
+    }
+
     function displayChangelog(data) {
       const changelogDiv = document.getElementById('changelog');
       
       // 清空載入提示
       changelogDiv.innerHTML = '';
       
+      // 創建時間線元素
+      const timelineDiv = document.createElement('div');
+      timelineDiv.className = 'timeline';
+      
       // 添加所有版本信息
       if (data.history && Array.isArray(data.history)) {
         data.history.forEach((version, index) => {
           const versionDiv = document.createElement('div');
           versionDiv.className = index === 0 ? 'version current' : 'version';
+          versionDiv.style.setProperty('--delay', index);
           
+          // 創建版本內部容器
+          const versionInner = document.createElement('div');
+          versionInner.className = 'version-inner';
+
+          // 添加工具提示
+          const tooltip = document.createElement('div');
+          tooltip.className = 'tooltip';
+          tooltip.textContent = `發布於 ${formatVersionDate(version.date)}`;
+          versionInner.appendChild(tooltip);
+          
+          // 版本標題
           const versionTitle = document.createElement('h2');
-          versionTitle.textContent = `版本 ${version.version}`;
-          versionDiv.appendChild(versionTitle);
+          
+          const versionNum = document.createElement('span');
+          versionNum.textContent = `版本 ${version.version}`;
+          versionTitle.appendChild(versionNum);
+          
+          const versionBadge = document.createElement('span');
+          versionBadge.className = 'version-badge';
+          versionBadge.textContent = index === 0 ? '最新版本' : '舊版本';
+          versionTitle.appendChild(versionBadge);
+          
+          versionInner.appendChild(versionTitle);
           
           if (version.date) {
             const dateDiv = document.createElement('div');
             dateDiv.className = 'date';
-            dateDiv.textContent = version.date;
-            versionDiv.appendChild(dateDiv);
+            dateDiv.textContent = formatVersionDate(version.date);
+            versionInner.appendChild(dateDiv);
           }
           
           if (version.changes) {
             const changesList = document.createElement('ul');
             
-            // 如果 changes 是字符串，則添加為單個項目
+            // 如果 changes 是字符串
             if (typeof version.changes === 'string') {
               const changeItem = document.createElement('li');
-              changeItem.textContent = version.changes;
+              const typeLabel = getChangeTypeLabel(version.changes);
+              changeItem.innerHTML = typeLabel + version.changes;
               changesList.appendChild(changeItem);
             } 
-            // 如果 changes 是數組，則添加多個項目
+            // 如果 changes 是数组
             else if (Array.isArray(version.changes)) {
               version.changes.forEach(change => {
                 const changeItem = document.createElement('li');
-                changeItem.textContent = change;
+                const typeLabel = getChangeTypeLabel(change);
+                changeItem.innerHTML = typeLabel + change;
                 changesList.appendChild(changeItem);
               });
             }
             
-            versionDiv.appendChild(changesList);
+            versionInner.appendChild(changesList);
           }
           
-          changelogDiv.appendChild(versionDiv);
+          versionDiv.appendChild(versionInner);
+          timelineDiv.appendChild(versionDiv);
         });
       } else {
         changelogDiv.innerHTML = '<div class="error">更新日誌數據格式不正確</div>';
+        return;
       }
+      
+      changelogDiv.appendChild(timelineDiv);
     }
   </script>
 </body>
