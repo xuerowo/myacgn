@@ -215,11 +215,21 @@
       width: calc(50% - 30px);
       transform-style: preserve-3d;
       transition: transform 0.6s, box-shadow 0.3s;
-      opacity: 0;
-      transform: translateY(30px);
-      animation: fadeIn 0.8s forwards;
-      animation-delay: calc(var(--delay) * 0.1s);
+      opacity: 1;
+      transform: translateY(0);
       backface-visibility: hidden;
+      animation: simpleAppear 0.5s ease-out;
+    }
+
+    @keyframes simpleAppear {
+      from {
+        opacity: 0.5;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .version-inner:hover {
@@ -591,13 +601,6 @@
       pointer-events: none;
     }
 
-    @keyframes fadeIn {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
     @keyframes spin {
       to {
         transform: rotate(360deg);
@@ -719,23 +722,49 @@
       // 初始化粒子背景
       initParticles(savedTheme);
 
-      // 獲取更新日誌數據
-      fetch('version.json')
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('無法加載更新日誌數據');
-          }
-          return response.json();
-        })
-        .then(data => {
-          displayChangelog(data);
+      // 首先檢查文件是否存在
+      checkFileExists('version.json').then(exists => {
+        if (!exists) {
+          console.warn('version.json 文件不存在，使用默認數據');
+          displayChangelog({
+            history: [{
+              version: '1.0.0',
+              date: new Date().toISOString().split('T')[0],
+              changes: ['初始版本發布']
+            }]
+          });
           // 初始化 3D 效果
           setTimeout(initTiltEffect, 500);
-        })
-        .catch(error => {
-          const changelogDiv = document.getElementById('changelog');
-          changelogDiv.innerHTML = `<div class="error">加載更新日誌時出錯: ${error.message}</div>`;
-        });
+          return;
+        }
+        
+        // 文件存在，嘗試加載
+        fetch('version.json')
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('無法加載更新日誌數據');
+            }
+            return response.json();
+          })
+          .then(data => {
+            displayChangelog(data);
+            // 初始化 3D 效果
+            setTimeout(initTiltEffect, 500);
+          })
+          .catch(error => {
+            console.error('加載更新日誌時出錯:', error);
+            // 出錯時顯示預設數據
+            displayChangelog({
+              history: [{
+                version: '1.0.0',
+                date: new Date().toISOString().split('T')[0],
+                changes: ['初始版本發布']
+              }]
+            });
+            // 初始化 3D 效果
+            setTimeout(initTiltEffect, 500);
+          });
+      });
     });
 
     function initTiltEffect() {
@@ -936,93 +965,109 @@
       timelineDiv.className = 'timeline';
       
       // 添加所有版本信息
-      if (data.history && Array.isArray(data.history)) {
-        // 確保顯示版本，即使陣列為空也創建預設版本
-        if (data.history.length === 0) {
-          // 添加預設版本
-          data.history.push({
-            version: '1.0.0',
-            date: new Date().toISOString().split('T')[0],
-            changes: ['初始版本發布']
-          });
-        }
-        
-        data.history.forEach((version, index) => {
-          const versionDiv = document.createElement('div');
-          // 強制第一個項目為最新版本
-          versionDiv.className = index === 0 ? 'version current' : 'version';
-          versionDiv.style.setProperty('--delay', index);
-          
-          // 添加版本序號
-          const versionCount = document.createElement('div');
-          versionCount.className = 'version-count';
-          versionCount.textContent = index + 1;
-          versionDiv.appendChild(versionCount);
-          
-          // 創建版本內部容器
-          const versionInner = document.createElement('div');
-          versionInner.className = 'version-inner';
-
-          // 添加3D傾斜效果背景
-          const tiltBg = document.createElement('div');
-          tiltBg.className = 'tilt-bg';
-          versionInner.appendChild(tiltBg);
-
-          // 添加版本日期作為靜態內容而不是懸停提示
-          if (version.date) {
-            const dateDiv = document.createElement('div');
-            dateDiv.className = 'date';
-            dateDiv.textContent = formatVersionDate(version.date);
-            versionInner.appendChild(dateDiv);
+      let versionsAdded = false; // 跟踪是否添加了任何版本
+      
+      try {
+        if (data && data.history && Array.isArray(data.history)) {
+          // 確保顯示版本，即使陣列為空也創建預設版本
+          if (data.history.length === 0) {
+            // 添加預設版本
+            data.history.push({
+              version: '1.0.0',
+              date: new Date().toISOString().split('T')[0],
+              changes: ['初始版本發布']
+            });
           }
           
-          // 版本標題
-          const versionTitle = document.createElement('h2');
-          
-          const versionNum = document.createElement('span');
-          versionNum.textContent = `版本 ${version.version}`;
-          versionTitle.appendChild(versionNum);
-          
-          const versionBadge = document.createElement('span');
-          versionBadge.className = 'version-badge';
-          versionBadge.textContent = index === 0 ? '最新版本' : '舊版本';
-          versionTitle.appendChild(versionBadge);
-          
-          versionInner.appendChild(versionTitle);
-          
-          if (version.changes) {
-            const changesList = document.createElement('ul');
+          data.history.forEach((version, index) => {
+            const versionDiv = document.createElement('div');
+            // 強制第一個項目為最新版本
+            versionDiv.className = index === 0 ? 'version current' : 'version';
             
-            // 如果 changes 是字符串
-            if (typeof version.changes === 'string') {
-              const changeItem = document.createElement('li');
-              const typeLabel = getChangeTypeLabel(version.changes);
-              changeItem.innerHTML = typeLabel + version.changes;
-              changesList.appendChild(changeItem);
-            } 
-            // 如果 changes 是数组
-            else if (Array.isArray(version.changes)) {
-              version.changes.forEach(change => {
-                const changeItem = document.createElement('li');
-                const typeLabel = getChangeTypeLabel(change);
-                changeItem.innerHTML = typeLabel + change;
-                changesList.appendChild(changeItem);
-              });
+            // 添加版本序號
+            const versionCount = document.createElement('div');
+            versionCount.className = 'version-count';
+            versionCount.textContent = index + 1;
+            versionDiv.appendChild(versionCount);
+            
+            // 創建版本內部容器
+            const versionInner = document.createElement('div');
+            versionInner.className = 'version-inner';
+            versionInner.style.opacity = '1'; // 直接設置樣式確保可見
+
+            // 添加3D傾斜效果背景
+            const tiltBg = document.createElement('div');
+            tiltBg.className = 'tilt-bg';
+            versionInner.appendChild(tiltBg);
+
+            // 添加版本日期作為靜態內容
+            if (version.date) {
+              const dateDiv = document.createElement('div');
+              dateDiv.className = 'date';
+              dateDiv.textContent = formatVersionDate(version.date);
+              versionInner.appendChild(dateDiv);
             }
             
-            versionInner.appendChild(changesList);
-          }
-          
-          versionDiv.appendChild(versionInner);
-          timelineDiv.appendChild(versionDiv);
-        });
-      } else {
-        // 如果data.history不存在或不是陣列，提供一個預設版本
+            // 版本標題
+            const versionTitle = document.createElement('h2');
+            
+            const versionNum = document.createElement('span');
+            versionNum.textContent = `版本 ${version.version}`;
+            versionTitle.appendChild(versionNum);
+            
+            const versionBadge = document.createElement('span');
+            versionBadge.className = 'version-badge';
+            versionBadge.textContent = index === 0 ? '最新版本' : '舊版本';
+            versionTitle.appendChild(versionBadge);
+            
+            versionInner.appendChild(versionTitle);
+            
+            if (version.changes) {
+              const changesList = document.createElement('ul');
+              
+              // 如果 changes 是字符串
+              if (typeof version.changes === 'string') {
+                const changeItem = document.createElement('li');
+                const typeLabel = getChangeTypeLabel(version.changes);
+                changeItem.innerHTML = typeLabel + version.changes;
+                changesList.appendChild(changeItem);
+              } 
+              // 如果 changes 是数组
+              else if (Array.isArray(version.changes)) {
+                version.changes.forEach(change => {
+                  const changeItem = document.createElement('li');
+                  const typeLabel = getChangeTypeLabel(change);
+                  changeItem.innerHTML = typeLabel + change;
+                  changesList.appendChild(changeItem);
+                });
+              }
+              
+              versionInner.appendChild(changesList);
+            }
+            
+            versionDiv.appendChild(versionInner);
+            timelineDiv.appendChild(versionDiv);
+            versionsAdded = true;
+          });
+        }
+      } catch (error) {
+        console.error('處理版本數據時出錯:', error);
+      }
+      
+      // 如果沒有添加任何版本，創建一個預設版本
+      if (!versionsAdded) {
+        console.log('創建預設版本卡片');
         const versionDiv = document.createElement('div');
         versionDiv.className = 'version current';
         
+        const versionCount = document.createElement('div');
+        versionCount.className = 'version-count';
+        versionCount.textContent = '1';
+        versionDiv.appendChild(versionCount);
+        
         const versionInner = document.createElement('div');
         versionInner.className = 'version-inner';
+        versionInner.style.opacity = '1'; // 確保可見
         
         const versionTitle = document.createElement('h2');
         versionTitle.innerHTML = '<span>版本 1.0.0</span><span class="version-badge">最新版本</span>';
@@ -1045,10 +1090,32 @@
       
       changelogDiv.appendChild(timelineDiv);
       
-      // 確保第一個版本有特殊樣式，即使沒有在迴圈中正確設置
-      const firstVersion = timelineDiv.querySelector('.version');
-      if (firstVersion) {
-        firstVersion.classList.add('current');
+      // 使用更可靠的方法確保第一個版本有特殊樣式
+      const allVersions = timelineDiv.querySelectorAll('.version');
+      if (allVersions.length > 0) {
+        // 移除所有current類別
+        allVersions.forEach(v => v.classList.remove('current'));
+        // 確保第一個版本有current類別
+        allVersions[0].classList.add('current');
+      }
+    }
+
+    // 添加預載函數以檢查version.json是否存在
+    function checkFileExists(url) {
+      return fetch(url, { method: 'HEAD' })
+        .then(response => response.ok)
+        .catch(() => false);
+    }
+
+    function initTiltEffect() {
+      if (window.innerWidth > 768) {
+        VanillaTilt.init(document.querySelectorAll(".version-inner"), {
+          max: 5,
+          speed: 400,
+          glare: true,
+          "max-glare": 0.2,
+          scale: 1.02
+        });
       }
     }
   </script>
