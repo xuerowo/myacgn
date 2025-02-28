@@ -20,6 +20,8 @@
       --particle-color-alt: rgba(124, 77, 255, 0.4);
       --typewriter-speed: 4s; /* 打字機基本速度，從2s增加到4s */
       --typewriter-char-count: 1; /* 字符數量，將由JS動態設置 */
+      --typewriter-min-speed: 40ms; /* 最小打字速度 */
+      --typewriter-max-speed: 200ms; /* 最大打字速度 */
     }
 
     [data-theme="dark"] {
@@ -133,14 +135,8 @@
       overflow: hidden;
       white-space: nowrap;
       border-right: 2px solid var(--primary-color);
-      animation: typing calc(var(--typewriter-speed) * var(--typewriter-char-count) / 12) steps(var(--typewriter-char-count), end) forwards,
-                blink-caret 0.75s step-end infinite;
       max-width: 0;
-    }
-
-    @keyframes typing {
-      from { max-width: 0 }
-      to { max-width: 100% }
+      /* 不再使用一個統一的動畫，將通過JS動態添加 */
     }
 
     @keyframes blink-caret {
@@ -741,15 +737,68 @@
       // 設置打字機效果的字符數量
       const typewriterEl = document.querySelector('.typewriter');
       if (typewriterEl) {
-        const charCount = typewriterEl.textContent.length;
+        const text = typewriterEl.textContent;
+        const charCount = text.length;
         document.documentElement.style.setProperty('--typewriter-char-count', charCount);
         
-        // 動畫結束後確保文字可見
-        typewriterEl.addEventListener('animationend', function(e) {
-          if (e.animationName === 'typing') {
-            this.style.maxWidth = '100%';
+        // 新的打字機效果實現
+        typewriterEl.textContent = ''; // 清空文本，準備重新逐個添加
+        typewriterEl.style.borderRight = '2px solid var(--primary-color)';
+        typewriterEl.style.animation = 'blink-caret 0.75s step-end infinite';
+        
+        let i = 0;
+        function typeNextChar() {
+          if (i < text.length) {
+            // 添加下一個字符
+            typewriterEl.textContent += text.charAt(i);
+            i++;
+            
+            // 計算寬度以適應已輸入的文本
+            typewriterEl.style.maxWidth = typewriterEl.scrollWidth + 'px';
+            
+            // 隨機延遲，模擬人類打字速度變化
+            const minDelay = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--typewriter-min-speed'));
+            const maxDelay = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--typewriter-max-speed'));
+            
+            // 更加自然的延遲計算
+            let delay;
+            
+            // 在標點符號後增加更長的停頓
+            const punctuation = [',', '.', '，', '。', '！', '？', '；', '：'];
+            if (punctuation.includes(text.charAt(i-1))) {
+              delay = Math.random() * (maxDelay - minDelay) + maxDelay; // 較長延遲
+            } else if (i < text.length && text.charAt(i-1) === ' ' && text.charAt(i) !== ' ') {
+              // 單詞之間的停頓
+              delay = Math.random() * (maxDelay - minDelay) + minDelay * 1.5;
+            } else {
+              // 普通字符之間的延遲
+              delay = Math.random() * (maxDelay - minDelay) + minDelay;
+            }
+            
+            // 字符組合的更自然的處理（如對於中文字符）
+            if (i < text.length && isCJK(text.charAt(i-1)) && isCJK(text.charAt(i))) {
+              delay = delay * 0.8; // 中文字符間的延遲稍短
+            }
+            
+            setTimeout(typeNextChar, delay);
+          } else {
+            // 完成後保持光標閃爍
+            typewriterEl.style.borderRight = '2px solid var(--primary-color)';
           }
-        });
+        }
+        
+        // 判斷是否為中日韓文字
+        function isCJK(char) {
+          const code = char.charCodeAt(0);
+          return (
+            (code >= 0x4E00 && code <= 0x9FFF) || // CJK統一表意文字
+            (code >= 0x3400 && code <= 0x4DBF) || // CJK統一表意文字擴展A
+            (code >= 0xAC00 && code <= 0xD7AF)    // 韓文音節
+          );
+        }
+        
+        // 延遲一下再開始打字
+        setTimeout(typeNextChar, 500);
       }
 
       // 檢查並設置主題
@@ -1146,18 +1195,6 @@
       return fetch(url, { method: 'HEAD' })
         .then(response => response.ok)
         .catch(() => false);
-    }
-
-    function initTiltEffect() {
-      if (window.innerWidth > 768) {
-        VanillaTilt.init(document.querySelectorAll(".version-inner"), {
-          max: 5,
-          speed: 400,
-          glare: true,
-          "max-glare": 0.2,
-          scale: 1.02
-        });
-      }
     }
   </script>
 </body>
