@@ -845,6 +845,12 @@
       animation: fadeInUp 0.6s ease forwards;
     }
 
+    /* 為了確保卡片初始可見 */
+    .failsafe-visible {
+      opacity: 1 !important;
+      transform: translateY(0) !important;
+    }
+
     @keyframes fadeInUp {
       to {
         opacity: 1;
@@ -905,6 +911,21 @@
       // 初始化移入動畫
       initScrollAnimation();
 
+      // 創建備用數據以防 fetch 失敗
+      const fallbackData = {
+        history: [
+          {
+            version: "1.0.0",
+            date: new Date().toISOString().split('T')[0],
+            changes: [
+              "初始版本發布",
+              "新增基本閱讀功能",
+              "支援多種字體設置"
+            ]
+          }
+        ]
+      };
+
       // 獲取更新日誌數據
       fetch('version.json')
         .then(response => {
@@ -914,15 +935,24 @@
           return response.json();
         })
         .then(data => {
-          displayChangelog(data);
+          if (!data || !data.history || !Array.isArray(data.history) || data.history.length === 0) {
+            console.warn('更新日誌數據格式不正確或為空，使用預設數據');
+            displayChangelog(fallbackData);
+          } else {
+            displayChangelog(data);
+          }
           // 初始化 3D 效果
           setTimeout(initTiltEffect, 500);
           // 綁定展開事件
           bindExpandEvents();
         })
         .catch(error => {
-          const changelogDiv = document.getElementById('changelog');
-          changelogDiv.innerHTML = `<div class="error">加載更新日誌時出錯: ${error.message}</div>`;
+          console.error('加載更新日誌時出錯:', error);
+          // 使用備用數據顯示預設卡片
+          displayChangelog(fallbackData);
+          // 同樣初始化 3D 效果和綁定事件
+          setTimeout(initTiltEffect, 500);
+          bindExpandEvents();
         });
     });
 
@@ -1180,22 +1210,15 @@
       timelineDiv.className = 'timeline parallax-scroll';
       timelineDiv.dataset.parallaxSpeed = '0.05';
       
+      // 變數用於跟蹤是否已建立版本卡片
+      let versionCreated = false;
+      
       // 添加所有版本信息
-      if (data.history && Array.isArray(data.history)) {
-        // 確保顯示版本，即使陣列為空也創建預設版本
-        if (data.history.length === 0) {
-          // 添加預設版本
-          data.history.push({
-            version: '1.0.0',
-            date: new Date().toISOString().split('T')[0],
-            changes: ['初始版本發布']
-          });
-        }
-        
+      if (data && data.history && Array.isArray(data.history) && data.history.length > 0) {
         data.history.forEach((version, index) => {
           const versionDiv = document.createElement('div');
           // 強制第一個項目為最新版本
-          versionDiv.className = index === 0 ? 'version current animate-in' : 'version animate-in';
+          versionDiv.className = index === 0 ? 'version current animate-in failsafe-visible' : 'version animate-in failsafe-visible';
           versionDiv.style.setProperty('--delay', index);
           
           // 添加版本序號
@@ -1296,11 +1319,14 @@
           
           versionDiv.appendChild(versionInner);
           timelineDiv.appendChild(versionDiv);
+          versionCreated = true;
         });
-      } else {
-        // 如果data.history不存在或不是陣列，提供一個預設版本
+      }
+      
+      // 如果沒有成功創建任何版本卡片，創建一個預設卡片
+      if (!versionCreated) {
         const versionDiv = document.createElement('div');
-        versionDiv.className = 'version current animate-in';
+        versionDiv.className = 'version current animate-in failsafe-visible';
         
         const versionInner = document.createElement('div');
         versionInner.className = 'version-inner';
@@ -1341,6 +1367,13 @@
       if (firstVersion) {
         firstVersion.classList.add('current');
       }
+      
+      // 強制讓所有卡片立即可見
+      setTimeout(function() {
+        document.querySelectorAll('.version').forEach(el => {
+          el.classList.add('failsafe-visible');
+        });
+      }, 100);
     }
   </script>
 </body>
