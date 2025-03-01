@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="透過回答生活方式和性格問題，找出最適合你的遊戲職業！每次測驗從20個精心設計的問題中隨機選擇8題，準確分析你的特質並匹配16種不同的職業角色。">
+    <meta name="keywords" content="遊戲職業,性格測試,RPG角色,職業配對,角色適配性,戰士,法師,盜賊,治療者,性格分析,遊戲角色,命定職業">
+    <meta name="author" content="遊戲職業鑑定師">
+    <meta name="theme-color" content="#6a3de8">
+    <title>遊戲職業配對系統</title>
+    <style>
+        :root {
+            --primary: #6a3de8;
+            --primary-light: #9d7ff2;
+            --primary-dark: #4e2ba6;
+            --secondary: #ff7eee;
+            --text: #2c3e50;
+            --background: #f7f9fc;
+            --card-bg: #ffffff;
+            --card-shadow: 0 10px 20px rgba(106, 61, 232, 0.1);
+            --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+        }
+        
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 0 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 0;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--primary-dark);
+            position: relative;
+            display: inline-block;
+        }
+        
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--gradient);
+            border-radius: 2px;
+        }
+        
+        .description {
+            font-size: 1.1rem;
+            color: #5d6778;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(106, 61, 232, 0.15);
+        }
+        
+        .question {
+            margin-bottom: 20px;
+        }
+        
+        .question h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--primary-dark);
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .option {
+            background: #f1f5f9;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .option:hover {
+            border-color: var(--primary-light);
+            background: #f8f7fe;
+        }
+        
+        .option.selected {
+            border-color: var(--primary);
+            background: rgba(106, 61, 232, 0.05);
+        }
+        
+        .option.selected::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--primary);
+        }
+        
+        .option p {
+            font-weight: 500;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        button {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(106, 61, 232, 0.2);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(106, 61, 232, 0.3);
+        }
+        
+        button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        button.prev {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        button.prev:hover {
+            background: #f8f7fe;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            margin: 40px 0 30px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: var(--gradient);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .result-card {
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .result-title {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--primary-dark);
+        }
+        
+        .result-class {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 20px 0;
+            color: var(--primary);
+            text-shadow: 0 2px 10px rgba(106, 61, 232, 0.2);
+        }
+        
+        .result-description {
+            font-size: 1.1rem;
+            max-width: 550px;
+            margin: 0 auto 30px;
+        }
+        
+        .second-class {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 10px 0;
+            color: var(--primary-light);
+        }
+        
+        .second-description {
+            font-size: 1rem;
+            max-width: 500px;
+            margin: 0 auto 20px;
+            color: #5d6778;
+        }
+        
+        .result-traits {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .trait {
+            background: rgba(106, 61, 232, 0.1);
+            color: var(--primary);
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-weight: 500;
+        }
+        
+        .restart-btn {
+            margin-top: 20px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .options {
+                grid-template-columns: 1fr;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>尋找你的命定遊戲職業</h1>
+            <p class="description">不是每個人都適合成為英雄，但每個英雄都有適合的職業。透過回答一些關於生活和性格的問題，找出最適合你的遊戲職業吧！每次測驗都會從20個問題中隨機選擇8題，讓你的體驗更豐富多樣。</p>
+        </header>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <div id="questionContainer">
+            <!-- 問題將由JavaScript動態生成 -->
+        </div>
+        
+        <div class="navigation">
+            <button id="prevBtn" class="prev" disabled>上一題</button>
+            <button id="nextBtn">下一題</button>
+        </div>
+        
+        <div id="resultContainer" class="card result-card hidden">
+            <h2 class="result-title">根據你的個性，你最適合的職業是：</h2>
+            <div class="result-class" id="resultClass"></div>
+            <p class="result-description" id="resultDescription"></p>
+            
+            <h3>你的特質：</h3>
+            <div class="result-traits" id="resultTraits"></div>
+            
+            <button id="restartBtn" class="restart-btn">重新測驗</button>
+        </div>
+    </div>
+
+    <script>
+        // 所有可能的測驗問題
+        const allQuestions = [
+            {
+                id: 1,
+                text: "當你面對困難時，你通常會怎麼做？",
+                options: [
+                    { text: "直接面對，迎難而上", points: { warrior: 3, paladin: 2, berserker: 3, tank: 2 } },
+                    { text: "分析情況，制定策略", points: { mage: 3, strategist: 3, scholar: 2, ranger: 1 } },
+                    { text: "尋求他人協助，團隊解決", points: { healer: 3, bard: 2, summoner: 2, support: 3 } },
+                    { text: "迂迴應對，避開正面衝突", points: { rogue: 3, ninja: 2, hunter: 2, assassin: 3 } }
+                ]
+            },
+            {
+                id: 2,
+                text: "在社交場合中，你通常是什麼角色？",
+                options: [
+                    { text: "話題的中心，活躍氣氛", points: { bard: 3, paladin: 1, berserker: 2, warrior: 1 } },
+                    { text: "安靜的觀察者，少言多聽", points: { mage: 2, scholar: 3, ranger: 2, rogue: 2 } },
+                    { text: "照顧他人，確保大家都好", points: { healer: 3, support: 3, tank: 2, paladin: 2 } },
+                    { text: "獨立行動，偶爾加入對話", points: { assassin: 3, ninja: 3, hunter: 2, mage: 1 } }
+                ]
+            },
+            {
+                id: 3,
+                text: "在休閒時間，你最喜歡做什麼？",
+                options: [
+                    { text: "運動、健身或戶外活動", points: { warrior: 3, berserker: 2, ranger: 2, hunter: 2 } },
+                    { text: "閱讀、學習或研究新知識", points: { mage: 3, scholar: 3, strategist: 2, summoner: 1 } },
+                    { text: "與朋友相聚，分享生活", points: { bard: 3, healer: 2, support: 2, paladin: 1 } },
+                    { text: "獨處時光，發展個人興趣", points: { rogue: 2, ninja: 2, assassin: 3, mage: 2 } }
+                ]
+            },
+            {
+                id: 4,
+                text: "面對突發狀況，你的第一反應是？",
+                options: [
+                    { text: "立即採取行動解決問題", points: { warrior: 3, berserker: 3, tank: 2, paladin: 1 } },
+                    { text: "冷靜分析，尋找最佳解決方案", points: { strategist: 3, mage: 2, scholar: 3, ranger: 1 } },
+                    { text: "安撫他人情緒，穩定局面", points: { healer: 3, bard: 2, support: 3, summoner: 1 } },
+                    { text: "觀察情況，靈活應變", points: { rogue: 3, ninja: 3, hunter: 2, assassin: 2 } }
+                ]
+            },
+            {
+                id: 5,
+                text: "在團隊合作中，你傾向於扮演什麼角色？",
+                options: [
+                    { text: "領導者，指引方向", points: { warrior: 2, paladin: 3, strategist: 3, tank: 2 } },
+                    { text: "創意者，提供新點子", points: { mage: 3, scholar: 2, summoner: 3, bard: 2 } },
+                    { text: "支持者，確保團隊和諧", points: { healer: 3, support: 3, bard: 2, scholar: 1 } },
+                    { text: "執行者，專注完成自己的部分", points: { assassin: 3, rogue: 2, hunter: 3, ninja: 2 } }
+                ]
+            },
+            {
+                id: 6,
+                text: "你如何看待規則和傳統？",
+                options: [
+                    { text: "尊重並嚴格遵守", points: { paladin: 3, tank: 2, support: 2, warrior: 1 } },
+                    { text: "理解但願意質疑和改進", points: { mage: 2, scholar: 3, strategist: 2, summoner: 1 } },
+                    { text: "視情況而定，保持彈性", points: { bard: 3, healer: 2, ranger: 2, hunter: 1 } },
+                    { text: "傾向打破或繞過不合理的規則", points: { rogue: 3, ninja: 3, berserker: 2, assassin: 3 } }
+                ]
+            },
+            {
+                id: 7,
+                text: "當你需要做重要決定時，你會？",
+                options: [
+                    { text: "根據直覺和經驗快速決定", points: { warrior: 2, berserker: 3, hunter: 2, assassin: 2 } },
+                    { text: "收集資訊，理性分析利弊", points: { mage: 3, scholar: 3, strategist: 3, ranger: 1 } },
+                    { text: "考慮決定對他人的影響", points: { healer: 3, paladin: 2, support: 3, bard: 2 } },
+                    { text: "權衡風險與回報", points: { rogue: 3, ninja: 2, ranger: 2, summoner: 1 } }
+                ]
+            },
+            {
+                id: 8,
+                text: "你最重視什麼價值觀？",
+                options: [
+                    { text: "忠誠與榮譽", points: { warrior: 2, paladin: 3, tank: 3, berserker: 1 } },
+                    { text: "知識與智慧", points: { mage: 3, scholar: 3, strategist: 2, summoner: 2 } },
+                    { text: "和平與和諧", points: { healer: 3, support: 3, bard: 2, scholar: 1 } },
+                    { text: "自由與獨立", points: { rogue: 3, ninja: 2, assassin: 3, hunter: 3 } }
+                ]
+            },
+            {
+                id: 9,
+                text: "當你遇到挫折時，你的應對方式是？",
+                options: [
+                    { text: "堅持不懈，加倍努力", points: { warrior: 3, paladin: 2, tank: 3, berserker: 2 } },
+                    { text: "分析問題，尋找新方法", points: { mage: 3, strategist: 3, scholar: 2, summoner: 1 } },
+                    { text: "尋求支持，調整心態", points: { healer: 2, bard: 3, support: 3, ranger: 1 } },
+                    { text: "轉換目標，探索其他可能", points: { rogue: 3, ninja: 2, assassin: 2, hunter: 3 } }
+                ]
+            },
+            {
+                id: 10,
+                text: "你如何處理壓力？",
+                options: [
+                    { text: "運動或體力活動釋放壓力", points: { warrior: 3, berserker: 3, ranger: 2, hunter: 1 } },
+                    { text: "冥想或獨處思考", points: { mage: 3, scholar: 3, ninja: 1, summoner: 2 } },
+                    { text: "與朋友交流分享", points: { bard: 3, healer: 2, support: 3, paladin: 1 } },
+                    { text: "專注於解決問題的實際行動", points: { strategist: 3, rogue: 2, assassin: 2, tank: 2 } }
+                ]
+            },
+            {
+                id: 11,
+                text: "你認為自己最突出的優點是？",
+                options: [
+                    { text: "勇氣和決斷力", points: { warrior: 3, berserker: 3, paladin: 2, tank: 1 } },
+                    { text: "智慧和洞察力", points: { mage: 3, scholar: 3, strategist: 3, summoner: 2 } },
+                    { text: "同理心和包容心", points: { healer: 3, support: 3, bard: 2, paladin: 1 } },
+                    { text: "靈活性和適應能力", points: { rogue: 3, ninja: 3, ranger: 2, hunter: 2 } }
+                ]
+            },
+            {
+                id: 12,
+                text: "在與他人發生衝突時，你通常會？",
+                options: [
+                    { text: "直接表達不滿，尋求解決", points: { warrior: 3, berserker: 3, paladin: 1, tank: 2 } },
+                    { text: "理性溝通，尋求共識", points: { strategist: 3, scholar: 2, mage: 3, ranger: 1 } },
+                    { text: "傾聽對方，尋求和解", points: { healer: 3, bard: 2, support: 3, summoner: 1 } },
+                    { text: "避開衝突，獨自冷靜", points: { ninja: 3, rogue: 3, assassin: 2, hunter: 2 } }
+                ]
+            },
+            {
+                id: 13,
+                text: "你喜歡什麼類型的書籍或電影？",
+                options: [
+                    { text: "充滿動作和冒險的故事", points: { warrior: 3, berserker: 3, hunter: 2, tank: 1 } },
+                    { text: "科幻、奇幻或哲學類作品", points: { mage: 3, scholar: 3, summoner: 3, strategist: 2 } },
+                    { text: "感人的劇情和人物成長", points: { healer: 3, bard: 3, support: 2, paladin: 2 } },
+                    { text: "懸疑、驚悚或解謎類型", points: { rogue: 3, ninja: 3, assassin: 3, ranger: 1 } }
+                ]
+            },
+            {
+                id: 14,
+                text: "面對新環境或新挑戰，你的態度是？",
+                options: [
+                    { text: "熱情接受，勇於嘗試", points: { berserker: 3, warrior: 2, paladin: 2, bard: 2 } },
+                    { text: "謹慎評估，充分準備", points: { strategist: 3, scholar: 3, mage: 2, summoner: 1 } },
+                    { text: "保持開放，逐步適應", points: { healer: 2, support: 2, ranger: 3, tank: 2 } },
+                    { text: "觀察情況，靈活應對", points: { ninja: 3, rogue: 3, assassin: 2, hunter: 2 } }
+                ]
+            },
+            {
+                id: 15,
+                text: "你如何看待失敗？",
+                options: [
+                    { text: "視為成長的機會，不斷嘗試", points: { warrior: 3, berserker: 2, paladin: 2, tank: 2 } },
+                    { text: "分析原因，改進方法", points: { mage: 3, scholar: 3, strategist: 3, ranger: 1 } },
+                    { text: "接受並尋求支持，重新開始", points: { healer: 3, bard: 2, support: 3, summoner: 1 } },
+                    { text: "調整目標，尋找替代路徑", points: { rogue: 3, ninja: 2, assassin: 3, hunter: 2 } }
+                ]
+            },
+            {
+                id: 16,
+                text: "你對未來的規劃傾向於？",
+                options: [
+                    { text: "有明確目標，堅定前進", points: { warrior: 3, paladin: 3, tank: 2, strategist: 2 } },
+                    { text: "保持開放，根據興趣探索", points: { mage: 3, scholar: 3, summoner: 2, bard: 1 } },
+                    { text: "尋找能幫助他人的機會", points: { healer: 3, support: 3, paladin: 2, bard: 1 } },
+                    { text: "靈活應變，把握當下機會", points: { rogue: 3, ninja: 3, hunter: 2, assassin: 2 } }
+                ]
+            },
+            {
+                id: 17,
+                text: "在團隊中，你最受不了什麼？",
+                options: [
+                    { text: "缺乏行動力和決斷力", points: { warrior: 3, berserker: 3, paladin: 2, assassin: 1 } },
+                    { text: "不講邏輯，拒絕理性討論", points: { mage: 3, scholar: 3, strategist: 3, summoner: 1 } },
+                    { text: "自私自利，不顧他人感受", points: { healer: 3, support: 3, paladin: 2, bard: 2 } },
+                    { text: "過度控制，缺乏彈性", points: { rogue: 3, ninja: 3, hunter: 2, ranger: 2 } }
+                ]
+            },
+            {
+                id: 18,
+                text: "你認為生活中最重要的是什麼？",
+                options: [
+                    { text: "實現目標，證明自己", points: { warrior: 3, berserker: 2, paladin: 2, tank: 1 } },
+                    { text: "不斷學習，增長見識", points: { mage: 3, scholar: 3, strategist: 2, summoner: 2 } },
+                    { text: "建立深厚的人際關係", points: { healer: 3, bard: 3, support: 3, paladin: 1 } },
+                    { text: "保持自由，追求獨立", points: { rogue: 3, ninja: 2, assassin: 3, hunter: 3 } }
+                ]
+            },
+            {
+                id: 19,
+                text: "遇到不確定的情況，你會如何做決定？",
+                options: [
+                    { text: "相信直覺，勇敢前進", points: { warrior: 3, berserker: 3, hunter: 2, paladin: 1 } },
+                    { text: "收集資訊，分析比較", points: { mage: 3, scholar: 3, strategist: 3, summoner: 1 } },
+                    { text: "徵求他人意見，集思廣益", points: { healer: 2, support: 3, bard: 3, tank: 1 } },
+                    { text: "保留選項，觀察形勢", points: { rogue: 3, ninja: 3, ranger: 2, assassin: 2 } }
+                ]
+            },
+            {
+                id: 20,
+                text: "你如何定義成功？",
+                options: [
+                    { text: "達成目標，克服挑戰", points: { warrior: 3, berserker: 2, tank: 3, paladin: 2 } },
+                    { text: "獲得知識，不斷成長", points: { mage: 3, scholar: 3, strategist: 2, summoner: 2 } },
+                    { text: "幫助他人，建立連結", points: { healer: 3, support: 3, bard: 2, paladin: 1 } },
+                    { text: "保持獨立，追求自由", points: { rogue: 3, assassin: 3, ninja: 2, hunter: 3 } }
+                ]
+            }
+        ];
+        
+        // 隨機選擇8個問題
+        function getRandomQuestions() {
+            // 複製問題陣列以避免修改原始資料
+            const shuffled = [...allQuestions];
+            
+            // Fisher-Yates 洗牌算法
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            
+            // 取前8個問題
+            return shuffled.slice(0, 8);
+        }
+        
+        // 測驗問題 (隨機選擇8個)
+        const questions = getRandomQuestions();
+
+        // 職業描述
+        const classDescriptions = {
+            warrior: {
+                name: "戰士",
+                description: "你是團隊的前線，勇敢無畏，直面挑戰。你喜歡採取行動而非空談，並且擁有堅韌的意志力。在現實生活中，你可能是那個願意為朋友兩肋插刀，挺身而出的人。",
+                traits: ["勇敢", "堅決", "實際", "直接", "忠誠"]
+            },
+            mage: {
+                name: "法師",
+                description: "你思維敏捷，求知若渴，總是尋求了解事物的本質。你擅長分析複雜問題並找到創新解決方案。在現實生活中，你可能是朋友中的智者，喜歡鑽研和學習新事物。",
+                traits: ["聰明", "好奇", "創新", "分析型", "獨立思考"]
+            },
+            healer: {
+                name: "治療者",
+                description: "你天生具有同理心，總是能感受他人的需求並提供幫助。你的存在能使團隊更加和諧，並在困難時刻給予希望。在現實生活中，你可能是朋友的情緒支柱，總是願意傾聽和支持。",
+                traits: ["富有同情心", "善解人意", "支持型", "平靜", "關懷"]
+            },
+            rogue: {
+                name: "盜賊",
+                description: "你靈活多變，善於觀察，總能找到解決問題的非常規方法。你喜歡自由，不拘一格，常常能在危機中找到機會。在現實生活中，你可能是那個有創意，思考角度獨特的人。",
+                traits: ["靈活", "機智", "適應性強", "獨立", "觀察力敏銳"]
+            },
+            paladin: {
+                name: "聖騎士",
+                description: "你有強烈的正義感和道德標準，願意為信念而戰。你既有領導能力，又能照顧團隊成員。在現實生活中，你可能是那個堅持原則，為弱者發聲的人。",
+                traits: ["正義", "保護", "領導", "忠誠", "堅定"]
+            },
+            berserker: {
+                name: "狂戰士",
+                description: "你熱情如火，行動力強，面對挑戰時充滿激情。你不畏艱難，勇往直前，敢於冒險。在現實生活中，你可能是那個充滿活力，敢於挑戰自我的人。",
+                traits: ["熱情", "勇敢", "直接", "活力充沛", "冒險"]
+            },
+            ranger: {
+                name: "遊俠",
+                description: "你獨立自主，善於觀察環境並適應變化。你喜歡探索未知，享受自然和自由。在現實生活中，你可能是那個獨立自主，喜歡探索新地方的人。",
+                traits: ["觀察力強", "獨立", "適應性好", "實用主義", "平衡"]
+            },
+            assassin: {
+                name: "刺客",
+                description: "你精準專注，做事有條不紊且有明確目標。你喜歡獨立工作，善於在關鍵時刻發揮作用。在現實生活中，你可能是那個高效、專注，能夠迅速解決問題的人。",
+                traits: ["專注", "精準", "策略性", "獨立", "決斷力強"]
+            },
+            bard: {
+                name: "吟遊詩人",
+                description: "你善於表達，富有魅力，能夠連結不同的人。你喜歡分享故事和經驗，為團隊帶來歡樂和靈感。在現實生活中，你可能是那個社交能力強，能夠活躍氣氛的人。",
+                traits: ["有魅力", "表達能力強", "社交", "創意", "激勵人心"]
+            },
+            scholar: {
+                name: "學者",
+                description: "你熱愛知識，深思熟慮，總是尋求理解事物的本質。你擅長研究和分析，能夠提供深刻的見解。在現實生活中，你可能是那個博學多聞，願意分享知識的人。",
+                traits: ["博學", "思考型", "分析", "耐心", "求知"]
+            },
+            ninja: {
+                name: "忍者",
+                description: "你行動迅速，低調有效，善於觀察並把握時機。你適應性強，能在各種環境中生存和發揮。在現實生活中，你可能是那個做事高效，不張揚但總能達成目標的人。",
+                traits: ["敏捷", "機智", "適應性強", "細心", "戰略性"]
+            },
+            tank: {
+                name: "坦克",
+                description: "你堅韌可靠，願意為他人承擔責任和壓力。你是團隊的盾牌，保護他人不受傷害。在現實生活中，你可能是那個可靠穩定，朋友遇到困難時第一個站出來的人。",
+                traits: ["可靠", "堅強", "保護", "穩定", "犧牲精神"]
+            },
+            hunter: {
+                name: "獵人",
+                description: "你觀察力敏銳，追求目標時專注且有耐心。你喜歡獨立行動，善於適應各種環境。在現實生活中，你可能是那個目標明確，專注行動的人。",
+                traits: ["觀察力敏銳", "專注", "耐心", "自給自足", "實用"]
+            },
+            summoner: {
+                name: "召喚師",
+                description: "你有創造力和想像力，善於整合資源和力量。你喜歡探索未知領域，尋找新的可能性。在現實生活中，你可能是那個思維發散，能夠連結不同領域知識的人。",
+                traits: ["創造力", "協調能力", "適應性", "好奇心", "多才多藝"]
+            },
+            strategist: {
+                name: "策略家",
+                description: "你擅長規劃和分析，能夠看到更大的圖景。你喜歡制定計劃並指導團隊達成目標。在現實生活中，你可能是那個善於組織，能夠預見問題並提前解決的人。",
+                traits: ["思考型", "有遠見", "組織能力強", "分析", "決策型"]
+            },
+            support: {
+                name: "輔助者",
+                description: "你樂於助人，善於強化他人的能力。你從他人的成功中獲得滿足感，是團隊中不可或缺的一員。在現實生活中，你可能是那個默默付出，幫助他人成長的人。",
+                traits: ["支持型", "合作", "體貼", "調和", "可靠"]
+            }
+        };
+
+        // 初始化變數
+        let currentQuestionIndex = 0;
+        const userAnswers = [];
+        const classScores = {};
+
+        // 初始化所有職業的分數
+        Object.keys(classDescriptions).forEach(className => {
+            classScores[className] = 0;
+        });
+
+        // DOM元素
+        const questionContainer = document.getElementById('questionContainer');
+        const progressBar = document.getElementById('progressBar');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const resultContainer = document.getElementById('resultContainer');
+        const resultClass = document.getElementById('resultClass');
+        const resultDescription = document.getElementById('resultDescription');
+        const resultTraits = document.getElementById('resultTraits');
+        const restartBtn = document.getElementById('restartBtn');
+
+        // 顯示當前問題
+        function showQuestion(index) {
+            // 更新進度條
+            progressBar.style.width = `${((index + 1) / questions.length) * 100}%`;
+            
+            // 創建問題卡片
+            const question = questions[index];
+            const card = document.createElement('div');
+            card.className = 'card';
+            
+            const questionElement = document.createElement('div');
+            questionElement.className = 'question';
+            questionElement.innerHTML = `<h3>${question.text}</h3>`;
+            
+            const optionsElement = document.createElement('div');
+            optionsElement.className = 'options';
+            
+            // 隨機打亂選項順序
+            const shuffledOptions = [...question.options];
+            for (let i = shuffledOptions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledOptions[i], shuffledOptions[j]] = [shuffledOptions[j], shuffledOptions[i]];
+            }
+            
+            // 記錄原始選項索引到隨機選項的映射
+            const optionIndexMap = {};
+            shuffledOptions.forEach((option, shuffledIndex) => {
+                const originalIndex = question.options.findIndex(o => o.text === option.text);
+                optionIndexMap[shuffledIndex] = originalIndex;
+            });
+            
+            shuffledOptions.forEach((option, optionIndex) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.dataset.index = optionIndexMap[optionIndex]; // 保存原始選項索引
+                optionElement.innerHTML = `<p>${option.text}</p>`;
+                
+                // 如果之前選過這個選項，標記為已選
+                if (userAnswers[index] !== undefined && userAnswers[index] === parseInt(optionElement.dataset.index)) {
+                    optionElement.classList.add('selected');
+                }
+                
+                optionElement.addEventListener('click', () => {
+                    // 移除其他選項的選中狀態
+                    document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
+                    // 添加當前選項的選中狀態
+                    optionElement.classList.add('selected');
+                    // 保存用戶回答（使用原始選項索引）
+                    userAnswers[index] = parseInt(optionElement.dataset.index);
+                    // 啟用下一題按鈕
+                    nextBtn.disabled = false;
+                });
+                
+                optionsElement.appendChild(optionElement);
+            });
+            
+            card.appendChild(questionElement);
+            card.appendChild(optionsElement);
+            
+            // 清空問題容器並添加新卡片
+            questionContainer.innerHTML = '';
+            questionContainer.appendChild(card);
+            
+            // 更新按鈕狀態
+            prevBtn.disabled = index === 0;
+            nextBtn.textContent = index === questions.length - 1 ? '查看結果' : '下一題';
+            
+            // 如果這個問題已經回答過，啟用下一題按鈕
+            nextBtn.disabled = userAnswers[index] === undefined;
+        }
+
+        // 找出得分最高的職業
+        function calculateResult() {
+            // 重置分數
+            Object.keys(classScores).forEach(className => {
+                classScores[className] = 0;
+            });
+            
+            // 計算每個職業的得分
+            userAnswers.forEach((answerIndex, questionIndex) => {
+                const selectedOption = questions[questionIndex].options[answerIndex];
+                
+                Object.entries(selectedOption.points).forEach(([className, points]) => {
+                    classScores[className] += points;
+                });
+            });
+            
+            // 找出得分最高的職業
+            let highestScore = 0;
+            let bestClass = '';
+            
+            Object.entries(classScores).forEach(([className, score]) => {
+                if (score > highestScore) {
+                    highestScore = score;
+                    bestClass = className;
+                }
+            });
+            
+            return bestClass;
+        }
+        
+        // 找出得分第二高的職業
+        function getSecondBestClass() {
+            let highestScore = 0;
+            let secondHighestScore = 0;
+            let bestClass = '';
+            let secondBestClass = '';
+            
+            Object.entries(classScores).forEach(([className, score]) => {
+                if (score > highestScore) {
+                    secondHighestScore = highestScore;
+                    secondBestClass = bestClass;
+                    highestScore = score;
+                    bestClass = className;
+                } else if (score > secondHighestScore && className !== bestClass) {
+                    secondHighestScore = score;
+                    secondBestClass = className;
+                }
+            });
+            
+            return secondBestClass;
+        }
+
+        // 顯示結果
+        function showResult() {
+            const bestClass = calculateResult();
+            const classData = classDescriptions[bestClass];
+            
+            resultClass.textContent = classData.name;
+            resultDescription.textContent = classData.description;
+            
+            // 清空特質容器
+            resultTraits.innerHTML = '';
+            
+            // 添加特質標籤
+            classData.traits.forEach(trait => {
+                const traitElement = document.createElement('div');
+                traitElement.className = 'trait';
+                traitElement.textContent = trait;
+                resultTraits.appendChild(traitElement);
+            });
+            
+            // 顯示次高分職業
+            const secondBestClass = getSecondBestClass();
+            if (secondBestClass) {
+                const secondClassData = classDescriptions[secondBestClass];
+                const secondClassElement = document.createElement('div');
+                secondClassElement.className = 'second-class-container';
+                secondClassElement.innerHTML = `
+                    <h3 class="mt-6 mb-2">你也很適合：</h3>
+                    <div class="second-class">${secondClassData.name}</div>
+                    <p class="second-description">${secondClassData.description}</p>
+                `;
+                resultContainer.insertBefore(secondClassElement, document.getElementById('restartBtn'));
+            }
+            
+            // 隱藏問題，顯示結果
+            questionContainer.classList.add('hidden');
+            document.querySelector('.navigation').classList.add('hidden');
+            resultContainer.classList.remove('hidden');
+        }
+
+        // 初始化測驗
+        function initQuiz() {
+            // 重新隨機選擇問題
+            const newQuestions = getRandomQuestions();
+            questions.length = 0;
+            newQuestions.forEach(q => questions.push(q));
+            
+            // 重置用戶回答
+            userAnswers.length = 0;
+            
+            // 重置職業分數
+            Object.keys(classScores).forEach(className => {
+                classScores[className] = 0;
+            });
+            
+            // 顯示第一個問題
+            currentQuestionIndex = 0;
+            showQuestion(currentQuestionIndex);
+            
+            // 隱藏結果，顯示問題
+            resultContainer.classList.add('hidden');
+            questionContainer.classList.remove('hidden');
+            document.querySelector('.navigation').classList.remove('hidden');
+            
+            // 重置進度條
+            progressBar.style.width = `${(1 / questions.length) * 100}%`;
+        }
+
+        // 事件監聽器
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                showQuestion(currentQuestionIndex);
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                showQuestion(currentQuestionIndex);
+            } else {
+                showResult();
+            }
+        });
+
+        restartBtn.addEventListener('click', initQuiz);
+
+        // 初始化測驗
+        initQuiz();
+    </script>
+</body>
+</html>
