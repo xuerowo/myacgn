@@ -2986,6 +2986,9 @@
             
             // 重新設置靶子
             setupTargetByMode();
+            
+            // 保存所有設定
+            saveAllSettings();
         });
         
         // 設置顏色選擇器
@@ -3178,60 +3181,66 @@
         document.getElementById('easy-button').addEventListener('click', function() {
             setDifficulty('easy');
             updateDifficultyButtons('easy');
+            // 保存設定
+            saveAllSettings();
         });
         
         document.getElementById('medium-button').addEventListener('click', function() {
             setDifficulty('medium');
             updateDifficultyButtons('medium');
+            // 保存設定
+            saveAllSettings();
         });
         
         document.getElementById('hard-button').addEventListener('click', function() {
             setDifficulty('hard');
             updateDifficultyButtons('hard');
+            // 保存設定
+            saveAllSettings();
         });
         
         // 設置靶子移動方式
         function setMoveType(type) {
             moveType = type;
-            console.log(`移動方式已設置為: ${type}`);
             
-            // 更新顯示的移動方式
+            // 更新顯示
             const moveTypeDisplay = document.getElementById('current-move-type');
             if (moveTypeDisplay) {
                 moveTypeDisplay.textContent = type === 'transition' ? '漸變移動' : '瞬間移動';
-            } else {
-                console.error('找不到移動方式顯示元素');
             }
             
-            // 立即更新靶子的transition屬性
-            if (isPlaying) {
-                const targetElement = getTarget();
-                if (targetElement) {
-                    targetElement.style.transition = type === 'transition' 
-                        ? `left ${difficulties[currentDifficulty].targetSpeed}ms, top ${difficulties[currentDifficulty].targetSpeed}ms`
-                        : 'none';
-                }
-            }
+            // 保存設定
+            saveAllSettings();
         }
         
         // 音量控制事件處理
         document.getElementById('volume-control').addEventListener('input', function(e) {
             soundSettings.volume = parseFloat(e.target.value);
             
-            // 更新所有音效的音量
-            Object.values(sounds).forEach(sound => {
+            // 更新所有音效元素音量
+            document.querySelectorAll('audio').forEach(sound => {
                 sound.volume = soundSettings.volume;
             });
+            
+            console.log('音量調整為:', soundSettings.volume);
+            
+            // 保存設定
+            saveAllSettings();
         });
         
-        // 靜音切換事件處理
+        // 靜音控制事件處理
         document.getElementById('mute-toggle').addEventListener('change', function(e) {
             soundSettings.muted = e.target.checked;
             
-            // 更新所有音效的靜音狀態
-            Object.values(sounds).forEach(sound => {
+            // 更新所有音效元素靜音狀態
+            document.querySelectorAll('audio').forEach(sound => {
                 sound.muted = soundSettings.muted;
             });
+            
+            console.log('靜音設定:', soundSettings.muted);
+            
+            // 保存設定
+            saveAllSettings();
         });
         
         // 初始設置模式按鈕文本
@@ -3266,8 +3275,8 @@
                 }
             }, 500); // 延遲檢查以確保DOM完全加載
             
-            // 加載顏色設定
-            loadColorSettings();
+            // 載入所有遊戲設定（包括顏色設定、遊戲模式、難度、移動方式等）
+            loadAllSettings();
             
             // 初始化遊戲
             initGame();
@@ -3338,12 +3347,16 @@
                     setMoveType('transition');
                     updateMoveTypeButtons('transition');
                     console.log('設置為漸變移動');
+                    // 保存所有設定
+                    saveAllSettings();
                 });
                 
                 instantButton.addEventListener('click', function() {
                     setMoveType('instant');
                     updateMoveTypeButtons('instant');
                     console.log('設置為瞬間移動');
+                    // 保存所有設定
+                    saveAllSettings();
                 });
             } else {
                 console.error('找不到移動方式按鈕');
@@ -3387,74 +3400,129 @@
             target.style.top = `${randomY}px`;
         }
         
-        // 保存遊戲設定
-        function saveGameSettings() {
+        // 保存所有遊戲設定到localStorage
+        function saveAllSettings() {
             try {
-                // 保存難度設定
-                localStorage.setItem('shootingGameDifficulty', currentDifficulty);
-                
-                // 保存移動方式設定
-                localStorage.setItem('shootingGameMoveType', moveType);
-                
-                // 保存聲音設定
-                localStorage.setItem('shootingGameVolume', soundSettings.volume);
-                localStorage.setItem('shootingGameMuted', soundSettings.muted ? '1' : '0');
-                
                 // 保存遊戲模式
                 localStorage.setItem('shootingGameMode', gameMode);
                 
-                console.log('遊戲設定已保存');
+                // 保存移動類型
+                localStorage.setItem('shootingGameMoveType', moveType);
+                
+                // 保存難度設定
+                localStorage.setItem('shootingGameDifficulty', currentDifficulty);
+                
+                // 保存音效設定
+                localStorage.setItem('shootingGameSoundSettings', JSON.stringify(soundSettings));
+                
+                // 保存顏色設定（已有函數但在這裡也調用一次確保所有設定都保存）
+                saveColorSettings();
+                
+                console.log('所有遊戲設定已保存');
             } catch (e) {
                 console.error('保存遊戲設定失敗:', e);
             }
         }
         
-        // 載入遊戲設定
-        function loadGameSettings() {
+        // 載入所有遊戲設定
+        function loadAllSettings() {
             try {
-                // 載入難度設定
-                const savedDifficulty = localStorage.getItem('shootingGameDifficulty');
-                if (savedDifficulty && difficulties[savedDifficulty]) {
-                    currentDifficulty = savedDifficulty;
-                    updateDifficultyButtons(currentDifficulty);
-                }
-                
-                // 載入移動方式設定
-                const savedMoveType = localStorage.getItem('shootingGameMoveType');
-                if (savedMoveType && (savedMoveType === 'transition' || savedMoveType === 'instant')) {
-                    moveType = savedMoveType;
-                    // 移動方式按鈕在setupMoveTypeButtons函數中會更新
-                }
-                
-                // 載入聲音設定
-                const savedVolume = localStorage.getItem('shootingGameVolume');
-                if (savedVolume !== null) {
-                    soundSettings.volume = parseFloat(savedVolume);
-                    // 更新音量控制滑塊
-                    document.getElementById('volume-control').value = soundSettings.volume;
-                }
-                
-                const savedMuted = localStorage.getItem('shootingGameMuted');
-                if (savedMuted !== null) {
-                    soundSettings.muted = (savedMuted === '1');
-                    // 更新靜音開關
-                    document.getElementById('mute-toggle').checked = soundSettings.muted;
-                }
-                
                 // 載入遊戲模式
                 const savedGameMode = localStorage.getItem('shootingGameMode');
-                if (savedGameMode && (savedGameMode === 'human' || savedGameMode === 'target')) {
+                if (savedGameMode) {
                     gameMode = savedGameMode;
-                    // 更新模式按鈕文本
-                    document.getElementById('toggle-mode-button').textContent = 
-                        gameMode === "human" ? "切換至靶心模式" : "切換至人形模式";
-                    homeToggleModeButton.textContent = 
-                        gameMode === "human" ? "切換至靶心模式" : "切換至人形模式";
-                    // 更新當前模式顯示
-                    currentModeDisplay.textContent = gameMode === "human" ? "人形靶子" : "靶心";
+                    // 更新模式顯示
+                    const modeDisplay = document.getElementById('current-mode');
+                    if (modeDisplay) {
+                        modeDisplay.textContent = gameMode === "human" ? "人形靶子" : "靶心";
+                    }
+                    
+                    // 更新模式切換按鈕文字
+                    const modeToggleButton = document.getElementById('toggle-mode-button');
+                    if (modeToggleButton) {
+                        modeToggleButton.textContent = gameMode === "human" ? "切換至靶心模式" : "切換至人形模式";
+                    }
+                    
+                    const homeToggleButton = document.getElementById('home-toggle-mode');
+                    if (homeToggleButton) {
+                        homeToggleButton.textContent = gameMode === "human" ? "切換至靶心模式" : "切換至人形模式";
+                    }
                 }
                 
-                console.log('遊戲設定已載入');
+                // 載入移動類型
+                const savedMoveType = localStorage.getItem('shootingGameMoveType');
+                if (savedMoveType) {
+                    moveType = savedMoveType;
+                    // 更新移動類型顯示
+                    const moveTypeDisplay = document.getElementById('current-move-type');
+                    if (moveTypeDisplay) {
+                        moveTypeDisplay.textContent = moveType === 'transition' ? '漸變移動' : '瞬間移動';
+                    }
+                    
+                    // 初始化移動類型按鈕
+                    setTimeout(() => {
+                        const transitionBtn = document.getElementById('transition-button');
+                        const instantBtn = document.getElementById('instant-button');
+                        if (transitionBtn && instantBtn) {
+                            transitionBtn.classList.remove('active');
+                            instantBtn.classList.remove('active');
+                            
+                            if (moveType === 'transition') {
+                                transitionBtn.classList.add('active');
+                            } else {
+                                instantBtn.classList.add('active');
+                            }
+                        }
+                    }, 100);
+                }
+                
+                // 載入難度設定
+                const savedDifficulty = localStorage.getItem('shootingGameDifficulty');
+                if (savedDifficulty) {
+                    currentDifficulty = savedDifficulty;
+                    // 設置難度並更新難度按鈕
+                    setTimeout(() => {
+                        setDifficulty(currentDifficulty);
+                        updateDifficultyButtons(currentDifficulty);
+                    }, 100);
+                }
+                
+                // 載入音效設定
+                const savedSoundSettings = localStorage.getItem('shootingGameSoundSettings');
+                if (savedSoundSettings) {
+                    const parsedSettings = JSON.parse(savedSoundSettings);
+                    soundSettings.volume = parsedSettings.volume;
+                    soundSettings.muted = parsedSettings.muted;
+                    
+                    // 套用音效設定到所有音效
+                    setTimeout(() => {
+                        // 更新音量滑動條
+                        const volumeSlider = document.getElementById('volume-slider');
+                        if (volumeSlider) {
+                            volumeSlider.value = soundSettings.volume;
+                        }
+                        
+                        // 更新靜音勾選框
+                        const muteCheckbox = document.getElementById('mute-checkbox');
+                        if (muteCheckbox) {
+                            muteCheckbox.checked = soundSettings.muted;
+                        }
+                        
+                        // 更新所有音效元素
+                        document.querySelectorAll('audio').forEach(sound => {
+                            sound.volume = soundSettings.volume;
+                            sound.muted = soundSettings.muted;
+                        });
+                    }, 100);
+                }
+                
+                // 載入顏色設定（已有函數，直接調用）
+                loadColorSettings();
+                
+                // 設置靶子類型
+                setupTargetByMode();
+                
+                console.log('所有遊戲設定已載入');
             } catch (e) {
                 console.error('載入遊戲設定失敗:', e);
             }
