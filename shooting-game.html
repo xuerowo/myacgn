@@ -1513,7 +1513,7 @@
         let isPlaying = false;
         let isPaused = false; // 新增暫停狀態變數
         let gameMode = "human"; // 預設為人形模式，另一個選項是"target"
-        let highScore = 0; // 記錄最高分
+        let highScore = parseInt(localStorage.getItem('shootingGameHighScore')) || 0; // 從 localStorage 讀取最高分，若無則為 0
         let combo = 0; // 連擊
         let maxCombo = 0; // 最高連擊
         let shotsFired = 0; // 射擊總數
@@ -1538,7 +1538,7 @@
         
         // 音效設置
         const soundSettings = {
-            volume: 0.7,
+            volume: parseFloat(localStorage.getItem('shootingGameVolume')) || 0.7, // 從 localStorage 讀取音量，若無則為 0.7
             muted: false
         };
         
@@ -1549,12 +1549,12 @@
                 console.log('開始初始化音效...');
                 
                 // 獲取所有音頻元素
-            sounds.shot = document.getElementById('sound-shot');
-            sounds.hit = document.getElementById('sound-hit');
-            sounds.miss = document.getElementById('sound-miss');
-            sounds.gameStart = document.getElementById('sound-game-start');
-            sounds.gameEnd = document.getElementById('sound-game-end');
-            sounds.bgm = document.getElementById('sound-bgm');
+                sounds.shot = document.getElementById('sound-shot');
+                sounds.hit = document.getElementById('sound-hit');
+                sounds.miss = document.getElementById('sound-miss');
+                sounds.gameStart = document.getElementById('sound-game-start');
+                sounds.gameEnd = document.getElementById('sound-game-end');
+                sounds.bgm = document.getElementById('sound-bgm');
                 
                 // 檢查每個音效元素
                 Object.entries(sounds).forEach(([key, sound]) => {
@@ -1565,9 +1565,9 @@
                         
                         // 主動加載音效
                         sound.load();
-            
-            // 設置初始音量
-                sound.volume = soundSettings.volume;
+                        
+                        // 設置初始音量
+                        sound.volume = soundSettings.volume;
                         
                         // 添加錯誤處理
                         sound.onerror = function(e) {
@@ -3266,17 +3266,8 @@
                 }
             }, 500); // 延遲檢查以確保DOM完全加載
             
-            // 加載顏色設定
-            loadColorSettings();
-            
-            // 初始化遊戲
-            initGame();
-            
-            // 載入遊戲歷史紀錄
-            loadGameHistory();
-            
-            // 初始化顏色選擇器
-            setupColorOptions();
+            // 載入本地存儲數據
+            initLocalStorage();
             
             // 調整遊戲容器大小以適應螢幕
             adjustGameContainerSize();
@@ -3290,8 +3281,56 @@
             // 延遲加載移動方式按鈕設置，確保DOM元素已完全加載
             setTimeout(setupMoveTypeButtons, 500);
             
+            // 音量控制事件處理
+            document.getElementById('volume-control').addEventListener('input', function(e) {
+                soundSettings.volume = parseFloat(e.target.value);
+                
+                // 更新所有音效的音量
+                Object.values(sounds).forEach(sound => {
+                    if (sound) sound.volume = soundSettings.volume;
+                });
+                
+                // 保存音效設定
+                saveSoundSettings();
+            });
+            
+            // 靜音切換事件處理
+            document.getElementById('mute-toggle').addEventListener('change', function(e) {
+                soundSettings.muted = e.target.checked;
+                
+                // 更新所有音效的靜音狀態
+                Object.values(sounds).forEach(sound => {
+                    if (sound) sound.muted = soundSettings.muted;
+                });
+                
+                // 保存音效設定
+                saveSoundSettings();
+            });
+            
+            // 設置難度按鈕事件監聽器
+            document.getElementById('easy-button').addEventListener('click', function() {
+                setDifficulty('easy');
+                updateDifficultyButtons('easy');
+                saveGameSettings(); // 保存設定
+            });
+            
+            document.getElementById('medium-button').addEventListener('click', function() {
+                setDifficulty('medium');
+                updateDifficultyButtons('medium');
+                saveGameSettings(); // 保存設定
+            });
+            
+            document.getElementById('hard-button').addEventListener('click', function() {
+                setDifficulty('hard');
+                updateDifficultyButtons('hard');
+                saveGameSettings(); // 保存設定
+            });
+            
+            // 初始化遊戲
+            initGame();
+            
             // 測試準備好，添加一個提示
-            console.log('遊戲初始化完成');
+            console.log('遊戲初始化完成，本地存儲功能已啟用');
         });
         
         // 調整遊戲容器大小
@@ -3387,6 +3426,126 @@
             target.style.top = `${randomY}px`;
         }
 
+        // 保存遊戲設定
+        function saveGameSettings() {
+            try {
+                localStorage.setItem('shootingGameMode', gameMode);
+                localStorage.setItem('shootingGameDifficulty', currentDifficulty);
+                localStorage.setItem('shootingGameMoveType', moveType);
+            } catch (e) {
+                console.error('保存遊戲設定失敗:', e);
+            }
+        }
+
+        // 保存音效設定
+        function saveSoundSettings() {
+            try {
+                localStorage.setItem('shootingGameVolume', soundSettings.volume);
+                localStorage.setItem('shootingGameMuted', soundSettings.muted ? 'true' : 'false');
+            } catch (e) {
+                console.error('保存音效設定失敗:', e);
+            }
+        }
+
+        // 保存最高分
+        function saveHighScore() {
+            try {
+                localStorage.setItem('shootingGameHighScore', highScore);
+            } catch (e) {
+                console.error('保存最高分失敗:', e);
+            }
+        }
+
+        // 載入遊戲設定
+        function loadGameSettings() {
+            try {
+                const savedMode = localStorage.getItem('shootingGameMode');
+                const savedDifficulty = localStorage.getItem('shootingGameDifficulty');
+                const savedMoveType = localStorage.getItem('shootingGameMoveType');
+                
+                if (savedMode) {
+                    gameMode = savedMode;
+                    // 更新模式顯示
+                    currentModeDisplay.textContent = gameMode === "human" ? "人形靶子" : "靶心";
+                }
+                
+                if (savedDifficulty) {
+                    currentDifficulty = savedDifficulty;
+                    // 更新難度按鈕
+                    updateDifficultyButtons(currentDifficulty);
+                }
+                
+                if (savedMoveType) {
+                    moveType = savedMoveType;
+                    // 更新移動方式顯示
+                    document.getElementById('current-move-type').textContent = moveType === 'transition' ? '漸變移動' : '瞬間移動';
+                }
+            } catch (e) {
+                console.error('載入遊戲設定失敗:', e);
+            }
+        }
+
+        // 載入音效設定
+        function loadSoundSettings() {
+            try {
+                const savedVolume = localStorage.getItem('shootingGameVolume');
+                const savedMuted = localStorage.getItem('shootingGameMuted');
+                
+                if (savedVolume !== null) {
+                    soundSettings.volume = parseFloat(savedVolume);
+                    // 更新音量控制器
+                    const volumeControl = document.getElementById('volume-control');
+                    if (volumeControl) {
+                        volumeControl.value = soundSettings.volume;
+                    }
+                }
+                
+                if (savedMuted !== null) {
+                    soundSettings.muted = savedMuted === 'true';
+                    // 更新靜音控制器
+                    const muteToggle = document.getElementById('mute-toggle');
+                    if (muteToggle) {
+                        muteToggle.checked = soundSettings.muted;
+                    }
+                }
+                
+                // 應用音效設定到所有音效
+                Object.values(sounds).forEach(sound => {
+                    if (sound) {
+                        sound.volume = soundSettings.volume;
+                        sound.muted = soundSettings.muted;
+                    }
+                });
+            } catch (e) {
+                console.error('載入音效設定失敗:', e);
+            }
+        }
+
+        // 載入最高分
+        function loadHighScore() {
+            try {
+                const savedHighScore = localStorage.getItem('shootingGameHighScore');
+                if (savedHighScore !== null) {
+                    highScore = parseInt(savedHighScore);
+                    // 更新顯示
+                    highScoreDisplay.textContent = highScore;
+                }
+            } catch (e) {
+                console.error('載入最高分失敗:', e);
+            }
+        }
+
+        // 初始化本地存儲
+        function initLocalStorage() {
+            loadGameHistory();
+            loadColorSettings();
+            loadGameSettings();
+            loadSoundSettings();
+            loadHighScore();
+            
+            // 根據載入的遊戲模式設置靶子
+            setupTargetByMode();
+        }
     </script>
 </body>
 </html>
