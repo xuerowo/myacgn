@@ -185,11 +185,11 @@
             <li><strong>絕對路徑</strong>：完整 URL，如 <code>https://example.com/images/1.png</code>。</li>
             <li><strong>相對路徑</strong>：
                 <ul>
-                    <li><code>images/2.png</code> (目前目錄下的 images 資料夾)</li>
+                    <li><code>images/1.png</code> (目前目錄下的 images 資料夾)</li>
                     <li><code>../styles/main.css</code> (上一層目錄的 styles 資料夾)</li>
                 </ul>
             </li>
-            <li><strong>根目錄相對路徑</strong>：以 <code>/</code> 開頭，相對於網站根目錄，如 <code>/images/3.png</code>。</li>
+            <li><strong>根目錄相對路徑</strong>：以 <code>/</code> 開頭，相對於網站根目錄，如 <code>/images/1.png</code>。</li>
         </ul>
 
         <h3>2-3 HTML 的基本架構</h3>
@@ -489,27 +489,27 @@
 
         <h3>3-5 圖片元素</h3>
         <h4>基本圖片 (img)</h4>
-        <pre><code>&lt;img src="2.png" alt="風景圖片" width="300" height="200"&gt;
+        <pre><code>&lt;img src="1.png" alt="風景圖片" width="300" height="200"&gt;
 &lt;!-- 建議只設寬或高，或用 CSS 控制 --&gt;
-&lt;img src="3.png" alt="另一風景" style="width: 250px;"&gt;</code></pre>
+&lt;img src="1.png" alt="另一風景" style="width: 250px;"&gt;</code></pre>
         <div class="example-output">
-            <img src="images/1.png" alt="風景圖片 (示意圖)" width="300" height="200">
-            <img src="images/1.png" alt="另一風景 (示意圖)" style="width: 250px;">
+            <img src="images/1.png" alt="(示意圖)" width="300" height="200">
+            <img src="images/1.png" alt="(示意圖)" style="width: 250px;">
         </div>
 
         <h4>響應式圖片 (picture)</h4>
         <pre><code>&lt;picture&gt;
     &lt;!-- 當螢幕寬度小於 600px 時，載入 small.png --&gt;
-    &lt;source media="(max-width: 599px)" srcset="4.png"&gt;
+    &lt;source media="(max-width: 599px)" srcset="2.png"&gt;
     &lt;!-- 當螢幕寬度大於等於 600px 時，載入 large.png --&gt;
-    &lt;source media="(min-width: 600px)" srcset="5.png"&gt;
+    &lt;source media="(min-width: 600px)" srcset="1.png"&gt;
     &lt;!-- 預設圖片 --&gt;
-    &lt;img src="5.png" alt="響應式圖片"&gt;
+    &lt;img src="1.png" alt="響應式圖片"&gt;
 &lt;/picture&gt;</code></pre>
         <div class="example-output">
             <picture>
-                <source media="(max-width: 599px)" srcset="4.png">
-                <source media="(min-width: 600px)" srcset="5.png">
+                <source media="(max-width: 599px)" srcset="images/2.png">
+                <source media="(min-width: 600px)" srcset="images/1.png">
                 <img src="images/1.png" alt="響應式圖片 (示意圖)">
             </picture>
             <p><small>(註：請調整瀏覽器視窗寬度查看效果)</small></p>
