@@ -1095,8 +1095,12 @@ say_whee()
 
                 try {
                     // 為這次執行設置特定的 stdout, stderr, stdin
-                    pyodideInstance.setStdout({ batched: (s) => addToOutput(outputElement, s) });
-                    pyodideInstance.setStderr({ batched: (s) => addToOutput(outputElement, s) });
+                    pyodideInstance.setStdout({
+                        batched: (s) => addToOutput(outputElement, s + "\n")
+                    });
+                    pyodideInstance.setStderr({
+                        batched: (s) => addToOutput(outputElement, s + "\n")
+                    });
                     // 創建一個綁定了當前 outputElement 的 input 處理函數
                     const currentStdinPrompt = (promptMsg = '') => stdinPrompt(outputElement, promptMsg);
                     pyodideInstance.globals.set("input", currentStdinPrompt);
@@ -1129,6 +1133,73 @@ say_whee()
                 }
             });
         });
+
+        // 讓 .practice-area textarea 支援 Tab / Shift‑Tab (含多行選取)
+        document.querySelectorAll('.practice-area textarea').forEach(t => {
+        t.addEventListener('keydown', e => {
+            if (e.key !== 'Tab') return;           // 只攔 Tab
+            e.preventDefault();                    // 阻止預設行為（跳焦點）
+
+            const indent = '    ';                 // 想用 \t 就改成 '\t'
+            const { selectionStart: start, selectionEnd: end } = t;
+            const value = t.value;
+            const before = value.slice(0, start);
+            const selection = value.slice(start, end);
+            const after  = value.slice(end);
+
+            // 判斷選取範圍的起始、結束行
+            const lineStart = before.lastIndexOf('\n') + 1;      // 找到本行開頭
+            const lineEnd   = end < value.length
+                                ? value.indexOf('\n', end)
+                                : value.length;                  // 找到最後一行結尾
+
+            // 把要處理的區塊拆成行陣列
+            const lines = value
+            .slice(lineStart, lineEnd)
+            .split('\n');
+
+            if (!e.shiftKey) {
+            // ─────────── Tab：整批縮排 ───────────
+            for (let i = 0; i < lines.length; i++) {
+                lines[i] = indent + lines[i];
+            }
+            const newBlock = lines.join('\n');
+            t.value = value.slice(0, lineStart) + newBlock + value.slice(lineEnd);
+
+            // 更新游標／選取
+            if (selection.length === 0) {
+                t.selectionStart = t.selectionEnd = start + indent.length;
+            } else {
+                t.selectionStart = start + indent.length;
+                t.selectionEnd   = end   + indent.length * lines.length;
+            }
+            } else {
+            // ─────────── Shift+Tab：整批反縮排 ───────────
+            let removed = 0;
+            for (let i = 0; i < lines.length; i++) {
+                if (lines[i].startsWith(indent)) {
+                lines[i] = lines[i].slice(indent.length);
+                removed++;
+                } else if (lines[i].startsWith('\t')) {
+                lines[i] = lines[i].slice(1);
+                removed++;                       // 如果前面用 \t
+                }
+            }
+            const newBlock = lines.join('\n');
+            t.value = value.slice(0, lineStart) + newBlock + value.slice(lineEnd);
+
+            // 更新游標／選取
+            if (selection.length === 0) {
+                t.selectionStart = t.selectionEnd = Math.max(start - indent.length, lineStart);
+            } else {
+                const delta = indent.length * removed;
+                t.selectionStart = start - Math.min(indent.length, start - lineStart);
+                t.selectionEnd   = end   - delta;
+            }
+            }
+        });
+        });
+
 
         // 當頁面載入完成後，開始初始化 Pyodide
         window.onload = initializePyodide;
