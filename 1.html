@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>網頁程式設計教學 (CH1-CH6)</title>
+    <style>
+        /* 教學文件基本樣式 */
+        body {
+            font-family: "Microsoft JhengHei", "Segoe UI", Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h1, h2, h3, h4 {
+            color: #0056b3; /* 深藍色標題 */
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #003366; /* 更深的藍色 */
+            border-bottom-width: 4px;
+        }
+        section {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        /* 程式碼區塊樣式 */
+        pre {
+            background-color: #e9e9e9; /* 淺灰色背景 */
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto; /* 水平捲軸 */
+            font-family: Consolas, Monaco, "Courier New", monospace;
+            font-size: 0.9em;
+            border: 1px solid #ccc;
+        }
+        code {
+            font-family: Consolas, Monaco, "Courier New", monospace;
+        }
+        /* 範例展示區塊樣式 */
+        .example-output {
+            border: 1px dashed #007bff; /* 藍色虛線邊框 */
+            padding: 15px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            background-color: #f8f9fa; /* 非常淺的灰色 */
+            border-radius: 5px;
+        }
+        .example-output p,
+        .example-output div,
+        .example-output span,
+        .example-output h1,
+        .example-output h2,
+        .example-output h3,
+        .example-output h4,
+        .example-output h5,
+        .example-output h6,
+        .example-output ul,
+        .example-output ol,
+        .example-output table {
+             /* 移除範例內元素的預設邊框和特定顏色，除非範例本身需要 */
+            border: none;
+            color: inherit; /* 繼承父元素顏色 */
+            margin: 5px 0; /* 稍微調整間距 */
+        }
+        /* 表格樣式 */
+        table {
+            border-collapse: collapse; /* 合併邊框 */
+            width: auto; /* 自動寬度 */
+            margin-bottom: 15px;
+        }
+        th, td {
+            border: 1px solid #ccc; /* 灰色邊框 */
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #e9ecef; /* 淺灰色表頭 */
+        }
+        /* 圖片樣式 */
+        img {
+            max-width: 100%; /* 圖片最大寬度為容器寬度 */
+            height: auto; /* 高度自動 */
+            display: block; /* 避免底部多餘空間 */
+            margin: 10px 0;
+            border: 1px solid #ddd; /* 淺灰色邊框 */
+            border-radius: 4px;
+        }
+        /* 區塊引用樣式 */
+        blockquote {
+            border-left: 4px solid #007bff;
+            padding-left: 15px;
+            margin-left: 0;
+            font-style: italic;
+            color: #555;
+        }
+        /* 定義列表樣式 */
+        dt {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        dd {
+            margin-left: 20px;
+        }
+        /* 響應式設計：小螢幕調整 */
+        @media (max-width: 600px) {
+            body {
+                margin: 10px;
+            }
+            section {
+                padding: 15px;
+            }
+            pre, .example-output {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>網頁程式設計教學 (CH1-CH6)</h1>
+
+    <section id="ch1">
+        <h2>第一章：網頁設計基本概念</h2>
+
+        <h3>1-1 網站基本概念</h3>
+        <p><strong>全球資訊網 (WWW)</strong>：運用超文本(Hypertext)技術，整合HTTP等通訊協定，在網際網路上提供多媒體服務的系統。</p>
+        <p><strong>網站與網頁</strong>：網站是多個網頁的集合。首頁(Homepage)是入口，網頁(Web Page)是其他頁面。</p>
+        <p><strong>網站設計流程</strong>：</p>
+        <ol>
+            <li>內容規劃</li>
+            <li>設計與製作</li>
+            <li>測試與發行</li>
+            <li>流量分析</li>
+        </ol>
+        <p><strong>網頁運作原則</strong>：瀏覽器(Client)透過HTTP向伺服器(Server)請求網頁，伺服器回傳HTML文件，瀏覽器解析並顯示。</p>
+        <p><strong>響應式網頁設計 (RWD)</strong>：讓網頁能自動適應不同裝置的螢幕尺寸，提供最佳瀏覽體驗。</p>
+        <p><strong>一頁式網站</strong>：所有內容集中在單一頁面，透過滾動瀏覽。</p>
+
+        <h3>1-2 網頁設計程式語言</h3>
+        <h4>瀏覽器端 (Client-Side)</h4>
+        <ul>
+            <li><strong>HTML</strong>：網頁結構與內容。</li>
+            <li><strong>CSS</strong>：網頁樣式與外觀。</li>
+            <li><strong>JavaScript (JS)</strong>：網頁互動與動態效果 (DHTML是早期概念，現多指HTML+CSS+JS)。</li>
+            <li><strong>XML</strong>：描述資料結構。</li>
+        </ul>
+        <h4>伺服器端 (Server-Side)</h4>
+        <ul>
+            <li><strong>ASP.NET</strong>：Microsoft 開發框架。</li>
+            <li><strong>PHP</strong>：開源腳本語言，廣泛使用。</li>
+            <li><strong>JSP</strong>：Java 技術。</li>
+            <li><strong>CGI</strong>：通用閘道介面。</li>
+            <li>(還有 Python/Django/Flask, Ruby/Rails, Node.js 等)</li>
+        </ul>
+        <h4>MVC 架構</h4>
+        <p>將應用程式分為模型(Model)、檢視(View)、控制器(Controller)，以利於開發與維護。</p>
+        <h4>Web API</h4>
+        <p>應用程式介面，讓不同程式可以透過網路交換資料或服務，例如嵌入 Google Map。</p>
+    </section>
+
+    <section id="ch2">
+        <h2>第二章：HTML 基本概念</h2>
+
+        <h3>2-1 認識 HTML</h3>
+        <p><strong>HTML5</strong> 是最新的 HTML 標準，簡化語法並加入新功能。</p>
+        <p>可使用 <a href="https://validator.w3.org/" target="_blank">W3C Validator</a> 驗證 HTML。</p>
+
+        <h3>2-2 HTML 檔案命名與管理</h3>
+        <ul>
+            <li>副檔名：<code>.html</code> 或 <code>.htm</code>。</li>
+            <li>命名：半形英文/數字，建議小寫，避免空格。</li>
+            <li>首頁：通常為 <code>index.html</code>。</li>
+            <li>資料夾管理：將 HTML、CSS、JS、圖片等分門別類。</li>
+        </ul>
+        <h4>檔案路徑</h4>
+        <ul>
+            <li><strong>絕對路徑</strong>：完整 URL，如 <code>https://example.com/images/1.png</code>。</li>
+            <li><strong>相對路徑</strong>：
+                <ul>
+                    <li><code>images/2.png</code> (目前目錄下的 images 資料夾)</li>
+                    <li><code>../styles/main.css</code> (上一層目錄的 styles 資料夾)</li>
+                </ul>
+            </li>
+            <li><strong>根目錄相對路徑</strong>：以 <code>/</code> 開頭，相對於網站根目錄，如 <code>/images/3.png</code>。</li>
+        </ul>
+
+        <h3>2-3 HTML 的基本架構</h3>
+        <p><strong>元素 (Element)</strong> = 開始標籤 + 內容 + 結束標籤 (如 <code>&lt;p&gt;內容&lt;/p&gt;</code>)。</p>
+        <p><strong>空元素 (Empty Element)</strong>：沒有內容和結束標籤 (如 <code>&lt;br&gt;</code>, <code>&lt;img&gt;</code>)。</p>
+        <p><strong>屬性 (Attribute)</strong>：在開始標籤中提供額外資訊 (如 <code>&lt;img src="1.png" alt="範例圖片"&gt;</code>)。</p>
+        <p><strong>巢狀元素 (Nested Element)</strong>：元素內可包含其他元素。</p>
+
+        <h4>網頁基本結構範例</h4>
+        <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="zh-Hant-TW"&gt;
+    &lt;head&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+        &lt;title&gt;網頁標題&lt;/title&gt;
+        &lt;!-- 連結外部 CSS --&gt;
+        &lt;link rel="stylesheet" href="style.css"&gt;
+        &lt;!-- 內部 CSS --&gt;
+        &lt;style&gt;
+            /* 這裡可以寫 CSS */
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;!-- 網頁可見內容 --&gt;
+        &lt;h1&gt;主要標題&lt;/h1&gt;
+        &lt;p&gt;這是一個段落。&lt;/p&gt;
+        &lt;!-- 連結外部 JavaScript --&gt;
+        &lt;script src="script.js"&gt;&lt;/script&gt;
+        &lt;!-- 內部 JavaScript --&gt;
+        &lt;script&gt;
+            // 這裡可以寫 JavaScript
+        &lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+        <h3>2-4 文件資料元素 (Head 內常用)</h3>
+        <ul>
+            <li><code>&lt;title&gt;</code>：網頁標題。</li>
+            <li><code>&lt;meta&gt;</code>：提供元數據。
+                <ul>
+                    <li><code>charset="UTF-8"</code>：字元編碼。</li>
+                    <li><code>name="description" content="..."</code>：網頁描述。</li>
+                    <li><code>name="keywords" content="..."</code>：關鍵字。</li>
+                    <li><code>name="author" content="..."</code>：作者。</li>
+                    <li><code>name="viewport" content="..."</code>：行動裝置視口設定。</li>
+                    <li><code>http-equiv="..." content="..."</code>：模擬 HTTP 標頭 (如 `refresh` 跳轉)。</li>
+                </ul>
+            </li>
+            <li><code>&lt;link&gt;</code>：連結外部資源 (最常用於 CSS)。
+                <ul>
+                    <li><code>rel="stylesheet"</code>：表示連結的是樣式表。</li>
+                    <li><code>href="路徑/檔名.css"</code>：樣式表路徑。</li>
+                    <li><code>rel="icon" href="favicon.ico"</code>：設定網頁圖示。</li>
+                </ul>
+            </li>
+            <li><code>&lt;style&gt;</code>：嵌入內部 CSS 樣式。</li>
+            <li><code>&lt;script&gt;</code>：嵌入內部 JavaScript 或連結外部 JS 檔案 (<code>src</code> 屬性)。
+                 <ul>
+                    <li><code>async</code>：非同步下載並執行 JS (不保證順序)。</li>
+                    <li><code>defer</code>：非同步下載，HTML 解析完畢後按順序執行 JS。</li>
+                 </ul>
+            </li>
+            <li><code>&lt;noscript&gt;</code>：當瀏覽器不支援或禁用 JS 時顯示的內容。</li>
+            <li><code>&lt;base&gt;</code>：設定頁面相對路徑的基準 URL (<code>href</code>) 或預設連結目標 (<code>target</code>)。</li>
+        </ul>
+        <h4>HTML 註解</h4>
+        <pre><code>&lt;!-- 這是一行註解 --&gt;
+
+&lt;!--
+    這是
+    多行
+    註解
+--&gt;</code></pre>
+    </section>
+
+    <section id="ch3">
+        <h2>第三章：常用的 HTML 元素</h2>
+
+        <h3>3-1 段落元素</h3>
+        <h4>標題 (h1-h6)</h4>
+        <pre><code>&lt;h1&gt;第一級標題&lt;/h1&gt;
+&lt;h2&gt;第二級標題&lt;/h2&gt;
+&lt;h3&gt;第三級標題&lt;/h3&gt;
+&lt;h4&gt;第四級標題&lt;/h4&gt;
+&lt;h5&gt;第五級標題&lt;/h5&gt;
+&lt;h6&gt;第六級標題&lt;/h6&gt;</code></pre>
+        <div class="example-output">
+            <h1>第一級標題</h1>
+            <h2>第二級標題</h2>
+            <h3>第三級標題</h3>
+            <h4>第四級標題</h4>
+            <h5>第五級標題</h5>
+            <h6>第六級標題</h6>
+        </div>
+
+        <h4>段落 (p) 與換行 (br)</h4>
+        <pre><code>&lt;p&gt;這是一個段落。它會自動換行並與下一個段落產生間距。&lt;/p&gt;
+&lt;p&gt;這是第二個段落。&lt;br&gt;使用 br 強制換行，&lt;br&gt;但仍在同一個段落內。&lt;/p&gt;</code></pre>
+        <div class="example-output">
+            <p>這是一個段落。它會自動換行並與下一個段落產生間距。</p>
+            <p>這是第二個段落。<br>使用 br 強制換行，<br>但仍在同一個段落內。</p>
+        </div>
+
+        <h4>清單 (ul, ol, li)</h4>
+        <pre><code>&lt;h4&gt;無序清單&lt;/h4&gt;
+&lt;ul&gt;
+    &lt;li&gt;項目一&lt;/li&gt;
+    &lt;li&gt;項目二&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;有序清單&lt;/h4&gt;
+&lt;ol type="A" start="3"&gt;
+    &lt;li&gt;項目C&lt;/li&gt;
+    &lt;li&gt;項目D&lt;/li&gt;
+&lt;/ol&gt;</code></pre>
+        <div class="example-output">
+            <h4>無序清單</h4>
+            <ul>
+                <li>項目一</li>
+                <li>項目二</li>
+            </ul>
+            <h4>有序清單</h4>
+            <ol type="A" start="3">
+                <li>項目C</li>
+                <li>項目D</li>
+            </ol>
+        </div>
+
+        <h4>定義清單 (dl, dt, dd)</h4>
+        <pre><code>&lt;dl&gt;
+    &lt;dt&gt;HTML&lt;/dt&gt;
+    &lt;dd&gt;超文本標記語言，用於建立網頁結構。&lt;/dd&gt;
+    &lt;dt&gt;CSS&lt;/dt&gt;
+    &lt;dd&gt;層疊樣式表，用於設定網頁樣式。&lt;/dd&gt;
+&lt;/dl&gt;</code></pre>
+        <div class="example-output">
+            <dl>
+                <dt>HTML</dt>
+                <dd>超文本標記語言，用於建立網頁結構。</dd>
+                <dt>CSS</dt>
+                <dd>層疊樣式表，用於設定網頁樣式。</dd>
+            </dl>
+        </div>
+
+        <h4>引述區塊 (blockquote)</h4>
+        <pre><code>&lt;blockquote cite="來源網址"&gt;
+    這是一段引用的文字，通常會進行縮排。
+&lt;/blockquote&gt;</code></pre>
+        <div class="example-output">
+            <blockquote cite="來源網址">
+                這是一段引用的文字，通常會進行縮排。
+            </blockquote>
+        </div>
+
+        <h4>預先格式化區塊 (pre)</h4>
+        <pre><code>&lt;pre&gt;
+  保留原始的
+    空格
+  和換行符號。
+  適合顯示程式碼。
+&lt;/pre&gt;</code></pre>
+        <div class="example-output">
+            <pre>
+  保留原始的
+    空格
+  和換行符號。
+  適合顯示程式碼。
+            </pre>
+        </div>
+
+        <h4>水平分隔線 (hr)</h4>
+        <pre><code>&lt;p&gt;段落一&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;段落二&lt;/p&gt;</code></pre>
+        <div class="example-output">
+            <p>段落一</p>
+            <hr>
+            <p>段落二</p>
+        </div>
+
+        <h3>3-2 文字樣式元素</h3>
+        <pre><code>&lt;p&gt;
+    &lt;b&gt;粗體 (b)&lt;/b&gt; vs &lt;strong&gt;強調粗體 (strong)&lt;/strong&gt;&lt;br&gt;
+    &lt;i&gt;斜體 (i)&lt;/i&gt; vs &lt;em&gt;強調斜體 (em)&lt;/em&gt;&lt;br&gt;
+    &lt;s&gt;刪除線 (s)&lt;/s&gt; vs &lt;del&gt;標示刪除 (del)&lt;/del&gt;&lt;br&gt;
+    &lt;u&gt;底線 (u)&lt;/u&gt;&lt;br&gt;
+    這段文字中有 &lt;mark&gt;高亮顯示&lt;/mark&gt; 的部分。&lt;br&gt;
+    這是 &lt;small&gt;小字體&lt;/small&gt;。&lt;br&gt;
+    X&lt;sup&gt;2&lt;/sup&gt; (上標) 和 H&lt;sub&gt;2&lt;/sub&gt;O (下標)。&lt;br&gt;
+    注音符號：&lt;ruby&gt;字&lt;rt&gt;ㄓㄨˋ ㄧㄣ&lt;/rt&gt;&lt;/ruby&gt;。&lt;br&gt;
+    顯示程式碼：&lt;code&gt;console.log('Hello');&lt;/code&gt;。
+&lt;/p&gt;</code></pre>
+        <div class="example-output">
+             <p>
+                <b>粗體 (b)</b> vs <strong>強調粗體 (strong)</strong><br>
+                <i>斜體 (i)</i> vs <em>強調斜體 (em)</em><br>
+                <s>刪除線 (s)</s> vs <del>標示刪除 (del)</del><br>
+                <u>底線 (u)</u><br>
+                這段文字中有 <mark>高亮顯示</mark> 的部分。<br>
+                這是 <small>小字體</small>。<br>
+                X<sup>2</sup> (上標) 和 H<sub>2</sub>O (下標)。<br>
+                注音符號：<ruby>字<rt>ㄓㄨˋ ㄧㄣ</rt></ruby>。<br>
+                顯示程式碼：<code>console.log('Hello');</code>。
+            </p>
+        </div>
+
+        <h3>3-3 語意結構區塊元素</h3>
+        <p><code>&lt;div&gt;</code> 是一個通用的區塊容器，本身無語意。</p>
+        <h4>HTML5 語意標籤</h4>
+        <p>這些標籤有助於提升網頁結構的可讀性和 SEO。</p>
+        <pre><code>&lt;header&gt;頁首 (標題, Logo, 導覽)&lt;/header&gt;
+&lt;nav&gt;導覽列 (主要選單)&lt;/nav&gt;
+&lt;main&gt;
+    主要內容區域
+    &lt;article&gt;
+        獨立的文章內容
+        &lt;h2&gt;文章標題&lt;/h2&gt;
+        &lt;p&gt;文章段落...&lt;/p&gt;
+        &lt;section&gt;
+            文章內的一個章節
+            &lt;h3&gt;章節標題&lt;/h3&gt;
+            &lt;p&gt;章節內容...&lt;/p&gt;
+        &lt;/section&gt;
+    &lt;/article&gt;
+    &lt;aside&gt;
+        側邊欄 (廣告, 相關連結)
+    &lt;/aside&gt;
+&lt;/main&gt;
+&lt;footer&gt;
+    頁尾 (版權, 聯絡資訊)
+    &lt;address&gt;
+        聯絡地址或 Email
+    &lt;/address&gt;
+&lt;/footer&gt;</code></pre>
+        <div class="example-output" style="border: 1px solid #ccc; padding: 10px;">
+            <header style="background-color:#eee; padding:5px; margin-bottom:5px; border:1px solid #ddd;">頁首 (標題, Logo, 導覽)</header>
+            <nav style="background-color:#eee; padding:5px; margin-bottom:5px; border:1px solid #ddd;">導覽列 (主要選單)</nav>
+            <main style="display: flex; border:1px solid #ddd; padding:5px; margin-bottom:5px;">
+                <div style="flex-grow: 1; margin-right: 5px;">
+                    主要內容區域
+                    <article style="border:1px solid #ddd; padding:5px; margin-top:5px;">
+                        獨立的文章內容
+                        <h2 style="font-size:1.1em; border:none;">文章標題</h2>
+                        <p>文章段落...</p>
+                        <section style="border:1px solid #ddd; padding:5px; margin-top:5px;">
+                            文章內的一個章節
+                            <h3 style="font-size:1em; border:none;">章節標題</h3>
+                            <p>章節內容...</p>
+                        </section>
+                    </article>
+                </div>
+                <aside style="background-color:#eee; padding:5px; border:1px solid #ddd; min-width: 80px;">
+                    側邊欄 (廣告, 相關連結)
+                </aside>
+            </main>
+            <footer style="background-color:#eee; padding:5px; border:1px solid #ddd;">
+                頁尾 (版權, 聯絡資訊)
+                <address style="font-style:italic; margin-top:5px;">
+                    聯絡地址或 Email
+                </address>
+            </footer>
+            <small>(註：此處為示意，實際佈局需靠 CSS)</small>
+        </div>
+
+
+        <h3>3-4 超連結元素 (a)</h3>
+        <pre><code>&lt;!-- 連結到外部網站 --&gt;
+&lt;a href="https://www.google.com" target="_blank"&gt;前往 Google (開新視窗)&lt;/a&gt;&lt;br&gt;
+
+&lt;!-- 連結到 Email --&gt;
+&lt;a href="mailto:test@example.com"&gt;寄信給我&lt;/a&gt;&lt;br&gt;
+
+&lt;!-- 連結到電話 --&gt;
+&lt;a href="tel:+886-912-345-678"&gt;撥打電話&lt;/a&gt;&lt;br&gt;
+
+&lt;!-- 連結到頁內錨點 --&gt;
+&lt;a href="#ch1"&gt;跳到第一章&lt;/a&gt;&lt;br&gt;
+
+&lt;!-- 圖片連結 --&gt;
+&lt;a href="https://www.nttu.edu.tw"&gt;
+    &lt;img src="1.png" alt="台東大學 Logo" width="100"&gt;
+&lt;/a&gt;&lt;br&gt;
+
+&lt;!-- 下載連結 --&gt;
+&lt;a href="document.pdf" download="學習文件.pdf"&gt;下載 PDF&lt;/a&gt;</code></pre>
+        <div class="example-output">
+            <a href="https://www.google.com" target="_blank">前往 Google (開新視窗)</a><br>
+            <a href="mailto:test@example.com">寄信給我</a><br>
+            <a href="tel:+886-912-345-678">撥打電話</a><br>
+            <a href="#ch1">跳到第一章</a><br>
+            <a href="https://www.nttu.edu.tw">
+                <img src="images/1.png" alt="台東大學 Logo (示意圖)" width="100">
+            </a><br>
+            <a href="document.pdf" download="學習文件.pdf">下載 PDF</a>
+            <p><small>(註：部分連結需在實際環境測試，如 mailto, tel, download)</small></p>
+        </div>
+
+        <h3>3-5 圖片元素</h3>
+        <h4>基本圖片 (img)</h4>
+        <pre><code>&lt;img src="2.png" alt="風景圖片" width="300" height="200"&gt;
+&lt;!-- 建議只設寬或高，或用 CSS 控制 --&gt;
+&lt;img src="3.png" alt="另一風景" style="width: 250px;"&gt;</code></pre>
+        <div class="example-output">
+            <img src="images/1.png" alt="風景圖片 (示意圖)" width="300" height="200">
+            <img src="images/1.png" alt="另一風景 (示意圖)" style="width: 250px;">
+        </div>
+
+        <h4>響應式圖片 (picture)</h4>
+        <pre><code>&lt;picture&gt;
+    &lt;!-- 當螢幕寬度小於 600px 時，載入 small.png --&gt;
+    &lt;source media="(max-width: 599px)" srcset="4.png"&gt;
+    &lt;!-- 當螢幕寬度大於等於 600px 時，載入 large.png --&gt;
+    &lt;source media="(min-width: 600px)" srcset="5.png"&gt;
+    &lt;!-- 預設圖片 --&gt;
+    &lt;img src="5.png" alt="響應式圖片"&gt;
+&lt;/picture&gt;</code></pre>
+        <div class="example-output">
+            <picture>
+                <source media="(max-width: 599px)" srcset="4.png">
+                <source media="(min-width: 600px)" srcset="5.png">
+                <img src="images/1.png" alt="響應式圖片 (示意圖)">
+            </picture>
+            <p><small>(註：請調整瀏覽器視窗寬度查看效果)</small></p>
+        </div>
+    </section>
+
+    <section id="ch4">
+        <h2>第四章：影音多媒體、表格及表單元素</h2>
+
+        <h3>4-1 影音多媒體元素</h3>
+        <h4>音訊 (audio)</h4>
+        <pre><code>&lt;audio controls loop preload="metadata"&gt;
+  &lt;source src="music.mp3" type="audio/mpeg"&gt;
+  &lt;source src="music.ogg" type="audio/ogg"&gt;
+  您的瀏覽器不支援 audio 標籤。
+&lt;/audio&gt;</code></pre>
+        <div class="example-output">
+            <audio controls loop preload="metadata">
+              您的瀏覽器不支援 audio 標籤。(此處無實際音訊檔)
+            </audio>
+        </div>
+
+        <h4>視訊 (video)</h4>
+        <pre><code>&lt;video width="320" height="240" controls poster="6.png"&gt;
+  &lt;source src="movie.mp4" type="video/mp4"&gt;
+  &lt;source src="movie.webm" type="video/webm"&gt;
+  您的瀏覽器不支援 video 標籤。
+&lt;/video&gt;</code></pre>
+        <div class="example-output">
+            <video width="320" height="240" controls poster="6.png">
+              您的瀏覽器不支援 video 標籤。(此處無實際影片檔)
+            </video>
+        </div>
+
+        <h4>內嵌框架 (iframe) - 嵌入 YouTube 影片</h4>
+        <pre><code>&lt;iframe width="560" height="315"
+    src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+    title="YouTube video player" frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen&gt;
+&lt;/iframe&gt;</code></pre>
+        <div class="example-output">
+            <iframe width="560" height="315"
+                src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                title="YouTube video player" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+            </iframe>
+        </div>
+
+         <h4>繪圖畫布 (canvas)</h4>
+         <pre><code>&lt;canvas id="myDrawingCanvas" width="200" height="100" style="border:1px solid #000;"&gt;&lt;/canvas&gt;
+&lt;script&gt;
+  const canvas = document.getElementById('myDrawingCanvas');
+  if (canvas.getContext) {
+    const ctx = canvas.getContext('2d');
+    // 繪製一個紅色矩形
+    ctx.fillStyle = 'red';
+    ctx.fillRect(10, 10, 50, 50); // x, y, width, height
+    // 繪製一個藍色線條
+    ctx.strokeStyle = 'blue';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(70, 10);
+    ctx.lineTo(120, 60);
+    ctx.stroke();
+  }
+&lt;/script&gt;</code></pre>
+         <div class="example-output">
+             <canvas id="myDrawingCanvas" width="200" height="100" style="border:1px solid #000; background-color: white;"></canvas>
+             <script>
+               const canvasInstance = document.getElementById('myDrawingCanvas');
+               if (canvasInstance && canvasInstance.getContext) {
+                 const ctxInstance = canvasInstance.getContext('2d');
+                 ctxInstance.fillStyle = 'red';
+                 ctxInstance.fillRect(10, 10, 50, 50);
+                 ctxInstance.strokeStyle = 'blue';
+                 ctxInstance.lineWidth = 3;
+                 ctxInstance.beginPath();
+                 ctxInstance.moveTo(70, 10);
+                 ctxInstance.lineTo(120, 60);
+                 ctxInstance.stroke();
+               }
+             </script>
+         </div>
+
+        <h3>4-2 表格元素 (table)</h3>
+        <h4>基本表格與合併儲存格</h4>
+        <pre><code>&lt;table border="1"&gt; &lt;!-- 建議用 CSS 設定 border --&gt;
+    &lt;caption&gt;課程表&lt;/caption&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th&gt;時間&lt;/th&gt;
+            &lt;th&gt;星期一&lt;/th&gt;
+            &lt;th&gt;星期二&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;td&gt;早上&lt;/td&gt;
+            &lt;td&gt;網頁設計&lt;/td&gt;
+            &lt;td rowspan="2"&gt;體育&lt;/td&gt; &lt;!-- 合併兩列 --&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;中午&lt;/td&gt;
+            &lt;td&gt;午休&lt;/td&gt;
+            &lt;!-- 星期二中午被合併了 --&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+    &lt;tfoot&gt;
+        &lt;tr&gt;
+            &lt;td colspan="3"&gt;下午課程請見詳細課表&lt;/td&gt; &lt;!-- 合併三欄 --&gt;
+        &lt;/tr&gt;
+    &lt;/tfoot&gt;
+&lt;/table&gt;</code></pre>
+        <div class="example-output">
+            <table> <caption>課程表</caption>
+                <thead>
+                    <tr>
+                        <th>時間</th>
+                        <th>星期一</th>
+                        <th>星期二</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>早上</td>
+                        <td>網頁設計</td>
+                        <td rowspan="2">體育</td> </tr>
+                    <tr>
+                        <td>中午</td>
+                        <td>午休</td>
+                        </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3">下午課程請見詳細課表</td> </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <h4>欄位群組 (colgroup, col)</h4>
+        <pre><code>&lt;table&gt;
+    &lt;colgroup&gt;
+        &lt;col span="1" style="background-color: #f0f0f0;"&gt; &lt;!-- 第一欄背景色 --&gt;
+        &lt;col span="2" style="background-color: #e0e0e0;"&gt; &lt;!-- 第二、三欄背景色 --&gt;
+    &lt;/colgroup&gt;
+    &lt;tr&gt;&lt;th&gt;品項&lt;/th&gt;&lt;th&gt;價格&lt;/th&gt;&lt;th&gt;數量&lt;/th&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;蘋果&lt;/td&gt;&lt;td&gt;30&lt;/td&gt;&lt;td&gt;5&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;香蕉&lt;/td&gt;&lt;td&gt;10&lt;/td&gt;&lt;td&gt;12&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;</code></pre>
+        <div class="example-output">
+             <table>
+                <colgroup>
+                    <col span="1" style="background-color: #f0f0f0;">
+                    <col span="2" style="background-color: #e0e0e0;">
+                </colgroup>
+                <tr><th>品項</th><th>價格</th><th>數量</th></tr>
+                <tr><td>蘋果</td><td>30</td><td>5</td></tr>
+                <tr><td>香蕉</td><td>10</td><td>12</td></tr>
+            </table>
+        </div>
+
+        <h3>4-3 表單元素 (form)</h3>
+        <pre><code>&lt;form action="process.php" method="post" enctype="multipart/form-data" autocomplete="on"&gt;
+    &lt;fieldset&gt;
+        &lt;legend&gt;個人資料&lt;/legend&gt;
+
+        &lt;!-- 文字輸入框與標籤 --&gt;
+        &lt;label for="username"&gt;姓名：&lt;/label&gt;
+        &lt;input type="text" id="username" name="username" placeholder="請輸入姓名" required&gt;&lt;br&gt;
+
+        &lt;!-- 密碼輸入框 --&gt;
+        &lt;label&gt;密碼：&lt;input type="password" name="password" required minlength="8"&gt;&lt;/label&gt;&lt;br&gt;
+
+        &lt;!-- Email --&gt;
+        &lt;label for="email"&gt;Email：&lt;/label&gt;
+        &lt;input type="email" id="email" name="email"&gt;&lt;br&gt;
+
+        &lt;!-- 數字 --&gt;
+        &lt;label for="age"&gt;年齡：&lt;/label&gt;
+        &lt;input type="number" id="age" name="age" min="18" max="100" step="1"&gt;&lt;br&gt;
+
+        &lt;!-- 日期 --&gt;
+        &lt;label for="birthdate"&gt;生日：&lt;/label&gt;
+        &lt;input type="date" id="birthdate" name="birthdate"&gt;&lt;br&gt;
+    &lt;/fieldset&gt;
+
+    &lt;fieldset&gt;
+        &lt;legend&gt;選項&lt;/legend&gt;
+
+        &lt;!-- 單選按鈕 --&gt;
+        &lt;p&gt;性別：
+            &lt;input type="radio" id="male" name="gender" value="male" checked&gt;
+            &lt;label for="male"&gt;男&lt;/label&gt;
+            &lt;input type="radio" id="female" name="gender" value="female"&gt;
+            &lt;label for="female"&gt;女&lt;/label&gt;
+        &lt;/p&gt;
+
+        &lt;!-- 複選框 --&gt;
+        &lt;p&gt;興趣：
+            &lt;input type="checkbox" id="coding" name="hobby" value="coding"&gt;
+            &lt;label for="coding"&gt;寫程式&lt;/label&gt;
+            &lt;input type="checkbox" id="music" name="hobby" value="music"&gt;
+            &lt;label for="music"&gt;聽音樂&lt;/label&gt;
+            &lt;input type="checkbox" id="sports" name="hobby" value="sports"&gt;
+            &lt;label for="sports"&gt;運動&lt;/label&gt;
+        &lt;/p&gt;
+
+        &lt;!-- 下拉式選單 --&gt;
+        &lt;label for="city"&gt;居住城市：&lt;/label&gt;
+        &lt;select id="city" name="city"&gt;
+            &lt;option value=""&gt;--請選擇--&lt;/option&gt;
+            &lt;option value="taipei"&gt;台北&lt;/option&gt;
+            &lt;option value="taitung" selected&gt;台東&lt;/option&gt; &lt;!-- 預設選中 --&gt;
+            &lt;option value="kaohsiung" disabled&gt;高雄 (不可選)&lt;/option&gt;
+        &lt;/select&gt;&lt;br&gt;
+
+        &lt;!-- 多行文字輸入框 --&gt;
+        &lt;label for="comment"&gt;意見：&lt;/label&gt;&lt;br&gt;
+        &lt;textarea id="comment" name="comment" rows="4" cols="50" placeholder="請輸入您的寶貴意見..."&gt;&lt;/textarea&gt;&lt;br&gt;
+
+        &lt;!-- 檔案上傳 --&gt;
+        &lt;label for="avatar"&gt;上傳頭像：&lt;/label&gt;
+        &lt;input type="file" id="avatar" name="avatar" accept="image/png, image/jpeg"&gt;&lt;br&gt;
+    &lt;/fieldset&gt;
+
+    &lt;!-- 按鈕 --&gt;
+    &lt;input type="submit" value="提交表單"&gt;
+    &lt;input type="reset" value="清除重填"&gt;
+    &lt;input type="button" value="一般按鈕" onclick="alert('按鈕被點擊了!');"&gt; &lt;!-- 需 JS 配合 --&gt;
+
+&lt;/form&gt;</code></pre>
+        <div class="example-output">
+            <form action="#" method="post"> <fieldset>
+                    <legend>個人資料</legend>
+                    <label for="ex-username">姓名：</label>
+                    <input type="text" id="ex-username" name="username" placeholder="請輸入姓名" required><br>
+                    <label>密碼：<input type="password" name="password" required minlength="8"></label><br>
+                    <label for="ex-email">Email：</label>
+                    <input type="email" id="ex-email" name="email"><br>
+                    <label for="ex-age">年齡：</label>
+                    <input type="number" id="ex-age" name="age" min="18" max="100" step="1"><br>
+                    <label for="ex-birthdate">生日：</label>
+                    <input type="date" id="ex-birthdate" name="birthdate"><br>
+                </fieldset>
+                <fieldset>
+                    <legend>選項</legend>
+                    <p>性別：
+                        <input type="radio" id="ex-male" name="gender" value="male" checked>
+                        <label for="ex-male">男</label>
+                        <input type="radio" id="ex-female" name="gender" value="female">
+                        <label for="ex-female">女</label>
+                    </p>
+                    <p>興趣：
+                        <input type="checkbox" id="ex-coding" name="hobby" value="coding">
+                        <label for="ex-coding">寫程式</label>
+                        <input type="checkbox" id="ex-music" name="hobby" value="music">
+                        <label for="ex-music">聽音樂</label>
+                        <input type="checkbox" id="ex-sports" name="hobby" value="sports">
+                        <label for="ex-sports">運動</label>
+                    </p>
+                    <label for="ex-city">居住城市：</label>
+                    <select id="ex-city" name="city">
+                        <option value="">--請選擇--</option>
+                        <option value="taipei">台北</option>
+                        <option value="taitung" selected>台東</option>
+                        <option value="kaohsiung" disabled>高雄 (不可選)</option>
+                    </select><br>
+                    <label for="ex-comment">意見：</label><br>
+                    <textarea id="ex-comment" name="comment" rows="4" cols="50" placeholder="請輸入您的寶貴意見..."></textarea><br>
+                    <label for="ex-avatar">上傳頭像：</label>
+                    <input type="file" id="ex-avatar" name="avatar" accept="image/png, image/jpeg"><br>
+                </fieldset>
+                <input type="submit" value="提交表單">
+                <input type="reset" value="清除重填">
+                <input type="button" value="一般按鈕" onclick="alert('按鈕被點擊了!');">
+            </form>
+        </div>
+    </section>
+
+    <section id="ch5">
+        <h2>第五章：CSS 基本概念</h2>
+
+        <h3>5-1 認識 CSS</h3>
+        <p>CSS (Cascading Style Sheets) 用於設定 HTML 元素的外觀和佈局。</p>
+        <p>基本架構：<code>選擇器 { 屬性: 值; 屬性: 值; }</code></p>
+        <pre><code>/* CSS 註解 */
+p {
+    color: blue; /* 設定文字顏色為藍色 */
+    font-size: 16px; /* 設定字體大小為 16 像素 */
+}</code></pre>
+
+        <h3>5-2 CSS 的使用方式</h3>
+        <ul>
+            <li><strong>行內樣式</strong>：<code>&lt;p style="color: red;"&gt;...&lt;/p&gt;</code> (優先權最高，不建議)</li>
+            <li><strong>內部樣式表</strong>：在 <code>&lt;head&gt;</code> 的 <code>&lt;style&gt;</code> 標籤內寫 CSS。</li>
+            <li><strong>外部樣式表</strong>：寫在獨立的 <code>.css</code> 檔案，用 <code>&lt;link&gt;</code> 引入。(推薦)</li>
+        </ul>
+
+        <h3>CSS 串接與優先權</h3>
+        <p>樣式來源優先權：行內 > 內部/外部 > 瀏覽器預設。</p>
+        <p><code>!important</code> 宣告具有最高優先權。</p>
+        <p>選擇器明確度：ID > Class/屬性/虛擬類 > 標籤/虛擬元素 > 通用。</p>
+        <p>相同優先權下，後定義的規則覆蓋先定義的。</p>
+
+        <h3>5-3 CSS 基本選擇器</h3>
+        <h4>標籤選擇器</h4>
+        <pre><code>h2 { font-family: "Verdana", sans-serif; }</code></pre>
+        <h4>Class 選擇器 (.)</h4>
+        <pre><code>.highlight { background-color: yellow; }
+.important { font-weight: bold; }
+.highlight.important { color: red; } /* 同時有兩個 class */</code></pre>
+        <div class="example-output">
+            <p class="highlight">這段文字背景是黃色。</p>
+            <p class="important">這段文字是粗體。</p>
+            <p class="highlight important" style="color:red;">這段文字背景黃色、粗體且紅色。</p>
+            <style>
+                .highlight { background-color: yellow; }
+                .important { font-weight: bold; }
+                .highlight.important { color: red; }
+            </style>
+        </div>
+        <h4>ID 選擇器 (#)</h4>
+        <pre><code>#logo { border: 1px solid blue; }</code></pre>
+        <div class="example-output">
+            <div id="logo" style="border: 1px solid blue; padding: 5px;">這是 ID 為 logo 的區塊</div>
+        </div>
+        <h4>通用選擇器 (*)</h4>
+        <pre><code>* { margin: 0; padding: 0; } /* 通常用於重設樣式 */</code></pre>
+        <h4>屬性選擇器 ([])</h4>
+        <pre><code>/* 選擇所有有 title 屬性的 a 標籤 */
+a[title] { color: green; }
+
+/* 選擇 type="submit" 的 input 標籤 */
+input[type="submit"] { background-color: lightblue; }
+
+/* 選擇 href 以 "https" 開頭的 a 標籤 */
+a[href^="https"] { font-style: italic; }
+
+/* 選擇 src 以 ".png" 結尾的 img 標籤 */
+img[src$=".png"] { border: 2px solid red; }
+
+/* 選擇 class 包含 "button" 的元素 */
+[class*="button"] { cursor: pointer; }</code></pre>
+        <div class="example-output">
+            <a href="#" title="提示文字" style="color: green;">有 title 的連結</a><br>
+            <input type="submit" value="提交按鈕" style="background-color: lightblue;"><br>
+            <a href="https://example.com" style="font-style: italic;">https 開頭的連結</a><br>
+            <img src="images/1.png" alt="PNG 圖片" style="border: 2px solid red; width: 50px;"><br>
+            <button class="action-button" style="cursor: pointer;">包含 button 的 Class</button>
+        </div>
+
+        <h3>5-4 組合選擇器</h3>
+        <h4>後代選擇器 (空格)</h4>
+        <pre><code>article p { line-height: 1.8; } /* article 內所有 p */</code></pre>
+        <h4>子選擇器 (&gt;)</h4>
+        <pre><code>ul > li { list-style-type: square; } /* ul 的直接子層 li */</code></pre>
+        <h4>同層相鄰選擇器 (+)</h4>
+        <pre><code>h3 + p { margin-top: 5px; } /* 緊接在 h3 後的同層 p */</code></pre>
+        <h4>同層全體選擇器 (~)</h4>
+        <pre><code>h3 ~ p { color: gray; } /* h3 後面所有同層的 p */</code></pre>
+        <div class="example-output">
+            <article>
+                <p style="line-height: 1.8;">Article 內的第一個段落。</p>
+                <div><p style="line-height: 1.8;">Article 內 div 內的段落。</p></div>
+            </article>
+            <ul>
+                <li style="list-style-type: square;">第一層列表項</li>
+                <li>
+                    第二層列表項
+                    <ul><li>（這個不受影響）</li></ul>
+                </li>
+            </ul>
+            <h3>一個標題</h3>
+            <p style="margin-top: 5px; color: gray;">緊接在標題後的段落。</p>
+            <p style="color: gray;">標題後的第二個段落。</p>
+        </div>
+
+        <h3>5-5 虛擬類別選擇器 (:)</h3>
+        <pre><code>/* 連結狀態 */
+a:link { color: blue; }
+a:visited { color: purple; }
+a:hover { color: red; text-decoration: underline; }
+a:active { color: orange; }
+
+/* 表單狀態 */
+input:focus { border-color: orange; outline: none; }
+input:checked + label { font-weight: bold; } /* 選中時，旁邊的 label 變粗 */
+input:disabled { background-color: #eee; }
+
+/* 結構位置 */
+li:first-child { color: green; }
+li:last-child { color: red; }
+li:nth-child(odd) { background-color: #f0f0f0; } /* 奇數行 */
+p:not(.special) { font-style: italic; } /* 非 special class 的 p */</code></pre>
+        <div class="example-output">
+            <a href="#ch5-example1">連結範例 (試著懸停/點擊)</a><br>
+            <input type="text" placeholder="輸入框 (試著點擊)" style="border: 1px solid #ccc;"><br>
+            <input type="checkbox" id="ch5-check" class="ch5-check-input">
+            <label for="ch5-check" class="ch5-check-label">勾選我</label><br>
+            <input type="text" value="禁用輸入框" disabled><br>
+            <ul>
+                <li style="color: green; background-color: #f0f0f0;">第一項 (綠色, 奇數行背景)</li>
+                <li>第二項</li>
+                <li style="background-color: #f0f0f0;">第三項 (奇數行背景)</li>
+                <li style="color: red;">最後項 (紅色)</li>
+            </ul>
+            <p style="font-style: italic;">一般段落 (斜體)</p>
+            <p class="special">有 special class 的段落 (非斜體)</p>
+            <style>
+                #ch5-example1:link { color: blue; }
+                #ch5-example1:visited { color: purple; }
+                #ch5-example1:hover { color: red; text-decoration: underline; }
+                #ch5-example1:active { color: orange; }
+                .example-output input[type="text"]:focus { border-color: orange; outline: none; }
+                .ch5-check-input:checked + .ch5-check-label { font-weight: bold; }
+                .example-output input:disabled { background-color: #eee; }
+                .example-output li:first-child { color: green; }
+                .example-output li:last-child { color: red; }
+                .example-output li:nth-child(odd) { background-color: #f0f0f0; }
+                .example-output p:not(.special) { font-style: italic; }
+            </style>
+        </div>
+
+        <h3>5-6 虛擬元素選擇器 (::)</h3>
+        <pre><code>/* 在 p 元素前插入圖示 */
+p.info::before {
+    content: "ℹ️ "; /* 必要屬性 */
+    margin-right: 5px;
+}
+
+/* 設定第一個字母樣式 */
+p.first-letter-style::first-letter {
+    font-size: 2em;
+    color: #0056b3;
+    float: left; /* 讓文字環繞 */
+    margin-right: 4px;
+}
+
+/* 設定第一行樣式 */
+p.first-line-style::first-line {
+    font-weight: bold;
+}
+
+/* 設定列表標記樣式 */
+ul.custom-marker li::marker {
+    content: "✅ ";
+    color: green;
+}
+
+/* 設定選取文字樣式 */
+::selection {
+    background-color: #0056b3;
+    color: white;
+}</code></pre>
+        <div class="example-output">
+            <p class="info">這是一個提示訊息。</p>
+            <p class="first-letter-style" style="font-size: 1em; color: #333;">這段文字的第一個字母會變大且變色，並且文字會環繞它。這是為了展示 first-letter 的效果。</p>
+            <p class="first-line-style" style="font-weight: normal;">這段文字的第一行會是粗體。如果文字夠長換行了，第二行就不會是粗體了。繼續寫一些文字來測試換行效果。</p>
+            <ul class="custom-marker">
+                <li>自訂標記項目一</li>
+                <li>自訂標記項目二</li>
+            </ul>
+            <p>試著用滑鼠選取這段文字，看看背景和文字顏色變化。</p>
+            <style>
+                .example-output p.info::before { content: "ℹ️ "; margin-right: 5px; }
+                .example-output p.first-letter-style::first-letter { font-size: 2em; color: #0056b3; float: left; margin-right: 4px; line-height: 1; }
+                .example-output p.first-line-style::first-line { font-weight: bold; }
+                .example-output ul.custom-marker li::marker { content: "✅ "; color: green; }
+                .example-output ::selection { background-color: #0056b3; color: white; }
+            </style>
+        </div>
+    </section>
+
+    <section id="ch6">
+        <h2>第六章：CSS 樣式</h2>
+
+        <h3>6-1 色彩屬性</h3>
+        <p>設定文字顏色：<code>color</code> 屬性。</p>
+        <pre><code>p { color: #333; } /* 十六進位 */
+h4 { color: rgb(0, 128, 0); } /* RGB */
+span { color: rgba(255, 0, 0, 0.7); } /* RGBA (半透明紅) */
+a { color: hsl(240, 100%, 50%); } /* HSL (藍色) */
+strong { color: darkorange; } /* 顏色名稱 */</code></pre>
+        <div class="example-output">
+            <p style="color: #333;">這是用 #333 顏色的段落。</p>
+            <h4 style="color: rgb(0, 128, 0); border:none;">這是用 rgb(0, 128, 0) 的標題。</h4>
+            <span style="color: rgba(255, 0, 0, 0.7);">這是半透明紅色文字。</span><br>
+            <a href="#" style="color: hsl(240, 100%, 50%);">這是藍色的連結。</a><br>
+            <strong style="color: darkorange;">這是橘色的強調文字。</strong>
+        </div>
+
+        <h3>6-2 字型屬性</h3>
+        <pre><code>.font-example {
+    font-family: "Georgia", serif; /* 字型 */
+    font-size: 18px;           /* 大小 */
+    font-style: italic;        /* 樣式: 斜體 */
+    font-weight: bold;         /* 粗細: 粗體 */
+    font-variant: small-caps;  /* 變化: 小型大寫 */
+}
+/* 速記寫法: style variant weight size/line-height family */
+.font-shorthand {
+    font: italic small-caps bold 1.2em/1.5 "Arial", sans-serif;
+}</code></pre>
+        <div class="example-output">
+            <p class="font-example" style='font-family: "Georgia", serif; font-size: 18px; font-style: italic; font-weight: bold; font-variant: small-caps;'>Font Example Text (Georgia, 18px, Italic, Bold, Small-Caps)</p>
+            <p class="font-shorthand" style='font: italic small-caps bold 1.2em/1.5 "Arial", sans-serif;'>Font Shorthand Example (Arial, 1.2em)</p>
+        </div>
+
+        <h3>6-3 文字段落屬性</h3>
+        <pre><code>.text-style {
+    text-align: center;        /* 水平置中 */
+    text-decoration: underline dotted blue; /* 藍色點狀底線 */
+    text-transform: uppercase; /* 全大寫 */
+    letter-spacing: 2px;       /* 字元間距 */
+    line-height: 1.8;          /* 行高 */
+    text-shadow: 1px 1px 2px gray; /* 文字陰影 */
+    text-indent: 2em;          /* 首行縮排 */
+}</code></pre>
+        <div class="example-output">
+            <p class="text-style" style="text-align: center; text-decoration: underline dotted blue; text-transform: uppercase; letter-spacing: 2px; line-height: 1.8; text-shadow: 1px 1px 2px gray; text-indent: 2em;">Styled Text Example</p>
+        </div>
+
+        <h3>6-4 清單屬性</h3>
+        <pre><code>ul.list-style {
+    list-style-type: circle;      /* 標記: 空心圓 */
+    list-style-position: inside; /* 位置: 內部 */
+    /* list-style-image: url("8.png"); */ /* 使用圖片標記 */
+}
+/* 速記寫法 */
+ol.list-shorthand {
+    list-style: lower-roman outside;
+}</code></pre>
+        <div class="example-output">
+            <ul class="list-style" style="list-style-type: circle; list-style-position: inside; border: 1px solid #eee; padding-left: 20px;">
+                <li>項目一 (空心圓, 內部)</li>
+                <li>項目二</li>
+            </ul>
+            <ol class="list-shorthand" style="list-style: lower-roman outside; border: 1px solid #eee; padding-left: 40px;">
+                <li>項目一 (小寫羅馬數字, 外部)</li>
+                <li>項目二</li>
+            </ol>
+        </div>
+
+        <h3>6-5 邊框屬性</h3>
+        <pre><code>.border-example {
+    border-width: 2px;              /* 寬度 */
+    border-style: dashed;           /* 樣式: 虛線 */
+    border-color: green;            /* 顏色 */
+    border-radius: 10px;            /* 圓角 */
+}
+/* 速記寫法 */
+.border-shorthand {
+    border: 3px solid #0056b3;      /* 寬度 樣式 顏色 */
+    border-bottom-color: red;       /* 單獨修改下邊框顏色 */
+    border-top-left-radius: 20px;   /* 單獨設定左上圓角 */
+    border-bottom-right-radius: 20px;/* 單獨設定右下圓角 */
+}
+/* 圖片邊框 (較複雜，僅示意) */
+.border-image-example {
+    border: 15px solid transparent; /* 需要先設定邊框寬度和樣式 */
+    padding: 15px;
+    border-image-source: url('9.png');
+    border-image-slice: 30;          /* 切割圖片 */
+    border-image-repeat: round;      /* 重複方式 */
+}</code></pre>
+        <div class="example-output">
+            <div class="border-example" style="border-width: 2px; border-style: dashed; border-color: green; border-radius: 10px; padding: 10px; margin-bottom: 10px;">邊框範例 (2px 綠色虛線, 10px 圓角)</div>
+            <div class="border-shorthand" style="border: 3px solid #0056b3; border-bottom-color: red; border-top-left-radius: 20px; border-bottom-right-radius: 20px; padding: 10px; margin-bottom: 10px;">邊框速記 (3px 藍實線, 紅底線, 左上右下圓角)</div>
+            <div class="border-image-example" style="border: 15px solid transparent; padding: 15px; border-image-source: url('9.png'); border-image-slice: 30; border-image-repeat: round;">圖片邊框範例 (需有 9.png 圖片才能看到效果)</div>
+        </div>
+
+        <h3>6-6 背景屬性</h3>
+        <pre><code>.background-example {
+    background-color: lightyellow;      /* 背景色 */
+    background-image: url('10.png');    /* 背景圖 */
+    background-repeat: no-repeat;       /* 不重複 */
+    background-position: center center; /* 位置置中 */
+    background-size: contain;           /* 調整大小: 包含 */
+    background-attachment: scroll;      /* 滾動: 跟隨滾動 */
+    padding: 20px; /* 增加內距看效果 */
+    height: 150px; /* 設定高度看效果 */
+    border: 1px solid #ccc; /* 加邊框區分 */
+}
+/* 速記寫法 (常用) */
+.background-shorthand {
+    background: lightblue url('10.png') no-repeat right top / 50px auto;
+    /* color image repeat position / size */
+    padding: 20px;
+    height: 100px;
+    border: 1px solid #ccc;
+}</code></pre>
+        <div class="example-output">
+            <div class="background-example" style="background-color: lightyellow; background-image: url('10.png'); background-repeat: no-repeat; background-position: center center; background-size: contain; background-attachment: scroll; padding: 20px; height: 150px; border: 1px solid #ccc; margin-bottom: 10px;">背景範例 (需有 10.png 圖片)</div>
+            <div class="background-shorthand" style="background: lightblue url('10.png') no-repeat right top / 50px auto; padding: 20px; height: 100px; border: 1px solid #ccc;">背景速記 (需有 10.png 圖片)</div>
+        </div>
+
+        <h3>6-7 漸層函式</h3>
+        <pre><code>.linear-gradient {
+    height: 100px;
+    background-image: linear-gradient(to right, red, yellow); /* 線性漸層 */
+}
+.radial-gradient {
+    height: 100px;
+    background-image: radial-gradient(circle, white, blue); /* 徑向漸層 */
+}</code></pre>
+        <div class="example-output">
+            <div class="linear-gradient" style="height: 100px; background-image: linear-gradient(to right, red, yellow); margin-bottom: 10px; border: 1px solid #ccc;">線性漸層</div>
+            <div class="radial-gradient" style="height: 100px; background-image: radial-gradient(circle, white, blue); border: 1px solid #ccc;">徑向漸層</div>
+        </div>
+
+        <h3>6-8 表格屬性</h3>
+        <pre><code>table.styled-table {
+    width: 100%;
+    border-collapse: collapse; /* 合併邊框 */
+    border-spacing: 0;       /* (合併後無效) */
+    caption-side: bottom;    /* 標題在下方 */
+    empty-cells: show;       /* 顯示空儲存格邊框 */
+    table-layout: fixed;     /* 固定佈局 */
+}
+.styled-table th, .styled-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+.styled-table th {
+    background-color: #f2f2f2;
+}</code></pre>
+        <div class="example-output">
+            <table class="styled-table" style="width: 100%; border-collapse: collapse; caption-side: bottom; empty-cells: show; table-layout: fixed;">
+                 <caption style="text-align:center; margin-top: 5px;">表格樣式範例</caption>
+                 <colgroup> <col style="width: 40%;"> <col style="width: 30%;"> <col style="width: 30%;"> </colgroup>
+                 <thead><tr><th>標題一</th><th>標題二</th><th>標題三</th></tr></thead>
+                 <tbody>
+                     <tr><td>資料A1</td><td>資料A2</td><td>資料A3</td></tr>
+                     <tr><td>資料B1</td><td></td><td>資料B3</td></tr>
+                 </tbody>
+            </table>
+        </div>
+    </section>
+
+</body>
+</html>
