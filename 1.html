@@ -3,36 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>網頁程式設計教學</title>
+    <title>網頁程式設計教學 (響應式)</title>
     <style>
+        /* 基本樣式 */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
-            margin: 20px;
+            margin: 10px; /* 減少邊距以適應小螢幕 */
             background-color: #f4f4f4;
             color: #333;
+            font-size: 16px; /* 設定基準字體大小 */
         }
         h1, h2, h3, h4 {
             color: #0056b3;
             border-bottom: 2px solid #0056b3;
             padding-bottom: 5px;
-            margin-top: 30px;
+            margin-top: 25px; /* 調整標題間距 */
+            margin-bottom: 15px;
         }
         h1 {
             text-align: center;
-            font-size: 2.5em;
-            margin-bottom: 30px;
+            font-size: 2em; /* 調整字體大小 */
+            margin-bottom: 25px;
         }
         h2 {
-            font-size: 2em;
-            margin-top: 40px;
+            font-size: 1.7em; /* 調整字體大小 */
+            margin-top: 35px;
         }
         h3 {
-            font-size: 1.5em;
+            font-size: 1.3em; /* 調整字體大小 */
             border-bottom: 1px solid #ccc;
         }
         h4 {
-            font-size: 1.2em;
+            font-size: 1.1em; /* 調整字體大小 */
             border-bottom: none;
             color: #007bff;
         }
@@ -40,19 +43,21 @@
             background-color: #e9ecef;
             border: 1px solid #ced4da;
             border-radius: 5px;
-            padding: 15px;
-            margin: 15px 0;
+            padding: 10px; /* 調整內距 */
+            margin: 10px 0; /* 調整外距 */
             font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-            white-space: pre-wrap; /* 保留空白和換行 */
-            word-wrap: break-word; /* 長代碼換行 */
-            font-size: 0.95em;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 0.9em; /* 調整代碼字體大小 */
+            overflow-x: auto; /* 如果代碼過長，允許水平滾動 */
         }
         .result-preview {
             border: 2px dashed #007bff;
             border-radius: 5px;
-            padding: 15px;
-            margin: 15px 0;
+            padding: 10px; /* 調整內距 */
+            margin: 10px 0; /* 調整外距 */
             background-color: #fff;
+            overflow-x: auto; /* 如果預覽內容過寬，允許水平滾動 */
         }
         .result-preview h4 {
             margin-top: 0;
@@ -62,28 +67,33 @@
         }
         strong {
             color: #dc3545;
+            font-weight: bold; /* 確保 strong 有加粗效果 */
         }
-        code { /* 用於行內代碼 */
+        code {
             background-color: #f8f9fa;
             padding: 2px 4px;
             border-radius: 3px;
             font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
             color: #c7254e;
+            font-size: 0.9em; /* 調整行內代碼字體 */
+            word-break: break-word; /* 允許在長單詞中換行 */
         }
-        pre > code { /* 用於<pre>內的代碼塊 */
+        pre > code {
              background-color: transparent;
              padding: 0;
              border-radius: 0;
              color: inherit;
+             font-size: inherit; /* 繼承 pre 的字體大小 */
         }
         table {
             border-collapse: collapse;
-            width: 100%;
+            width: 100%; /* 使表格寬度自適應 */
             margin-bottom: 15px;
+            font-size: 0.9em; /* 稍微縮小表格字體 */
         }
         th, td {
             border: 1px solid #ddd;
-            padding: 8px;
+            padding: 6px; /* 調整表格內距 */
             text-align: left;
         }
         th {
@@ -91,19 +101,32 @@
             color: #333;
         }
         ul, ol {
-            padding-left: 20px;
+            padding-left: 25px; /* 調整列表縮排 */
         }
         li {
             margin-bottom: 5px;
         }
-        img {
-            max-width: 100%; /* 圖片自適應寬度 */
+        img, video, iframe, canvas { /* 讓嵌入內容響應式 */
+            max-width: 100%;
             height: auto;
-            border: 1px solid #ddd;
-            padding: 3px;
-            background-color: #fff;
-            margin: 5px 0;
+            display: block; /* 避免下方多餘空間 */
         }
+         img {
+             border: 1px solid #ddd;
+             padding: 3px;
+             background-color: #fff;
+             margin: 5px 0;
+         }
+        figure {
+            margin: 10px 0; /* 調整 figure 外距 */
+        }
+        figcaption {
+            font-size: 0.9em;
+            color: #555;
+            text-align: center;
+            margin-top: 5px;
+        }
+
         /* 特定範例的樣式 */
         .preview-box {
             border: 1px solid #ccc;
@@ -122,12 +145,12 @@
         }
         .preview-table-style {
             border-collapse: collapse;
-            width: 80%;
-            margin: 10px auto;
+            width: 100%; /* 改為 100% */
+            margin: 10px 0; /* 移除左右 auto */
         }
         .preview-table-style th, .preview-table-style td {
             border: 1px solid navy;
-            padding: 10px;
+            padding: 8px; /* 可稍微調整 */
             text-align: center;
         }
         .preview-table-style th {
@@ -135,14 +158,41 @@
         }
         .preview-form input, .preview-form select, .preview-form textarea {
             margin-bottom: 10px;
-            padding: 5px;
+            padding: 8px; /* 增加觸控區域 */
             border: 1px solid #ccc;
             border-radius: 3px;
+            width: calc(100% - 18px); /* 讓輸入框寬度接近 100% */
+            box-sizing: border-box; /* 包含 padding 和 border */
+        }
+        /* Radio 和 Checkbox 不需要全寬 */
+        .preview-form input[type="radio"],
+        .preview-form input[type="checkbox"] {
+            width: auto;
+            margin-right: 5px;
         }
         .preview-form label {
-            display: inline-block;
-            min-width: 80px;
+            display: block; /* 讓標籤獨佔一行 */
             margin-bottom: 5px;
+            font-weight: bold;
+        }
+        /* Radio 和 Checkbox 的標籤樣式調整 */
+        .preview-form div > label:first-of-type { /* 只針對欄位標題 */
+             margin-bottom: 8px;
+        }
+        .preview-form input[type="radio"] + label,
+        .preview-form input[type="checkbox"] + label {
+            display: inline-block; /* 讓選項標籤同行 */
+            font-weight: normal;
+            margin-bottom: 10px;
+            margin-right: 15px;
+            min-width: auto; /* 取消最小寬度 */
+        }
+        .preview-form input[type="submit"],
+        .preview-form input[type="reset"],
+        .preview-form button {
+             width: auto; /* 按鈕不需要全寬 */
+             padding: 10px 15px; /* 增大按鈕觸控區域 */
+             cursor: pointer;
         }
         .preview-gradient-box {
             height: 100px;
@@ -150,15 +200,83 @@
             margin-bottom: 10px;
             color: white;
             text-align: center;
-            padding-top: 30px;
+            display: flex; /* 使用 flex 垂直居中文字 */
+            align-items: center;
+            justify-content: center;
+            padding: 10px; /* 增加內距 */
+            box-sizing: border-box;
         }
         .preview-border-image {
-            border: 30px solid transparent;
-            padding: 15px;
-            border-image-source: url('images/1.png'); /* 假設 images/1.png 是邊框圖片 */
+            border: 20px solid transparent; /* 減少邊框寬度 */
+            padding: 10px;
+            border-image-source: url('images/1.png');
             border-image-slice: 30;
             border-image-repeat: round;
             margin-bottom: 15px;
+        }
+        /* 結構示意圖調整 */
+        #prev_3_3 > div {
+             flex-direction: column; /* 小螢幕時堆疊 */
+        }
+         #prev_3_3 main {
+             border-right: none; /* 移除分隔線 */
+             padding-right: 0;
+             border-bottom: 1px dashed #aaa; /* 改為下方分隔 */
+             padding-bottom: 5px;
+             margin-bottom: 5px;
+         }
+         #prev_3_3 aside {
+             width: 100%; /* 寬度變 100% */
+             padding-left: 0;
+         }
+
+        /* --- 響應式設計：針對小螢幕調整 --- */
+        @media (min-width: 768px) { /* 平板及以上尺寸 */
+            body {
+                margin: 20px; /* 恢復較大邊距 */
+                font-size: 17px; /* 可稍微增大基準字體 */
+            }
+            h1 { font-size: 2.5em; }
+            h2 { font-size: 2em; }
+            h3 { font-size: 1.5em; }
+            h4 { font-size: 1.2em; }
+            .code-example { font-size: 0.95em; padding: 15px; }
+            .result-preview { padding: 15px; }
+            code { font-size: 0.95em; }
+            table { font-size: 1em; }
+            th, td { padding: 8px; }
+            ul, ol { padding-left: 30px; }
+            .preview-form input, .preview-form select, .preview-form textarea {
+                 width: auto; /* 恢復自動寬度 */
+            }
+            .preview-form label {
+                 display: inline-block; /* 恢復標籤同行 */
+                 min-width: 80px; /* 恢復最小寬度 */
+                 margin-bottom: 5px;
+            }
+            .preview-form input[type="radio"] + label,
+            .preview-form input[type="checkbox"] + label {
+                 margin-bottom: 5px; /* 減少底部間距 */
+            }
+            .preview-border-image {
+                 border-width: 30px; /* 恢復邊框寬度 */
+                 padding: 15px;
+            }
+            /* 恢復結構示意圖佈局 */
+            #prev_3_3 > div {
+                 flex-direction: row;
+            }
+             #prev_3_3 main {
+                 border-right: 1px dashed #aaa;
+                 padding-right: 5px;
+                 border-bottom: none;
+                 padding-bottom: 0;
+                 margin-bottom: 0;
+             }
+             #prev_3_3 aside {
+                 width: 150px;
+                 padding-left: 5px;
+             }
         }
 
     </style>
@@ -520,48 +638,50 @@
     &lt;/main&gt;
 
     &lt;footer&gt;
-        &lt;p&gt;版權所有 &copy; 2025&lt;/p&gt;
+        &lt;p&gt;版權所有 © 2025&lt;/p&gt;
         &lt;address&gt;聯絡我們：email@example.com&lt;/address&gt;
     &lt;/footer&gt;
 &lt;/body&gt;</code></pre>
     </div>
      <div class="result-preview">
         <h4>結果預覽 (僅結構示意):</h4>
-        <div style="border:1px solid #ccc; margin-bottom:5px; padding:5px; background-color:#eef;">
-            <strong>&lt;header&gt;</strong>
-            <h1>網站標題</h1>
-            <nav style="background-color:#ddd; padding:3px;">
-                <strong>&lt;nav&gt;</strong>
-                <a href="#">首頁</a> | <a href="#">關於</a>
-            </nav>
+        <div id="prev_3_3">
+            <div style="border:1px solid #ccc; margin-bottom:5px; padding:5px; background-color:#eef;">
+                <strong>&lt;header&gt;</strong>
+                <h1>網站標題</h1>
+                <nav style="background-color:#ddd; padding:3px;">
+                    <strong>&lt;nav&gt;</strong>
+                    <a href="#">首頁</a> | <a href="#">關於</a>
+                </nav>
+            </div>
+            <div style="display:flex; border:1px solid #ccc; margin-bottom:5px; padding:5px; background-color:#fee;">
+                <main style="flex-grow:1; padding-right:5px;">
+                    <strong>&lt;main&gt;</strong>
+                    <article style="border:1px solid #fcc; margin-bottom:5px; padding:5px;">
+                        <strong>&lt;article&gt;</strong>
+                        <h2>文章標題</h2>
+                        <p>文章內容...</p>
+                        <section style="border:1px solid #fdd; margin-top:5px; padding:5px;">
+                            <strong>&lt;section&gt;</strong>
+                            <h3>小節標題</h3>
+                            <p>小節內容...</p>
+                        </section>
+                    </article>
+                </main>
+                <aside style="padding-left:5px;">
+                    <strong>&lt;aside&gt;</strong>
+                    <h3>相關連結</h3>
+                    <ul><li><a href="#">連結一</a></li></ul>
+                </aside>
+            </div>
+            <footer style="border:1px solid #ccc; padding:5px; background-color:#efe;">
+                <strong>&lt;footer&gt;</strong>
+                <p>版權所有 © 2025</p>
+                <address style="font-style:italic;">
+                    <strong>&lt;address&gt;</strong>聯絡我們：email@example.com
+                </address>
+            </footer>
         </div>
-        <div style="display:flex; border:1px solid #ccc; margin-bottom:5px; padding:5px; background-color:#fee;">
-            <main style="flex-grow:1; border-right:1px dashed #aaa; padding-right:5px;">
-                <strong>&lt;main&gt;</strong>
-                <article style="border:1px solid #fcc; margin-bottom:5px; padding:5px;">
-                    <strong>&lt;article&gt;</strong>
-                    <h2>文章標題</h2>
-                    <p>文章內容...</p>
-                    <section style="border:1px solid #fdd; margin-top:5px; padding:5px;">
-                        <strong>&lt;section&gt;</strong>
-                        <h3>小節標題</h3>
-                        <p>小節內容...</p>
-                    </section>
-                </article>
-            </main>
-            <aside style="width:150px; padding-left:5px;">
-                <strong>&lt;aside&gt;</strong>
-                <h3>相關連結</h3>
-                <ul><li><a href="#">連結一</a></li></ul>
-            </aside>
-        </div>
-        <footer style="border:1px solid #ccc; padding:5px; background-color:#efe;">
-            <strong>&lt;footer&gt;</strong>
-            <p>版權所有 &copy; 2025</p>
-            <address style="font-style:italic;">
-                <strong>&lt;address&gt;</strong>聯絡我們：email@example.com
-            </address>
-        </footer>
     </div>
 
     <h3>3-4 超連結元素: &lt;a&gt;</h3>
@@ -599,10 +719,9 @@
         <a href="https://www.google.com" target="_blank">前往 Google</a><br>
         <a href="mailto:info@example.com">寄信給我們</a><br>
         <a href="tel:+1234567890">撥打電話</a><br>
-        <a href="#section-target">跳到目標區塊</a><br>
-        <a href="https://www.example.com"><img src="images/1.png" alt="範例圖片" width="50"></a><br>
+        <a href="#section-target-preview">跳到目標區塊</a><br> <a href="https://www.example.com"><img src="images/1.png" alt="範例圖片" width="50"></a><br>
         <a href="files/document.pdf" download="我的文件.pdf">下載文件</a>
-        <h3 id="section-target" style="margin-top:50px;">這裡是目標區塊</h3>
+        <h3 id="section-target-preview" style="margin-top:50px;">這裡是目標區塊</h3>
         <p>(向上滾動以查看錨點跳轉效果)</p>
     </div>
 
@@ -787,8 +906,7 @@
         <li><code>&lt;colgroup&gt;</code> / <code>&lt;col&gt;</code>：定義欄位群組及樣式。</li>
     </ul>
     <div class="code-example">
-        <pre><code>&lt;table border="1" style="width: 300px;"&gt;
-    &lt;caption&gt;範例表格&lt;/caption&gt;
+        <pre><code>&lt;table border="1" style="width: 100%;"&gt; &lt;caption&gt;範例表格&lt;/caption&gt;
     &lt;colgroup&gt;
         &lt;col style="background-color: #f0f0f0;"&gt; &lt;!-- 第一欄背景色 --&gt;
         &lt;col span="2"&gt; &lt;!-- 後兩欄 --&gt;
@@ -824,7 +942,7 @@
     </div>
     <div class="result-preview">
         <h4>結果預覽:</h4>
-        <table border="1" style="width: 300px;">
+        <table border="1" style="width: 100%;">
             <caption>範例表格</caption>
              <colgroup>
                 <col style="background-color: #f0f0f0;">
@@ -969,13 +1087,13 @@
                 </div>
                 <div>
                     <label>性別:</label>
-                    <input type="radio" id="male_prev" name="gender_prev" value="male"> <label for="male_prev" style="min-width:auto;">男</label>
-                    <input type="radio" id="female_prev" name="gender_prev" value="female"> <label for="female_prev" style="min-width:auto;">女</label>
+                    <input type="radio" id="male_prev" name="gender_prev" value="male"> <label for="male_prev">男</label>
+                    <input type="radio" id="female_prev" name="gender_prev" value="female"> <label for="female_prev">女</label>
                 </div>
                 <div>
                     <label>興趣:</label>
-                    <input type="checkbox" id="coding_prev" name="hobby_prev" value="coding"> <label for="coding_prev" style="min-width:auto;">寫程式</label>
-                    <input type="checkbox" id="music_prev" name="hobby_prev" value="music"> <label for="music_prev" style="min-width:auto;">聽音樂</label>
+                    <input type="checkbox" id="coding_prev" name="hobby_prev" value="coding"> <label for="coding_prev">寫程式</label>
+                    <input type="checkbox" id="music_prev" name="hobby_prev" value="music"> <label for="music_prev">聽音樂</label>
                 </div>
                 <div>
                     <label for="city_prev">城市:</label>
@@ -1160,7 +1278,7 @@ a[href*="tutorial"] { font-weight: bold; }</code></pre>
     <h3>5-4 組合選擇器</h3>
     <ul>
         <li><strong>後代選擇器 (空格)</strong>：選擇父元素內的所有後代。例：<code>article p { ... }</code> (選擇 article 內所有 p)</li>
-        <li><strong>子選擇器 (&gt;)</strong>：只選擇父元素的直接子元素。例：<code>ul > li { ... }</code> (只選擇 ul 的第一層 li)</li>
+        <li><strong>子選擇器 (&gt;)</strong>：只選擇父元素的直接子元素。例：<code>ul &gt; li { ... }</code> (只選擇 ul 的第一層 li)</li>
         <li><strong>同層相鄰選擇器 (+)</strong>：選擇緊接在某元素後的同層元素。例：<code>h3 + p { ... }</code> (選擇緊跟 h3 後的 p)</li>
         <li><strong>同層全體選擇器 (~)</strong>：選擇某元素之後的所有同層元素。例：<code>h3 ~ p { ... }</code> (選擇 h3 之後所有同層的 p)</li>
     </ul>
@@ -1169,7 +1287,7 @@ a[href*="tutorial"] { font-weight: bold; }</code></pre>
     /* 後代: div 內的 p 變紅色 */
     #combinator-demo div p { color: red; }
     /* 子: div 的直接子元素 p 加上底線 */
-    #combinator-demo div > p { text-decoration: underline; }
+    #combinator-demo div &gt; p { text-decoration: underline; }
     /* 相鄰: h4 後緊鄰的 p 變粗體 */
     #combinator-demo h4 + p { font-weight: bold; }
     /* 全體: h4 後所有同層的 p 背景變淺灰 */
@@ -1329,11 +1447,13 @@ a[href*="tutorial"] { font-weight: bold; }</code></pre>
                 content: "📌 ";
                 color: green;
             }
+            #pseudo-el-demo-preview p { clear: left; } /* 清除浮動影響 */
             #pseudo-el-demo-preview p::first-letter {
                 font-size: 1.5em;
                 color: navy;
                 float: left;
                 margin-right: 4px;
+                line-height: 1; /* 調整行高避免影響佈局 */
             }
             #pseudo-el-demo-preview li::marker {
                 color: blue;
@@ -1383,22 +1503,17 @@ span.color-example-hex { color: #b22222; /* firebrick */ }</code></pre>
         <li><code>font-style</code>: 設定字體樣式 (<code>normal</code>, <code>italic</code>, <code>oblique</code>)。</li>
         <li><code>font-variant</code>: 設定小型大寫字母 (<code>normal</code>, <code>small-caps</code>)。</li>
         <li><code>font-weight</code>: 設定字體粗細 (<code>normal</code>(400), <code>bold</code>(700), 數字 100-900)。</li>
+        <li><code>font</code>: 縮寫屬性 (順序: <code>font-style font-variant font-weight font-size/line-height font-family</code>)。至少需指定 <code>font-size</code> 和 <code>font-family</code>。</li>
     </ul>
     <div class="code-example">
         <pre><code>.font-demo {
-    font-family: "Georgia", serif; /* 襯線體 */
-    font-size: 18px;
-    font-style: italic;
-    font-weight: bold; /* 或 700 */
-}
-.small-caps-demo {
-    font-variant: small-caps;
+    /* font-style font-variant font-weight font-size/line-height font-family */
+    font: italic small-caps bold 18px/1.5 "Georgia", serif;
 }</code></pre>
     </div>
     <div class="result-preview">
         <h4>結果預覽:</h4>
-        <p style='font-family: "Georgia", serif; font-size: 18px; font-style: italic; font-weight: bold;'>這是字型樣式範例。</p>
-        <p>This Text Uses <span style="font-variant: small-caps;">Small-Caps</span> Variant.</p>
+        <p style='font: italic small-caps bold 18px/1.5 "Georgia", serif;'>這是使用 font 縮寫屬性的範例。</p>
     </div>
 
     <h3>6-3 文字段落屬性</h3>
@@ -1413,6 +1528,8 @@ span.color-example-hex { color: #b22222; /* firebrick */ }</code></pre>
         <li><code>text-indent</code>: 首行縮排。</li>
         <li><code>text-transform</code>: 大小寫轉換 (<code>uppercase</code>, <code>lowercase</code>, <code>capitalize</code>)。</li>
         <li><code>white-space</code>: 空白處理 (<code>normal</code>, <code>nowrap</code>, <code>pre</code>, <code>pre-wrap</code>, <code>pre-line</code>)。</li>
+        <li><code>word-break</code>: 斷詞規則 (<code>normal</code>, <code>break-all</code>, <code>keep-all</code>)。</li>
+        <li><code>overflow-wrap</code> (或 <code>word-wrap</code>): 長單詞換行 (<code>normal</code>, <code>break-word</code>)。</li>
     </ul>
     <div class="code-example">
         <pre><code>.para-style {
@@ -1420,20 +1537,30 @@ span.color-example-hex { color: #b22222; /* firebrick */ }</code></pre>
     line-height: 1.7;
     text-indent: 2em; /* 首行縮排 2 個字寬 */
     letter-spacing: 1px;
+    word-spacing: 4px; /* 單詞間距 */
+    white-space: normal; /* 預設，允許換行 */
 }
 .shadow-text {
     text-shadow: 1px 1px 3px gray;
     text-transform: uppercase;
     text-decoration: underline wavy blue;
+}
+.long-word-wrap {
+    width: 200px; /* 限制寬度以看換行效果 */
+    border: 1px solid red;
+    overflow-wrap: break-word; /* 允許在長單詞內換行 */
 }</code></pre>
     </div>
     <div class="result-preview">
         <h4>結果預覽:</h4>
-        <p style="text-align: justify; line-height: 1.7; text-indent: 2em; letter-spacing: 1px; border: 1px solid #eee; padding: 5px; width: 300px;">
-            這是一段示範文字，設定了兩端對齊、行高、首行縮排和字元間距。這是一段示範文字，設定了兩端對齊、行高、首行縮排和字元間距。
+        <p style="text-align: justify; line-height: 1.7; text-indent: 2em; letter-spacing: 1px; word-spacing: 4px; border: 1px solid #eee; padding: 5px;">
+            這是一段示範文字，設定了兩端對齊、行高、首行縮排、字元間距和單詞間距。這是一段示範文字。
         </p>
         <p style="text-shadow: 1px 1px 3px gray; text-transform: uppercase; text-decoration: underline wavy blue;">
             具有陰影、大寫轉換和裝飾線的文字
+        </p>
+        <p class="long-word-wrap" style="width: 200px; border: 1px solid red; overflow-wrap: break-word; padding: 5px;">
+            這是一段包含超長單詞的文字：Pneumonoultramicroscopicsilicovolcanoconiosis，看看它如何換行。
         </p>
     </div>
 
@@ -1446,32 +1573,31 @@ span.color-example-hex { color: #b22222; /* firebrick */ }</code></pre>
     </ul>
     <div class="code-example">
         <pre><code>ul.custom-list {
-    list-style-type: square; /* 方塊標記 */
-    list-style-position: inside; /* 標記在內部 */
+    list-style: circle inside; /* 空心圓, 位置 inside */
 }
 ol.image-list {
-    list-style-image: url('images/1.png'); /* 使用圖片，調整圖片大小 */
-    /* 圖片大小需另外調整，或使用 background-image 技巧 */
+    /* 建議使用 background-image 技巧來控制圖片標記大小 */
+    list-style: none; /* 先移除預設標記 */
+    padding-left: 0;
 }
-ul.no-list-style {
-    list-style: none; /* 移除標記 */
-    padding-left: 0; /* 同時移除預設縮排 */
+ol.image-list li {
+    padding-left: 25px; /* 留出空間給背景圖 */
+    background: url('images/1.png') no-repeat left center;
+    background-size: 16px 16px; /* 控制圖標大小 */
+    margin-bottom: 5px; /* 增加項目間距 */
+    line-height: 1.8; /* 確保文字與圖標對齊 */
 }</code></pre>
     </div>
     <div class="result-preview">
         <h4>結果預覽:</h4>
-        <ul style="list-style-type: square; list-style-position: inside; border: 1px dotted #ccc; padding-left: 30px;">
-            <li>方塊標記，位置 inside</li>
+        <ul style="list-style: circle inside; border: 1px dotted #ccc; padding-left: 30px;">
+            <li>空心圓標記，位置 inside</li>
             <li>第二項</li>
         </ul>
-        <ol style="list-style-image: url('images/1.png'); padding-left: 30px; /* 圖片標記可能需要額外調整 */">
-             <li>圖片標記 (需調整圖片)</li>
-             <li>第二項</li>
+        <ol class="image-list" style="list-style: none; padding-left: 0;">
+             <li style="padding-left: 25px; background: url('images/1.png') no-repeat left center; background-size: 16px 16px; margin-bottom: 5px; line-height: 1.8;">背景圖片標記</li>
+             <li style="padding-left: 25px; background: url('images/1.png') no-repeat left center; background-size: 16px 16px; margin-bottom: 5px; line-height: 1.8;">第二項</li>
         </ol>
-        <ul style="list-style: none; padding-left: 0; border: 1px dotted #ccc;">
-            <li>無標記列表</li>
-            <li>第二項</li>
-        </ul>
     </div>
 
     <h3>6-5 邊框屬性</h3>
@@ -1507,9 +1633,7 @@ ul.no-list-style {
 .image-border-example { /* 需要邊框圖片 images/1.png */
     border: 30px solid transparent;
     padding: 15px;
-    border-image-source: url('images/1.png');
-    border-image-slice: 30;
-    border-image-repeat: round;
+    border-image: url('images/1.png') 30 round; /* 速記 */
 }</code></pre>
     </div>
     <div class="result-preview">
@@ -1523,52 +1647,46 @@ ul.no-list-style {
     <h3>6-6 背景屬性</h3>
     <ul>
         <li><code>background-color</code>: 背景顏色。</li>
-        <li><code>background-image</code>: 背景圖片 (<code>url('path')</code>)。</li>
+        <li><code>background-image</code>: 背景圖片 (<code>url('path')</code>)。可設多個背景，用逗號分隔。</li>
         <li><code>background-repeat</code>: 重複方式 (<code>repeat</code>, <code>no-repeat</code>, <code>repeat-x</code>, <code>repeat-y</code>)。</li>
         <li><code>background-position</code>: 背景圖片位置 (關鍵字或單位值)。</li>
         <li><code>background-attachment</code>: 背景固定方式 (<code>scroll</code>, <code>fixed</code>, <code>local</code>)。</li>
         <li><code>background-size</code>: 背景圖片大小 (<code>auto</code>, <code>cover</code>, <code>contain</code>, 單位值)。</li>
-        <li><code>background</code>: 速記屬性 (<code>color image repeat attachment position / size</code>)。</li>
+        <li><code>background-origin</code>: 定位原點 (<code>padding-box</code>, <code>border-box</code>, <code>content-box</code>)。</li>
+        <li><code>background-clip</code>: 繪製區域 (<code>padding-box</code>, <code>border-box</code>, <code>content-box</code>, <code>text</code>)。</li>
+        <li><code>background</code>: 速記屬性 (建議順序: <code>color image repeat attachment position / size origin clip</code>)。</li>
     </ul>
     <div class="code-example">
         <pre><code>.bg-demo {
-    width: 300px;
+    width: 100%; /* 改為 100% 寬度 */
+    max-width: 300px; /* 限制最大寬度 */
     height: 150px;
     border: 1px solid #ccc;
     margin-bottom: 10px;
-    color: white; /* 讓文字可見 */
-    text-shadow: 1px 1px 1px black; /* 文字陰影 */
+    color: white;
+    text-shadow: 1px 1px 1px black;
+    padding: 10px; /* 增加內距 */
+    box-sizing: border-box; /* 包含 padding */
 }
-.bg-color {
-    background-color: lightcoral;
+.bg-multi { /* 多重背景 */
+    background-image: url('images/1.png'), url('images/2.png');
+    background-repeat: no-repeat, repeat-y;
+    background-position: top left, center right;
+    background-size: 50px, auto; /* 第一個背景50px寬，第二個自動 */
+    background-color: lightgray; /* 底層顏色 */
 }
-.bg-image {
-    background-image: url('images/2.png');
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: contain; /* 完整顯示圖片 */
-}
-.bg-fixed {
-    height: 200px; /* 需要足夠高度才能看到滾動效果 */
-    overflow: auto; /* 添加滾動條 */
-    background: lightblue url('images/1.png') no-repeat fixed center;
-    background-size: 50px;
-    padding: 20px;
-    color: black;
-    text-shadow: none;
+.bg-cover {
+     background: url('images/2.png') no-repeat center center / cover; /* 使用 cover */
 }</code></pre>
     </div>
     <div class="result-preview">
         <h4>結果預覽:</h4>
         <div class="bg-demo" style="background-color: lightcoral;">背景顏色</div>
-        <div class="bg-demo" style="background-image: url('images/2.png'); background-repeat: no-repeat; background-position: center center; background-size: contain;">背景圖片 (Contain)</div>
-         <div class="bg-demo" style="background-image: url('images/2.png'); background-repeat: no-repeat; background-position: center center; background-size: cover;">背景圖片 (Cover)</div>
-        <div class="bg-fixed" style="height: 100px; overflow: auto; background: lightblue url('images/1.png') no-repeat fixed center; background-size: 50px; padding: 10px; color: black; text-shadow: none;">
-            固定背景 (Fixed Attachment): 嘗試滾動這個區塊，背景圖片應該保持不動。嘗試滾動這個區塊，背景圖片應該保持不動。嘗試滾動這個區塊，背景圖片應該保持不動。
-        </div>
+        <div class="bg-demo" style="background: url('images/2.png') no-repeat center center / cover;">背景圖片 (Cover)</div>
+        <div class="bg-demo" style="background-image: url('images/1.png'), url('images/2.png'); background-repeat: no-repeat, repeat-y; background-position: top left, center right; background-size: 50px, auto; background-color: lightgray;">多重背景</div>
     </div>
 
-    <h3>6-7 漸層函式 (用於 background-image)</h3>
+    <h3>6-7 漸層函式 (用於 background 或 background-image)</h3>
     <ul>
         <li><strong>線性漸層 (Linear Gradient)</strong>: <code>linear-gradient(direction, color1, color2, ...)</code></li>
         <li><strong>放射漸層 (Radial Gradient)</strong>: <code>radial-gradient(shape size at position, color1, color2, ...)</code></li>
@@ -1577,31 +1695,26 @@ ul.no-list-style {
     </ul>
     <div class="code-example">
         <pre><code>.gradient-linear {
-    background-image: linear-gradient(to right, steelblue, lightgreen);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 .gradient-radial {
-    background-image: radial-gradient(circle, yellow, orange, red);
+    background: radial-gradient(ellipse at bottom, #ffdde1, #ee9ca7);
 }
-.gradient-conic { /* 彩虹效果 */
-    background-image: conic-gradient(red, yellow, lime, aqua, blue, magenta, red);
-    border-radius: 50%; /* 變圓形 */
+.gradient-conic {
+    background: conic-gradient(from 90deg, violet, indigo, blue, green, yellow, orange, red, violet);
+    border-radius: 50%;
 }
-.gradient-repeating { /* 斜條紋 */
-    background-image: repeating-linear-gradient(
-        45deg,
-        #ccc,
-        #ccc 10px,
-        #eee 10px,
-        #eee 20px
-    );
+.gradient-repeating {
+    background: repeating-radial-gradient(circle, rgba(0,0,0,0.2), rgba(0,0,0,0.2) 5px, transparent 5px, transparent 10px);
+    background-color: lightblue; /* 底色 */
 }</code></pre>
     </div>
     <div class="result-preview">
         <h4>結果預覽:</h4>
-        <div class="preview-gradient-box" style="background-image: linear-gradient(to right, steelblue, lightgreen);">線性漸層</div>
-        <div class="preview-gradient-box" style="background-image: radial-gradient(circle, yellow, orange, red);">放射漸層</div>
-        <div class="preview-gradient-box" style="background-image: conic-gradient(red, yellow, lime, aqua, blue, magenta, red); border-radius: 50%;">圓錐漸層 (彩虹輪)</div>
-        <div class="preview-gradient-box" style="background-image: repeating-linear-gradient(45deg, #ccc, #ccc 10px, #eee 10px, #eee 20px); color: black; text-shadow: none;">重複線性漸層 (條紋)</div>
+        <div class="preview-gradient-box" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">線性漸層</div>
+        <div class="preview-gradient-box" style="background: radial-gradient(ellipse at bottom, #ffdde1, #ee9ca7);">放射漸層</div>
+        <div class="preview-gradient-box" style="background: conic-gradient(from 90deg, violet, indigo, blue, green, yellow, orange, red, violet); border-radius: 50%;">圓錐漸層</div>
+        <div class="preview-gradient-box" style="background: repeating-radial-gradient(circle, rgba(0,0,0,0.2), rgba(0,0,0,0.2) 5px, transparent 5px, transparent 10px); background-color: lightblue; color: black; text-shadow: none;">重複放射漸層 (圓點)</div>
     </div>
 
     <h3>6-8 表格屬性 (CSS)</h3>
@@ -1615,54 +1728,48 @@ ul.no-list-style {
     </ul>
     <div class="code-example">
         <pre><code>&lt;style&gt;
-.styled-table {
-    width: 400px;
-    border-collapse: collapse; /* 合併邊框 */
-    table-layout: fixed; /* 固定佈局 */
+.styled-table-separate {
+    width: 100%; /* 自適應寬度 */
+    max-width: 400px; /* 最大寬度 */
+    border-collapse: separate; /* 分離邊框 */
+    border-spacing: 5px 10px; /* 水平5px, 垂直10px 間距 */
+    empty-cells: hide; /* 隱藏空單元格邊框 */
     margin-bottom: 15px;
+    border: 2px solid green; /* 給表格本身加個外框 */
 }
-.styled-table caption {
-    caption-side: bottom; /* 標題在下方 */
-    margin-top: 5px;
-    font-style: italic;
+.styled-table-separate caption {
+    caption-side: top; /* 標題在上方 */
+    font-weight: bold;
+    margin-bottom: 5px;
 }
-.styled-table th, .styled-table td {
-    border: 1px solid darkblue;
+.styled-table-separate th, .styled-table-separate td {
+    border: 1px solid lightgreen;
     padding: 8px;
-    text-align: center;
+    text-align: left;
+    background-color: #fafffa;
 }
-.styled-table th {
-    background-color: lightblue;
+.styled-table-separate th {
+    background-color: #e0ffe0;
 }
-.styled-table td.align-top {
-    vertical-align: top; /* 垂直靠上 */
-    height: 50px; /* 給予高度看效果 */
-}
-.styled-table td.empty-cell-demo {
-    /* 在 collapse 模式下 empty-cells 無效 */
+.styled-table-separate td.align-middle {
+    vertical-align: middle;
+    height: 60px;
 }
 &lt;/style&gt;
 
-&lt;table class="styled-table"&gt;
-    &lt;caption&gt;CSS 表格樣式範例&lt;/caption&gt;
-    &lt;colgroup&gt;
-        &lt;col style="width: 30%;"&gt;
-        &lt;col style="width: 40%;"&gt;
-        &lt;col style="width: 30%;"&gt;
-    &lt;/colgroup&gt;
+&lt;table class="styled-table-separate"&gt;
+    &lt;caption&gt;分離邊框表格&lt;/caption&gt;
     &lt;thead&gt;
-        &lt;tr&gt;&lt;th&gt;欄位1&lt;/th&gt;&lt;th&gt;欄位2&lt;/th&gt;&lt;th&gt;欄位3&lt;/th&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;th&gt;Header 1&lt;/th&gt;&lt;th&gt;Header 2&lt;/th&gt;&lt;/tr&gt;
     &lt;/thead&gt;
     &lt;tbody&gt;
         &lt;tr&gt;
-            &lt;td&gt;資料A&lt;/td&gt;
-            &lt;td class="align-top"&gt;垂直靠上&lt;/td&gt;
-            &lt;td&gt;資料C&lt;/td&gt;
+            &lt;td class="align-middle"&gt;中對齊&lt;/td&gt;
+            &lt;td&gt;Data B&lt;/td&gt;
         &lt;/tr&gt;
-         &lt;tr&gt;
-            &lt;td&gt;資料D&lt;/td&gt;
-            &lt;td&gt;資料E&lt;/td&gt;
-            &lt;td class="empty-cell-demo"&gt;&lt;/td&gt; &lt;!-- 空儲存格 --&gt;
+        &lt;tr&gt;
+            &lt;td&gt;Data C&lt;/td&gt;
+            &lt;td&gt;&lt;/td&gt; &lt;!-- 空單元格 --&gt;
         &lt;/tr&gt;
     &lt;/tbody&gt;
 &lt;/table&gt;</code></pre>
@@ -1670,53 +1777,50 @@ ul.no-list-style {
     <div class="result-preview">
         <h4>結果預覽:</h4>
         <style>
-        .styled-table-preview {
-            width: 400px;
-            border-collapse: collapse;
-            table-layout: fixed;
+        .styled-table-separate-preview {
+            width: 100%;
+            max-width: 400px;
+            border-collapse: separate;
+            border-spacing: 5px 10px;
+            empty-cells: hide;
             margin-bottom: 15px;
+            border: 2px solid green;
         }
-        .styled-table-preview caption {
-            caption-side: bottom;
-            margin-top: 5px;
-            font-style: italic;
+        .styled-table-separate-preview caption {
+            caption-side: top;
+            font-weight: bold;
+            margin-bottom: 5px;
         }
-        .styled-table-preview th, .styled-table-preview td {
-            border: 1px solid darkblue;
+        .styled-table-separate-preview th, .styled-table-separate-preview td {
+            border: 1px solid lightgreen;
             padding: 8px;
-            text-align: center;
+            text-align: left;
+            background-color: #fafffa;
         }
-        .styled-table-preview th {
-            background-color: lightblue;
+        .styled-table-separate-preview th {
+            background-color: #e0ffe0;
         }
-        .styled-table-preview td.align-top-preview {
-            vertical-align: top;
-            height: 50px;
+        .styled-table-separate-preview td.align-middle-preview {
+            vertical-align: middle;
+            height: 60px;
         }
-        .styled-table-preview td.empty-cell-demo-preview {
-             background-color: #fafa; /* 稍微標示一下 */
-        }
+         .styled-table-separate-preview td.empty-cell-preview {
+             /* 內容為空，因為 empty-cells: hide，邊框和背景應被隱藏 */
+         }
         </style>
-        <table class="styled-table-preview">
-            <caption>CSS 表格樣式範例</caption>
-            <colgroup>
-                <col style="width: 30%;">
-                <col style="width: 40%;">
-                <col style="width: 30%;">
-            </colgroup>
+        <table class="styled-table-separate-preview">
+            <caption>分離邊框表格</caption>
             <thead>
-                <tr><th>欄位1</th><th>欄位2</th><th>欄位3</th></tr>
+                <tr><th>Header 1</th><th>Header 2</th></tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>資料A</td>
-                    <td class="align-top-preview">垂直靠上</td>
-                    <td>資料C</td>
+                    <td class="align-middle-preview">中對齊</td>
+                    <td>Data B</td>
                 </tr>
-                 <tr>
-                    <td>資料D</td>
-                    <td>資料E</td>
-                    <td class="empty-cell-demo-preview"></td> </tr>
+                <tr>
+                    <td>Data C</td>
+                    <td class="empty-cell-preview"></td> </tr>
             </tbody>
         </table>
     </div>
