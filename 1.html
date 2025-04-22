@@ -1,1116 +1,1427 @@
 <!DOCTYPE html>
-<html lang="zh-Hant-TW">
+<html lang="zh-Hant-Tw">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>網頁程式設計教學 (CH1-CH6) - 含測驗</title>
+    <title>網頁程式設計 期中教學文件</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* 教學文件基本樣式 */
+        /* 自訂樣式 */
         body {
-            font-family: "Microsoft JhengHei", "Segoe UI", Arial, sans-serif;
-            line-height: 1.6;
-            margin: 20px;
-            background-color: #f4f4f4;
-            color: #333;
+            font-family: 'Inter', 'Microsoft JhengHei', sans-serif; /* 使用 Inter 字體，並加入微軟正黑體作為後備 */
+            line-height: 1.6; /* 增加行高以提高可讀性 */
         }
         h1, h2, h3, h4 {
-            color: #0056b3; /* 深藍色標題 */
-            border-bottom: 2px solid #0056b3;
-            padding-bottom: 5px;
-            margin-top: 30px;
+            font-weight: 600; /* 加粗標題 */
+            margin-top: 1.5em;
+            margin-bottom: 0.8em;
+            line-height: 1.3; /* 調整標題行高 */
         }
-        h1 {
-            text-align: center;
-            color: #003366; /* 更深的藍色 */
-            border-bottom-width: 4px;
+        h1 { font-size: 2.25rem; } /* 調整標題大小 */
+        h2 { font-size: 1.875rem; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.3em; } /* 為 H2 加上底線 */
+        h3 { font-size: 1.5rem; }
+        h4 { font-size: 1.25rem; }
+        p {
+            margin-bottom: 1rem; /* 段落下方間距 */
         }
-        section {
-            background-color: #fff;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        /* 程式碼區塊樣式 */
-        pre {
-            background-color: #e9e9e9; /* 淺灰色背景 */
-            padding: 15px;
-            border-radius: 5px;
-            overflow-x: auto; /* 水平捲軸 */
-            font-family: Consolas, Monaco, "Courier New", monospace;
+        .code-block {
+            background-color: #f3f4f6; /* 淺灰色背景 */
+            border-radius: 0.5rem; /* 圓角 */
+            padding: 1rem;
+            margin-top: 0.5rem; /* Code Block 上方間距 */
+            margin-bottom: 1rem;
+            overflow-x: auto; /* 水平滾動 */
+            font-family: 'Courier New', Courier, monospace; /* 等寬字體 */
             font-size: 0.9em;
-            border: 1px solid #ccc;
+            line-height: 1.4; /* Code Block 行高 */
         }
-        code {
-            font-family: Consolas, Monaco, "Courier New", monospace;
+        .preview-block {
+            border: 1px solid #d1d5db; /* 灰色邊框 */
+            border-radius: 0.5rem; /* 圓角 */
+            padding: 1rem;
+            margin-top: 0.5rem; /* Preview Block 上方間距 */
+            margin-bottom: 1.5rem;
+            background-color: #ffffff; /* 白色背景 */
         }
-        /* 範例展示區塊樣式 */
-        .example-output {
-            border: 1px dashed #007bff; /* 藍色虛線邊框 */
-            padding: 15px;
-            margin-top: 10px;
-            margin-bottom: 20px;
-            background-color: #f8f9fa; /* 非常淺的灰色 */
-            border-radius: 5px;
+        .quiz-section {
+            background-color: #eef2ff; /* 淡藍色背景 */
+            border: 1px dashed #a5b4fc; /* 藍色虛線邊框 */
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 2rem;
         }
-        .example-output p,
-        .example-output div,
-        .example-output span,
-        .example-output h1,
-        .example-output h2,
-        .example-output h3,
-        .example-output h4,
-        .example-output h5,
-        .example-output h6,
-        .example-output ul,
-        .example-output ol,
-        .example-output table {
-             /* 移除範例內元素的預設邊框和特定顏色，除非範例本身需要 */
-            border: none;
-            color: inherit; /* 繼承父元素顏色 */
-            margin: 5px 0; /* 稍微調整間距 */
+        .answer-section {
+            background-color: #f0fdf4; /* 淡綠色背景 */
+            border: 1px solid #86efac; /* 綠色邊框 */
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: none; /* 預設隱藏 */
         }
-        /* 表格樣式 */
-        table {
-            border-collapse: collapse; /* 合併邊框 */
-            width: auto; /* 自動寬度 */
-            margin-bottom: 15px;
+        /* 按鈕樣式 */
+        .show-answer-btn {
+            background-color: #4f46e5; /* Indigo 背景 */
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border: none; /* 移除預設邊框 */
+            font-size: 0.875rem; /* 稍小字體 */
+            margin-top: 1rem;
         }
-        th, td {
-            border: 1px solid #ccc; /* 灰色邊框 */
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #e9ecef; /* 淺灰色表頭 */
+        .show-answer-btn:hover {
+            background-color: #4338ca; /* 深一點的 Indigo */
         }
         /* 圖片樣式 */
         img {
-            max-width: 100%; /* 圖片最大寬度為容器寬度 */
-            height: auto; /* 高度自動 */
-            display: block; /* 避免底部多餘空間 */
-            margin: 10px 0;
-            border: 1px solid #ddd; /* 淺灰色邊框 */
-            border-radius: 4px;
+          max-width: 100%; /* 圖片最大寬度為容器寬度 */
+          height: auto; /* 高度自動調整 */
+          border-radius: 0.5rem; /* 圖片圓角 */
+          margin-top: 0.5rem;
+          margin-bottom: 0.5rem;
         }
-        /* 區塊引用樣式 */
+        table {
+            width: 100%;
+            border-collapse: collapse; /* 合併邊框 */
+            margin-bottom: 1rem;
+        }
+        th, td {
+            border: 1px solid #d1d5db; /* 灰色邊框 */
+            padding: 0.75rem;
+            text-align: left;
+        }
+        th {
+            background-color: #f9fafb; /* 表頭淺灰色背景 */
+            font-weight: 600;
+        }
+        /* 調整列表樣式 */
+        ul, ol {
+            margin-left: 1.5rem; /* 列表縮排 */
+            margin-bottom: 1rem;
+        }
+        li {
+            margin-bottom: 0.5rem;
+        }
+        /* --- 新增樣式：確保主要內容列表項背景透明 --- */
+        .max-w-4xl > section ul li,
+        .max-w-4xl > section ol li {
+            background-color: transparent !important; /* 使用 !important 提高優先級 */
+        }
+        /* --- End of 新增樣式 --- */
+
+        /* 調整區塊引述樣式 */
         blockquote {
-            border-left: 4px solid #007bff;
-            padding-left: 15px;
+            border-left: 4px solid #9ca3af; /* 左邊灰色邊框 */
+            padding-left: 1rem;
             margin-left: 0;
-            font-style: italic;
-            color: #555;
+            margin-right: 0;
+            margin-bottom: 1rem;
+            color: #4b5563; /* 深灰色文字 */
+            font-style: italic; /* 斜體 */
         }
-        /* 定義列表樣式 */
-        dt {
-            font-weight: bold;
-            margin-top: 10px;
+        /* 調整預格式化文本樣式 */
+        pre {
+            white-space: pre-wrap; /* 自動換行 */
+            word-wrap: break-word; /* 斷詞 */
         }
-        dd {
-            margin-left: 20px;
-        }
-
-        /* --- 測驗區塊樣式 --- */
-        .quiz-section {
-            margin-top: 30px;
-            padding: 15px;
-            border: 1px solid #007bff;
-            border-radius: 5px;
-            background-color: #e7f3ff; /* 淡藍色背景 */
-        }
-        .quiz-section h4 {
-            margin-top: 0;
-            border-bottom: 1px solid #0056b3;
-            color: #0056b3;
-        }
-        .quiz-question {
-            margin-bottom: 15px;
-        }
-        .quiz-question ol {
-            list-style-type: lower-alpha; /* a, b, c 選項 */
-            padding-left: 20px;
-        }
-        .quiz-answer {
-            display: none; /* 預設隱藏答案 */
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #fff;
-            border: 1px dashed #ccc;
-            border-radius: 4px;
-        }
-        .toggle-answer-btn {
-            background-color: #007bff;
+        /* 漸層範例樣式 */
+        .gradient-box {
+            width: 100%;
+            height: 150px;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9em;
-            margin-top: 10px;
-            transition: background-color 0.3s ease;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px black;
         }
-        .toggle-answer-btn:hover {
-            background-color: #0056b3;
+        /* 修正預覽區塊中的列表樣式繼承問題 */
+        .preview-block ul, .preview-block ol {
+             margin-left: 1.5rem;
+             margin-bottom: 1rem;
         }
-        /* --- 結束 測驗區塊樣式 --- */
+         .preview-block li {
+             margin-bottom: 0.5rem;
+             background-color: transparent !important; /* 同樣確保預覽區塊列表透明 */
+        }
+         .preview-block dl dd {
+             margin-left: 1.5rem; /* 預覽區塊定義列表縮排 */
+         }
+         .preview-block h4 { /* 減少預覽區塊 H4 的邊距 */
+             margin-top: 0.5em;
+             margin-bottom: 0.5em;
+         }
+         /* 修正表格預覽的文字對齊 */
+         .preview-block table th, .preview-block table td {
+             text-align: left;
+         }
+         .preview-block table caption {
+             caption-side: top; /* 預覽中標題放回上方 */
+             text-align: left;
+              font-style: normal;
+              color: inherit;
+              margin-bottom: 0.5rem;
+         }
+         /* 修正表單預覽的標籤和輸入框樣式 */
+         .preview-block label {
+             display: inline-block; /* 讓 label 和 input 在同一行 */
+             margin-right: 0.5rem;
+             margin-bottom: 0.5rem;
+         }
+         .preview-block input[type="radio"], .preview-block input[type="checkbox"] {
+             margin-right: 0.25rem;
+             vertical-align: middle; /* 垂直對齊 */
+         }
+         .preview-block input[type="text"],
+         .preview-block input[type="email"],
+         .preview-block select,
+         .preview-block textarea {
+             display: block; /* 讓文字輸入框獨佔一行 */
+             width: calc(100% - 1rem); /* 調整寬度以適應 padding */
+             margin-bottom: 0.5rem;
+         }
+         .preview-block fieldset {
+             margin-bottom: 1rem;
+         }
+         .preview-block legend {
+             padding: 0 0.25rem;
+         }
+         /* 修正虛擬元素預覽 */
+         .preview-block .pseudo-list li:nth-child(odd) {
+              background-color: #eee !important; /* 確保預覽中樣式生效 */
+         }
 
-        /* 響應式設計：小螢幕調整 */
-        @media (max-width: 600px) {
-            body {
-                margin: 10px;
-            }
-            section {
-                padding: 15px;
-            }
-            pre, .example-output, .quiz-section {
-                padding: 10px;
-            }
-        }
+
     </style>
 </head>
-<body>
+<body class="bg-gray-50 p-4 md:p-8">
 
-    <h1>網頁程式設計教學 (CH1-CH6)</h1>
+    <div class="max-w-4xl mx-auto bg-white p-6 md:p-10 rounded-lg shadow-md">
 
-    <section id="ch1">
-        <h2>第一章：網頁設計基本概念</h2>
+        <h1 class="text-3xl md:text-4xl font-bold text-center text-indigo-700 mb-8">網頁程式設計 期中教學文件</h1>
 
-        <h3>1-1 網站基本概念</h3>
-        <p><strong>全球資訊網 (WWW)</strong>：運用超文本(Hypertext)技術，整合HTTP等通訊協定，在網際網路上提供多媒體服務的系統。</p>
-        <p><strong>網站與網頁</strong>：網站是多個網頁的集合。首頁(Homepage)是入口，網頁(Web Page)是其他頁面。</p>
-        <p><strong>網站設計流程</strong>：</p>
-        <ol>
-            <li>內容規劃</li>
-            <li>設計與製作</li>
-            <li>測試與發行</li>
-            <li>流量分析</li>
-        </ol>
-        <p><strong>網頁運作原則</strong>：瀏覽器(Client)透過HTTP向伺服器(Server)請求網頁，伺服器回傳HTML文件，瀏覽器解析並顯示。</p>
-        <p><strong>響應式網頁設計 (RWD)</strong>：讓網頁能自動適應不同裝置的螢幕尺寸，提供最佳瀏覽體驗。</p>
-        <p><strong>一頁式網站</strong>：所有內容集中在單一頁面，透過滾動瀏覽。</p>
+        <section id="chapter1">
+            <h2 class="text-2xl font-semibold pb-2 mb-4">第一章：網頁設計基本概念</h2>
 
-        <h3>1-2 網頁設計程式語言</h3>
-        <h4>瀏覽器端 (Client-Side)</h4>
-        <ul>
-            <li><strong>HTML</strong>：網頁結構與內容。</li>
-            <li><strong>CSS</strong>：網頁樣式與外觀。</li>
-            <li><strong>JavaScript (JS)</strong>：網頁互動與動態效果 (DHTML是早期概念，現多指HTML+CSS+JS)。</li>
-            <li><strong>XML</strong>：描述資料結構。</li>
-        </ul>
-        <h4>伺服器端 (Server-Side)</h4>
-        <ul>
-            <li><strong>ASP.NET</strong>：Microsoft 開發框架。</li>
-            <li><strong>PHP</strong>：開源腳本語言，廣泛使用。</li>
-            <li><strong>JSP</strong>：Java 技術。</li>
-            <li><strong>CGI</strong>：通用閘道介面。</li>
-            <li>(還有 Python/Django/Flask, Ruby/Rails, Node.js 等)</li>
-        </ul>
-        <h4>MVC 架構</h4>
-        <p>將應用程式分為模型(Model)、檢視(View)、控制器(Controller)，以利於開發與維護。</p>
-        <h4>Web API</h4>
-        <p>應用程式介面，讓不同程式可以透過網路交換資料或服務，例如嵌入 Google Map。</p>
-
-        <div class="quiz-section">
-            <h4>第一章 隨堂測驗</h4>
-            <div class="quiz-question">
-                <p><strong>1. (選擇題)</strong> 下列何者主要負責定義網頁的結構與內容？</p>
-                <ol>
-                    <li>CSS</li>
-                    <li>JavaScript</li>
-                    <li>HTML</li>
-                    <li>PHP</li>
-                </ol>
-            </div>
-            <div class="quiz-question">
-                <p><strong>2. (問答題)</strong> 請簡述什麼是響應式網頁設計 (RWD)？</p>
-            </div>
-            <button class="toggle-answer-btn" onclick="toggleAnswer('ch1-answers', this)">顯示答案</button>
-            <div class="quiz-answer" id="ch1-answers">
-                <p><strong>1. 答案：</strong> (c) HTML</p>
-                <p><strong>2. 答案：</strong> 響應式網頁設計 (Responsive Web Design, RWD) 是一種讓網頁內容能夠根據使用者裝置的螢幕尺寸（如電腦、平板、手機）自動調整排版、圖片大小等，以提供最佳瀏覽體驗的設計方法。</p>
-            </div>
-        </div>
-        </section>
-
-    <section id="ch2">
-        <h2>第二章：HTML 基本概念</h2>
-
-        <h3>2-1 認識 HTML</h3>
-        <p><strong>HTML5</strong> 是最新的 HTML 標準，簡化語法並加入新功能。</p>
-        <p>可使用 <a href="https://validator.w3.org/" target="_blank">W3C Validator</a> 驗證 HTML。</p>
-
-        <h3>2-2 HTML 檔案命名與管理</h3>
-        <ul>
-            <li>副檔名：<code>.html</code> 或 <code>.htm</code>。</li>
-            <li>命名：半形英文/數字，建議小寫，避免空格。</li>
-            <li>首頁：通常為 <code>index.html</code>。</li>
-            <li>資料夾管理：將 HTML、CSS、JS、圖片等分門別類。</li>
-        </ul>
-        <h4>檔案路徑</h4>
-        <ul>
-            <li><strong>絕對路徑</strong>：完整 URL，如 <code>https://example.com/images/1.png</code>。</li>
-            <li><strong>相對路徑</strong>：
-                <ul>
-                    <li><code>images/1.png</code> (目前目錄下的 images 資料夾)</li>
-                    <li><code>../styles/main.css</code> (上一層目錄的 styles 資料夾)</li>
-                </ul>
-            </li>
-            <li><strong>根目錄相對路徑</strong>：以 <code>/</code> 開頭，相對於網站根目錄，如 <code>/images/1.png</code>。</li>
-        </ul>
-
-        <h3>2-3 HTML 的基本架構</h3>
-        <p><strong>元素 (Element)</strong> = 開始標籤 + 內容 + 結束標籤 (如 <code><p>內容</p></code>)。</p>
-        <p><strong>空元素 (Empty Element)</strong>：沒有內容和結束標籤 (如 <code><br></code>, <code><img></code>)。</p>
-        <p><strong>屬性 (Attribute)</strong>：在開始標籤中提供額外資訊 (如 <code><img src="1.png" alt="範例圖片"></code>)。</p>
-        <p><strong>巢狀元素 (Nested Element)</strong>：元素內可包含其他元素。</p>
-
-        <h4>網頁基本結構範例</h4>
-        <pre><code>&lt;!DOCTYPE html&gt;
-&lt;html lang="zh-Hant-TW"&gt;
-    &lt;head&gt;
-        &lt;meta charset="UTF-8"&gt;
-        &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
-        &lt;title&gt;網頁標題&lt;/title&gt;
-        &lt;!-- 連結外部 CSS --&gt;
-        &lt;link rel="stylesheet" href="style.css"&gt;
-        &lt;!-- 內部 CSS --&gt;
-        &lt;style&gt;
-            /* 這裡可以寫 CSS */
-        &lt;/style&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;!-- 網頁可見內容 --&gt;
-        &lt;h1&gt;主要標題&lt;/h1&gt;
-        &lt;p&gt;這是一個段落。&lt;/p&gt;
-        &lt;!-- 連結外部 JavaScript --&gt;
-        &lt;script src="script.js"&gt;&lt;/script&gt;
-        &lt;!-- 內部 JavaScript --&gt;
-        &lt;script&gt;
-            // 這裡可以寫 JavaScript
-        &lt;/script&gt;
-    &lt;/body&gt;
-&lt;/html&gt;</code></pre>
-
-        <h3>2-4 文件資料元素 (Head 內常用)</h3>
-        <ul>
-            <li><code>&lt;title&gt;</code>：網頁標題。</li>
-            <li><code>&lt;meta&gt;</code>：提供元數據。
-                <ul>
-                    <li><code>charset="UTF-8"</code>：字元編碼。</li>
-                    <li><code>name="description" content="..."</code>：網頁描述。</li>
-                    <li><code>name="keywords" content="..."</code>：關鍵字。</li>
-                    <li><code>name="author" content="..."</code>：作者。</li>
-                    <li><code>name="viewport" content="..."</code>：行動裝置視口設定。</li>
-                    <li><code>http-equiv="..." content="..."</code>：模擬 HTTP 標頭 (如 `refresh` 跳轉)。</li>
-                </ul>
-            </li>
-            <li><code>&lt;link&gt;</code>：連結外部資源 (最常用於 CSS)。
-                <ul>
-                    <li><code>rel="stylesheet"</code>：表示連結的是樣式表。</li>
-                    <li><code>href="路徑/檔名.css"</code>：樣式表路徑。</li>
-                    <li><code>rel="icon" href="favicon.ico"</code>：設定網頁圖示。</li>
-                </ul>
-            </li>
-            <li><code>&lt;style&gt;</code>：嵌入內部 CSS 樣式。</li>
-            <li><code>&lt;script&gt;</code>：嵌入內部 JavaScript 或連結外部 JS 檔案 (<code>src</code> 屬性)。
-                 <ul>
-                    <li><code>async</code>：非同步下載並執行 JS (不保證順序)。</li>
-                    <li><code>defer</code>：非同步下載，HTML 解析完畢後按順序執行 JS。</li>
-                 </ul>
-            </li>
-            <li><code>&lt;noscript&gt;</code>：當瀏覽器不支援或禁用 JS 時顯示的內容。</li>
-            <li><code>&lt;base&gt;</code>：設定頁面相對路徑的基準 URL (<code>href</code>) 或預設連結目標 (<code>target</code>)。</li>
-        </ul>
-        <h4>HTML 註解</h4>
-        <pre><code>&lt;!-- 這是一行註解 --&gt;
-
-&lt;!--
-    這是
-    多行
-    註解
---&gt;</code></pre>
-
-        <div class="quiz-section">
-            <h4>第二章 隨堂測驗</h4>
-            <div class="quiz-question">
-                <p><strong>1. (選擇題)</strong> 在 HTML 中，哪個標籤通常用來定義網頁的主要內容區域？</p>
-                <ol>
-                    <li>&lt;head&gt;</li>
-                    <li>&lt;body&gt;</li>
-                    <li>&lt;footer&gt;</li>
-                    <li>&lt;meta&gt;</li>
-                </ol>
-            </div>
-            <div class="quiz-question">
-                <p><strong>2. (問答題)</strong> 請解釋 HTML 中絕對路徑和相對路徑的區別。</p>
-            </div>
-            <div class="quiz-question">
-                <p><strong>3. (選擇題)</strong> 哪個 <code>&lt;meta&gt;</code> 標籤屬性最常用來設定網頁的字元編碼？</p>
-                <ol>
-                    <li>name="keywords"</li>
-                    <li>name="description"</li>
-                    <li>charset</li>
-                    <li>http-equiv="refresh"</li>
-                </ol>
-            </div>
-            <button class="toggle-answer-btn" onclick="toggleAnswer('ch2-answers', this)">顯示答案</button>
-            <div class="quiz-answer" id="ch2-answers">
-                <p><strong>1. 答案：</strong> (b) &lt;body&gt;</p>
-                <p><strong>2. 答案：</strong> 絕對路徑提供資源的完整 URL (例如 <code>https://www.example.com/image.jpg</code>)，無論目前頁面在哪裡，路徑都相同。相對路徑則是相對於目前 HTML 檔案的位置來指定資源路徑 (例如 <code>images/logo.png</code> 或 <code>../css/style.css</code>)。</p>
-                <p><strong>3. 答案：</strong> (c) charset (例如 <code>&lt;meta charset="UTF-8"&gt;</code>)</p>
-            </div>
-        </div>
-        </section>
-
-    <section id="ch3">
-        <h2>第三章：常用的 HTML 元素</h2>
-
-        <h3>3-1 段落元素</h3>
-        <h4>標題 (h1-h6)</h4>
-        <pre><code>&lt;h1&gt;第一級標題&lt;/h1&gt;
-&lt;h2&gt;第二級標題&lt;/h2&gt;
-...
-&lt;h6&gt;第六級標題&lt;/h6&gt;</code></pre>
-        <div class="example-output">
-            <h1>第一級標題</h1>
-            <h2>第二級標題</h2>
-            <h3>第三級標題</h3>
-            <h4>第四級標題</h4>
-            <h5>第五級標題</h5>
-            <h6>第六級標題</h6>
-        </div>
-
-        <h4>段落 (p) 與換行 (br)</h4>
-        <pre><code>&lt;p&gt;這是一個段落。&lt;/p&gt;
-&lt;p&gt;這是第二個段落。&lt;br&gt;強制換行。&lt;/p&gt;</code></pre>
-        <div class="example-output">
-            <p>這是一個段落。它會自動換行並與下一個段落產生間距。</p>
-            <p>這是第二個段落。<br>使用 br 強制換行，<br>但仍在同一個段落內。</p>
-        </div>
-
-        <h4>清單 (ul, ol, li)</h4>
-        <pre><code>&lt;h4&gt;無序清單&lt;/h4&gt;
-&lt;ul&gt;
-    &lt;li&gt;項目一&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4&gt;有序清單&lt;/h4&gt;
-&lt;ol type="A" start="3"&gt;
-    &lt;li&gt;項目C&lt;/li&gt;
-&lt;/ol&gt;</code></pre>
-        <div class="example-output">
-            <h4>無序清單</h4>
+            <h3 class="text-xl font-semibold">1-1 網站基本概念</h3>
             <ul>
-                <li>項目一</li>
-                <li>項目二</li>
+                <li><strong>全球資訊網 (WWW):</strong> 使用超文本 (Hypertext) 技術，透過 HTTP 等協定在網際網路上提供多媒體服務。</li>
+                <li><strong>網站 (Website) 與網頁 (Web Page):</strong> 網站是多個網頁的集合，首頁 (Homepage) 是入口，其他頁面稱為網頁。</li>
+                <li><strong>網站設計流程:</strong> 規劃 -&gt; 設計製作 -&gt; 測試發行 -&gt; 流量分析。</li>
+                <li><strong>網頁運作:</strong> 瀏覽器發送請求 -&gt; 伺服器回傳 HTML -&gt; 瀏覽器解析顯示。</li>
+                <li><strong>響應式網頁設計 (RWD):</strong> 網頁能自動適應不同裝置螢幕大小。</li>
+                <li><strong>一頁式網站:</strong> 所有內容顯示在單一長頁面。</li>
             </ul>
-            <h4>有序清單</h4>
-            <ol type="A" start="3">
-                <li>項目C</li>
-                <li>項目D</li>
-            </ol>
-        </div>
 
-        <h4>定義清單 (dl, dt, dd)</h4>
-        <pre><code>&lt;dl&gt;
-    &lt;dt&gt;HTML&lt;/dt&gt;
-    &lt;dd&gt;描述...&lt;/dd&gt;
-&lt;/dl&gt;</code></pre>
-        <div class="example-output">
-            <dl>
-                <dt>HTML</dt>
-                <dd>超文本標記語言，用於建立網頁結構。</dd>
-                <dt>CSS</dt>
-                <dd>層疊樣式表，用於設定網頁樣式。</dd>
-            </dl>
-        </div>
-
-        <h4>引述區塊 (blockquote)</h4>
-        <pre><code>&lt;blockquote cite="來源網址"&gt;...&lt;/blockquote&gt;</code></pre>
-        <div class="example-output">
-            <blockquote cite="來源網址">
-                這是一段引用的文字，通常會進行縮排。
-            </blockquote>
-        </div>
-
-        <h4>預先格式化區塊 (pre)</h4>
-        <pre><code>&lt;pre&gt;保留 空格 和 換行&lt;/pre&gt;</code></pre>
-        <div class="example-output">
-            <pre>
-  保留原始的
-    空格
-  和換行符號。
-  適合顯示程式碼。
-            </pre>
-        </div>
-
-        <h4>水平分隔線 (hr)</h4>
-        <pre><code>&lt;hr&gt;</code></pre>
-        <div class="example-output">
-            <p>段落一</p>
-            <hr>
-            <p>段落二</p>
-        </div>
-
-        <h3>3-2 文字樣式元素</h3>
-        <pre><code>&lt;b&gt;粗體&lt;/b&gt;, &lt;strong&gt;強調粗體&lt;/strong&gt;
-&lt;i&gt;斜體&lt;/i&gt;, &lt;em&gt;強調斜體&lt;/em&gt;
-&lt;s&gt;刪除線&lt;/s&gt;, &lt;del&gt;標示刪除&lt;/del&gt;
-&lt;u&gt;底線&lt;/u&gt;, &lt;mark&gt;高亮&lt;/mark&gt;, &lt;small&gt;小字&lt;/small&gt;
-&lt;sup&gt;上標&lt;/sup&gt;, &lt;sub&gt;下標&lt;/sub&gt;
-&lt;ruby&gt;字&lt;rt&gt;注音&lt;/rt&gt;&lt;/ruby&gt;
-&lt;code&gt;程式碼&lt;/code&gt;</code></pre>
-        <div class="example-output">
-             <p>
-                <b>粗體 (b)</b> vs <strong>強調粗體 (strong)</strong><br>
-                <i>斜體 (i)</i> vs <em>強調斜體 (em)</em><br>
-                <s>刪除線 (s)</s> vs <del>標示刪除 (del)</del><br>
-                <u>底線 (u)</u><br>
-                這段文字中有 <mark>高亮顯示</mark> 的部分。<br>
-                這是 <small>小字體</small>。<br>
-                X<sup>2</sup> (上標) 和 H<sub>2</sub>O (下標)。<br>
-                注音符號：<ruby>字<rt>ㄓㄨˋ ㄧㄣ</rt></ruby>。<br>
-                顯示程式碼：<code>console.log('Hello');</code>。
-            </p>
-        </div>
-
-        <h3>3-3 語意結構區塊元素</h3>
-        <p><code>&lt;div&gt;</code> 是一個通用的區塊容器，本身無語意。</p>
-        <h4>HTML5 語意標籤</h4>
-        <p>這些標籤有助於提升網頁結構的可讀性和 SEO。</p>
-        <pre><code>&lt;header&gt;頁首&lt;/header&gt;
-&lt;nav&gt;導覽列&lt;/nav&gt;
-&lt;main&gt;
-    主要內容
-    &lt;article&gt;文章&lt;/article&gt;
-    &lt;section&gt;章節&lt;/section&gt;
-    &lt;aside&gt;側邊欄&lt;/aside&gt;
-&lt;/main&gt;
-&lt;footer&gt;頁尾&lt;/footer&gt;
-&lt;address&gt;聯絡資訊&lt;/address&gt;</code></pre>
-        <div class="example-output" style="border: 1px solid #ccc; padding: 10px;">
-            <header style="background-color:#eee; padding:5px; margin-bottom:5px; border:1px solid #ddd;">頁首 (標題, Logo, 導覽)</header>
-            <nav style="background-color:#eee; padding:5px; margin-bottom:5px; border:1px solid #ddd;">導覽列 (主要選單)</nav>
-            <main style="display: flex; border:1px solid #ddd; padding:5px; margin-bottom:5px;">
-                <div style="flex-grow: 1; margin-right: 5px;">
-                    主要內容區域
-                    <article style="border:1px solid #ddd; padding:5px; margin-top:5px;">
-                        獨立的文章內容
-                        <h2 style="font-size:1.1em; border:none;">文章標題</h2>
-                        <p>文章段落...</p>
-                        <section style="border:1px solid #ddd; padding:5px; margin-top:5px;">
-                            文章內的一個章節
-                            <h3 style="font-size:1em; border:none;">章節標題</h3>
-                            <p>章節內容...</p>
-                        </section>
-                    </article>
-                </div>
-                <aside style="background-color:#eee; padding:5px; border:1px solid #ddd; min-width: 80px;">
-                    側邊欄 (廣告, 相關連結)
-                </aside>
-            </main>
-            <footer style="background-color:#eee; padding:5px; border:1px solid #ddd;">
-                頁尾 (版權, 聯絡資訊)
-                <address style="font-style:italic; margin-top:5px;">
-                    聯絡地址或 Email
-                </address>
-            </footer>
-            <small>(註：此處為示意，實際佈局需靠 CSS)</small>
-        </div>
-
-        <h3>3-4 超連結元素 (a)</h3>
-        <pre><code>&lt;!-- 外部連結 --&gt;
-&lt;a href="https://..." target="_blank"&gt;文字&lt;/a&gt;
-&lt;!-- Email --&gt;
-&lt;a href="mailto:..."&gt;寄信&lt;/a&gt;
-&lt;!-- 電話 --&gt;
-&lt;a href="tel:..."&gt;撥號&lt;/a&gt;
-&lt;!-- 頁內錨點 --&gt;
-&lt;a href="#id"&gt;跳轉&lt;/a&gt;
-&lt;!-- 圖片連結 --&gt;
-&lt;a href="..."&gt;&lt;img src="..."&gt;&lt;/a&gt;
-&lt;!-- 下載連結 --&gt;
-&lt;a href="..." download="檔名"&gt;下載&lt;/a&gt;</code></pre>
-        <div class="example-output">
-            <a href="https://www.google.com" target="_blank">前往 Google (開新視窗)</a><br>
-            <a href="mailto:test@example.com">寄信給我</a><br>
-            <a href="tel:+886-912-345-678">撥打電話</a><br>
-            <a href="#ch1">跳到第一章</a><br>
-            <a href="https://www.nttu.edu.tw">
-                <img src="https://placehold.co/100x50/eee/333?text=Logo" alt="台東大學 Logo (示意圖)" width="100">
-            </a><br>
-            <a href="document.pdf" download="學習文件.pdf">下載 PDF</a>
-            <p><small>(註：部分連結需在實際環境測試，如 mailto, tel, download)</small></p>
-        </div>
-
-        <h3>3-5 圖片元素</h3>
-        <h4>基本圖片 (img)</h4>
-        <pre><code>&lt;img src="路徑" alt="替代文字" width="寬" height="高"&gt;</code></pre>
-        <div class="example-output">
-            <img src="https://placehold.co/300x200/abc/fff?text=Image+1" alt="(示意圖)" width="300" height="200">
-            <img src="https://placehold.co/250x150/cba/fff?text=Image+2" alt="(示意圖)" style="width: 250px;">
-        </div>
-
-        <h4>響應式圖片 (picture)</h4>
-        <pre><code>&lt;picture&gt;
-    &lt;source media="(max-width: 599px)" srcset="small.png"&gt;
-    &lt;source media="(min-width: 600px)" srcset="large.png"&gt;
-    &lt;img src="default.png" alt="..."&gt;
-&lt;/picture&gt;</code></pre>
-        <div class="example-output">
-            <picture>
-                <source media="(max-width: 599px)" srcset="https://placehold.co/200x100/f00/fff?text=Small">
-                <source media="(min-width: 600px)" srcset="https://placehold.co/400x200/00f/fff?text=Large">
-                <img src="https://placehold.co/300x150/ccc/000?text=Default" alt="響應式圖片 (示意圖)">
-            </picture>
-            <p><small>(註：請調整瀏覽器視窗寬度查看效果)</small></p>
-        </div>
-
-        <div class="quiz-section">
-            <h4>第三章 隨堂測驗</h4>
-            <div class="quiz-question">
-                <p><strong>1. (選擇題)</strong> 在 HTML5 中，哪個標籤最適合用來放置網站的主要導覽連結？</p>
-                <ol>
-                    <li>&lt;header&gt;</li>
-                    <li>&lt;section&gt;</li>
-                    <li>&lt;nav&gt;</li>
-                    <li>&lt;aside&gt;</li>
-                </ol>
-            </div>
-            <div class="quiz-question">
-                <p><strong>2. (問答題)</strong> <code>&lt;strong&gt;</code> 和 <code>&lt;b&gt;</code> 標籤在語意上有何不同？</p>
-            </div>
-            <div class="quiz-question">
-                <p><strong>3. (選擇題)</strong> 如何建立一個點擊後會開啟 Email 客戶端的連結？</p>
-                <ol>
-                    <li>&lt;a href="email:user@example.com"&gt;</li>
-                    <li>&lt;a href="mailto:user@example.com"&gt;</li>
-                    <li>&lt;a link="mailto:user@example.com"&gt;</li>
-                    <li>&lt;link type="email" href="user@example.com"&gt;</li>
-                </ol>
-            </div>
-            <button class="toggle-answer-btn" onclick="toggleAnswer('ch3-answers', this)">顯示答案</button>
-            <div class="quiz-answer" id="ch3-answers">
-                <p><strong>1. 答案：</strong> (c) &lt;nav&gt;</p>
-                <p><strong>2. 答案：</strong> 兩者預設樣式都是粗體，但 <code>&lt;strong&gt;</code> 帶有語意上的「重要性」強調，而 <code>&lt;b&gt;</code> 僅表示視覺上的粗體，沒有額外語意。</p>
-                <p><strong>3. 答案：</strong> (b) &lt;a href="mailto:user@example.com"&gt;</p>
-            </div>
-        </div>
-        </section>
-
-    <section id="ch4">
-        <h2>第四章：影音多媒體、表格及表單元素</h2>
-
-        <h3>4-1 影音多媒體元素</h3>
-        <h4>音訊 (audio)</h4>
-        <pre><code>&lt;audio controls&gt;
-  &lt;source src="music.mp3" type="audio/mpeg"&gt;
-  不支援。
-&lt;/audio&gt;</code></pre>
-        <div class="example-output">
-            <audio controls loop preload="metadata">
-              您的瀏覽器不支援 audio 標籤。(此處無實際音訊檔)
-            </audio>
-        </div>
-
-        <h4>視訊 (video)</h4>
-        <pre><code>&lt;video controls poster="預覽圖.png"&gt;
-  &lt;source src="movie.mp4" type="video/mp4"&gt;
-  不支援。
-&lt;/video&gt;</code></pre>
-        <div class="example-output">
-            <video width="320" height="240" controls poster="https://placehold.co/320x240/eee/aaa?text=Video+Poster">
-              您的瀏覽器不支援 video 標籤。(此處無實際影片檔)
-            </video>
-        </div>
-
-        <h4>內嵌框架 (iframe) - 嵌入 YouTube 影片</h4>
-        <pre><code>&lt;iframe width="560" height="315" src="YouTube連結" ...&gt;&lt;/iframe&gt;</code></pre>
-        <div class="example-output">
-            <iframe width="560" height="315"
-                src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen>
-            </iframe>
-        </div>
-
-         <h4>繪圖畫布 (canvas)</h4>
-         <pre><code>&lt;canvas id="myCanvas" width="200" height="100"&gt;&lt;/canvas&gt;
-&lt;script&gt;
-  const canvas = document.getElementById('myCanvas');
-  const ctx = canvas.getContext('2d');
-  // ... 使用 ctx 繪圖 ...
-&lt;/script&gt;</code></pre>
-         <div class="example-output">
-             <canvas id="myDrawingCanvas" width="200" height="100" style="border:1px solid #000; background-color: white;"></canvas>
-             <script>
-               // 確保 canvas 元素存在後再執行
-               const canvasInstance = document.getElementById('myDrawingCanvas');
-               if (canvasInstance && canvasInstance.getContext) {
-                 const ctxInstance = canvasInstance.getContext('2d');
-                 // 繪製一個紅色矩形
-                 ctxInstance.fillStyle = 'red';
-                 ctxInstance.fillRect(10, 10, 50, 50); // x, y, width, height
-                 // 繪製一個藍色線條
-                 ctxInstance.strokeStyle = 'blue';
-                 ctxInstance.lineWidth = 3;
-                 ctxInstance.beginPath();
-                 ctxInstance.moveTo(70, 10);
-                 ctxInstance.lineTo(120, 60);
-                 ctxInstance.stroke();
-               } else {
-                   console.error("找不到 Canvas 元素或瀏覽器不支援 getContext('2d')");
-               }
-             </script>
-         </div>
-
-        <h3>4-2 表格元素 (table)</h3>
-        <h4>基本表格與合併儲存格</h4>
-        <pre><code>&lt;table border="1"&gt;
-    &lt;caption&gt;標題&lt;/caption&gt;
-    &lt;thead&gt;&lt;tr&gt;&lt;th&gt;表頭&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
-    &lt;tbody&gt;
-        &lt;tr&gt;&lt;td&gt;資料&lt;/td&gt;&lt;/tr&gt;
-        &lt;tr&gt;&lt;td rowspan="2"&gt;合併列&lt;/td&gt;&lt;/tr&gt;
-    &lt;/tbody&gt;
-    &lt;tfoot&gt;&lt;tr&gt;&lt;td colspan="2"&gt;合併欄&lt;/td&gt;&lt;/tr&gt;&lt;/tfoot&gt;
-&lt;/table&gt;</code></pre>
-        <div class="example-output">
-            <table> <caption>課程表</caption>
-                <thead>
-                    <tr>
-                        <th>時間</th>
-                        <th>星期一</th>
-                        <th>星期二</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>早上</td>
-                        <td>網頁設計</td>
-                        <td rowspan="2">體育</td> </tr>
-                    <tr>
-                        <td>中午</td>
-                        <td>午休</td>
-                        </tr>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="3">下午課程請見詳細課表</td> </tr>
-                </tfoot>
-            </table>
-        </div>
-
-        <h4>欄位群組 (colgroup, col)</h4>
-        <pre><code>&lt;colgroup&gt;
-    &lt;col span="1" style="background-color: #f0f0f0;"&gt;
-    &lt;col span="2" style="background-color: #e0e0e0;"&gt;
-&lt;/colgroup&gt;</code></pre>
-        <div class="example-output">
-             <table>
-                <colgroup>
-                    <col span="1" style="background-color: #f0f0f0;">
-                    <col span="2" style="background-color: #e0e0e0;">
-                </colgroup>
-                <thead><tr><th>品項</th><th>價格</th><th>數量</th></tr></thead>
-                <tbody>
-                    <tr><td>蘋果</td><td>30</td><td>5</td></tr>
-                    <tr><td>香蕉</td><td>10</td><td>12</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <h3>4-3 表單元素 (form)</h3>
-        <pre><code>&lt;form action="..." method="..."&gt;
-    &lt;fieldset&gt;
-        &lt;legend&gt;群組標題&lt;/legend&gt;
-        &lt;label for="id"&gt;標籤&lt;/label&gt;
-        &lt;input type="text" id="id" name="..."&gt;
-        &lt;input type="radio" name="..." value="..."&gt;
-        &lt;input type="checkbox" name="..." value="..."&gt;
-        &lt;select name="..."&gt;&lt;option value="..."&gt;選項&lt;/option&gt;&lt;/select&gt;
-        &lt;textarea name="..."&gt;&lt;/textarea&gt;
-        &lt;input type="submit" value="提交"&gt;
-        &lt;input type="reset" value="重設"&gt;
-        &lt;input type="button" value="按鈕"&gt;
-    &lt;/fieldset&gt;
-&lt;/form&gt;</code></pre>
-        <div class="example-output">
-            <form action="#" method="post"> <fieldset>
-                    <legend>個人資料</legend>
-                    <label for="ex-username">姓名：</label>
-                    <input type="text" id="ex-username" name="username" placeholder="請輸入姓名" required><br>
-                    <label>密碼：<input type="password" name="password" required minlength="8"></label><br>
-                    <label for="ex-email">Email：</label>
-                    <input type="email" id="ex-email" name="email"><br>
-                    <label for="ex-age">年齡：</label>
-                    <input type="number" id="ex-age" name="age" min="18" max="100" step="1"><br>
-                    <label for="ex-birthdate">生日：</label>
-                    <input type="date" id="ex-birthdate" name="birthdate"><br>
-                </fieldset>
-                <fieldset>
-                    <legend>選項</legend>
-                    <p>性別：
-                        <input type="radio" id="ex-male" name="gender" value="male" checked>
-                        <label for="ex-male">男</label>
-                        <input type="radio" id="ex-female" name="gender" value="female">
-                        <label for="ex-female">女</label>
-                    </p>
-                    <p>興趣：
-                        <input type="checkbox" id="ex-coding" name="hobby" value="coding">
-                        <label for="ex-coding">寫程式</label>
-                        <input type="checkbox" id="ex-music" name="hobby" value="music">
-                        <label for="ex-music">聽音樂</label>
-                        <input type="checkbox" id="ex-sports" name="hobby" value="sports">
-                        <label for="ex-sports">運動</label>
-                    </p>
-                    <label for="ex-city">居住城市：</label>
-                    <select id="ex-city" name="city">
-                        <option value="">--請選擇--</option>
-                        <option value="taipei">台北</option>
-                        <option value="taitung" selected>台東</option>
-                        <option value="kaohsiung" disabled>高雄 (不可選)</option>
-                    </select><br>
-                    <label for="ex-comment">意見：</label><br>
-                    <textarea id="ex-comment" name="comment" rows="4" cols="50" placeholder="請輸入您的寶貴意見..."></textarea><br>
-                    <label for="ex-avatar">上傳頭像：</label>
-                    <input type="file" id="ex-avatar" name="avatar" accept="image/png, image/jpeg"><br>
-                </fieldset>
-                <input type="submit" value="提交表單">
-                <input type="reset" value="清除重填">
-                <input type="button" value="一般按鈕" onclick="alert('按鈕被點擊了!');">
-            </form>
-        </div>
-
-        <div class="quiz-section">
-            <h4>第四章 隨堂測驗</h4>
-            <div class="quiz-question">
-                <p><strong>1. (選擇題)</strong> 在 HTML 表格中，哪個標籤用於定義表頭 (Header) 的儲存格？</p>
-                <ol>
-                    <li>&lt;td&gt;</li>
-                    <li>&lt;tr&gt;</li>
-                    <li>&lt;th&gt;</li>
-                    <li>&lt;thead&gt;</li>
-                </ol>
-            </div>
-            <div class="quiz-question">
-                <p><strong>2. (問答題)</strong> <code>&lt;input type="radio"&gt;</code> 和 <code>&lt;input type="checkbox"&gt;</code> 的主要區別是什麼？</p>
-            </div>
-            <div class="quiz-question">
-                <p><strong>3. (選擇題)</strong> 如果你想讓使用者輸入一段較長的文字評論，應該使用哪個表單元素？</p>
-                <ol>
-                    <li>&lt;input type="text"&gt;</li>
-                    <li>&lt;select&gt;</li>
-                    <li>&lt;textarea&gt;</li>
-                    <li>&lt;input type="comment"&gt;</li>
-                </ol>
-            </div>
-            <button class="toggle-answer-btn" onclick="toggleAnswer('ch4-answers', this)">顯示答案</button>
-            <div class="quiz-answer" id="ch4-answers">
-                <p><strong>1. 答案：</strong> (c) &lt;th&gt;</p>
-                <p><strong>2. 答案：</strong> Radio buttons (單選按鈕) 通常用於一組選項中只能選擇一個的情況 (需設定相同的 `name` 屬性)。Checkbox (複選框) 則允許使用者從一組選項中選擇零個或多個。</p>
-                <p><strong>3. 答案：</strong> (c) &lt;textarea&gt;</p>
-            </div>
-        </div>
-        </section>
-
-    <section id="ch5">
-        <h2>第五章：CSS 基本概念</h2>
-
-        <h3>5-1 認識 CSS</h3>
-        <p>CSS (Cascading Style Sheets) 用於設定 HTML 元素的外觀和佈局。</p>
-        <p>基本架構：<code>選擇器 { 屬性: 值; 屬性: 值; }</code></p>
-        <pre><code>/* CSS 註解 */
-p {
-    color: blue; /* 設定文字顏色為藍色 */
-    font-size: 16px; /* 設定字體大小為 16 像素 */
-}</code></pre>
-
-        <h3>5-2 CSS 的使用方式</h3>
-        <ul>
-            <li><strong>行內樣式</strong>：<code>&lt;p style="color: red;"&gt;...&lt;/p&gt;</code> (優先權最高，不建議)</li>
-            <li><strong>內部樣式表</strong>：在 <code>&lt;head&gt;</code> 的 <code>&lt;style&gt;</code> 標籤內寫 CSS。</li>
-            <li><strong>外部樣式表</strong>：寫在獨立的 <code>.css</code> 檔案，用 <code>&lt;link&gt;</code> 引入。(推薦)</li>
-        </ul>
-
-        <h3>CSS 串接與優先權</h3>
-        <p>樣式來源優先權：行內 > 內部/外部 > 瀏覽器預設。</p>
-        <p><code>!important</code> 宣告具有最高優先權。</p>
-        <p>選擇器明確度：ID > Class/屬性/虛擬類 > 標籤/虛擬元素 > 通用。</p>
-        <p>相同優先權下，後定義的規則覆蓋先定義的。</p>
-
-        <h3>5-3 CSS 基本選擇器</h3>
-        <h4>標籤選擇器</h4>
-        <pre><code>h2 { font-family: "Verdana", sans-serif; }</code></pre>
-        <h4>Class 選擇器 (.)</h4>
-        <pre><code>.highlight { background-color: yellow; }</code></pre>
-        <div class="example-output">
-            <p class="highlight" style="background-color: yellow;">這段文字背景是黃色。</p>
-        </div>
-        <h4>ID 選擇器 (#)</h4>
-        <pre><code>#logo { border: 1px solid blue; }</code></pre>
-        <div class="example-output">
-            <div id="logo-example" style="border: 1px solid blue; padding: 5px;">這是 ID 為 logo-example 的區塊</div>
-            </div>
-        <h4>通用選擇器 (*)</h4>
-        <pre><code>* { margin: 0; padding: 0; } /* 通常用於重設樣式 */</code></pre>
-        <h4>屬性選擇器 ([])</h4>
-        <pre><code>a[title] { color: green; }
-input[type="submit"] { background-color: lightblue; }</code></pre>
-        <div class="example-output">
-            <a href="#" title="提示文字" style="color: green;">有 title 的連結</a><br>
-            <input type="submit" value="提交按鈕" style="background-color: lightblue;"><br>
-        </div>
-
-        <h3>5-4 組合選擇器</h3>
-        <h4>後代選擇器 (空格)</h4>
-        <pre><code>article p { line-height: 1.8; }</code></pre>
-        <h4>子選擇器 (>)</h4>
-        <pre><code>ul > li { list-style-type: square; }</code></pre>
-        <h4>同層相鄰選擇器 (+)</h4>
-        <pre><code>h3 + p { margin-top: 5px; }</code></pre>
-        <h4>同層全體選擇器 (~)</h4>
-        <pre><code>h3 ~ p { color: gray; }</code></pre>
-        <div class="example-output">
-            <article>
-                <p style="line-height: 1.8;">Article 內的第一個段落。</p>
-                <div><p style="line-height: 1.8;">Article 內 div 內的段落。</p></div>
-            </article>
+            <h3 class="text-xl font-semibold">1-2 網頁設計程式語言</h3>
             <ul>
-                <li style="list-style-type: square;">第一層列表項</li>
-                <li>
-                    第二層列表項
-                    <ul><li>（這個不受影響）</li></ul>
+                <li><strong>瀏覽器端 (Client-Side):</strong>
+                    <ul>
+                        <li><strong>標籤語言:</strong> HTML (結構), CSS (樣式)。</li>
+                        <li><strong>程式語言:</strong> JavaScript (互動), DHTML (動態效果)。</li>
+                        <li><strong>資料描述:</strong> XML。</li>
+                    </ul>
+                </li>
+                <li><strong>伺服器端 (Server-Side):</strong> PHP, ASP.NET, JSP, CGI (通常用 Perl/C)。在伺服器執行，產生動態內容。</li>
+            </ul>
+
+            <h3 class="text-xl font-semibold">1-3 搜尋引擎最佳化 (SEO)</h3>
+            <p>（此部分在提供檔案中未詳細說明，但通常指優化網站內容與結構，使其更容易被搜尋引擎找到並排名靠前。）</p>
+
+            <h3 class="text-xl font-semibold">1-4 網路資源 & 1-5 AI 工具 & 1-6 網頁編輯工具</h3>
+            <p>（此部分在提供檔案中未詳細說明，但指設計網頁時可利用的線上資源、AI 輔助工具以及各種網頁編輯軟體，如 VS Code, Sublime Text 等。）</p>
+
+            <div class="quiz-section">
+                <h4 class="text-lg font-semibold mb-3">第一章 隨堂測驗</h4>
+                <ol class="list-decimal ml-5 space-y-2">
+                    <li>什麼是響應式網頁設計 (RWD)？它的主要目的是什麼？</li>
+                    <li>請簡單說明瀏覽器如何取得並顯示一個網頁的過程。</li>
+                    <li>HTML 和 CSS 在網頁設計中各自扮演什麼角色？ (選擇題)<br>
+                        A) HTML負責互動，CSS負責結構<br>
+                        B) HTML負責樣式，CSS負責結構<br>
+                        C) HTML負責結構，CSS負責樣式<br>
+                        D) HTML負責伺服器邏輯，CSS負責客戶端邏輯
+                    </li>
+                </ol>
+                <button class="show-answer-btn" onclick="toggleAnswer('answer1')">顯示答案</button>
+                <div id="answer1" class="answer-section">
+                    <h5 class="font-semibold mb-2">答案</h5>
+                    <ol class="list-decimal ml-5 space-y-1">
+                        <li>RWD 是一種讓網頁內容能隨不同裝置的解析度自動調整畫面呈現的技術。主要目的是提升使用者在不同裝置上的視覺體驗與操作便利性。</li>
+                        <li>瀏覽者透過瀏覽器輸入網址 (URL) 或點擊連結，向網頁伺服器發出 HTTP 請求。伺服器找到對應的 HTML 文件後，將其傳回給瀏覽器。瀏覽器接收到 HTML 文件後，解析其中的標籤和內容，並根據 CSS 樣式渲染成使用者看到的網頁畫面。</li>
+                        <li>C) HTML負責結構，CSS負責樣式</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <section id="chapter2">
+            <h2 class="text-2xl font-semibold pb-2 mb-4">第二章：HTML 基本概念</h2>
+
+            <h3 class="text-xl font-semibold">2-1 認識 HTML</h3>
+            <ul>
+                <li><strong>HTML5:</strong> 最新的 HTML 標準，簡化語法，增加新標籤 (如 <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;audio&gt;</code>, <code>&lt;video&gt;</code>) 和 API，提升網頁功能與互動性，減少對外掛的依賴。</li>
+                <li><strong>W3C 驗證工具:</strong> 可用來檢查 HTML 程式碼是否符合標準 (validator.w3.org)。</li>
+            </ul>
+
+            <h3 class="text-xl font-semibold">2-2 HTML 檔案命名與管理</h3>
+            <ul>
+                <li><strong>命名原則:</strong> 使用半形英數字、小寫、避免空格、加副檔名 (.html 或 .htm)、首頁常命名為 index.html。</li>
+                <li><strong>資料夾管理:</strong> 將所有網站檔案放在一個主資料夾，內部可再依類型 (如 images, css, js) 建立子資料夾。</li>
+                <li><strong>檔案路徑:</strong>
+                    <ul>
+                        <li><strong>絕對路徑:</strong> 完整的 URL (如 <code>https://www.example.com/images/1.png</code>)。</li>
+                        <li><strong>文件相對路徑:</strong> 相對於目前 HTML 檔案的位置 (如 <code>images/1.png</code>, <code>../css/style.css</code>)。</li>
+                        <li><strong>網站根目錄相對路徑:</strong> 相對於網站根目錄 (以 <code>/</code> 開頭，如 <code>/images/1.png</code>)。</li>
+                    </ul>
                 </li>
             </ul>
-            <h3>一個標題</h3>
-            <p style="margin-top: 5px; color: gray;">緊接在標題後的段落。</p>
-            <p style="color: gray;">標題後的第二個段落。</p>
-        </div>
 
-        <h3>5-5 虛擬類別選擇器 (:)</h3>
-        <pre><code>a:hover { color: red; } /* 滑鼠懸停 */
-input:focus { border-color: orange; } /* 獲得焦點 */
-li:first-child { color: green; } /* 第一個子元素 */
-p:not(.special) { font-style: italic; } /* 非 .special 的 p */</code></pre>
-        <div class="example-output">
-            <a href="#ch5-example1" id="ch5-example1-link">連結範例 (試著懸停)</a><br>
-            <input type="text" placeholder="輸入框 (試著點擊)" style="border: 1px solid #ccc;"><br>
+            <h3 class="text-xl font-semibold">2-3 HTML 的基本結構</h3>
             <ul>
-                <li style="color: green;">第一項 (綠色)</li>
-                <li>第二項</li>
+                <li><strong>元素 (Element):</strong> 由開始標籤、內容、結束標籤組成 (如 <code>&lt;p&gt;這是段落&lt;/p&gt;</code>)。</li>
+                <li><strong>標籤 (Tag):</strong> 用 <code>&lt; &gt;</code> 包圍的指令 (如 <code>&lt;p&gt;</code>, <code>&lt;/p&gt;</code>)。</li>
+                <li><strong>屬性 (Attribute):</strong> 在開始標籤中提供額外資訊 (如 <code>&lt;img src="1.png" alt="圖片"&gt;</code>)。</li>
+                <li><strong>巢狀元素 (Nesting):</strong> 元素可以包含其他元素。</li>
+                <li><strong>空元素 (Empty Element):</strong> 沒有內容，通常沒有結束標籤 (如 <code>&lt;br&gt;</code>, <code>&lt;img&gt;</code>, <code>&lt;hr&gt;</code>)。</li>
+                <li><strong>全域屬性:</strong> 可用於任何 HTML 元素的屬性 (如 <code>id</code>, <code>class</code>, <code>style</code>, <code>title</code>)。</li>
             </ul>
-            <p style="font-style: italic;">一般段落 (斜體)</p>
-            <p class="special">有 special class 的段落 (非斜體)</p>
-            <style>
-                #ch5-example1-link:hover { color: red; text-decoration: underline; }
-                .example-output input[type="text"]:focus { border-color: orange; outline: none; }
-                .example-output li:first-child { color: green; }
-                .example-output p:not(.special) { font-style: italic; }
-            </style>
-        </div>
 
-        <h3>5-6 虛擬元素選擇器 (::)</h3>
-        <pre><code>p::before { content: "ℹ️ "; } /* 元素前插入內容 */
-p::first-letter { font-size: 2em; } /* 首字母樣式 */
-::selection { background-color: blue; color: white; } /* 選取文字樣式 */</code></pre>
-        <div class="example-output">
-            <p class="info-pseudo">這是一個提示訊息。</p>
-            <p class="first-letter-pseudo" style="font-size: 1em; color: #333;">這段文字的第一個字母會變大。</p>
-            <p>試著用滑鼠選取這段文字。</p>
-            <style>
-                .example-output p.info-pseudo::before { content: "ℹ️ "; margin-right: 5px; }
-                .example-output p.first-letter-pseudo::first-letter { font-size: 2em; color: #0056b3; float: left; margin-right: 4px; line-height: 1; }
-                .example-output ::selection { background-color: #0056b3; color: white; }
-            </style>
-        </div>
+            <h4 class="text-lg font-semibold">基本網頁結構範例</h4>
+            <div class="code-block">
+                <pre><code class="language-html">&lt;!DOCTYPE html&gt; &lt;!-- 宣告為 HTML5 文件 --&gt;
+&lt;html lang="zh-Hant-Tw"&gt; &lt;!-- 根元素，設定語言為繁體中文 --&gt;
+&lt;head&gt; &lt;!-- 文件標頭，包含元資訊 --&gt;
+    &lt;meta charset="UTF-8"&gt; &lt;!-- 設定字元編碼 --&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt; &lt;!-- RWD 設定 --&gt;
+    &lt;meta name="description" content="網頁描述"&gt; &lt;!-- 網頁描述 --&gt;
+    &lt;title&gt;網頁標題&lt;/title&gt; &lt;!-- 顯示在瀏覽器標籤上的標題 --&gt;
+    &lt;link rel="stylesheet" href="style.css"&gt; &lt;!-- 連結外部 CSS --&gt;
+&lt;/head&gt;
+&lt;body&gt; &lt;!-- 文件主體，顯示在瀏覽器視窗的內容 --&gt;
+    &lt;h1&gt;主要標題&lt;/h1&gt;
+    &lt;p&gt;這是一個段落。&lt;/p&gt;
+    &lt;script src="script.js"&gt;&lt;/script&gt; &lt;!-- 連結外部 JavaScript --&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            </div>
+            <div class="preview-block">
+                (此處無法直接預覽完整網頁，但結構如上所示)
+                <h1 class="text-xl font-bold">主要標題</h1>
+                <p>這是一個段落。</p>
+            </div>
 
-        <div class="quiz-section">
-            <h4>第五章 隨堂測驗</h4>
-            <div class="quiz-question">
-                <p><strong>1. (選擇題)</strong> 下列哪種 CSS 使用方式具有最高的優先權？</p>
-                <ol>
-                    <li>外部樣式表</li>
-                    <li>內部樣式表 (&lt;style&gt;)</li>
-                    <li>行內樣式 (style 屬性)</li>
-                    <li>瀏覽器預設樣式</li>
+            <h3 class="text-xl font-semibold">2-4 文件資料元素 (常用於 <code>&lt;head&gt;</code>)</h3>
+            <ul>
+                <li><strong><code>&lt;meta&gt;</code>:</strong> 提供元數據 (編碼 <code>charset</code>, 描述 <code>description</code>, 關鍵字 <code>keywords</code>, 視口 <code>viewport</code>)。</li>
+                <li><strong><code>&lt;base&gt;</code>:</strong> 設定頁面相對路徑的基準 URL (<code>href</code>) 和預設連結目標 (<code>target</code>)。</li>
+                <li><strong><code>&lt;link&gt;</code>:</strong> 連結外部資源，最常用於 CSS (<code>rel="stylesheet"</code>)。</li>
+                <li><strong><code>&lt;style&gt;</code>:</strong> 嵌入內部 CSS 樣式。</li>
+                <li><strong><code>&lt;script&gt;</code>:</strong> 嵌入或連結 JavaScript。<code>src</code> 連結外部檔案，<code>async</code>/<code>defer</code> 控制載入與執行時機。</li>
+                <li><strong><code>&lt;noscript&gt;</code>:</strong> 當 JavaScript 被禁用時顯示的內容。</li>
+                <li><strong>HTML 註解:</strong> <code>&lt;!-- 這是註解 --&gt;</code>。</li>
+            </ul>
+
+            <div class="quiz-section">
+                <h4 class="text-lg font-semibold mb-3">第二章 隨堂測驗</h4>
+                <ol class="list-decimal ml-5 space-y-2">
+                    <li>HTML 檔案命名的主要原則有哪些？為什麼首頁通常命名為 `index.html`？</li>
+                    <li>`&lt;head&gt;` 和 `&lt;body&gt;` 標籤在 HTML 文件中的主要功能分別是什麼？</li>
+                    <li>以下哪個 `&lt;meta&gt;` 標籤用於設定網頁的字元編碼？ (選擇題)<br>
+                        A) `&lt;meta name="encoding" content="UTF-8"&gt;`<br>
+                        B) `&lt;meta charset="UTF-8"&gt;`<br>
+                        C) `&lt;meta http-equiv="content-type" content="text/html; charset=UTF-8"&gt;`<br>
+                        D) B 和 C 都可以
+                    </li>
+                     <li>相對路徑 `../images/logo.png` 代表什麼意思？</li>
                 </ol>
+                <button class="show-answer-btn" onclick="toggleAnswer('answer2')">顯示答案</button>
+                <div id="answer2" class="answer-section">
+                    <h5 class="font-semibold mb-2">答案</h5>
+                    <ol class="list-decimal ml-5 space-y-1">
+                        <li>原則：使用半形英數字、小寫、避免空格、加副檔名。因為伺服器預設會尋找名為 `index.html` (或類似名稱) 的檔案作為網站的入口頁面（首頁）。</li>
+                        <li>`&lt;head&gt;` 包含網頁的元資訊，如標題、編碼、外部資源連結等，這些內容通常不直接顯示在瀏覽器主視窗。`&lt;body&gt;` 包含網頁的主要可見內容，如文字、圖片、連結等。</li>
+                        <li>D) B 和 C 都可以。`&lt;meta charset="UTF-8"&gt;` 是 HTML5 的簡化寫法，`&lt;meta http-equiv="content-type" ...&gt;` 是早期寫法，兩者都能設定編碼，但推薦使用 B。</li>
+                        <li>`../` 代表回到上一層目錄，所以這個路徑代表從目前檔案所在的目錄回到上一層，然後進入 `images` 資料夾，找到 `logo.png` 這個檔案。</li>
+                    </ol>
+                </div>
             </div>
-            <div class="quiz-question">
-                <p><strong>2. (問答題)</strong> 請寫出一個 CSS 選擇器，選取所有 class 為 "button" 且同時具有 "active" class 的 &lt;button&gt; 元素。</p>
-            </div>
-            <div class="quiz-question">
-                <p><strong>3. (選擇題)</strong> CSS 選擇器 <code>h2 + p</code> 會選取到什麼元素？</p>
-                <ol>
-                    <li>所有在 &lt;h2&gt; 元素內部的 &lt;p&gt; 元素</li>
-                    <li>所有緊接在 &lt;h2&gt; 元素後面的同層級 &lt;p&gt; 元素</li>
-                    <li>所有在 &lt;h2&gt; 元素後面的同層級 &lt;p&gt; 元素 (不一定緊鄰)</li>
-                    <li>所有 &lt;h2&gt; 和 &lt;p&gt; 元素</li>
-                </ol>
-            </div>
-            <button class="toggle-answer-btn" onclick="toggleAnswer('ch5-answers', this)">顯示答案</button>
-            <div class="quiz-answer" id="ch5-answers">
-                <p><strong>1. 答案：</strong> (c) 行內樣式 (style 屬性)</p>
-                <p><strong>2. 答案：</strong> <code>button.button.active</code> 或 <code>.button.active</code> (如果確定只套用在 button 上)</p>
-                <p><strong>3. 答案：</strong> (b) 所有緊接在 &lt;h2&gt; 元素後面的同層級 &lt;p&gt; 元素</p>
-            </div>
-        </div>
         </section>
 
-    <section id="ch6">
-        <h2>第六章：CSS 樣式</h2>
+        <section id="chapter3">
+            <h2 class="text-2xl font-semibold pb-2 mb-4">第三章：常用的 HTML 元素</h2>
 
-        <h3>6-1 色彩屬性</h3>
-        <p>設定文字顏色：<code>color</code> 屬性。</p>
-        <pre><code>p { color: #333; } /* 十六進位 */
-h4 { color: rgb(0, 128, 0); } /* RGB */
-span { color: rgba(255, 0, 0, 0.7); } /* RGBA (半透明紅) */</code></pre>
-        <div class="example-output">
-            <p style="color: #333;">這是用 #333 顏色的段落。</p>
-            <h4 style="color: rgb(0, 128, 0); border:none;">這是用 rgb(0, 128, 0) 的標題。</h4>
-            <span style="color: rgba(255, 0, 0, 0.7);">這是半透明紅色文字。</span><br>
-        </div>
-
-        <h3>6-2 字型屬性</h3>
-        <pre><code>.font-example {
-    font-family: "Georgia", serif; /* 字型 */
-    font-size: 18px;           /* 大小 */
-    font-weight: bold;         /* 粗細 */
-    font-style: italic;        /* 樣式 */
-}
-/* 速記寫法 */
-.font-shorthand {
-    font: italic bold 1.2em/1.5 "Arial", sans-serif;
-}</code></pre>
-        <div class="example-output">
-            <p class="font-example-ch6" style='font-family: "Georgia", serif; font-size: 18px; font-style: italic; font-weight: bold;'>Font Example Text</p>
-            <p class="font-shorthand-ch6" style='font: italic bold 1.2em/1.5 "Arial", sans-serif;'>Font Shorthand Example</p>
-        </div>
-
-        <h3>6-3 文字段落屬性</h3>
-        <pre><code>.text-style {
-    text-align: center;        /* 水平對齊 */
-    text-decoration: underline;/* 文字裝飾 */
-    line-height: 1.8;          /* 行高 */
-    text-indent: 2em;          /* 首行縮排 */
-}</code></pre>
-        <div class="example-output">
-            <p class="text-style-ch6" style="text-align: center; text-decoration: underline; line-height: 1.8; text-indent: 2em;">Styled Text Example. 這是一段比較長的文字，用來測試首行縮排和行高的效果。</p>
-        </div>
-
-        <h3>6-4 清單屬性</h3>
-        <pre><code>ul.list-style {
-    list-style-type: circle;      /* 標記類型 */
-    list-style-position: inside; /* 標記位置 */
-}</code></pre>
-        <div class="example-output">
-            <ul class="list-style-ch6" style="list-style-type: circle; list-style-position: inside; border: 1px solid #eee; padding-left: 20px;">
-                <li>項目一 (空心圓, 內部)</li>
-                <li>項目二</li>
+            <h3 class="text-xl font-semibold">3-1 段落與列表元素</h3>
+            <ul>
+                <li><strong>標題:</strong> <code>&lt;h1&gt;</code> 到 <code>&lt;h6&gt;</code>。</li>
+                <li><strong>段落:</strong> <code>&lt;p&gt;</code>。</li>
+                <li><strong>換行:</strong> <code>&lt;br&gt;</code>。</li>
+                <li><strong>無序列表:</strong> <code>&lt;ul&gt;</code> (項目符號)，內含 <code>&lt;li&gt;</code> (列表項目)。</li>
+                <li><strong>有序列表:</strong> <code>&lt;ol&gt;</code> (編號)，內含 <code>&lt;li&gt;</code>。可使用 `type` (編號樣式) 和 `start` (起始值) 屬性。</li>
+                <li><strong>定義列表:</strong> <code>&lt;dl&gt;</code>，內含 <code>&lt;dt&gt;</code> (名詞) 和 <code>&lt;dd&gt;</code> (解釋)。</li>
+                <li><strong>引述區塊:</strong> <code>&lt;blockquote&gt;</code> (通常縮排)。</li>
+                <li><strong>預格式化:</strong> <code>&lt;pre&gt;</code> (保留空格和換行)。</li>
+                <li><strong>水平線:</strong> <code>&lt;hr&gt;</code>。</li>
             </ul>
-        </div>
 
-        <h3>6-5 邊框屬性</h3>
-        <pre><code>.border-example {
-    border: 2px dashed green; /* 寬度 樣式 顏色 */
-    border-radius: 10px;      /* 圓角 */
-}</code></pre>
-        <div class="example-output">
-            <div class="border-example-ch6" style="border: 2px dashed green; border-radius: 10px; padding: 10px; margin-bottom: 10px;">邊框範例 (2px 綠色虛線, 10px 圓角)</div>
-        </div>
+            <h4 class="text-lg font-semibold">列表範例</h4>
+            <div class="code-block">
+                <pre><code class="language-html">&lt;h4&gt;水果清單 (無序)&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;蘋果&lt;/li&gt;
+  &lt;li&gt;香蕉&lt;/li&gt;
+  &lt;li&gt;橘子&lt;/li&gt;
+&lt;/ul&gt;
 
-        <h3>6-6 背景屬性</h3>
-        <pre><code>.background-example {
-    background-color: lightyellow;      /* 背景色 */
-    background-image: url('...');    /* 背景圖 */
-    background-repeat: no-repeat;       /* 重複方式 */
-    background-position: center;        /* 位置 */
-    background-size: cover;             /* 尺寸 */
+&lt;h4&gt;步驟 (有序)&lt;/h4&gt;
+&lt;ol type="A" start="3"&gt; &lt;!-- 從 C 開始 --&gt;
+  &lt;li&gt;步驟 C&lt;/li&gt;
+  &lt;li&gt;步驟 D&lt;/li&gt;
+  &lt;li&gt;步驟 E&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4&gt;名詞解釋 (定義)&lt;/h4&gt;
+&lt;dl&gt;
+  &lt;dt&gt;HTML&lt;/dt&gt;
+  &lt;dd&gt;超文本標記語言&lt;/dd&gt;
+  &lt;dt&gt;CSS&lt;/dt&gt;
+  &lt;dd&gt;層疊樣式表&lt;/dd&gt;
+&lt;/dl&gt;</code></pre>
+            </div>
+            <div class="preview-block">
+                <h4>水果清單 (無序)</h4>
+                <ul>
+                  <li>蘋果</li>
+                  <li>香蕉</li>
+                  <li>橘子</li>
+                </ul>
+
+                <h4>步驟 (有序)</h4>
+                <ol type="A" start="3" style="list-style-type: upper-alpha;">
+                  <li value="3">步驟 C</li>
+                  <li>步驟 D</li>
+                  <li>步驟 E</li>
+                </ol>
+
+                <h4>名詞解釋 (定義)</h4>
+                <dl>
+                  <dt>HTML</dt>
+                  <dd>超文本標記語言</dd>
+                  <dt>CSS</dt>
+                  <dd>層疊樣式表</dd>
+                </dl>
+            </div>
+
+            <h3 class="text-xl font-semibold">3-2 文字樣式元素</h3>
+            <ul>
+                <li><strong>粗體:</strong> <code>&lt;b&gt;</code>, <code>&lt;strong&gt;</code> (語意強調)。</li>
+                <li><strong>斜體:</strong> <code>&lt;i&gt;</code>, <code>&lt;em&gt;</code> (語意強調)。</li>
+                <li><strong>刪除線:</strong> <code>&lt;s&gt;</code>, <code>&lt;del&gt;</code> (表示刪除)。</li>
+                <li><strong>底線:</strong> <code>&lt;u&gt;</code> (少用)。</li>
+                <li><strong>標示:</strong> <code>&lt;mark&gt;</code> (螢光筆)。</li>
+                <li><strong>小字:</strong> <code>&lt;small&gt;</code>。</li>
+                <li><strong>上標/下標:</strong> <code>&lt;sup&gt;</code> / <code>&lt;sub&gt;</code>。</li>
+                <li><strong>旁註:</strong> <code>&lt;ruby&gt;</code> 包裹文字, <code>&lt;rt&gt;</code> 包裹註釋。</li>
+                <li><strong>程式碼:</strong> <code>&lt;code&gt;</code> (等寬字體)。</li>
+            </ul>
+             <h4 class="text-lg font-semibold">文字樣式範例</h4>
+            <div class="code-block">
+                <pre><code class="language-html">&lt;p&gt;這是 &lt;strong&gt;重要&lt;/strong&gt; 的文字，這是 &lt;em&gt;強調&lt;/em&gt; 的文字。&lt;/p&gt;
+&lt;p&gt;舊價格：&lt;del&gt;NT$100&lt;/del&gt;，新價格：&lt;mark&gt;NT$80&lt;/mark&gt;。&lt;/p&gt;
+&lt;p&gt;水的化學式是 H&lt;sub&gt;2&lt;/sub&gt;O。&lt;/p&gt;
+&lt;p&gt;E = mc&lt;sup&gt;2&lt;/sup&gt;。&lt;/p&gt;
+&lt;p&gt;顯示程式碼：&lt;code&gt;console.log('Hello');&lt;/code&gt;&lt;/p&gt;</code></pre>
+            </div>
+            <div class="preview-block">
+                <p>這是 <strong>重要</strong> 的文字，這是 <em>強調</em> 的文字。</p>
+                <p>舊價格：<del>NT$100</del>，新價格：<mark>NT$80</mark>。</p>
+                <p>水的化學式是 H<sub>2</sub>O。</p>
+                <p>E = mc<sup>2</sup>。</p>
+                <p>顯示程式碼：<code>console.log('Hello');</code></p>
+            </div>
+
+
+            <h3 class="text-xl font-semibold">3-3 語意結構區塊元素</h3>
+            <ul>
+                <li><strong><code>&lt;div&gt;</code>:</strong> 通用區塊容器。</li>
+                <li><strong><code>&lt;header&gt;</code>:</strong> 頁首。</li>
+                <li><strong><code>&lt;nav&gt;</code>:</strong> 導覽列。</li>
+                <li><strong><code>&lt;main&gt;</code>:</strong> 主要內容。</li>
+                <li><strong><code>&lt;section&gt;</code>:</strong> 文件區段。</li>
+                <li><strong><code>&lt;article&gt;</code>:</strong> 獨立文章內容。</li>
+                <li><strong><code>&lt;aside&gt;</code>:</strong> 側邊欄。</li>
+                <li><strong><code>&lt;footer&gt;</code>:</strong> 頁尾。</li>
+                <li><strong><code>&lt;address&gt;</code>:</strong> 聯絡資訊。</li>
+            </ul>
+             <h4 class="text-lg font-semibold">語意結構範例</h4>
+            <div class="code-block">
+                <pre><code class="language-html">&lt;body&gt;
+    &lt;header&gt;
+        &lt;h1&gt;網站標題&lt;/h1&gt;
+        &lt;nav&gt;
+            &lt;a href="#"&gt;首頁&lt;/a&gt; | &lt;a href="#"&gt;關於我們&lt;/a&gt;
+        &lt;/nav&gt;
+    &lt;/header&gt;
+    &lt;main&gt;
+        &lt;article&gt;
+            &lt;h2&gt;文章標題&lt;/h2&gt;
+            &lt;p&gt;文章內容...&lt;/p&gt;
+        &lt;/article&gt;
+        &lt;aside&gt;
+            &lt;h3&gt;相關連結&lt;/h3&gt;
+            &lt;ul&gt;...&lt;/ul&gt;
+        &lt;/aside&gt;
+    &lt;/main&gt;
+    &lt;footer&gt;
+        &lt;p&gt;版權所有 © 2025&lt;/p&gt;
+        &lt;address&gt;聯絡方式...&lt;/address&gt;
+    &lt;/footer&gt;
+&lt;/body&gt;</code></pre>
+            </div>
+             <div class="preview-block">
+                <header class="bg-gray-200 p-4 rounded mb-4">
+                    <h1 class="text-2xl font-bold">網站標題</h1>
+                    <nav>
+                        <a href="#" class="text-blue-600 hover:underline">首頁</a> |
+                        <a href="#" class="text-blue-600 hover:underline">關於我們</a>
+                    </nav>
+                </header>
+                <main class="flex flex-col md:flex-row gap-4 mb-4">
+                    <article class="flex-grow bg-gray-100 p-4 rounded">
+                        <h2 class="text-xl font-semibold">文章標題</h2>
+                        <p>文章內容...</p>
+                    </article>
+                    <aside class="md:w-1/3 bg-gray-100 p-4 rounded">
+                        <h3 class="text-lg font-semibold">相關連結</h3>
+                        <ul><li>連結...</li></ul>
+                    </aside>
+                </main>
+                <footer class="bg-gray-200 p-4 rounded">
+                    <p>版權所有 © 2025</p>
+                    <address>聯絡方式...</address>
+                </footer>
+            </div>
+
+
+            <h3 class="text-xl font-semibold">3-4 超連結元素 (`&lt;a&gt;`)</h3>
+            <ul>
+                <li><strong>`href` 屬性:</strong> 指定目標 URL。
+                    <ul>
+                        <li>網址: `href="https://..."`</li>
+                        <li>Email: `href="mailto:..."`</li>
+                        <li>電話: `href="tel:..."`</li>
+                        <li>頁內錨點: `href="#id"`</li>
+                    </ul>
+                </li>
+                <li><strong>`target` 屬性:</strong> 開啟方式 (`_blank` 在新分頁)。</li>
+                <li><strong>`download` 屬性:</strong> 下載檔案。</li>
+            </ul>
+            <h4 class="text-lg font-semibold">超連結範例</h4>
+            <div class="code-block">
+                <pre><code class="language-html">&lt;!-- 連結到外部網站，在新分頁開啟 --&gt;
+&lt;a href="https://www.google.com" target="_blank"&gt;Google 搜尋&lt;/a&gt;
+&lt;br&gt;
+&lt;!-- 連結到 Email --&gt;
+&lt;a href="mailto:test@example.com"&gt;聯絡我們&lt;/a&gt;
+&lt;br&gt;
+&lt;!-- 連結到頁內錨點 --&gt;
+&lt;a href="#chapter1"&gt;跳到第一章&lt;/a&gt;
+&lt;br&gt;
+&lt;!-- 下載檔案 --&gt;
+&lt;a href="document.pdf" download="教學文件.pdf"&gt;下載 PDF&lt;/a&gt;</code></pre>
+            </div>
+            <div class="preview-block">
+                <a href="https://www.google.com" target="_blank" class="text-blue-600 hover:underline">Google 搜尋</a>
+                <br>
+                <a href="mailto:test@example.com" class="text-blue-600 hover:underline">聯絡我們</a>
+                <br>
+                <a href="#chapter1" class="text-blue-600 hover:underline">跳到第一章</a>
+                <br>
+                <a href="#" download="教學文件.pdf" class="text-blue-600 hover:underline">下載 PDF</a> (此處 href="#" 僅為範例)
+            </div>
+
+            <h3 class="text-xl font-semibold">3-5 圖片元素</h3>
+            <ul>
+                <li><strong><code>&lt;img&gt;</code>:</strong> 嵌入圖片。
+                    <ul>
+                        <li><strong>`src` 屬性:</strong> 圖片來源路徑 (必要)。</li>
+                        <li><strong>`alt` 屬性:</strong> 替代文字 (必要，用於無障礙和圖片失效時)。</li>
+                        <li><strong>`width`, `height` 屬性:</strong> 設定寬高。</li>
+                    </ul>
+                </li>
+                 <li><strong><code>&lt;picture&gt;</code>:</strong> 提供多個圖片來源，讓瀏覽器依條件選擇。內含 <code>&lt;source&gt;</code> (指定條件和來源) 和一個 <code>&lt;img&gt;</code> (預設)。</li>
+            </ul>
+             <h4 class="text-lg font-semibold">圖片範例</h4>
+            <div class="code-block">
+                <pre><code class="language-html">&lt;!-- 基本圖片 --&gt;
+&lt;img src="1.png" alt="範例圖片一" width="200"&gt;
+
+&lt;!-- 使用 picture 提供不同尺寸圖片 --&gt;
+&lt;picture&gt;
+  &lt;source media="(min-width: 650px)" srcset="2.png"&gt; &lt;!-- 大螢幕用 2.png --&gt;
+  &lt;source media="(min-width: 465px)" srcset="1.png"&gt; &lt;!-- 中螢幕用 1.png --&gt;
+  &lt;img src="1.png" alt="範例圖片" style="width:auto;"&gt; &lt;!-- 小螢幕或預設用 1.png --&gt;
+&lt;/picture&gt;</code></pre>
+            </div>
+            <div class="preview-block">
+                 <img src="https://placehold.co/200x150/a5b4fc/4338ca?text=1.png" alt="範例圖片一" width="200">
+                 <picture>
+                   <source media="(min-width: 650px)" srcset="https://placehold.co/400x300/86efac/166534?text=2.png">
+                   <source media="(min-width: 465px)" srcset="https://placehold.co/300x225/a5b4fc/4338ca?text=1.png">
+                   <img src="https://placehold.co/200x150/a5b4fc/4338ca?text=1.png" alt="範例圖片" style="width:auto;">
+                 </picture>
+                 <p class="text-sm text-gray-500 mt-2">(預覽使用佔位圖片，實際效果需調整瀏覽器寬度查看)</p>
+            </div>
+
+
+            <div class="quiz-section">
+                <h4 class="text-lg font-semibold mb-3">第三章 隨堂測驗</h4>
+                <ol class="list-decimal ml-5 space-y-2">
+                    <li>`&lt;ul&gt;` 和 `&lt;ol&gt;` 的主要區別是什麼？它們都需要搭配哪個標籤來定義列表項目？</li>
+                    <li>`&lt;strong&gt;` 和 `&lt;b&gt;` 都可以讓文字變粗，它們在使用上有何建議的區別？</li>
+                    <li>在 HTML5 中，`&lt;header&gt;`, `&lt;nav&gt;`, `&lt;main&gt;`, `&lt;footer&gt;` 這些標籤被稱為什麼？使用它們有什麼好處？</li>
+                    <li>`&lt;img&gt;` 標籤中的 `alt` 屬性有什麼作用？為什麼它很重要？</li>
+                </ol>
+                <button class="show-answer-btn" onclick="toggleAnswer('answer3')">顯示答案</button>
+                <div id="answer3" class="answer-section">
+                    <h5 class="font-semibold mb-2">答案</h5>
+                    <ol class="list-decimal ml-5 space-y-1">
+                        <li>`&lt;ul&gt;` (Unordered List) 建立無序列表（項目符號），`&lt;ol&gt;` (Ordered List) 建立有序列表（編號）。它們都需要搭配 `&lt;li&gt;` (List Item) 標籤來定義每個列表項目。</li>
+                        <li>`&lt;strong&gt;` 具有語意上的強調重要性，而 `&lt;b&gt;` 僅表示視覺上的粗體，沒有額外的語意重要性。建議在需要強調內容重要性時使用 `&lt;strong&gt;`，僅需視覺粗體時才考慮 `&lt;b&gt;` (或最好使用 CSS)。</li>
+                        <li>這些被稱為「語意結構區塊元素」(Semantic Elements)。使用它們的好處是讓 HTML 結構更清晰、更具意義，有助於 SEO（搜尋引擎理解網頁結構）和無障礙性（螢幕閱讀器能更好地解析頁面）。</li>
+                        <li>`alt` (Alternative text) 屬性提供圖片的文字描述。作用：1. 當圖片因故無法載入時，顯示替代文字。 2. 供螢幕閱讀器讀取，幫助視覺障礙者理解圖片內容。 3. 有助於搜尋引擎理解圖片內容。因此它對於網頁可訪問性 (Accessibility) 和 SEO 都很重要。</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <section id="chapter4">
+            <h2 class="text-2xl font-semibold pb-2 mb-4">第四章：影音多媒體、表格及表單元素</h2>
+
+            <h3 class="text-xl font-semibold">4-1 影音多媒體元素</h3>
+            <ul>
+                <li><strong><code>&lt;audio&gt;</code>:</strong> 嵌入音訊。常用屬性: `src`, `controls`, `autoplay`, `loop`, `preload`。</li>
+                <li><strong><code>&lt;video&gt;</code>:</strong> 嵌入視訊。常用屬性同 `audio`，外加 `width`, `height`, `poster` (預覽圖)。</li>
+                <li><strong><code>&lt;source&gt;</code>:</strong> 在 `audio` 或 `video` 內指定多個來源格式。</li>
+                <li><strong><code>&lt;iframe&gt;</code>:</strong> 嵌入外部網頁或內容 (如 YouTube 影片、Google 地圖)。常用屬性: `src`, `width`, `height`, `frameborder`。</li>
+                <li><strong><code>&lt;canvas&gt;</code>:</strong> 繪圖畫布，需搭配 JavaScript 繪圖。常用屬性: `id`, `width`, `height`。</li>
+            </ul>
+             <h4 class="text-lg font-semibold">影音嵌入範例 (結構)</h4>
+            <div class="code-block">
+                <pre><code class="language-html">&lt;!-- 音訊 --&gt;
+&lt;audio controls&gt;
+  &lt;source src="music.mp3" type="audio/mpeg"&gt;
+  &lt;source src="music.ogg" type="audio/ogg"&gt;
+  您的瀏覽器不支援 audio 標籤。
+&lt;/audio&gt;
+&lt;br&gt;&lt;br&gt;
+
+&lt;!-- 視訊 --&gt;
+&lt;video width="320" height="240" controls poster="1.png"&gt;
+  &lt;source src="movie.mp4" type="video/mp4"&gt;
+  &lt;source src="movie.ogg" type="video/ogg"&gt;
+  您的瀏覽器不支援 video 標籤。
+&lt;/video&gt;
+&lt;br&gt;&lt;br&gt;
+
+&lt;!-- YouTube 嵌入 (範例) --&gt;
+&lt;iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen&gt;&lt;/iframe&gt;</code></pre>
+            </div>
+            <div class="preview-block">
+                <p class="mb-2">音訊播放器 (需要實際音檔):</p>
+                <audio controls class="mb-4">
+                  您的瀏覽器不支援 audio 標籤。
+                </audio>
+
+                <p class="mb-2">視訊播放器 (需要實際影檔及預覽圖):</p>
+                <video width="320" height="240" controls poster="https://placehold.co/320x240/cccccc/ffffff?text=Video+Poster+(1.png)" class="mb-4 bg-gray-200">
+                  您的瀏覽器不支援 video 標籤。
+                </video>
+
+                <p class="mb-2">YouTube 嵌入:</p>
+                <iframe width="100%" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="max-w-xl"></iframe>
+            </div>
+
+            <h3 class="text-xl font-semibold">4-2 表格元素 (`&lt;table&gt;`)</h3>
+            <ul>
+                <li><strong>基本結構:</strong> <code>&lt;table&gt;</code> &gt; <code>&lt;tr&gt;</code> (列) &gt; <code>&lt;td&gt;</code> (儲存格) / <code>&lt;th&gt;</code> (表頭儲存格)。</li>
+                <li><strong><code>&lt;caption&gt;</code>:</strong> 表格標題。</li>
+                <li><strong>合併儲存格:</strong> `colspan` (水平合併), `rowspan` (垂直合併)。</li>
+                <li><strong>結構化:</strong> <code>&lt;thead&gt;</code> (表頭), <code>&lt;tbody&gt;</code> (主體), <code>&lt;tfoot&gt;</code> (表尾)。</li>
+                <li><strong>欄位群組:</strong> <code>&lt;colgroup&gt;</code> 和 <code>&lt;col&gt;</code> (用於設定整欄樣式)。</li>
+            </ul>
+            <h4 class="text-lg font-semibold">表格範例</h4>
+            <div class="code-block">
+                <pre><code class="language-html">&lt;table&gt;
+  &lt;caption&gt;學生分數表&lt;/caption&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;姓名&lt;/th&gt;
+      &lt;th&gt;科目&lt;/th&gt;
+      &lt;th&gt;分數&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td rowspan="2"&gt;小明&lt;/td&gt; &lt;!-- 垂直合併儲存格 --&gt;
+      &lt;td&gt;國文&lt;/td&gt;
+      &lt;td&gt;90&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;數學&lt;/td&gt;
+      &lt;td&gt;85&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;小華&lt;/td&gt;
+      &lt;td&gt;國文&lt;/td&gt;
+      &lt;td&gt;92&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+  &lt;tfoot&gt;
+    &lt;tr&gt;
+      &lt;td colspan="2"&gt;總平均 (示意)&lt;/td&gt; &lt;!-- 水平合併儲存格 --&gt;
+      &lt;td&gt;89&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tfoot&gt;
+&lt;/table&gt;</code></pre>
+            </div>
+            <div class="preview-block">
+                 <table>
+                  <caption>學生分數表</caption>
+                  <thead>
+                    <tr>
+                      <th>姓名</th>
+                      <th>科目</th>
+                      <th>分數</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td rowspan="2">小明</td>
+                      <td>國文</td>
+                      <td>90</td>
+                    </tr>
+                    <tr>
+                      <td>數學</td>
+                      <td>85</td>
+                    </tr>
+                    <tr>
+                      <td>小華</td>
+                      <td>國文</td>
+                      <td>92</td>
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colspan="2">總平均 (示意)</td>
+                      <td>89</td>
+                    </tr>
+                  </tfoot>
+                </table>
+            </div>
+
+            <h3 class="text-xl font-semibold">4-3 表單元素 (`&lt;form&gt;`)</h3>
+            <ul>
+                <li><strong><code>&lt;form&gt;</code>:</strong> 表單容器。屬性: `action` (提交位址), `method` (`get`/`post`)。</li>
+                <li><strong><code>&lt;label&gt;</code>:</strong> 標籤。`for` 屬性對應 input 的 `id`。</li>
+                <li><strong><code>&lt;input&gt;</code>:</strong> 輸入欄位。`type` 屬性決定類型 (text, password, radio, checkbox, submit, file, date, number, email 等)。常用屬性: `name`, `value`, `placeholder`, `required`, `disabled`。</li>
+                <li><strong><code>&lt;textarea&gt;</code>:</strong> 多行文字輸入。屬性: `rows`, `cols`。</li>
+                <li><strong><code>&lt;select&gt;</code>:</strong> 下拉選單。內含 <code>&lt;option&gt;</code> (選項)。`option` 可有 `value`, `selected` 屬性。</li>
+                <li><strong><code>&lt;fieldset&gt;</code>:</strong> 群組相關欄位。</li>
+                <li><strong><code>&lt;legend&gt;</code>:</strong> `fieldset` 的標題。</li>
+                <li><strong><code>&lt;output&gt;</code>:</strong> 顯示結果。</li>
+            </ul>
+            <h4 class="text-lg font-semibold">表單範例</h4>
+            <div class="code-block">
+                <pre><code class="language-html">&lt;form action="/submit-form" method="post"&gt;
+  &lt;fieldset&gt;
+    &lt;legend&gt;個人資料&lt;/legend&gt;
+    &lt;div class="mb-4"&gt;
+      &lt;label for="username" class="block mb-1"&gt;姓名:&lt;/label&gt;
+      &lt;input type="text" id="username" name="username" required placeholder="請輸入姓名" class="border rounded p-2 w-full"&gt;
+    &lt;/div&gt;
+    &lt;div class="mb-4"&gt;
+      &lt;label for="email" class="block mb-1"&gt;Email:&lt;/label&gt;
+      &lt;input type="email" id="email" name="email" required placeholder="請輸入 Email" class="border rounded p-2 w-full"&gt;
+    &lt;/div&gt;
+     &lt;div class="mb-4"&gt;
+      &lt;label class="block mb-1"&gt;性別:&lt;/label&gt;
+      &lt;input type="radio" id="male" name="gender" value="male" class="mr-1"&gt;
+      &lt;label for="male" class="mr-4"&gt;男&lt;/label&gt;
+      &lt;input type="radio" id="female" name="gender" value="female" class="mr-1"&gt;
+      &lt;label for="female"&gt;女&lt;/label&gt;
+    &lt;/div&gt;
+     &lt;div class="mb-4"&gt;
+        &lt;label for="interests" class="block mb-1"&gt;興趣 (可複選):&lt;/label&gt;
+        &lt;input type="checkbox" id="coding" name="interests" value="coding" class="mr-1"&gt;
+        &lt;label for="coding" class="mr-4"&gt;寫程式&lt;/label&gt;
+        &lt;input type="checkbox" id="music" name="interests" value="music" class="mr-1"&gt;
+        &lt;label for="music" class="mr-4"&gt;聽音樂&lt;/label&gt;
+        &lt;input type="checkbox" id="sports" name="interests" value="sports" class="mr-1"&gt;
+        &lt;label for="sports"&gt;運動&lt;/label&gt;
+    &lt;/div&gt;
+    &lt;div class="mb-4"&gt;
+      &lt;label for="city" class="block mb-1"&gt;居住城市:&lt;/label&gt;
+      &lt;select id="city" name="city" class="border rounded p-2 w-full"&gt;
+        &lt;option value=""&gt;請選擇&lt;/option&gt;
+        &lt;option value="taipei"&gt;台北&lt;/option&gt;
+        &lt;option value="taitung" selected&gt;台東&lt;/option&gt; &lt;!-- 預設選中 --&gt;
+        &lt;option value="kaohsiung"&gt;高雄&lt;/option&gt;
+      &lt;/select&gt;
+    &lt;/div&gt;
+    &lt;div class="mb-4"&gt;
+      &lt;label for="message" class="block mb-1"&gt;留言:&lt;/label&gt;
+      &lt;textarea id="message" name="message" rows="4" class="border rounded p-2 w-full"&gt;&lt;/textarea&gt;
+    &lt;/div&gt;
+  &lt;/fieldset&gt;
+  &lt;div class="mt-4"&gt;
+    &lt;input type="submit" value="提交" class="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-700"&gt;
+    &lt;input type="reset" value="重設" class="bg-gray-400 text-white px-4 py-2 rounded cursor-pointer hover:bg-gray-500 ml-2"&gt;
+  &lt;/div&gt;
+&lt;/form&gt;</code></pre>
+            </div>
+            <div class="preview-block">
+                 <form action="#" method="post">
+                  <fieldset class="border p-4 rounded">
+                    <legend class="px-2 font-semibold">個人資料</legend>
+                    <div class="mb-4">
+                      <label for="username_preview" class="block mb-1">姓名:</label>
+                      <input type="text" id="username_preview" name="username" required placeholder="請輸入姓名" class="border rounded p-2 w-full">
+                    </div>
+                    <div class="mb-4">
+                      <label for="email_preview" class="block mb-1">Email:</label>
+                      <input type="email" id="email_preview" name="email" required placeholder="請輸入 Email" class="border rounded p-2 w-full">
+                    </div>
+                     <div class="mb-4">
+                      <label class="block mb-1">性別:</label>
+                      <input type="radio" id="male_preview" name="gender_preview" value="male" class="mr-1">
+                      <label for="male_preview" class="mr-4">男</label>
+                      <input type="radio" id="female_preview" name="gender_preview" value="female" class="mr-1">
+                      <label for="female_preview">女</label>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-1">興趣 (可複選):</label>
+                        <input type="checkbox" id="coding_preview" name="interests_preview" value="coding" class="mr-1">
+                        <label for="coding_preview" class="mr-4">寫程式</label>
+                        <input type="checkbox" id="music_preview" name="interests_preview" value="music" class="mr-1">
+                        <label for="music_preview" class="mr-4">聽音樂</label>
+                        <input type="checkbox" id="sports_preview" name="interests_preview" value="sports" class="mr-1">
+                        <label for="sports_preview">運動</label>
+                    </div>
+                    <div class="mb-4">
+                      <label for="city_preview" class="block mb-1">居住城市:</label>
+                      <select id="city_preview" name="city" class="border rounded p-2 w-full">
+                        <option value="">請選擇</option>
+                        <option value="taipei">台北</option>
+                        <option value="taitung" selected>台東</option>
+                        <option value="kaohsiung">高雄</option>
+                      </select>
+                    </div>
+                    <div class="mb-4">
+                      <label for="message_preview" class="block mb-1">留言:</label>
+                      <textarea id="message_preview" name="message" rows="4" class="border rounded p-2 w-full"></textarea>
+                    </div>
+                  </fieldset>
+                  <div class="mt-4">
+                    <input type="submit" value="提交" class="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-700">
+                    <input type="reset" value="重設" class="bg-gray-400 text-white px-4 py-2 rounded cursor-pointer hover:bg-gray-500 ml-2">
+                  </div>
+                </form>
+            </div>
+
+            <div class="quiz-section">
+                <h4 class="text-lg font-semibold mb-3">第四章 隨堂測驗</h4>
+                <ol class="list-decimal ml-5 space-y-2">
+                    <li>如何在 HTML 中嵌入 YouTube 影片？主要使用哪個標籤？</li>
+                    <li>表格的 `colspan="2"` 屬性代表什麼意思？</li>
+                    <li>在表單中，`radio` 和 `checkbox` 類型的 `&lt;input&gt;` 有何不同？</li>
+                    <li>表單的 `method` 屬性設定為 `post` 和 `get` 有什麼主要差異？哪種比較安全？</li>
+                </ol>
+                <button class="show-answer-btn" onclick="toggleAnswer('answer4')">顯示答案</button>
+                <div id="answer4" class="answer-section">
+                    <h5 class="font-semibold mb-2">答案</h5>
+                    <ol class="list-decimal ml-5 space-y-1">
+                        <li>主要使用 `&lt;iframe&gt;` 標籤。通常可以直接從 YouTube 影片頁面複製嵌入程式碼。</li>
+                        <li>`colspan="2"` 代表該儲存格（`&lt;td&gt;` 或 `&lt;th&gt;`）會水平橫跨 2 個欄位。</li>
+                        <li>`radio` (單選按鈕) 用於一組選項中只能選擇一個，同一組的 `radio` 需要有相同的 `name` 屬性。`checkbox` (複選框) 允許使用者選擇零個、一個或多個選項。</li>
+                        <li>`get` 方法會將表單數據附加到 URL 後面傳送，有長度限制且數據可見，安全性較低。`post` 方法將表單數據放在 HTTP 請求的主體中傳送，沒有長度限制，數據不可見，相對較安全。因此 `post` 比較安全，常用於傳送敏感資訊或大量數據。</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <section id="chapter5">
+            <h2 class="text-2xl font-semibold pb-2 mb-4">第五章：CSS 基本概念</h2>
+
+            <h3 class="text-xl font-semibold">5-1 認識 CSS</h3>
+            <ul>
+                <li><strong>CSS (Cascading Style Sheets):</strong> 層疊樣式表，用於定義 HTML 元素的外觀和排版。</li>
+                <li><strong>基本語法:</strong> `選擇器 { 屬性: 值; 屬性: 值; }`。</li>
+                <li><strong>註解:</strong> `/* 註解 */`。</li>
+            </ul>
+
+            <h3 class="text-xl font-semibold">5-2 CSS 使用方式</h3>
+            <ul>
+                <li><strong>行內樣式 (Inline):</strong> `&lt;p style="color: red;"&gt;...&lt;/p&gt;`。</li>
+                <li><strong>內部樣式表 (Internal):</strong> 在 `&lt;head&gt;` 中使用 `&lt;style&gt;` 標籤。</li>
+                <li><strong>外部樣式表 (External):</strong> 寫在獨立的 `.css` 檔，用 `&lt;link&gt;` 引入。</li>
+            </ul>
+
+            <h3 class="text-xl font-semibold">樣式優先權 (Specificity & Cascade)</h3>
+            <ul>
+                <li><strong>來源優先級:</strong> `!important` &gt; 行內 &gt; ID &gt; Class/屬性/偽類 &gt; 標籤/偽元素 &gt; 通用 &gt; 瀏覽器預設。</li>
+                <li><strong>相同優先級:</strong> 後定義的樣式會覆蓋先定義的。</li>
+            </ul>
+
+            <h3 class="text-xl font-semibold">5-3 CSS 基本選擇器</h3>
+            <ul>
+                <li><strong>標籤選擇器:</strong> `p { ... }`</li>
+                <li><strong>Class 選擇器:</strong> `.classname { ... }`</li>
+                <li><strong>ID 選擇器:</strong> `#idname { ... }` (ID 應唯一)</li>
+                <li><strong>通用選擇器:</strong> `* { ... }`</li>
+                <li><strong>屬性選擇器:</strong> `[attribute]`, `[attribute="value"]`, `[attribute^="value"]`, `[attribute$="value"]`, `[attribute*="value"]`。</li>
+            </ul>
+            <h4 class="text-lg font-semibold">基本選擇器範例</h4>
+            <div class="code-block">
+                <pre><code class="language-css">/* 標籤選擇器 */
+p {
+  color: gray;
 }
-/* 速記寫法 */
-.background-shorthand {
-    background: lightblue url('...') no-repeat right top / 50px auto;
-}</code></pre>
-        <div class="example-output">
-            <div class="background-example-ch6" style="background-color: lightyellow; background-image: url('https://placehold.co/100x100/ddd/999?text=BG'); background-repeat: no-repeat; background-position: center center; background-size: contain; padding: 20px; height: 150px; border: 1px solid #ccc; margin-bottom: 10px;">背景範例 (有背景圖)</div>
-            <div class="background-shorthand-ch6" style="background: lightblue url('https://placehold.co/50x50/eee/777?text=BG') no-repeat right top / 50px auto; padding: 20px; height: 100px; border: 1px solid #ccc;">背景速記 (有背景圖)</div>
-        </div>
 
-        <h3>6-7 漸層函式</h3>
-        <pre><code>.linear-gradient {
-    background-image: linear-gradient(to right, red, yellow); /* 線性漸層 */
+/* Class 選擇器 */
+.highlight {
+  background-color: yellow;
+  font-weight: bold;
 }
-.radial-gradient {
-    background-image: radial-gradient(circle, white, blue); /* 徑向漸層 */
-}</code></pre>
-        <div class="example-output">
-            <div class="linear-gradient-ch6" style="height: 100px; background-image: linear-gradient(to right, red, yellow); margin-bottom: 10px; border: 1px solid #ccc;">線性漸層</div>
-            <div class="radial-gradient-ch6" style="height: 100px; background-image: radial-gradient(circle, white, blue); border: 1px solid #ccc;">徑向漸層</div>
-        </div>
 
-        <h3>6-8 表格屬性</h3>
-        <pre><code>table.styled-table {
-    border-collapse: collapse; /* 合併邊框 */
-    width: 100%;
+/* ID 選擇器 */
+#main-title {
+  font-size: 2em;
+  color: navy;
 }
+
+/* 屬性選擇器 (選擇所有 type="text" 的 input) */
+input[type="text"] {
+  border: 1px solid blue;
+}
+
+/* 屬性選擇器 (選擇 href 以 https 開頭的 a 標籤) */
+a[href^="https://"] {
+  color: green;
+}</code></pre>
+            </div>
+             <div class="preview-block">
+                <h1 id="main-title" style="font-size: 2em; color: navy;">主標題 (ID 選擇器)</h1>
+                <p style="color: gray;">這是一個普通段落 (標籤選擇器)。</p>
+                <p class="highlight" style="background-color: yellow; font-weight: bold;">這是一個高亮段落 (Class 選擇器)。</p>
+                <input type="text" placeholder="文字輸入框 (屬性選擇器)" style="border: 1px solid blue;" class="border rounded p-1">
+                <br>
+                <a href="https://example.com" style="color: green;">安全連結 (屬性選擇器)</a>
+                <br>
+                <a href="http://example.com">一般連結</a>
+            </div>
+
+
+            <h3 class="text-xl font-semibold">5-4 組合選擇器</h3>
+            <ul>
+                <li><strong>後代:</strong> `div p` (div 內的所有 p)。</li>
+                <li><strong>子代:</strong> `ul &gt; li` (ul 的直接子元素 li)。</li>
+                <li><strong>相鄰兄弟:</strong> `h2 + p` (緊跟 h2 後的 p)。</li>
+                <li><strong>通用兄弟:</strong> `h2 ~ p` (h2 後面的所有同層 p)。</li>
+            </ul>
+             <h4 class="text-lg font-semibold">組合選擇器範例</h4>
+            <div class="code-block">
+                <pre><code class="language-css">/* 後代選擇器: div 裡的所有 p 變紅色 */
+div p {
+  color: red;
+}
+
+/* 子選擇器: ul 的直接子元素 li 加上底線 */
+ul &gt; li {
+  text-decoration: underline;
+}
+
+/* 相鄰兄弟選擇器: 緊跟 h3 後的 p 背景變淺藍 */
+h3 + p {
+  background-color: lightblue;
+}
+
+/* 通用兄弟選擇器: h4 後面的所有同層 p 變斜體 */
+h4 ~ p {
+  font-style: italic;
+}</code></pre>
+            </div>
+            <div class="preview-block">
+                <div>
+                    <p style="color: red;">Div 裡的第一個 P (後代)</p>
+                    <section>
+                        <p style="color: red;">Div 裡的 Section 裡的 P (後代)</p>
+                    </section>
+                </div>
+                <ul>
+                    <li style="text-decoration: underline;">第一層 Li (子代)</li>
+                    <li>
+                        <ul>
+                            <li>第二層 Li (非子代)</li>
+                        </ul>
+                    </li>
+                    <li style="text-decoration: underline;">第一層 Li (子代)</li>
+                </ul>
+                <h3>H3 標題</h3>
+                <p style="background-color: lightblue;">緊跟 H3 的 P (相鄰兄弟)</p>
+                <p>不是緊跟 H3 的 P</p>
+                <h4>H4 標題</h4>
+                <div>這不是 P</div>
+                <p style="font-style: italic;">H4 後面的第一個 P (通用兄弟)</p>
+                <p style="font-style: italic;">H4 後面的第二個 P (通用兄弟)</p>
+            </div>
+
+
+            <h3 class="text-xl font-semibold">5-5 & 5-6 虛擬類別與虛擬元素</h3>
+            <ul>
+                <li><strong>虛擬類別 (Pseudo-classes):</strong> `:hover`, `:focus`, `:active`, `:link`, `:visited`, `:first-child`, `:nth-child(n)`, `:not(s)` 等，表示元素狀態或位置。</li>
+                <li><strong>虛擬元素 (Pseudo-elements):</strong> `::before`, `::after`, `::first-line`, `::first-letter`, `::marker`, `::selection` 等，選取元素特定部分。</li>
+            </ul>
+            <h4 class="text-lg font-semibold">虛擬類別與虛擬元素範例</h4>
+             <div class="code-block">
+                <pre><code class="language-css">/* 連結懸停時變紅色 */
+a:hover {
+  color: red;
+}
+
+/* 輸入框獲得焦點時改變邊框 */
+input:focus {
+  border-color: orange;
+  outline: none; /* 移除預設外框 */
+}
+
+/* 選擇列表中的奇數項 */
+li:nth-child(odd) {
+  background-color: #eee;
+}
+
+/* 在段落前插入圖標 (需要 Font Awesome 或類似庫) */
+p.icon::before {
+  content: "\f005"; /* Font Awesome 星星圖標 Unicode */
+  font-family: "Font Awesome 5 Free"; /* 指定字體 */
+  font-weight: 900;
+  margin-right: 5px;
+  color: gold;
+}
+
+/* 段落第一個字母放大加粗 */
+p.first-letter-styled::first-letter {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: purple;
+}</code></pre>
+            </div>
+            <div class="preview-block">
+                 <style>
+                    a.pseudo-link:hover { color: red; }
+                    input.pseudo-input:focus { border-color: orange; outline: none; }
+                    ul.pseudo-list li:nth-child(odd) { background-color: #eee; }
+                    /* 實際應用 ::before 通常需要額外字體庫 */
+                    p.icon-preview::before { content: "* "; color: gold; font-weight: bold;}
+                    p.first-letter-styled-preview::first-letter { font-size: 1.5em; font-weight: bold; color: purple; }
+                 </style>
+                 <a href="#" class="pseudo-link text-blue-600">滑鼠移到這裡會變色</a>
+                 <br><br>
+                 <input type="text" placeholder="點擊這裡改變邊框" class="pseudo-input border rounded p-1">
+                 <br><br>
+                 <ul class="pseudo-list list-disc ml-5">
+                     <li>項目 1 (奇數)</li>
+                     <li>項目 2 (偶數)</li>
+                     <li>項目 3 (奇數)</li>
+                     <li>項目 4 (偶數)</li>
+                 </ul>
+                 <br>
+                 <p class="icon-preview">段落前有星號 (示意)</p>
+                 <p class="first-letter-styled-preview">段落第一個字母會放大加粗變色。</p>
+            </div>
+
+
+            <div class="quiz-section">
+                <h4 class="text-lg font-semibold mb-3">第五章 隨堂測驗</h4>
+                <ol class="list-decimal ml-5 space-y-2">
+                    <li>請說明 CSS 的三種使用方式及其優先級。</li>
+                    <li>ID 選擇器和 Class 選擇器的主要區別是什麼？</li>
+                    <li>CSS 選擇器 `div &gt; p` 和 `div p` 有何不同？</li>
+                    <li>`:hover` 和 `::before` 分別屬於哪種類型的選擇器？它們的作用是什麼？</li>
+                </ol>
+                <button class="show-answer-btn" onclick="toggleAnswer('answer5')">顯示答案</button>
+                <div id="answer5" class="answer-section">
+                    <h5 class="font-semibold mb-2">答案</h5>
+                    <ol class="list-decimal ml-5 space-y-1">
+                        <li>三種方式：行內樣式 (Inline)、內部樣式表 (Internal)、外部樣式表 (External)。優先級：行內 &gt; 內部/外部 (後載入優先) &gt; 瀏覽器預設。若考慮 `!important`，則其優先級最高。</li>
+                        <li>ID 選擇器 (`#idname`) 用於選取頁面上唯一的元素，具有較高的優先級。Class 選擇器 (`.classname`) 可以套用至頁面上多個元素，優先級低於 ID。</li>
+                        <li>`div &gt; p` (子選擇器) 只會選取作為 `&lt;div&gt;` 直接子元素的 `&lt;p&gt;` 標籤。`div p` (後代選擇器) 會選取 `&lt;div&gt;` 元素內部的所有 `&lt;p&gt;` 標籤，無論層級深度。</li>
+                        <li>`:hover` 屬於虛擬類別選擇器 (Pseudo-class)，用於定義元素在滑鼠指標懸停在其上時的樣式。`::before` 屬於虛擬元素選擇器 (Pseudo-element)，用於在選定元素的內容之前插入一些生成內容 (需搭配 `content` 屬性)。</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <section id="chapter6">
+            <h2 class="text-2xl font-semibold pb-2 mb-4">第六章：CSS 樣式</h2>
+
+            <h3 class="text-xl font-semibold">6-1 色彩屬性</h3>
+            <ul>
+                <li><strong>色彩值:</strong> 名稱, Hex (`#RRGGBB`), RGB/RGBA, HSL/HSLA。</li>
+                <li><strong>`color` 屬性:</strong> 設定文字顏色。</li>
+            </ul>
+
+            <h3 class="text-xl font-semibold">6-2 字型屬性 (`font-`)</h3>
+            <ul>
+                <li><strong>`font-family`:** 設定字體 (可設多個備用)。</li>
+                <li><strong>`font-size`:** 設定大小 (px, %, em, rem, 關鍵字)。</li>
+                <li><strong>`font-style`:** normal, italic, oblique。</li>
+                <li><strong>`font-variant`:** normal, small-caps。</li>
+                <li><strong>`font-weight`:** normal, bold, bolder, lighter, 100-900。</li>
+            </ul>
+
+            <h3 class="text-xl font-semibold">6-3 文字段落屬性 (`text-`, `line-`, `letter-`)</h3>
+            <ul>
+                <li><strong>`text-align`:** 水平對齊 (left, right, center, justify)。</li>
+                <li><strong>`text-decoration`:** 文字裝飾線 (underline, overline, line-through)。</li>
+                <li><strong>`text-shadow`:** 文字陰影。</li>
+                <li><strong>`line-height`:** 行高。</li>
+                <li><strong>`letter-spacing`:** 字元間距。</li>
+            </ul>
+
+             <h4 class="text-lg font-semibold">字型與文字樣式範例</h4>
+            <div class="code-block">
+                <pre><code class="language-css">.text-sample {
+  color: darkslateblue; /* 文字顏色 */
+  font-family: "Microsoft JhengHei", "PingFang TC", sans-serif; /* 字體 */
+  font-size: 18px; /* 文字大小 */
+  font-weight: bold; /* 粗體 */
+  line-height: 1.6; /* 行高 */
+  text-align: justify; /* 左右對齊 */
+  text-shadow: 1px 1px 2px lightgray; /* 文字陰影 */
+}
+
+.text-sample a {
+  text-decoration: none; /* 移除連結底線 */
+  color: teal;
+}
+
+.text-sample a:hover {
+  text-decoration: underline; /* 滑鼠懸停時加底線 */
+}</code></pre>
+            </div>
+            <div class="preview-block">
+                 <style>
+                    .text-sample-preview {
+                      color: darkslateblue;
+                      font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+                      font-size: 18px;
+                      font-weight: bold;
+                      line-height: 1.6;
+                      text-align: justify;
+                      text-shadow: 1px 1px 2px lightgray;
+                    }
+                    .text-sample-preview a {
+                      text-decoration: none;
+                      color: teal;
+                    }
+                    .text-sample-preview a:hover {
+                      text-decoration: underline;
+                    }
+                 </style>
+                 <p class="text-sample-preview">
+                     這是一段示範文字，展示了字體、大小、顏色、粗細、行高和對齊方式。這是一個 <a href="#">連結範例</a>，滑鼠移上去看看效果。這段文字設置了輕微的文字陰影效果，讓視覺更有層次感。
+                 </p>
+            </div>
+
+            <h3 class="text-xl font-semibold">6-4 清單屬性 (`list-style-`)</h3>
+            <ul>
+                <li><strong>`list-style-type`:** 符號類型 (disc, circle, square, decimal, none 等)。</li>
+                <li><strong>`list-style-position`:** 符號位置 (inside, outside)。</li>
+                <li><strong>`list-style-image`:** 使用圖片符號 (`url(...)`)。</li>
+                <li><strong>`list-style`:** 縮寫。</li>
+            </ul>
+
+            <h3 class="text-xl font-semibold">6-5 邊框屬性 (`border-`)</h3>
+            <ul>
+                <li><strong>`border`:** 縮寫 (寬度 樣式 顏色)。</li>
+                <li><strong>`border-width`:** 寬度。</li>
+                <li><strong>`border-style`:** 樣式 (solid, dotted, dashed, double 等)。</li>
+                <li><strong>`border-color`:** 顏色。</li>
+                <li><strong>`border-radius`:** 圓角。</li>
+                <li><strong>`border-image`:** 圖片邊框。</li>
+            </ul>
+
+             <h4 class="text-lg font-semibold">邊框與圓角範例</h4>
+            <div class="code-block">
+                <pre><code class="language-css">.box-sample {
+  width: 200px;
+  height: 100px;
+  padding: 15px;
+  margin-bottom: 10px;
+}
+
+.box1 {
+  border: 2px dashed blue; /* 2px 藍色虛線邊框 */
+}
+
+.box2 {
+  border: 1px solid gray;
+  border-radius: 15px; /* 四個角都是 15px 圓角 */
+}
+
+.box3 {
+  border: 3px solid green;
+  border-top-left-radius: 30px; /* 左上角 30px 圓角 */
+  border-bottom-right-radius: 30px; /* 右下角 30px 圓角 */
+}</code></pre>
+            </div>
+            <div class="preview-block">
+                 <style>
+                    .box-sample-preview { width: 200px; height: 100px; padding: 15px; margin-bottom: 10px; display: inline-block; vertical-align: top; background-color: #f9fafb; box-sizing: border-box; }
+                    .box1-preview { border: 2px dashed blue; }
+                    .box2-preview { border: 1px solid gray; border-radius: 15px; }
+                    .box3-preview { border: 3px solid green; border-top-left-radius: 30px; border-bottom-right-radius: 30px; }
+                 </style>
+                 <div class="box-sample-preview box1-preview">Box 1: 虛線邊框</div>
+                 <div class="box-sample-preview box2-preview">Box 2: 圓角邊框</div>
+                 <div class="box-sample-preview box3-preview">Box 3: 特定圓角</div>
+            </div>
+
+
+            <h3 class="text-xl font-semibold">6-6 背景屬性 (`background-`)</h3>
+            <ul>
+                <li><strong>`background-color`:** 背景顏色。</li>
+                <li><strong>`background-image`:** 背景圖片 (`url(...)`)。</li>
+                <li><strong>`background-repeat`:** 重複方式 (repeat, no-repeat, repeat-x, repeat-y)。</li>
+                <li><strong>`background-position`:** 圖片位置 (center, top, bottom, left, right, 數值)。</li>
+                <li><strong>`background-attachment`:** 固定方式 (scroll, fixed, local)。</li>
+                <li><strong>`background-size`:** 圖片大小 (auto, cover, contain, 數值)。</li>
+                <li><strong>`background`:** 縮寫。</li>
+            </ul>
+             <h4 class="text-lg font-semibold">背景圖片範例</h4>
+            <div class="code-block">
+                <pre><code class="language-css">.background-sample {
+  width: 100%;
+  height: 200px;
+  border: 1px solid #ccc;
+  color: white; /* 設置文字顏色以便在背景上可見 */
+  padding: 20px;
+  box-sizing: border-box; /* 包含 padding 和 border 在寬高中 */
+
+  background-image: url('2.png'); /* 背景圖片 */
+  background-color: lightslategray; /* 若圖片未載入時的背景色 */
+  background-repeat: no-repeat; /* 不重複 */
+  background-position: center center; /* 水平置中、垂直置中 */
+  background-size: cover; /* 縮放圖片以填滿容器 */
+  /* 縮寫: background: lightslategray url('2.png') no-repeat center center / cover; */
+}</code></pre>
+            </div>
+            <div class="preview-block">
+                <style>
+                    .background-sample-preview {
+                      width: 100%;
+                      height: 200px;
+                      border: 1px solid #ccc;
+                      color: white;
+                      padding: 20px;
+                      box-sizing: border-box;
+                      background-image: url('https://placehold.co/600x400/708090/ffffff?text=Background+(2.png)');
+                      background-color: lightslategray;
+                      background-repeat: no-repeat;
+                      background-position: center center;
+                      background-size: cover;
+                      text-shadow: 1px 1px 2px black; /* 加文字陰影讓白字更清楚 */
+                    }
+                </style>
+                <div class="background-sample-preview">
+                    這裡是內容文字，背景使用了圖片，設置為不重複、置中且填滿容器。
+                </div>
+            </div>
+
+            <h3 class="text-xl font-semibold">6-7 漸層函式</h3>
+            <p>CSS 漸層可以在背景中創造平滑的顏色過渡效果，不需要使用圖片。主要有線性漸層和徑向漸層。</p>
+            <ul>
+                <li><strong>線性漸層 (`linear-gradient()`):</strong> 顏色沿直線方向變化。
+                    <ul>
+                        <li>語法: `background-image: linear-gradient(方向, 顏色1, 顏色2, ...);`</li>
+                        <li>方向: 可以是角度 (如 `90deg`, `180deg`) 或關鍵字 (如 `to bottom`, `to top right`)。預設是 `to bottom`。</li>
+                        <li>顏色: 可以指定多個顏色，並可加上位置 (百分比或長度)。</li>
+                    </ul>
+                </li>
+                <li><strong>徑向漸層 (`radial-gradient()`):</strong> 顏色從中心點向外呈圓形或橢圓形擴散。
+                    <ul>
+                        <li>語法: `background-image: radial-gradient(形狀 大小 at 位置, 顏色1, 顏色2, ...);`</li>
+                        <li>形狀: `circle` (圓形) 或 `ellipse` (橢圓形 - 預設)。</li>
+                        <li>大小: 關鍵字 (`closest-side`, `closest-corner`, `farthest-side`, `farthest-corner`) 或具體長度/百分比。</li>
+                        <li>位置: `at` 後面接位置關鍵字 (`center`, `top`, `left` 等) 或百分比/長度。預設是 `center`。</li>
+                    </ul>
+                </li>
+                 <li><strong>重複漸層 (`repeating-linear-gradient()`, `repeating-radial-gradient()`):</strong> 建立重複的漸層圖案。</li>
+            </ul>
+            <h4 class="text-lg font-semibold">漸層背景範例</h4>
+            <div class="code-block">
+                <pre><code class="language-css">/* 線性漸層：從左到右，藍到綠 */
+.gradient-linear {
+  background-image: linear-gradient(to right, steelblue, lightgreen);
+}
+
+/* 線性漸層：對角線，紅到黃到綠 */
+.gradient-diagonal {
+  background-image: linear-gradient(to bottom right, red, yellow, limegreen);
+}
+
+/* 徑向漸層：圓形，中心白到外圈藍 */
+.gradient-radial {
+  background-image: radial-gradient(circle, white, dodgerblue);
+}
+
+/* 徑向漸層：橢圓，從左上角開始，黃到橘 */
+.gradient-radial-positioned {
+   background-image: radial-gradient(ellipse at top left, gold, darkorange);
+}</code></pre>
+            </div>
+            <div class="preview-block">
+                <div class="gradient-box" style="background-image: linear-gradient(to right, steelblue, lightgreen);">線性漸層 (左到右)</div>
+                <div class="gradient-box" style="background-image: linear-gradient(to bottom right, red, yellow, limegreen);">線性漸層 (對角線)</div>
+                <div class="gradient-box" style="background-image: radial-gradient(circle, white, dodgerblue);">徑向漸層 (圓形)</div>
+                <div class="gradient-box" style="background-image: radial-gradient(ellipse at top left, gold, darkorange);">徑向漸層 (橢圓，左上)</div>
+            </div>
+
+            <h3 class="text-xl font-semibold">6-8 表格屬性</h3>
+            <p>除了使用 `border` 屬性外，CSS 還提供了一些專門用於美化表格的屬性。</p>
+            <ul>
+                <li><strong>`border-collapse`:** 控制表格邊框是合併 (`collapse`) 還是分開 (`separate` - 預設)。合併模式下，相鄰儲存格邊框會合併為單一邊框。</li>
+                <li><strong>`border-spacing`:** 當 `border-collapse` 為 `separate` 時，設定相鄰儲存格邊框之間的距離。可設一個值 (水平和垂直相同) 或兩個值 (水平 垂直)。</li>
+                <li><strong>`caption-side`:** 設定表格標題 (`&lt;caption&gt;`) 相對於表格的位置 (`top` - 預設, `bottom`)。</li>
+                <li><strong>`empty-cells`:** 控制是否顯示內容為空的儲存格的邊框和背景 (`show` - 預設, `hide`)。僅在 `border-collapse: separate;` 時有效。</li>
+                <li><strong>`table-layout`:** 控制表格的佈局算法。
+                    <ul>
+                        <li>`auto` (預設): 欄寬由內容決定。</li>
+                        <li>`fixed`: 欄寬由表格寬度和 `width` 屬性決定，通常渲染更快。</li>
+                    </ul>
+                </li>
+            </ul>
+             <h4 class="text-lg font-semibold">表格樣式範例</h4>
+            <div class="code-block">
+                <pre><code class="language-css">.styled-table {
+  width: 100%;
+  border-collapse: collapse; /* 合併邊框 */
+  margin-bottom: 1rem;
+  table-layout: fixed; /* 固定欄寬 */
+}
+
+.styled-table caption {
+  caption-side: bottom; /* 標題放底部 */
+  margin-top: 0.5rem;
+  font-style: italic;
+  color: gray;
+}
+
 .styled-table th, .styled-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-}</code></pre>
-        <div class="example-output">
-            <table class="styled-table-ch6" style="width: 100%; border-collapse: collapse;">
-                 <thead><tr><th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">標題一</th><th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">標題二</th></tr></thead>
-                 <tbody>
-                     <tr><td style="border: 1px solid #ddd; padding: 8px;">資料A1</td><td style="border: 1px solid #ddd; padding: 8px;">資料A2</td></tr>
-                     <tr><td style="border: 1px solid #ddd; padding: 8px;">資料B1</td><td style="border: 1px solid #ddd; padding: 8px;">資料B2</td></tr>
-                 </tbody>
-            </table>
-        </div>
+  border: 1px solid lightgray;
+  padding: 10px;
+  text-align: center; /* 文字置中 */
+}
 
-        <div class="quiz-section">
-            <h4>第六章 隨堂測驗</h4>
-            <div class="quiz-question">
-                <p><strong>1. (選擇題)</strong> 在 CSS 中，<code>rgba(255, 0, 0, 0.5)</code> 代表什麼顏色？</p>
-                <ol>
-                    <li>完全不透明的紅色</li>
-                    <li>半透明的紅色</li>
-                    <li>完全不透明的藍色</li>
-                    <li>半透明的藍色</li>
+.styled-table th {
+  background-color: lightsteelblue;
+  color: navy;
+}
+
+/* 斑馬條紋效果 */
+.styled-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.styled-table tbody tr:hover {
+  background-color: #ddd; /* 滑鼠懸停效果 */
+}</code></pre>
+            </div>
+            <div class="preview-block">
+                 <style>
+                    .styled-table-preview { width: 100%; border-collapse: collapse; margin-bottom: 1rem; table-layout: fixed; }
+                    .styled-table-preview caption { caption-side: bottom; margin-top: 0.5rem; font-style: italic; color: gray; text-align: center;}
+                    .styled-table-preview th, .styled-table-preview td { border: 1px solid lightgray; padding: 10px; text-align: center; }
+                    .styled-table-preview th { background-color: lightsteelblue; color: navy; }
+                    .styled-table-preview tbody tr:nth-child(even) { background-color: #f2f2f2; }
+                    .styled-table-preview tbody tr:hover { background-color: #ddd; }
+                 </style>
+                 <table class="styled-table-preview">
+                    <caption>表格樣式範例 (標題在底部)</caption>
+                    <thead>
+                        <tr>
+                            <th>標題 1</th>
+                            <th>標題 2</th>
+                            <th>標題 3</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>資料 A1</td>
+                            <td>資料 A2</td>
+                            <td>資料 A3</td>
+                        </tr>
+                        <tr>
+                            <td>資料 B1</td>
+                            <td>資料 B2</td>
+                            <td>資料 B3</td>
+                        </tr>
+                        <tr>
+                            <td>資料 C1</td>
+                            <td>資料 C2</td>
+                            <td>資料 C3</td>
+                        </tr>
+                         <tr>
+                            <td>資料 D1</td>
+                            <td></td> &lt;!-- 空儲存格 --&gt;
+                            <td>資料 D3</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div class="quiz-section">
+                <h4 class="text-lg font-semibold mb-3">第六章 隨堂測驗 (更新)</h4>
+                <ol class="list-decimal ml-5 space-y-2">
+                    <li>請寫出至少三種在 CSS 中表示顏色的方法。</li>
+                    <li>`font-size` 屬性可以使用哪些單位？`em` 和 `rem` 有何不同？</li>
+                    <li>如何移除超連結預設的底線？當滑鼠移上去時才顯示底線？</li>
+                    <li>`background-size: cover;` 和 `background-size: contain;` 的效果有何不同？</li>
+                    <li>如何使用 CSS 創建一個從上到下由紅色漸變到藍色的線性漸層背景？</li>
+                    <li>`border-collapse: collapse;` 屬性用在表格上時有什麼效果？</li>
                 </ol>
+                <button class="show-answer-btn" onclick="toggleAnswer('answer6_updated')">顯示答案</button>
+                <div id="answer6_updated" class="answer-section">
+                    <h5 class="font-semibold mb-2">答案</h5>
+                    <ol class="list-decimal ml-5 space-y-1">
+                        <li>顏色名稱 (如 `red`)、十六進位碼 (如 `#ff0000`)、RGB/RGBA (如 `rgb(255, 0, 0)`)、HSL/HSLA (如 `hsl(0, 100%, 50%)`)。</li>
+                        <li>可用單位：`px`, `%`, `em`, `rem`, 關鍵字 (如 `medium`) 等。`em` 是相對於父元素的字體大小，會層疊計算。`rem` (root em) 是相對於根元素 (`&lt;html&gt;`) 的字體大小，計算較單純。</li>
+                        <li>移除底線：`a { text-decoration: none; }`。滑鼠移上顯示底線：`a:hover { text-decoration: underline; }`。</li>
+                        <li>`cover` 會縮放背景圖片，使其完全覆蓋背景區域，可能會裁切掉圖片的一部分。`contain` 會縮放背景圖片，使其寬度或高度其中一邊剛好符合容器大小，確保整張圖片都可見，但可能無法填滿整個容器。</li>
+                        <li>`background-image: linear-gradient(to bottom, red, blue);` 或 `background-image: linear-gradient(red, blue);` (因為 `to bottom` 是預設值)。</li>
+                        <li>它會使表格的邊框合併成單一線條，而不是每個儲存格都有獨立的邊框（預設的 `separate` 模式）。</li>
+                    </ol>
+                </div>
             </div>
-            <div class="quiz-question">
-                <p><strong>2. (問答題)</strong> 請簡述 CSS 的 <code>font-family</code> 屬性的作用，以及為什麼通常會提供多個字型名稱？</p>
-            </div>
-            <div class="quiz-question">
-                <p><strong>3. (選擇題)</strong> 哪個 CSS 屬性可以用來設定元素邊框的圓角效果？</p>
-                <ol>
-                    <li>border-style</li>
-                    <li>border-width</li>
-                    <li>border-radius</li>
-                    <li>border-collapse</li>
-                </ol>
-            </div>
-            <button class="toggle-answer-btn" onclick="toggleAnswer('ch6-answers', this)">顯示答案</button>
-            <div class="quiz-answer" id="ch6-answers">
-                <p><strong>1. 答案：</strong> (b) 半透明的紅色 (最後一個值 0.5 代表 50% 的透明度)</p>
-                <p><strong>2. 答案：</strong> <code>font-family</code> 用於指定元素的字型。提供多個字型名稱（稱為字型堆疊 Font Stack）是為了提供備選方案。瀏覽器會從列表中的第一個字型開始嘗試，如果使用者的系統安裝了該字型，就使用它；否則，繼續嘗試下一個，直到找到可用的字型或使用瀏覽器預設字型。通常最後會放一個通用的字型類別（如 serif, sans-serif）。</p>
-                <p><strong>3. 答案：</strong> (c) border-radius</p>
-            </div>
-        </div>
         </section>
+
+    </div>
 
     <script>
-        function toggleAnswer(answerId, button) {
+        // JavaScript 用於切換答案的顯示/隱藏
+        function toggleAnswer(answerId) {
             const answerDiv = document.getElementById(answerId);
             if (answerDiv) {
-                if (answerDiv.style.display === 'block') {
-                    answerDiv.style.display = 'none';
-                    button.textContent = '顯示答案'; // 更新按鈕文字
-                } else {
+                if (answerDiv.style.display === 'none' || answerDiv.style.display === '') {
                     answerDiv.style.display = 'block';
-                    button.textContent = '隱藏答案'; // 更新按鈕文字
+                } else {
+                    answerDiv.style.display = 'none';
                 }
-            } else {
-                console.error("找不到 ID 為 " + answerId + " 的答案區塊");
             }
         }
     </script>
