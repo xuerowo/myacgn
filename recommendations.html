@@ -1395,11 +1395,6 @@
 
             // 修改網址的hash值
             window.location.hash = contentId;
-
-            // 延遲執行滾動到頂部
-            setTimeout(() => {
-                window.scrollTo(0, 0);
-            }, 0);
         }
 
         // 頁面載入時根據網址的hash值切換分頁
@@ -1408,9 +1403,6 @@
             if (hash) {
                 showContent(hash);
             }
-
-            window.scrollTo(0, 0);
-            
         });
 
         window.addEventListener('popstate', () => {
