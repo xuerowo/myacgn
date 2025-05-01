@@ -36,13 +36,32 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
-        body {
+        html {
+            height: 100%; /* 確保 html 元素佔滿完整高度 */
+            }
+
+            body {
+            display: flex; /* 將 body 設為 flex 容器 */
+            flex-direction: column; /* 子元素垂直排列 */
+            min-height: 100vh; /* body 最小高度為整個視窗高度 */
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             line-height: 1.6;
             color: var(--text-color);
             background-color: var(--secondary-color);
-            padding-top: 60px;
-        }
+            padding-top: 60px; /* 保留為固定導覽列預留的空間 */
+            }
+
+            /* Vue 應用程式容器樣式調整 */
+            #app {
+            flex-grow: 1; /* 讓 #app 元素自動伸展，填滿可用空間 */
+            display: flex; /* (建議) 讓 #app 也成為 flex 容器 */
+            flex-direction: column; /* (建議) 讓 #app 內部的元素垂直排列 */
+            }
+
+            /* (建議) 確保 #app 內的 .container 能正確伸展 */
+            #app > .container {
+            flex-grow: 1; /* 讓主要內容容器填滿 #app 的剩餘空間 */
+            }
 
         .container {
             max-width: 1200px;
@@ -414,6 +433,15 @@
             content: none;
         }
 
+        /* Footer */
+        footer {
+            flex-shrink: 0; /* 防止 footer 在空間不足時被壓縮 */
+            flex-shrink: 0;
+            text-align: center;
+            padding: 2rem;
+            background-color: var(--background-color);
+        }
+
         @media (max-width: 768px) {
             .navbar {
                 padding: 0.8rem;
@@ -709,6 +737,10 @@
             </div>
         </div>
     </div>
+
+    <footer>
+        <p style="font-size: 0.8em; margin-top: 1em;">此網站僅供學習和參考使用，所有內容版權歸原作者所有。</p>
+    </footer>
 
     <script>
         const { createApp } = Vue;
