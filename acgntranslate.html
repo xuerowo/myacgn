@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ACG翻譯</title>
+    <title>ACGN翻譯</title>
     <meta name="description" content="網漫與輕小說中文翻譯閱讀網站。個人翻譯作品,使用 Claude 3.5 Sonnet 進行翻譯。">
     <meta name="keywords" content="網漫, 輕小說, 漫畫, 網漫翻譯, 輕小說翻譯, 漫畫翻譯, 網路漫畫, 漫畫閱讀, 中文翻譯, 閱讀器, 漫畫網站, webtoon, 漫畫推薦">
     <link rel="icon" href="images/favicon.jpg" type="image/jpg">
@@ -602,15 +602,15 @@
                     </div>
                     <div class="dropdown">
                         <button class="dropdown-toggle" 
-                                data-dropdown="acg"
-                                @mouseenter="!isMobile && (activeDropdown = 'acg')"
-                                @click="isMobile && (activeDropdown = activeDropdown === 'acg' ? null : 'acg')"
-                                :class="{ active: activeDropdown === 'acg' }"
-                                style="color: var(--primary-color)">ACG翻譯</button>
+                                data-dropdown="acgn"
+                                @mouseenter="!isMobile && (activeDropdown = 'acgn')"
+                                @click="isMobile && (activeDropdown = activeDropdown === 'acgn' ? null : 'acgn')"
+                                :class="{ active: activeDropdown === 'acgn' }"
+                                style="color: var(--primary-color)">ACGN翻譯</button>
                         <div class="dropdown-menu" 
-                             :class="{ show: activeDropdown === 'acg' }"
-                             :style="getDropdownPosition('acg')"
-                             @mouseenter="!isMobile && (activeDropdown = 'acg')"
+                             :class="{ show: activeDropdown === 'acgn' }"
+                             :style="getDropdownPosition('acgn')"
+                             @mouseenter="!isMobile && (activeDropdown = 'acgn')"
                              @mouseleave="!isMobile && (activeDropdown = null)">
                             <a href="#webtoons" 
                                @click="switchContent('webtoons')" 
@@ -649,7 +649,7 @@
                                    查看更新日誌
                                 </a>
                                 <a href="https://expo.dev/artifacts/eas/kgYr95XzCZU9wBr6N1TgZv.apk"
-                                   download="ACG閱讀器.apk"
+                                   download="acgn閱讀器.apk"
                                    class="app-download-link">
                                    點擊下載 App
                                 </a>
@@ -912,7 +912,7 @@
                     let element;
                     switch(dropdownId) {
                         case 'recommendations':
-                        case 'acg':
+                        case 'acgn':
                             element = document.querySelector(`button[data-dropdown="${dropdownId}"]`);
                             break;
                         case 'app':
