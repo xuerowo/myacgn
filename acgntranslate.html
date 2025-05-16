@@ -872,7 +872,14 @@
                     }
                 },
                 goToDetail(item) {
-                    window.location.href = item.detailPage;
+                    // 存儲點擊的小說標題到localStorage
+                    localStorage.setItem('currentNovel', item.title);
+                    if (item.type === 'novel') {
+                        // 導向通用頁面而非特定小說頁面
+                        window.location.href = '輕小說翻譯/noveldetail.html';
+                    } else {
+                        window.location.href = item.detailPage;
+                    }
                 },
                 getReadingProgress(item) {
                     return this.readingProgress[`${item.type}_${item.title}`];
