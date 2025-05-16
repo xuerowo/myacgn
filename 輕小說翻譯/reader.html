@@ -485,8 +485,18 @@
             methods: {
                 async fetchChapterData() {
                     try {
-                        // 從localStorage獲取當前小說標題
-                        const currentNovel = localStorage.getItem(STORAGE_KEYS.CURRENT_NOVEL);
+                        // 從URL參數獲取小說標題
+                        const params = new URLSearchParams(window.location.search);
+                        let currentNovel = params.get('title');
+                        
+                        // 如果URL沒有標題參數，則從localStorage讀取
+                        if (!currentNovel) {
+                            currentNovel = localStorage.getItem(STORAGE_KEYS.CURRENT_NOVEL);
+                        } else {
+                            // 確保localStorage也有最新值
+                            localStorage.setItem(STORAGE_KEYS.CURRENT_NOVEL, currentNovel);
+                        }
+                        
                         if (!currentNovel) {
                             throw new Error('找不到小說資料');
                         }
@@ -515,7 +525,6 @@
                             }))
                             .sort((a, b) => a.number - b.number);
 
-                        const params = new URLSearchParams(window.location.search);
                         const chapterNumber = parseFloat(params.get('chapter'));
                         
                         const currentChapterData = this.allChapters.find(
@@ -528,8 +537,20 @@
 
                         this.currentChapter = currentChapterData;
                         
-                        // 更新頁面標題
+                        // 更新頁面標題和meta標籤
                         document.title = `${this.currentChapter.title} - ${this.novelTitleFormatted} - 輕小說翻譯`;
+                        
+                        // 更新meta description標籤
+                        const metaDescription = document.querySelector('meta[name="description"]');
+                        if (metaDescription) {
+                            metaDescription.setAttribute('content', `閱讀${this.novelTitleFormatted}的${this.currentChapter.title}章節。`);
+                        }
+                        
+                        // 更新meta keywords標籤
+                        const metaKeywords = document.querySelector('meta[name="keywords"]');
+                        if (metaKeywords) {
+                            metaKeywords.setAttribute('content', `${this.novelTitleFormatted}, ${this.currentChapter.title}, 輕小說翻譯, 輕小說閱讀, 在線閱讀`);
+                        }
                         
                         await this.loadChapterContent();
 
@@ -635,13 +656,15 @@
                     if (number !== this.currentChapter.number) {
                         // 保存當前章節的滾動位置
                         this.saveScrollPosition();
-                        window.location.href = `reader.html?chapter=${number}`;
+                        const encodedTitle = encodeURIComponent(this.novelTitle);
+                        window.location.href = `reader.html?title=${encodedTitle}&chapter=${number}`;
                     }
                     this.showChapterMenu = false;
                 },
                 goToDetail() {
-                    // 清除滾動位置並返回
-                    window.location.href = 'noveldetail.html';
+                    // 帶著小說標題參數返回詳情頁
+                    const encodedTitle = encodeURIComponent(this.novelTitle);
+                    window.location.href = `noveldetail.html?title=${encodedTitle}`;
                 },
                 goToNext() {
                     if (this.hasNext) {
@@ -653,7 +676,8 @@
                         );
                         // 保存當前章節的滾動位置
                         this.saveScrollPosition();
-                        window.location.href = `reader.html?chapter=${nextChapter.number}`;
+                        const encodedTitle = encodeURIComponent(this.novelTitle);
+                        window.location.href = `reader.html?title=${encodedTitle}&chapter=${nextChapter.number}`;
                     }
                 },
                 goToPrevious() {
@@ -666,7 +690,8 @@
                         );
                         // 保存當前章節的滾動位置
                         this.saveScrollPosition();
-                        window.location.href = `reader.html?chapter=${prevChapter.number}`;
+                        const encodedTitle = encodeURIComponent(this.novelTitle);
+                        window.location.href = `reader.html?title=${encodedTitle}&chapter=${prevChapter.number}`;
                     }
                 },
                 scrollToTop() {
