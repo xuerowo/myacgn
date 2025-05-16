@@ -493,8 +493,23 @@
             methods: {
                 async fetchNovelData() {
                     try {
-                        // 從localStorage獲取當前小說標題
-                        const currentNovel = localStorage.getItem(STORAGE_KEYS.CURRENT_NOVEL);
+                        // 先嘗試從URL參數獲取小說標題
+                        const urlParams = new URLSearchParams(window.location.search);
+                        let currentNovel = urlParams.get('title');
+                        
+                        // 如果URL沒有參數，從localStorage獲取
+                        if (!currentNovel) {
+                            currentNovel = localStorage.getItem(STORAGE_KEYS.CURRENT_NOVEL);
+                            if (currentNovel) {
+                                // 更新URL但不重新加載頁面
+                                const encodedTitle = encodeURIComponent(currentNovel);
+                                if (window.history && window.history.pushState) {
+                                    const newUrl = `${window.location.pathname}?title=${encodedTitle}`;
+                                    window.history.pushState({ path: newUrl }, '', newUrl);
+                                }
+                            }
+                        }
+                        
                         if (!currentNovel) {
                             throw new Error('找不到小說資料');
                         }
@@ -582,7 +597,8 @@
                     window.location.href = '/acgntranslate.html#novels';
                 },
                 goToChapter(chapter) {
-                    window.location.href = `reader.html?chapter=${chapter}`;
+                    const encodedTitle = encodeURIComponent(this.currentNovelTitle);
+                    window.location.href = `reader.html?chapter=${chapter}&title=${encodedTitle}`;
                 },
                 openLightbox(imageUrl) {
                     this.lightboxImage = imageUrl;
