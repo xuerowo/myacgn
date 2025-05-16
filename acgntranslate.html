@@ -828,7 +828,11 @@
             methods: {
                 async fetchMangaList() {
                     try {
-                        const response = await fetch('/網漫翻譯/manga.json');
+                        // 使用相對路徑確保能正確加載JSON文件
+                        const response = await fetch('網漫翻譯/manga.json');
+                        if (!response.ok) {
+                            throw new Error(`無法獲取manga.json: ${response.status} ${response.statusText}`);
+                        }
                         const data = await response.json();
                         this.mangaList = data.manga.map(manga => ({
                             ...manga,
@@ -841,7 +845,11 @@
                 },
                 async fetchNovelList() {
                     try {
-                        const response = await fetch('/輕小說翻譯/novels.json');
+                        // 使用相對路徑確保能正確加載JSON文件
+                        const response = await fetch('輕小說翻譯/novels.json');
+                        if (!response.ok) {
+                            throw new Error(`無法獲取novels.json: ${response.status} ${response.statusText}`);
+                        }
                         const data = await response.json();
                         this.novelList = data.novels
                             .map(novel => {
@@ -849,7 +857,7 @@
                                 return {
                                     title: titleWithBrackets,
                                     detailPage: `輕小說翻譯/${encodeURIComponent(titleWithBrackets)}/noveldetail.html`,
-                                    coverUrl: `/輕小說翻譯/${encodeURIComponent(titleWithBrackets)}/cover.jpg`,
+                                    coverUrl: `輕小說翻譯/${encodeURIComponent(titleWithBrackets)}/cover.jpg`,
                                     type: 'novel',
                                     lastUpdated: novel.lastUpdated || new Date().toISOString(),
                                     author: novel.author || '未知作者',
@@ -1069,18 +1077,22 @@
                 window.addEventListener('touchmove', this.drag, { passive: false });
                 window.addEventListener('touchend', this.stopDragging);
                 
+                // Vue 3不支持$once方法，使用替代方案
+                const cleanup = () => {
+                    navContainer.removeEventListener('scroll', handleScroll);
+                    navContainer.removeEventListener('mouseleave', handleMouseLeave);
+                    navContainer.removeEventListener('mousedown', this.startDragging);
+                    window.removeEventListener('mousemove', this.drag);
+                    window.removeEventListener('mouseup', this.stopDragging);
+                    navContainer.removeEventListener('touchstart', this.startDragging);
+                    window.removeEventListener('touchmove', this.drag);
+                    window.removeEventListener('touchend', this.stopDragging);
+                    document.removeEventListener('click', this.closeDropdowns);
+                };
+                
+                // 保存清理函數以供未來使用
                 this.$nextTick(() => {
-                    this.$once('hook:beforeDestroy', () => {
-                        navContainer.removeEventListener('scroll', handleScroll);
-                        navContainer.removeEventListener('mouseleave', handleMouseLeave);
-                        navContainer.removeEventListener('mousedown', this.startDragging);
-                        window.removeEventListener('mousemove', this.drag);
-                        window.removeEventListener('mouseup', this.stopDragging);
-                        navContainer.removeEventListener('touchstart', this.startDragging);
-                        window.removeEventListener('touchmove', this.drag);
-                        window.removeEventListener('touchend', this.stopDragging);
-                        document.removeEventListener('click', this.closeDropdowns);
-                    });
+                    window.__cleanupEvents = cleanup;
                 });
             }
         }).mount('#app');
