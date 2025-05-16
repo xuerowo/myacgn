@@ -598,7 +598,7 @@
                 },
                 goToChapter(chapter) {
                     const encodedTitle = encodeURIComponent(this.currentNovelTitle);
-                    window.location.href = `reader.html?chapter=${chapter}&title=${encodedTitle}`;
+                    window.location.href = `reader.html?title=${encodedTitle}&chapter=${chapter}`;
                 },
                 openLightbox(imageUrl) {
                     this.lightboxImage = imageUrl;
