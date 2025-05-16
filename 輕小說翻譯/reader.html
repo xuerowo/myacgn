@@ -497,7 +497,11 @@
                         // 移除標題兩側的《》符號進行匹配
                         this.novelTitleFormatted = currentNovel.replace(/^《|》$/g, '');
                         
-                        const response = await fetch('/輕小說翻譯/novels.json');
+                        // 使用相對路徑獲取小說數據
+                        const response = await fetch('../輕小說翻譯/novels.json');
+                        if (!response.ok) {
+                            throw new Error(`無法獲取novels.json: ${response.status} ${response.statusText}`);
+                        }
                         const data = await response.json();
                         const novelData = data.novels.find(novel => novel.title === this.novelTitleFormatted);
                         
@@ -541,12 +545,15 @@
                 },
                 async loadChapterContent() {
                     try {
-                        // 獲取小說資料夾路徑
-                        const folderPath = `/輕小說翻譯/${encodeURIComponent(this.novelTitle)}`;
+                        // 獲取小說資料夾路徑 - 使用相對路徑
+                        const folderPath = `../${encodeURIComponent(this.novelTitle)}`;
                         
                         // 使用正確的文件名格式
                         const filename = `${folderPath}/${this.currentChapter.filename}`;
                         const response = await fetch(filename);
+                        if (!response.ok) {
+                            throw new Error(`無法獲取章節內容: ${response.status} ${response.statusText}`);
+                        }
                         this.chapterContent = await response.text();
                         this.scrollToTop();
                         this.$nextTick(() => {
