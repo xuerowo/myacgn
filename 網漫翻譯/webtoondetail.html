@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>漫畫詳情 - 網漫翻譯</title>
+    <meta name="description" content="網漫在線閱讀。">
+    <meta name="keywords" content="網漫翻譯, 網漫閱讀, 在線閱讀">
+    <link rel="icon" href="/images/favicon.jpg" type="image/jpg">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f5f5f5;
+            --text-color: #333;
+            --border-color: #ddd;
+            --background-color: #fff;
+        }
+
+        :root[data-theme="dark"] {
+            --primary-color: #64b5f6;
+            --secondary-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --border-color: #333;
+            --background-color: #121212;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--secondary-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .navbar {
+            background-color: var(--background-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 1rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h1 {
+            color: var(--primary-color);
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .nav-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            border-radius: 24px;
+            transition: .4s;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            border-radius: 50%;
+            transition: .4s;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        .manga-detail {
+            background: var(--background-color);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .manga-info {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+
+        .manga-cover {
+            width: 100%;
+            border-radius: 4px;
+        }
+
+        .manga-description {
+            margin-top: 1rem;
+            line-height: 1.8;
+            white-space: pre-line;
+        }
+
+        .manga-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .manga-metadata {
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .official-links {
+            margin-top: 0.5rem;
+        }
+
+        .official-link {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            margin-left: 0.5rem;
+            border-radius: 4px;
+            color: var(--text-color);
+            background: var(--secondary-color);
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .official-link:hover {
+            background: #357abd;
+            color: #fff;
+        }
+
+        .chapter-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .chapter-item {
+            background: var(--secondary-color);
+            padding: 1rem;
+            border-radius: 4px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .chapter-item.read {
+            opacity: 0.7;
+        }
+
+        .chapter-item.read .chapter-title {
+            color: #999;
+        }
+
+        :root[data-theme="dark"] .chapter-item.read .chapter-title {
+            color: #666;
+        }
+
+        .chapter-item:hover {
+            background: var(--primary-color);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .chapter-title {
+            font-weight: 500;
+        }
+
+        .chapter-date {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        :root[data-theme="dark"] .chapter-date {
+            color: #999;
+        }
+
+        .chapter-item:hover .chapter-date {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Lightbox 樣式 */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 95%;
+            max-height: 85vh;
+            animation: zoomIn 0.3s ease;
+        }
+
+        .lightbox img {
+            max-width: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+        }
+
+        .close-lightbox {
+            position: absolute;
+            top: -40px;
+            right: 0px;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 8px;
+            transition: transform 0.2s ease;
+        }
+
+        .close-lightbox:hover {
+            transform: scale(1.2);
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* 為可點擊的圖片添加懸停效果 */
+        .manga-cover {
+            cursor: pointer;
+            transition: transform 0.2s ease, filter 0.2s ease;
+        }
+
+        .manga-cover:hover {
+            transform: scale(1.02);
+            filter: brightness(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .manga-info {
+                grid-template-columns: 200px 1fr;
+                gap: 1rem;
+            }
+
+            .manga-cover {
+                max-width: 200px;
+                margin: 0 auto;
+            }
+
+            .manga-title {
+                font-size: 1.3rem;
+            }
+
+            .manga-metadata {
+                font-size: 1rem;
+                margin-bottom: 0.7rem;
+            }
+
+            .manga-description {
+                font-size: 1rem;
+                margin-top: 0.7rem;
+                line-height: 1.2;
+            }
+
+            .official-link {
+                padding: 0.2rem 0.6rem;
+                margin-left: 0.4rem;
+            }
+
+            .chapter-list {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 0.6rem;
+                margin-top: 1.2rem;
+            }
+
+            .chapter-item {
+                padding: 0.6rem;
+            }
+
+            .chapter-title {
+                font-size: 0.9rem;
+            }
+
+            .chapter-date {
+                font-size: 0.7rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .manga-info {
+                grid-template-columns: 100px 1fr;
+                gap: 0.6rem;
+            }
+
+            .manga-cover {
+                max-width: 100px;
+                margin: 0 auto;
+            }
+
+            .manga-title {
+                font-size: 1.1rem;
+            }
+
+            .manga-metadata {
+                font-size: 0.8rem;
+                margin-bottom: 0.6rem;
+            }
+
+            .manga-description {
+                font-size: 0.8rem;
+                margin-top: 0.6rem;
+                line-height: 1.1;
+            }
+
+            .official-link {
+                padding: 0.15rem 0.45rem;
+                margin-left: 0.3rem;
+            }
+
+            .chapter-list {
+                grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+                gap: 0.5rem;
+                margin-top: 1rem;
+            }
+
+            .chapter-item {
+                padding: 0.5rem;
+            }
+
+            .chapter-title {
+                font-size: 0.8rem;
+            }
+            
+            .chapter-date {
+                font-size: 0.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <nav class="navbar">
+            <h1 @click="goHome">網漫翻譯</h1>
+            <div class="nav-controls">
+                <label class="toggle-switch">
+                    <input type="checkbox" v-model="isDarkMode">
+                    <span class="toggle-slider"></span>
+                </label>
+                <span>夜間模式</span>
+            </div>
+        </nav>
+
+        <div class="lightbox" :class="{ active: isLightboxActive }" @click="closeLightbox">
+            <div class="lightbox-content">
+                <button class="close-lightbox" @click.stop="closeLightbox">✕</button>
+                <img :src="lightboxImage" alt="" @click.stop>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="manga-detail">
+                <div class="manga-info">
+                    <img :src="getCoverUrl()" :alt="manga.title" class="manga-cover" @click="openLightbox(getCoverUrl())">
+                    <div>
+                        <h2 class="manga-title">{{ manga.title }}</h2>
+                        <div class="manga-metadata">
+                            <p><strong>作者：</strong>{{ manga.author }}</p>
+                            <p><strong>類型：</strong>{{ manga.tags ? manga.tags.join('、') : '' }}</p>
+                            <p class="official-links">
+                                <strong>正版連結：</strong>
+                                <a v-if="manga.koreanUrl" :href="manga.koreanUrl" target="_blank" class="official-link">韓文版</a>
+                                <a v-if="manga.englishUrl" :href="manga.englishUrl" target="_blank" class="official-link">英文版</a>
+                            </p>
+                        </div>
+                        <p class="manga-description">{{ manga.description }}</p>
+                    </div>
+                </div>
+                <div class="chapter-list">
+                    <div v-for="chapter in chaptersWithDates" 
+                         :key="chapter.id"
+                         class="chapter-item"
+                         :class="{ read: isChapterRead(chapter.id) }"
+                         @click="goToChapter(chapter.id)">
+                        <div class="chapter-title">第{{ chapter.id }}話</div>
+                        <div class="chapter-date">{{ formatDate(chapter.lastUpdated) }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEYS = {
+            READ_CHAPTERS: 'read_chapters',
+            THEME: 'theme',
+            CURRENT_MANGA: 'currentManga'
+        };
+
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    manga: {
+                        title: '',
+                        author: '',
+                        tags: [],
+                        cover: '',
+                        description: '',
+                        koreanUrl: '',
+                        englishUrl: '',
+                        chapters: []
+                    },
+                    isDarkMode: localStorage.getItem(STORAGE_KEYS.THEME) === 'dark',
+                    isLightboxActive: false,
+                    lightboxImage: '',
+                    currentMangaTitle: ''
+                }
+            },
+            computed: {
+                chaptersWithDates() {
+                    return this.manga.chapters.sort((a, b) => b.id - a.id);
+                }
+            },
+            watch: {
+                isDarkMode(newValue) {
+                    const theme = newValue ? 'dark' : 'light';
+                    document.documentElement.setAttribute('data-theme', theme);
+                    localStorage.setItem(STORAGE_KEYS.THEME, theme);
+                }
+            },
+            methods: {
+                async fetchMangaData() {
+                    try {
+                        // 先嘗試從URL參數獲取漫畫標題
+                        const urlParams = new URLSearchParams(window.location.search);
+                        let currentManga = urlParams.get('title');
+                        
+                        // 如果URL沒有參數，從localStorage獲取
+                        if (!currentManga) {
+                            currentManga = localStorage.getItem(STORAGE_KEYS.CURRENT_MANGA);
+                            if (currentManga) {
+                                // 更新URL但不重新加載頁面
+                                const encodedTitle = encodeURIComponent(currentManga);
+                                if (window.history && window.history.pushState) {
+                                    const newUrl = `${window.location.pathname}?title=${encodedTitle}`;
+                                    window.history.pushState({ path: newUrl }, '', newUrl);
+                                }
+                            }
+                        }
+                        
+                        if (!currentManga) {
+                            throw new Error('找不到漫畫資料');
+                        }
+                        
+                        // 設置標題用於後續操作
+                        this.currentMangaTitle = currentManga;
+                        
+                        const response = await fetch('../manga.json');
+                        const data = await response.json();
+                        const mangaData = data.manga.find(manga => manga.title === currentManga);
+                        
+                        if (!mangaData) {
+                            throw new Error('找不到漫畫資料');
+                        }
+
+                        this.manga = mangaData;
+                        
+                        // 更新頁面標題和meta標籤
+                        document.title = `${mangaData.title} - 網漫翻譯`;
+                        
+                        // 更新meta description標籤
+                        const metaDescription = document.querySelector('meta[name="description"]');
+                        if (metaDescription) {
+                            metaDescription.setAttribute('content', `${mangaData.title}網漫在線閱讀。${mangaData.author}著。`);
+                        }
+                        
+                        // 更新meta keywords標籤
+                        const metaKeywords = document.querySelector('meta[name="keywords"]');
+                        if (metaKeywords) {
+                            metaKeywords.setAttribute('content', `${mangaData.title}, ${mangaData.author}, 網漫翻譯, 網漫閱讀, 在線閱讀`);
+                        }
+                    } catch (error) {
+                        console.error('讀取漫畫資料失敗:', error);
+                        alert('讀取漫畫資料失敗');
+                    }
+                },
+                getCoverUrl() {
+                    if (!this.currentMangaTitle || !this.manga.cover) return '';
+                    return this.manga.cover;
+                },
+                formatDate(dateStr) {
+                    if (!dateStr) return '';
+                    const date = new Date(dateStr);
+                    return date.toLocaleDateString('zh-TW', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit'
+                    }).replace(/\//g, '-');
+                },
+                goHome() {
+                    window.location.href = '/acgntranslate.html#webtoons';
+                },
+                goToChapter(chapter) {
+                    const encodedTitle = encodeURIComponent(this.currentMangaTitle);
+                    window.location.href = `chapter.html?title=${encodedTitle}&chapter=${chapter}`;
+                },
+                isChapterRead(chapterNumber) {
+                    const readChapters = JSON.parse(localStorage.getItem(STORAGE_KEYS.READ_CHAPTERS) || '{}');
+                    return readChapters[this.manga.title]?.includes(chapterNumber);
+                },
+                openLightbox(imageUrl) {
+                    this.lightboxImage = imageUrl;
+                    this.isLightboxActive = true;
+                    document.body.style.overflow = 'hidden';
+                },
+                closeLightbox() {
+                    this.isLightboxActive = false;
+                    document.body.style.overflow = '';
+                }
+            },
+            mounted() {
+                this.fetchMangaData();
+                const theme = localStorage.getItem(STORAGE_KEYS.THEME) || 'light';
+                document.documentElement.setAttribute('data-theme', theme);
+                this.isDarkMode = theme === 'dark';
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && this.isLightboxActive) {
+                        this.closeLightbox();
+                    }
+                });
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html> 
