@@ -488,19 +488,10 @@
                         // 從URL參數獲取小說標題
                         const params = new URLSearchParams(window.location.search);
                         let currentNovel = params.get('title');
-                        const chapterNumber = parseFloat(params.get('chapter'));
-                        
-                        console.log('URL參數: 標題=', currentNovel, '章節=', chapterNumber);
-                        
-                        // 確保章節號是有效的數字
-                        if (isNaN(chapterNumber)) {
-                            throw new Error('無效的章節編號');
-                        }
                         
                         // 如果URL沒有標題參數，則從localStorage讀取
                         if (!currentNovel) {
                             currentNovel = localStorage.getItem(STORAGE_KEYS.CURRENT_NOVEL);
-                            console.log('從localStorage獲取小說標題:', currentNovel);
                         } else {
                             // 確保localStorage也有最新值
                             localStorage.setItem(STORAGE_KEYS.CURRENT_NOVEL, currentNovel);
@@ -512,37 +503,12 @@
                         
                         // 保存標題，用於後續操作
                         this.novelTitle = currentNovel;
-                        console.log('設置當前小說標題:', this.novelTitle);
                         
                         // 移除標題兩側的《》符號進行匹配
                         this.novelTitleFormatted = currentNovel.replace(/^《|》$/g, '');
-                        console.log('格式化後的小說標題:', this.novelTitleFormatted);
                         
-                        // 嘗試不同的路徑來讀取novels.json
-                        let response;
-                        let data;
-                        
-                        // 嘗試三種可能的路徑
-                        try {
-                            console.log('嘗試從相對路徑讀取novels.json');
-                            response = await fetch('../novels.json');
-                            if (!response.ok) throw new Error('相對路徑讀取失敗');
-                            data = await response.json();
-                        } catch (e) {
-                            try {
-                                console.log('嘗試從輕小說翻譯目錄讀取novels.json');
-                                response = await fetch('../輕小說翻譯/novels.json');
-                                if (!response.ok) throw new Error('輕小說翻譯目錄讀取失敗');
-                                data = await response.json();
-                            } catch (e2) {
-                                console.log('嘗試從根目錄讀取novels.json');
-                                response = await fetch('/輕小說翻譯/novels.json');
-                                if (!response.ok) throw new Error('根目錄讀取失敗');
-                                data = await response.json();
-                            }
-                        }
-                        
-                        console.log('成功讀取novels.json:', data);
+                        const response = await fetch('/輕小說翻譯/novels.json');
+                        const data = await response.json();
                         const novelData = data.novels.find(novel => novel.title === this.novelTitleFormatted);
                         
                         if (!novelData) {
@@ -559,6 +525,8 @@
                             }))
                             .sort((a, b) => a.number - b.number);
 
+                        const chapterNumber = parseFloat(params.get('chapter'));
+                        
                         const currentChapterData = this.allChapters.find(
                             chapter => chapter.number === chapterNumber
                         );
@@ -589,50 +557,17 @@
                     } catch (error) {
                         console.error('讀取章節失敗:', error);
                         alert('讀取章節失敗');
-                        // 確保返回詳情頁時加上小說標題參數
-                        if (this.novelTitle) {
-                            const encodedTitle = encodeURIComponent(this.novelTitle);
-                            window.location.href = `noveldetail.html?title=${encodedTitle}`;
-                        } else {
-                            window.location.href = 'noveldetail.html';
-                        }
+                        window.location.href = 'noveldetail.html';
                     }
                 },
                 async loadChapterContent() {
                     try {
-                        // 修正路徑解析錯誤的問題
-                        // 首先嘗試相對路徑
-                        let folderPath = `../${encodeURIComponent(this.novelTitle)}`;
+                        // 獲取小說資料夾路徑
+                        const folderPath = `/輕小說翻譯/${encodeURIComponent(this.novelTitle)}`;
                         
-                        // 構建完整檔案路徑
-                        let filename = `${folderPath}/${this.currentChapter.filename}`;
-                        console.log('嘗試讀取檔案:', filename);
-                        
-                        let response = await fetch(filename);
-                        
-                        // 如果讀取失敗，嘗試不同的路徑格式
-                        if (!response.ok) {
-                            console.log('第一次嘗試失敗，嘗試備用路徑');
-                            // 嘗試使用絕對路徑
-                            folderPath = `/${encodeURIComponent(this.novelTitle)}`;
-                            filename = `${folderPath}/${this.currentChapter.filename}`;
-                            console.log('嘗試備用路徑:', filename);
-                            response = await fetch(filename);
-                            
-                            // 如果仍然失敗，嘗試完整路徑
-                            if (!response.ok) {
-                                console.log('第二次嘗試失敗，嘗試完整路徑');
-                                folderPath = `/輕小說翻譯/${encodeURIComponent(this.novelTitle)}`;
-                                filename = `${folderPath}/${this.currentChapter.filename}`;
-                                console.log('嘗試完整路徑:', filename);
-                                response = await fetch(filename);
-                            }
-                        }
-                        
-                        if (!response.ok) {
-                            throw new Error(`無法獲取章節內容: ${response.status} ${response.statusText}`);
-                        }
-                        
+                        // 使用正確的文件名格式
+                        const filename = `${folderPath}/${this.currentChapter.filename}`;
+                        const response = await fetch(filename);
                         this.chapterContent = await response.text();
                         this.scrollToTop();
                         this.$nextTick(() => {
@@ -642,12 +577,7 @@
                         });
                     } catch (error) {
                         console.error('讀取章節內容失敗:', error);
-                        alert('讀取章節內容失敗: ' + error.message);
-                        // 如果讀取內容失敗，返回小說詳情頁
-                        if (this.novelTitle) {
-                            const encodedTitle = encodeURIComponent(this.novelTitle);
-                            window.location.href = `noveldetail.html?title=${encodedTitle}`;
-                        }
+                        alert('讀取章節內容失敗');
                     }
                 },
                 setupImageViewer() {
