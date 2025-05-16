@@ -883,8 +883,9 @@
                     // 存儲點擊的小說標題到localStorage
                     localStorage.setItem('currentNovel', item.title);
                     if (item.type === 'novel') {
-                        // 導向通用頁面而非特定小說頁面
-                        window.location.href = '輕小說翻譯/noveldetail.html';
+                        // 導向通用頁面並加入小說名稱作為URL參數
+                        const encodedTitle = encodeURIComponent(item.title);
+                        window.location.href = `輕小說翻譯/noveldetail.html?title=${encodedTitle}`;
                     } else {
                         window.location.href = item.detailPage;
                     }
