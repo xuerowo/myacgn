@@ -505,8 +505,11 @@
                         // 移除標題兩側的《》符號進行匹配
                         const titleFormatted = currentNovel.replace(/^《|》$/g, '');
                         
-                        // 讀取小說數據
-                        const response = await fetch('/輕小說翻譯/novels.json');
+                        // 讀取小說數據 - 使用相對路徑
+                        const response = await fetch('../輕小說翻譯/novels.json');
+                        if (!response.ok) {
+                            throw new Error(`無法獲取novels.json: ${response.status} ${response.statusText}`);
+                        }
                         const data = await response.json();
                         const novelData = data.novels.find(novel => novel.title === titleFormatted);
                         
@@ -559,7 +562,7 @@
                 getCoverUrl() {
                     if (!this.currentNovelTitle) return '';
                     const encodedTitle = encodeURIComponent(this.currentNovelTitle);
-                    return `/輕小說翻譯/${encodedTitle}/cover.jpg`;
+                    return `../${encodedTitle}/cover.jpg`;
                 },
                 getSourceLinkName(key) {
                     const names = {
