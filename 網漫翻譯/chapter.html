@@ -419,7 +419,7 @@
                         this.currentChapter = chapter;
                         
                         // 獲取漫畫數據
-                        const response = await fetch('../manga.json');
+                        const response = await fetch('/網漫翻譯/manga.json');
                         const data = await response.json();
                         const mangaData = data.manga.find(manga => manga.title === currentManga);
                         
