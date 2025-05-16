@@ -564,8 +564,20 @@
                             }))
                             .sort((a, b) => a.number - b.number);
                             
-                        // 更新頁面標題
+                        // 更新頁面標題和meta標籤
                         document.title = `${novelData.title} - 輕小說翻譯`;
+                        
+                        // 更新meta description標籤
+                        const metaDescription = document.querySelector('meta[name="description"]');
+                        if (metaDescription) {
+                            metaDescription.setAttribute('content', `${novelData.title}輕小說在線閱讀。${novelData.author}著。`);
+                        }
+                        
+                        // 更新meta keywords標籤
+                        const metaKeywords = document.querySelector('meta[name="keywords"]');
+                        if (metaKeywords) {
+                            metaKeywords.setAttribute('content', `${novelData.title}, ${novelData.author}, 輕小說翻譯, 輕小說閱讀, 在線閱讀`);
+                        }
                     } catch (error) {
                         console.error('讀取小說資料失敗:', error);
                         alert('讀取小說資料失敗');
