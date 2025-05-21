@@ -37,23 +37,22 @@
         }
 
         html {
-            height: 100%; /* 確保 html 元素佔滿完整高度 */
+            height: 100%;
             }
 
         body {
-        display: flex; /* 將 body 設為 flex 容器 */
-        flex-direction: column; /* 子元素垂直排列 */
-        min-height: 100vh; /* body 最小高度為整個視窗高度 */
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         line-height: 1.6;
         color: var(--text-color);
         background-color: var(--secondary-color);
-        padding-top: 60px; /* 保留為固定導覽列預留的空間 */
+        padding-top: 60px;
         }
 
-        /* Vue 應用程式容器樣式調整 */
         #app {
-        flex-grow: 1; /* 讓 #app 元素自動伸展，填滿可用空間 */
+        flex-grow: 1;
         }
 
         .container {
@@ -96,7 +95,7 @@
             scroll-behavior: auto;
             white-space: nowrap;
             position: relative;
-            -ms-overflow-style: none;  /* IE and Edge */
+            -ms-overflow-style: none;
             cursor: grab;
         }
 
@@ -328,7 +327,6 @@
             transform: rotate(360deg);
         }
 
-        /* 排序選擇器樣式 */
         .sort-selector {
             display: inline-flex;
             align-items: center;
@@ -426,9 +424,8 @@
             content: none;
         }
 
-        /* Footer */
         footer {
-            flex-shrink: 0; /* 防止 footer 在空間不足時被壓縮 */
+            flex-shrink: 0;
             flex-shrink: 0;
             text-align: center;
             padding: 2rem;
@@ -530,7 +527,6 @@
             }
         }
 
-        /* 添加新的滾動條樣式 */
         .nav-container::-webkit-scrollbar {
             height: 4px;
         }
@@ -769,10 +765,8 @@
                 }
             },
             created() {
-                // 檢測是否為移動設備
                 this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
                 
-                // 監聽視窗大小變化
                 window.addEventListener('resize', () => {
                     this.isMobile = window.innerWidth <= 768;
                 });
@@ -828,7 +822,6 @@
             methods: {
                 async fetchMangaList() {
                     try {
-                        // 使用相對路徑確保能正確加載JSON文件
                         const response = await fetch('網漫翻譯/manga.json');
                         if (!response.ok) {
                             throw new Error(`無法獲取manga.json: ${response.status} ${response.statusText}`);
@@ -880,15 +873,11 @@
                 },
                 goToDetail(item) {
                     if (item.type === 'novel') {
-                        // 存儲點擊的小說標題到localStorage
                         localStorage.setItem('currentNovel', item.title);
-                        // 導向通用頁面並加入小說名稱作為URL參數
                         const encodedTitle = encodeURIComponent(item.title);
                         window.location.href = `輕小說翻譯/noveldetail.html?title=${encodedTitle}`;
                     } else {
-                        // 存儲點擊的漫畫標題到localStorage
                         localStorage.setItem('currentManga', item.title);
-                        // 導向通用頁面並加入漫畫名稱作為URL參數
                         const encodedTitle = encodeURIComponent(item.title);
                         window.location.href = `網漫翻譯/webtoondetail.html?title=${encodedTitle}`;
                     }
@@ -1045,7 +1034,6 @@
                     }
                 });
 
-                // 移除重複的事件監聽器
                 document.removeEventListener('click', (e) => {
                     const sortSelector = document.querySelector('.sort-selector');
                     if (sortSelector && !sortSelector.contains(e.target)) {
@@ -1053,7 +1041,6 @@
                     }
                 });
                 
-                // 添加全局點擊事件監聽器
                 document.addEventListener('click', this.closeDropdowns);
                 
                 const navContainer = document.querySelector('.nav-container');
@@ -1081,7 +1068,6 @@
                 window.addEventListener('touchmove', this.drag, { passive: false });
                 window.addEventListener('touchend', this.stopDragging);
                 
-                // Vue 3不支持$once方法，使用替代方案
                 const cleanup = () => {
                     navContainer.removeEventListener('scroll', handleScroll);
                     navContainer.removeEventListener('mouseleave', handleMouseLeave);
@@ -1094,7 +1080,6 @@
                     document.removeEventListener('click', this.closeDropdowns);
                 };
                 
-                // 保存清理函數以供未來使用
                 this.$nextTick(() => {
                     window.__cleanupEvents = cleanup;
                 });
