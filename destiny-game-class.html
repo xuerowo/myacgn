@@ -286,7 +286,7 @@
         </div>
         
         <div id="questionContainer">
-            <!-- 問題將由JavaScript動態生成 -->
+            
         </div>
         
         <div class="navigation">
@@ -307,7 +307,7 @@
     </div>
 
     <script>
-        // 所有可能的測驗問題
+
         const allQuestions = [
             {
                 id: 1,
@@ -510,26 +510,21 @@
                 ]
             }
         ];
-        
-        // 隨機選擇8個問題
+
         function getRandomQuestions() {
-            // 複製問題陣列以避免修改原始資料
+
             const shuffled = [...allQuestions];
-            
-            // Fisher-Yates 洗牌算法
+
             for (let i = shuffled.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
             }
-            
-            // 取前8個問題
+
             return shuffled.slice(0, 8);
         }
-        
-        // 測驗問題 (隨機選擇8個)
+
         const questions = getRandomQuestions();
 
-        // 職業描述
         const classDescriptions = {
             warrior: {
                 name: "戰士",
@@ -613,17 +608,14 @@
             }
         };
 
-        // 初始化變數
         let currentQuestionIndex = 0;
         const userAnswers = [];
         const classScores = {};
 
-        // 初始化所有職業的分數
         Object.keys(classDescriptions).forEach(className => {
             classScores[className] = 0;
         });
 
-        // DOM元素
         const questionContainer = document.getElementById('questionContainer');
         const progressBar = document.getElementById('progressBar');
         const prevBtn = document.getElementById('prevBtn');
@@ -634,12 +626,10 @@
         const resultTraits = document.getElementById('resultTraits');
         const restartBtn = document.getElementById('restartBtn');
 
-        // 顯示當前問題
         function showQuestion(index) {
-            // 更新進度條
+
             progressBar.style.width = `${((index + 1) / questions.length) * 100}%`;
-            
-            // 創建問題卡片
+
             const question = questions[index];
             const card = document.createElement('div');
             card.className = 'card';
@@ -650,15 +640,13 @@
             
             const optionsElement = document.createElement('div');
             optionsElement.className = 'options';
-            
-            // 隨機打亂選項順序
+
             const shuffledOptions = [...question.options];
             for (let i = shuffledOptions.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [shuffledOptions[i], shuffledOptions[j]] = [shuffledOptions[j], shuffledOptions[i]];
             }
-            
-            // 記錄原始選項索引到隨機選項的映射
+
             const optionIndexMap = {};
             shuffledOptions.forEach((option, shuffledIndex) => {
                 const originalIndex = question.options.findIndex(o => o.text === option.text);
@@ -668,22 +656,21 @@
             shuffledOptions.forEach((option, optionIndex) => {
                 const optionElement = document.createElement('div');
                 optionElement.className = 'option';
-                optionElement.dataset.index = optionIndexMap[optionIndex]; // 保存原始選項索引
+                optionElement.dataset.index = optionIndexMap[optionIndex]; 
                 optionElement.innerHTML = `<p>${option.text}</p>`;
-                
-                // 如果之前選過這個選項，標記為已選
+
                 if (userAnswers[index] !== undefined && userAnswers[index] === parseInt(optionElement.dataset.index)) {
                     optionElement.classList.add('selected');
                 }
                 
                 optionElement.addEventListener('click', () => {
-                    // 移除其他選項的選中狀態
+
                     document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
-                    // 添加當前選項的選中狀態
+
                     optionElement.classList.add('selected');
-                    // 保存用戶回答（使用原始選項索引）
+
                     userAnswers[index] = parseInt(optionElement.dataset.index);
-                    // 啟用下一題按鈕
+
                     nextBtn.disabled = false;
                 });
                 
@@ -692,27 +679,22 @@
             
             card.appendChild(questionElement);
             card.appendChild(optionsElement);
-            
-            // 清空問題容器並添加新卡片
+
             questionContainer.innerHTML = '';
             questionContainer.appendChild(card);
-            
-            // 更新按鈕狀態
+
             prevBtn.disabled = index === 0;
             nextBtn.textContent = index === questions.length - 1 ? '查看結果' : '下一題';
-            
-            // 如果這個問題已經回答過，啟用下一題按鈕
+
             nextBtn.disabled = userAnswers[index] === undefined;
         }
 
-        // 找出得分最高的職業
         function calculateResult() {
-            // 重置分數
+
             Object.keys(classScores).forEach(className => {
                 classScores[className] = 0;
             });
-            
-            // 計算每個職業的得分
+
             userAnswers.forEach((answerIndex, questionIndex) => {
                 const selectedOption = questions[questionIndex].options[answerIndex];
                 
@@ -720,8 +702,7 @@
                     classScores[className] += points;
                 });
             });
-            
-            // 找出得分最高的職業
+
             let highestScore = 0;
             let bestClass = '';
             
@@ -734,8 +715,7 @@
             
             return bestClass;
         }
-        
-        // 找出得分第二高的職業
+
         function getSecondBestClass() {
             let highestScore = 0;
             let secondHighestScore = 0;
@@ -757,26 +737,22 @@
             return secondBestClass;
         }
 
-        // 顯示結果
         function showResult() {
             const bestClass = calculateResult();
             const classData = classDescriptions[bestClass];
             
             resultClass.textContent = classData.name;
             resultDescription.textContent = classData.description;
-            
-            // 清空特質容器
+
             resultTraits.innerHTML = '';
-            
-            // 添加特質標籤
+
             classData.traits.forEach(trait => {
                 const traitElement = document.createElement('div');
                 traitElement.className = 'trait';
                 traitElement.textContent = trait;
                 resultTraits.appendChild(traitElement);
             });
-            
-            // 顯示次高分職業
+
             const secondBestClass = getSecondBestClass();
             if (secondBestClass) {
                 const secondClassData = classDescriptions[secondBestClass];
@@ -789,42 +765,34 @@
                 `;
                 resultContainer.insertBefore(secondClassElement, document.getElementById('restartBtn'));
             }
-            
-            // 隱藏問題，顯示結果
+
             questionContainer.classList.add('hidden');
             document.querySelector('.navigation').classList.add('hidden');
             resultContainer.classList.remove('hidden');
         }
 
-        // 初始化測驗
         function initQuiz() {
-            // 重新隨機選擇問題
+
             const newQuestions = getRandomQuestions();
             questions.length = 0;
             newQuestions.forEach(q => questions.push(q));
-            
-            // 重置用戶回答
+
             userAnswers.length = 0;
-            
-            // 重置職業分數
+
             Object.keys(classScores).forEach(className => {
                 classScores[className] = 0;
             });
-            
-            // 顯示第一個問題
+
             currentQuestionIndex = 0;
             showQuestion(currentQuestionIndex);
-            
-            // 隱藏結果，顯示問題
+
             resultContainer.classList.add('hidden');
             questionContainer.classList.remove('hidden');
             document.querySelector('.navigation').classList.remove('hidden');
-            
-            // 重置進度條
+
             progressBar.style.width = `${(1 / questions.length) * 100}%`;
         }
 
-        // 事件監聽器
         prevBtn.addEventListener('click', () => {
             if (currentQuestionIndex > 0) {
                 currentQuestionIndex--;
@@ -843,7 +811,6 @@
 
         restartBtn.addEventListener('click', initQuiz);
 
-        // 初始化測驗
         initQuiz();
     </script>
 </body>
