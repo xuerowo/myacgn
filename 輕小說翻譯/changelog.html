@@ -18,10 +18,10 @@
       --timeline-circle-size: 16px;
       --particle-color: rgba(74, 144, 226, 0.6);
       --particle-color-alt: rgba(124, 77, 255, 0.4);
-      --typewriter-speed: 4s; /* 打字機基本速度，從2s增加到4s */
-      --typewriter-char-count: 1; /* 字符數量，將由JS動態設置 */
-      --typewriter-min-speed: 40ms; /* 最小打字速度 */
-      --typewriter-max-speed: 200ms; /* 最大打字速度 */
+      --typewriter-speed: 4s; 
+      --typewriter-char-count: 1; 
+      --typewriter-min-speed: 40ms; 
+      --typewriter-max-speed: 200ms; 
     }
 
     [data-theme="dark"] {
@@ -129,14 +129,13 @@
       overflow: hidden;
     }
 
-    /* 打字機效果 */
     .typewriter {
       display: inline-block;
       overflow: hidden;
       white-space: nowrap;
       border-right: 2px solid var(--primary-color);
       max-width: 0;
-      /* 不再使用一個統一的動畫，將通過JS動態添加 */
+      
     }
 
     @keyframes blink-caret {
@@ -734,85 +733,73 @@
   <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.0/dist/vanilla-tilt.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // 設置打字機效果的字符數量
+
       const typewriterEl = document.querySelector('.typewriter');
       if (typewriterEl) {
         const text = typewriterEl.textContent;
         const charCount = text.length;
         document.documentElement.style.setProperty('--typewriter-char-count', charCount);
-        
-        // 新的打字機效果實現
-        typewriterEl.textContent = ''; // 清空文本，準備重新逐個添加
+
+        typewriterEl.textContent = ''; 
         typewriterEl.style.borderRight = '2px solid var(--primary-color)';
         typewriterEl.style.animation = 'blink-caret 0.75s step-end infinite';
         
         let i = 0;
         function typeNextChar() {
           if (i < text.length) {
-            // 添加下一個字符
+
             typewriterEl.textContent += text.charAt(i);
             i++;
-            
-            // 計算寬度以適應已輸入的文本
+
             typewriterEl.style.maxWidth = typewriterEl.scrollWidth + 'px';
-            
-            // 隨機延遲，模擬人類打字速度變化
+
             const minDelay = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--typewriter-min-speed'));
             const maxDelay = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--typewriter-max-speed'));
-            
-            // 更加自然的延遲計算
+
             let delay;
-            
-            // 在標點符號後增加更長的停頓
+
             const punctuation = [',', '.', '，', '。', '！', '？', '；', '：'];
             if (punctuation.includes(text.charAt(i-1))) {
-              delay = Math.random() * (maxDelay - minDelay) + maxDelay; // 較長延遲
+              delay = Math.random() * (maxDelay - minDelay) + maxDelay; 
             } else if (i < text.length && text.charAt(i-1) === ' ' && text.charAt(i) !== ' ') {
-              // 單詞之間的停頓
+
               delay = Math.random() * (maxDelay - minDelay) + minDelay * 1.5;
             } else {
-              // 普通字符之間的延遲
+
               delay = Math.random() * (maxDelay - minDelay) + minDelay;
             }
-            
-            // 字符組合的更自然的處理（如對於中文字符）
+
             if (i < text.length && isCJK(text.charAt(i-1)) && isCJK(text.charAt(i))) {
-              delay = delay * 0.8; // 中文字符間的延遲稍短
+              delay = delay * 0.8; 
             }
             
             setTimeout(typeNextChar, delay);
           } else {
-            // 完成後保持光標閃爍
+
             typewriterEl.style.borderRight = '2px solid var(--primary-color)';
           }
         }
-        
-        // 判斷是否為中日韓文字
+
         function isCJK(char) {
           const code = char.charCodeAt(0);
           return (
-            (code >= 0x4E00 && code <= 0x9FFF) || // CJK統一表意文字
-            (code >= 0x3400 && code <= 0x4DBF) || // CJK統一表意文字擴展A
-            (code >= 0xAC00 && code <= 0xD7AF)    // 韓文音節
+            (code >= 0x4E00 && code <= 0x9FFF) || 
+            (code >= 0x3400 && code <= 0x4DBF) || 
+            (code >= 0xAC00 && code <= 0xD7AF)    
           );
         }
-        
-        // 延遲一下再開始打字
+
         setTimeout(typeNextChar, 500);
       }
 
-      // 檢查並設置主題
       const savedTheme = localStorage.getItem('theme') || 'light';
       document.documentElement.setAttribute('data-theme', savedTheme);
       updateThemeToggle(savedTheme);
 
-      // 初始化滾動至頂按鈕
       initScrollTop();
 
-      // 初始化粒子背景
       initParticles(savedTheme);
 
-      // 首先檢查文件是否存在
       checkFileExists('version.json').then(exists => {
         if (!exists) {
           console.warn('version.json 文件不存在，使用默認數據');
@@ -823,12 +810,11 @@
               changes: ['初始版本發布']
             }]
           });
-          // 初始化 3D 效果
+
           setTimeout(initTiltEffect, 500);
           return;
         }
-        
-        // 文件存在，嘗試加載
+
         fetch('version.json')
           .then(response => {
             if (!response.ok) {
@@ -838,12 +824,12 @@
           })
           .then(data => {
             displayChangelog(data);
-            // 初始化 3D 效果
+
             setTimeout(initTiltEffect, 500);
           })
           .catch(error => {
             console.error('加載更新日誌時出錯:', error);
-            // 出錯時顯示預設數據
+
             displayChangelog({
               history: [{
                 version: '1.0.0',
@@ -851,7 +837,7 @@
                 changes: ['初始版本發布']
               }]
             });
-            // 初始化 3D 效果
+
             setTimeout(initTiltEffect, 500);
           });
       });
@@ -992,12 +978,11 @@
         toggleBtn.textContent = '🌞';
       }
 
-      // 更新粒子效果
       if (window.pJSDom && window.pJSDom.length > 0) {
-        // 移除現有粒子
+
         window.pJSDom[0].pJS.fn.vendors.destroypJS();
         window.pJSDom = [];
-        // 重新初始化
+
         initParticles(theme);
       }
     }
@@ -1034,7 +1019,7 @@
       const options = { year: 'numeric', month: 'long', day: 'numeric' };
       try {
         const date = new Date(dateStr);
-        // 檢查是否為無效日期
+
         if (isNaN(date.getTime())) {
           return '未知時間';
         }
@@ -1046,22 +1031,19 @@
 
     function displayChangelog(data) {
       const changelogDiv = document.getElementById('changelog');
-      
-      // 清空載入提示
+
       changelogDiv.innerHTML = '';
-      
-      // 創建時間線元素
+
       const timelineDiv = document.createElement('div');
       timelineDiv.className = 'timeline';
-      
-      // 添加所有版本信息
-      let versionsAdded = false; // 跟踪是否添加了任何版本
+
+      let versionsAdded = false; 
       
       try {
         if (data && data.history && Array.isArray(data.history)) {
-          // 確保顯示版本，即使陣列為空也創建預設版本
+
           if (data.history.length === 0) {
-            // 添加預設版本
+
             data.history.push({
               version: '1.0.0',
               date: new Date().toISOString().split('T')[0],
@@ -1071,34 +1053,29 @@
           
           data.history.forEach((version, index) => {
             const versionDiv = document.createElement('div');
-            // 強制第一個項目為最新版本
+
             versionDiv.className = index === 0 ? 'version current' : 'version';
-            
-            // 添加版本序號
+
             const versionCount = document.createElement('div');
             versionCount.className = 'version-count';
             versionCount.textContent = index + 1;
             versionDiv.appendChild(versionCount);
-            
-            // 創建版本內部容器
+
             const versionInner = document.createElement('div');
             versionInner.className = 'version-inner';
-            versionInner.style.opacity = '1'; // 直接設置樣式確保可見
+            versionInner.style.opacity = '1'; 
 
-            // 添加3D傾斜效果背景
             const tiltBg = document.createElement('div');
             tiltBg.className = 'tilt-bg';
             versionInner.appendChild(tiltBg);
 
-            // 添加版本日期作為靜態內容
             if (version.date) {
               const dateDiv = document.createElement('div');
               dateDiv.className = 'date';
               dateDiv.textContent = formatVersionDate(version.date);
               versionInner.appendChild(dateDiv);
             }
-            
-            // 版本標題
+
             const versionTitle = document.createElement('h2');
             
             const versionNum = document.createElement('span');
@@ -1114,15 +1091,14 @@
             
             if (version.changes) {
               const changesList = document.createElement('ul');
-              
-              // 如果 changes 是字符串
+
               if (typeof version.changes === 'string') {
                 const changeItem = document.createElement('li');
                 const typeLabel = getChangeTypeLabel(version.changes);
                 changeItem.innerHTML = typeLabel + version.changes;
                 changesList.appendChild(changeItem);
               } 
-              // 如果 changes 是数组
+
               else if (Array.isArray(version.changes)) {
                 version.changes.forEach(change => {
                   const changeItem = document.createElement('li');
@@ -1143,8 +1119,7 @@
       } catch (error) {
         console.error('處理版本數據時出錯:', error);
       }
-      
-      // 如果沒有添加任何版本，創建一個預設版本
+
       if (!versionsAdded) {
         console.log('創建預設版本卡片');
         const versionDiv = document.createElement('div');
@@ -1157,7 +1132,7 @@
         
         const versionInner = document.createElement('div');
         versionInner.className = 'version-inner';
-        versionInner.style.opacity = '1'; // 確保可見
+        versionInner.style.opacity = '1'; 
         
         const versionTitle = document.createElement('h2');
         versionTitle.innerHTML = '<span>版本 1.0.0</span><span class="version-badge">最新版本</span>';
@@ -1179,18 +1154,16 @@
       }
       
       changelogDiv.appendChild(timelineDiv);
-      
-      // 使用更可靠的方法確保第一個版本有特殊樣式
+
       const allVersions = timelineDiv.querySelectorAll('.version');
       if (allVersions.length > 0) {
-        // 移除所有current類別
+
         allVersions.forEach(v => v.classList.remove('current'));
-        // 確保第一個版本有current類別
+
         allVersions[0].classList.add('current');
       }
     }
 
-    // 添加預載函數以檢查version.json是否存在
     function checkFileExists(url) {
       return fetch(url, { method: 'HEAD' })
         .then(response => response.ok)
