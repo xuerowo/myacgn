@@ -46,13 +46,13 @@
             height: auto;
             margin: 0;
             display: block;
-            -webkit-touch-callout: none;  /* iOS Safari */
-            -webkit-user-select: none;    /* Safari */
-            -khtml-user-select: none;     /* Konqueror HTML */
-            -moz-user-select: none;       /* Firefox */
-            -ms-user-select: none;        /* Internet Explorer/Edge */
-            user-select: none;            /* Non-prefixed version */
-            pointer-events: none;         /* 禁用點擊事件 */
+            -webkit-touch-callout: none;  
+            -webkit-user-select: none;    
+            -khtml-user-select: none;     
+            -moz-user-select: none;       
+            -ms-user-select: none;        
+            user-select: none;            
+            pointer-events: none;         
         }
 
         .loading {
@@ -293,7 +293,6 @@
                  ondragstart="return false;">
         </div>
 
-        <!-- 章節目錄 -->
         <div v-if="showChapterMenu" class="chapter-menu" :class="{ hidden: hideControls }">
             <div class="chapter-menu-header">
                 章節目錄
@@ -391,34 +390,30 @@
             methods: {
                 async fetchMangaData() {
                     try {
-                        // 從URL參數獲取漫畫標題和章節編號
+
                         const params = new URLSearchParams(window.location.search);
                         let currentManga = params.get('title');
                         const chapter = parseInt(params.get('chapter'));
-                        
-                        // 如果URL沒有標題參數，則從localStorage讀取
+
                         if (!currentManga) {
                             currentManga = localStorage.getItem(STORAGE_KEYS.CURRENT_MANGA);
                         } else {
-                            // 確保localStorage也有最新值
+
                             localStorage.setItem(STORAGE_KEYS.CURRENT_MANGA, currentManga);
                         }
                         
                         if (!currentManga) {
                             throw new Error('找不到漫畫資料');
                         }
-                        
-                        // 保存標題，用於後續操作
+
                         this.currentMangaTitle = currentManga;
-                        
-                        // 檢查章節號是否有效
+
                         if (!chapter) {
                             throw new Error('無效的章節號');
                         }
                         
                         this.currentChapter = chapter;
-                        
-                        // 獲取漫畫數據
+
                         const response = await fetch('/網漫翻譯/manga.json');
                         const data = await response.json();
                         const mangaData = data.manga.find(manga => manga.title === currentManga);
@@ -428,17 +423,14 @@
                         }
 
                         this.manga = mangaData;
-                        
-                        // 更新頁面標題和meta標籤
+
                         document.title = `第${chapter}話 - ${this.manga.title} - 網漫翻譯`;
-                        
-                        // 更新meta description標籤
+
                         const metaDescription = document.querySelector('meta[name="description"]');
                         if (metaDescription) {
                             metaDescription.setAttribute('content', `閱讀${this.manga.title}的第${chapter}話。`);
                         }
-                        
-                        // 更新meta keywords標籤
+
                         const metaKeywords = document.querySelector('meta[name="keywords"]');
                         if (metaKeywords) {
                             metaKeywords.setAttribute('content', `${this.manga.title}, 第${chapter}話, 網漫翻譯, 網漫閱讀, 在線閱讀`);
@@ -452,7 +444,6 @@
                             throw new Error('找不到此章節');
                         }
 
-                        // 使用 R2 的基礎 URL 生成圖片列表
                         this.pages = Array.from(
                             { length: currentChapterData.total },
                             (_, i) => `${this.manga.r2Url}/${chapter}/${i + 1}.jpg?v=${Date.now()}`
@@ -481,7 +472,7 @@
                         year: 'numeric',
                         month: '2-digit',
                         day: '2-digit'
-                    }).replace(/\//g, '-');
+                    }).replace(/\
                 },
                 handleImageLoad() {
                     this.loadedImages++;
