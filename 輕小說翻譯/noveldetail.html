@@ -493,15 +493,14 @@
             methods: {
                 async fetchNovelData() {
                     try {
-                        // 先嘗試從URL參數獲取小說標題
+
                         const urlParams = new URLSearchParams(window.location.search);
                         let currentNovel = urlParams.get('title');
-                        
-                        // 如果URL沒有參數，從localStorage獲取
+
                         if (!currentNovel) {
                             currentNovel = localStorage.getItem(STORAGE_KEYS.CURRENT_NOVEL);
                             if (currentNovel) {
-                                // 更新URL但不重新加載頁面
+
                                 const encodedTitle = encodeURIComponent(currentNovel);
                                 if (window.history && window.history.pushState) {
                                     const newUrl = `${window.location.pathname}?title=${encodedTitle}`;
@@ -513,14 +512,11 @@
                         if (!currentNovel) {
                             throw new Error('找不到小說資料');
                         }
-                        
-                        // 設置標題用於後續操作
+
                         this.currentNovelTitle = currentNovel;
-                        
-                        // 移除標題兩側的《》符號進行匹配
+
                         const titleFormatted = currentNovel.replace(/^《|》$/g, '');
-                        
-                        // 讀取小說數據
+
                         const response = await fetch('/輕小說翻譯/novels.json');
                         const data = await response.json();
                         const novelData = data.novels.find(novel => novel.title === titleFormatted);
@@ -529,10 +525,9 @@
                             throw new Error('找不到小說資料');
                         }
 
-                        // 處理原連結
                         const sourceLinks = {};
                         if (novelData.originalUrl) {
-                            // 分割多個 URL
+
                             const urls = novelData.originalUrl.split('、');
                             urls.forEach(url => {
                                 if (url.includes('kakuyomu.jp')) {
@@ -563,17 +558,14 @@
                                 date: new Date(chapter.lastUpdated).toISOString().split('T')[0]
                             }))
                             .sort((a, b) => a.number - b.number);
-                            
-                        // 更新頁面標題和meta標籤
+
                         document.title = `${novelData.title} - 輕小說翻譯`;
-                        
-                        // 更新meta description標籤
+
                         const metaDescription = document.querySelector('meta[name="description"]');
                         if (metaDescription) {
                             metaDescription.setAttribute('content', `${novelData.title}輕小說在線閱讀。${novelData.author}著。`);
                         }
-                        
-                        // 更新meta keywords標籤
+
                         const metaKeywords = document.querySelector('meta[name="keywords"]');
                         if (metaKeywords) {
                             metaKeywords.setAttribute('content', `${novelData.title}, ${novelData.author}, 輕小說翻譯, 輕小說閱讀, 在線閱讀`);
@@ -603,7 +595,7 @@
                         year: 'numeric',
                         month: '2-digit',
                         day: '2-digit'
-                    }).replace(/\//g, '-');
+                    }).replace(/\
                 },
                 goHome() {
                     window.location.href = '/acgntranslate.html#novels';
