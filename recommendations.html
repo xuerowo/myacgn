@@ -18,9 +18,9 @@
             --dropdown-hover: #f0f0f0;
             --card-shadow: 0 4px 8px rgba(0,0,0,0.1);
             --transition-speed: 0.3s;
-            /* 新增標籤顏色變數 (淺色模式) */
-            --genre-tag-bg: #DBEAFE; /* Light Indigo */
-            --genre-tag-text: #1D4ED8; /* Indigo */
+            
+            --genre-tag-bg: #DBEAFE; 
+            --genre-tag-text: #1D4ED8; 
         }
 
         :root[data-theme="dark"] {
@@ -32,9 +32,9 @@
             --dropdown-background: #1a1a1a;
             --dropdown-hover: #2a2a2a;
             --card-shadow: 0 4px 8px rgba(255,255,255,0.1);
-            /* 新增標籤顏色變數 (深色模式) */
-            --genre-tag-bg: #3730a3; /* Darker Indigo */
-            --genre-tag-text: #e0e7ff; /* Light Indigo */
+            
+            --genre-tag-bg: #3730a3; 
+            --genre-tag-text: #e0e7ff; 
         }
 
         * {
@@ -45,18 +45,18 @@
         }
 
         html {
-            height: 100%; /* 確保 html 元素佔滿完整高度 */
+            height: 100%; 
         }
 
         body {
-            display: flex; /* 將 body 設為 flex 容器 */
-            flex-direction: column; /* 子元素垂直排列 */
-            min-height: 100vh; /* body 最小高度為整個視窗高度 */
+            display: flex; 
+            flex-direction: column; 
+            min-height: 100vh; 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             line-height: 1.6;
             color: var(--text-color);
             background-color: var(--secondary-color);
-            padding-top: 60px; /* 為固定導航欄預留空間 */
+            padding-top: 60px; 
         }
 
         h1 {
@@ -64,7 +64,6 @@
             margin-bottom: 2rem;
         }
 
-        /* Navigation styles */
         .navbar {
             position: fixed;
             top: 0;
@@ -78,7 +77,7 @@
         }
 
         .navbar[style*="-80px"] .dropdown-menu {
-            display: none !important; /* 導航欄隱藏時也隱藏下拉菜單 */
+            display: none !important; 
         }
 
         .nav-container {
@@ -96,7 +95,7 @@
         }
 
         .nav-links > * {
-            min-width: 80px; /* 確保項目有最小寬度 */
+            min-width: 80px; 
             text-align: center;
         }
 
@@ -105,24 +104,23 @@
             text-decoration: none;
             font-size: 1.1rem;
             transition: color 0.3s;
-            padding: 0.5rem 0; /* 增加垂直內邊距使點擊區域更大 */
+            padding: 0.5rem 0; 
         }
 
         .nav-links a:hover {
             color: var(--primary-color);
         }
 
-        /* 下拉菜單樣式 */
         .dropdown {
             position: relative;
             display: inline-block;
-            min-width: 80px; /* 與 nav-links > * 保持一致 */
+            min-width: 80px; 
             text-align: center;
         }
 
         .dropdown-toggle {
             cursor: pointer;
-            padding: 0.5rem 0; /* 與 nav-links a 保持一致 */
+            padding: 0.5rem 0; 
             display: flex;
             align-items: center;
             justify-content: center;
@@ -130,8 +128,8 @@
             color: var(--text-color);
             background: none;
             border: none;
-            font-size: 1.1rem; /* 與 nav-links a 保持一致 */
-            width: 100%; /* 使按鈕填滿父容器寬度 */
+            font-size: 1.1rem; 
+            width: 100%; 
         }
 
         .dropdown-toggle:hover {
@@ -156,7 +154,7 @@
             visibility: hidden;
             transform: translateY(-10px);
             transition: all 0.3s ease;
-            z-index: 1001; /* 確保在導航欄之上 */
+            z-index: 1001; 
         }
 
         .dropdown-menu a {
@@ -165,7 +163,7 @@
             color: var(--text-color);
             text-decoration: none;
             transition: background-color 0.3s;
-            white-space: nowrap; /* 防止文字換行 */
+            white-space: nowrap; 
         }
 
         .dropdown-menu a:hover {
@@ -173,32 +171,27 @@
             color: var(--primary-color);
         }
 
-        /* 懸停時顯示下拉菜單 */
         .dropdown:hover .dropdown-menu {
             opacity: 1;
             visibility: visible;
             transform: translateY(0);
         }
 
-        /* 懸停時旋轉箭頭 */
         .dropdown:hover .dropdown-toggle:after {
             transform: rotate(180deg);
         }
 
-        /* 當前活動連結樣式 */
         .dropdown-menu a.active {
             background-color: var(--dropdown-hover);
             color: var(--primary-color);
         }
 
-        /* Tab styles */
         .tab-container {
             max-width: 1200px;
             margin: 2rem auto;
             padding: 0 1rem;
         }
 
-        /* Content styles */
         .content-section {
             display: none;
             animation: fadeIn 0.5s ease-in;
@@ -210,15 +203,15 @@
 
         .container {
             display: flex;
-            align-items: stretch; /* 使子元素高度一致 */
+            align-items: stretch; 
             background-color: var(--background-color);
             box-shadow: var(--card-shadow);
             margin-bottom: 20px;
             padding: 24px;
             border-radius: 12px;
             transition: all var(--transition-speed);
-            gap: 24px; /* 圖片和文字之間的間距 */
-            min-height: 320px; /* 設定最小高度 */
+            gap: 24px; 
+            min-height: 320px; 
         }
 
         .container:hover {
@@ -228,28 +221,27 @@
 
         .container img {
             width: 200px;
-            height: auto; /* 高度自動，保持比例 */
+            height: auto; 
             border-radius: 8px;
-            object-fit: cover; /* 裁剪圖片以填充容器 */
+            object-fit: cover; 
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            align-self: flex-start; /* 使圖片頂部對齊 */
-            cursor: pointer; /* 添加指針提示圖片可點擊 */
-            transition: transform 0.2s ease, filter 0.2s ease; /* 添加圖片懸停效果 */
+            align-self: flex-start; 
+            cursor: pointer; 
+            transition: transform 0.2s ease, filter 0.2s ease; 
         }
 
-         /* 為可點擊的圖片添加懸停效果 */
         .container img:hover {
             transform: scale(1.02);
             filter: brightness(1.1);
         }
 
         .content-text {
-            flex: 1; /* 佔據剩餘空間 */
+            flex: 1; 
             display: flex;
             flex-direction: column;
-            gap: 12px; /* 內部元素間距 */
-            height: 100%; /* 確保佔滿父容器高度 */
-            min-height: 280px; /* 確保文字區域有最小高度 */
+            gap: 12px; 
+            height: 100%; 
+            min-height: 280px; 
         }
 
         .content-text h2 {
@@ -260,51 +252,46 @@
             border-bottom: 2px solid var(--border-color);
         }
 
-        /* --- 更新 series-info 樣式 --- */
         .series-info {
             font-size: 0.95rem;
             margin-bottom: 4px;
-            line-height: 1.8; /* 增加行高以便容納標籤 */
+            line-height: 1.8; 
         }
 
         .series-info strong {
             display: inline-block;
-            margin-bottom: 4px; /* 調整標籤和下方內容的間距 */
-            margin-right: 5px; /* 標籤和內容間的間距 */
+            margin-bottom: 4px; 
+            margin-right: 5px; 
             vertical-align: middle;
         }
 
-        /* --- 更新 genre-tags-container 樣式 --- */
         .genre-tags-container {
-            display: inline-flex; /* 改為 inline-flex 使其與 strong 在同一行 */
-            flex-wrap: wrap; /* 允許標籤換行 */
-            gap: 6px; /* 標籤之間的間距 */
+            display: inline-flex; 
+            flex-wrap: wrap; 
+            gap: 6px; 
             vertical-align: middle;
         }
 
-        /* --- 新增 genre-tag 樣式 --- */
         .genre-tag {
             display: inline-block;
-            padding: 3px 10px; /* 標籤內部上下左右的空間 */
-            background-color: var(--genre-tag-bg); /* 使用 CSS 變數 */
-            color: var(--genre-tag-text); /* 使用 CSS 變數 */
-            border-radius: 12px; /* 圓角 */
-            font-size: 0.85rem; /* 稍小的字體 */
-            line-height: 1.4; /* 確保文字垂直居中 */
+            padding: 3px 10px; 
+            background-color: var(--genre-tag-bg); 
+            color: var(--genre-tag-text); 
+            border-radius: 12px; 
+            font-size: 0.85rem; 
+            line-height: 1.4; 
             transition: background-color var(--transition-speed), color var(--transition-speed);
         }
-        /* --- 樣式更新結束 --- */
-
 
         .series-description {
             line-height: 1.7;
-            flex-grow: 1; /* 佔據剩餘垂直空間 */
+            flex-grow: 1; 
         }
 
         .link-container {
-            margin-top: auto; /* 將連結推到底部 */
+            margin-top: auto; 
             padding-top: 12px;
-            display: flex; /* 使連結按鈕可以並排 */
+            display: flex; 
         }
 
         .link-style-1 {
@@ -320,17 +307,15 @@
         }
 
         .link-style-1:hover {
-            background-color: #357ABD; /* 加深顏色 */
-            transform: translateY(-2px); /* 輕微上移 */
+            background-color: #357ABD; 
+            transform: translateY(-2px); 
         }
 
-        /* Animation */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
 
-        /* Theme toggle */
         .theme-toggle {
             background: none;
             border: none;
@@ -345,12 +330,10 @@
             transform: rotate(360deg);
         }
 
-        /* 主要內容區域樣式 (對應新增的 <main> 標籤) */
         .main-content-area {
-            flex-grow: 1; /* 讓主要內容區域自動伸展，填滿 nav 和 footer 之間的剩餘空間 */
+            flex-grow: 1; 
         }
 
-        /* Footer */
         footer {
             flex-shrink: 0;
             text-align: center;
@@ -358,7 +341,6 @@
             background-color: var(--background-color);
         }
 
-        /* Notes section */
         .notes {
             background-color: var(--background-color);
             padding: 1rem;
@@ -386,64 +368,62 @@
             border-radius: 8px;
             box-shadow: var(--card-shadow);
             position: relative;
-            overflow: hidden; /* 隱藏漸變溢出部分 */
+            overflow: hidden; 
         }
 
         .category-title h3 {
             font-size: 1.5rem;
             margin: 0;
-            position: relative; /* 使標題在漸變之上 */
+            position: relative; 
             z-index: 2;
         }
 
-        /* 分類標題漸變背景 */
         .category-title.japan,
         .category-title.china {
             background: linear-gradient(90deg, rgba(0, 204, 255, 0.1) 0%, var(--background-color) 100%);
         }
 
         .category-title.china {
-            margin-top: 3rem; /* 與上一個分類的間距 */
+            margin-top: 3rem; 
         }
 
-        /* Lightbox 樣式 */
         .lightbox {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9); /* 更深的背景 */
-            display: none; /* 默認隱藏 */
+            background: rgba(0, 0, 0, 0.9); 
+            display: none; 
             justify-content: center;
             align-items: center;
-            z-index: 2000; /* 最高層級 */
+            z-index: 2000; 
             opacity: 0;
             transition: opacity 0.3s ease;
         }
 
         .lightbox.active {
-            display: flex; /* 激活時顯示 */
+            display: flex; 
             opacity: 1;
         }
 
         .lightbox-content {
             position: relative;
-            max-width: 95%; /* 限制最大寬度 */
-            max-height: 85vh; /* 限制最大高度 */
-            animation: zoomIn 0.3s ease; /* 加入動畫效果 */
+            max-width: 95%; 
+            max-height: 85vh; 
+            animation: zoomIn 0.3s ease; 
         }
 
         .lightbox img {
             max-width: 100%;
-            max-height: 85vh; /* 確保圖片不超過視口高度 */
-            object-fit: contain; /* 保持圖片比例 */
-            display: block; /* 避免底部多餘空間 */
+            max-height: 85vh; 
+            object-fit: contain; 
+            display: block; 
         }
 
         .close-lightbox {
             position: absolute;
-            top: -40px; /* 調整位置到圖片外部 */
+            top: -40px; 
             right: 0px;
             color: white;
             font-size: 24px;
@@ -458,7 +438,6 @@
             transform: scale(1.2);
         }
 
-        /* Lightbox 動畫 */
         @keyframes zoomIn {
             from {
                 transform: scale(0.9);
@@ -470,8 +449,6 @@
             }
         }
 
-        /* 響應式設計 */
-        /* 平板與大型手機 (768px 以下) */
         @media (max-width: 768px) {
             .navbar {
                 padding: 0.8rem;
@@ -486,46 +463,45 @@
             }
 
             .container {
-                flex-direction: row; /* 在較小屏幕上仍然保持橫向 */
+                flex-direction: row; 
                 padding: 16px;
                 gap: 16px;
-                min-height: 200px; /* 調整最小高度 */
+                min-height: 200px; 
             }
 
             .container img {
-                width: 120px; /* 縮小圖片寬度 */
-                height: 160px; /* 固定高度 */
-                align-self: flex-start; /* 保持頂部對齊 */
+                width: 120px; 
+                height: 160px; 
+                align-self: flex-start; 
             }
 
             .content-text {
                 gap: 8px;
-                min-height: 160px; /* 調整文字區域最小高度 */
+                min-height: 160px; 
             }
 
             .content-text h2 {
-                font-size: 1.1rem; /* 縮小標題字體 */
+                font-size: 1.1rem; 
                 padding-bottom: 6px;
             }
 
             .series-info {
-                font-size: 0.8rem; /* 縮小信息字體 */
-                line-height: 1.6; /* 調整行高 */
+                font-size: 0.8rem; 
+                line-height: 1.6; 
             }
             .genre-tags-container {
-                 /* margin-left: 3.5em; */ /* 不再需要 */
-                 gap: 4px; /* 縮小標籤間距 */
+                  
+                 gap: 4px; 
             }
             .genre-tag {
-                font-size: 0.75rem; /* 縮小標籤字體 */
-                padding: 2px 8px; /* 調整標籤內邊距 */
+                font-size: 0.75rem; 
+                padding: 2px 8px; 
             }
 
-
             .series-description {
-                font-size: 0.85rem; /* 縮小描述字體 */
+                font-size: 0.85rem; 
                 line-height: 1.4;
-                flex-grow: 1; /* 確保描述填滿空間 */
+                flex-grow: 1; 
             }
 
             .link-container {
@@ -533,8 +509,8 @@
             }
 
             .link-style-1 {
-                padding: 6px 12px; /* 縮小按鈕內邊距 */
-                font-size: 0.85rem; /* 縮小按鈕字體 */
+                padding: 6px 12px; 
+                font-size: 0.85rem; 
             }
 
             .category-title {
@@ -543,30 +519,29 @@
             }
 
             .category-title h3 {
-                font-size: 1.2rem; /* 縮小分類標題字體 */
+                font-size: 1.2rem; 
             }
         }
 
-        /* 小型手機 (480px 以下) */
         @media (max-width: 480px) {
             .navbar {
                 padding: 0.6rem;
             }
 
             .nav-links {
-                gap: 0.8rem; /* 進一步縮小導航間距 */
+                gap: 0.8rem; 
             }
 
             .nav-links > * {
-                min-width: 50px; /* 最小寬度 */
+                min-width: 50px; 
             }
 
             .nav-links a, .dropdown-toggle {
-                font-size: 0.95rem; /* 縮小導航字體 */
+                font-size: 0.95rem; 
             }
 
             .dropdown-menu {
-                min-width: 140px; /* 調整下拉菜單寬度 */
+                min-width: 140px; 
             }
 
             .dropdown-menu a {
@@ -575,7 +550,7 @@
             }
 
             h1 {
-                font-size: 1.4rem; /* 縮小主標題字體 */
+                font-size: 1.4rem; 
             }
 
             .container {
@@ -595,8 +570,8 @@
                 font-size: 0.75rem;
             }
              .genre-tags-container {
-                 /* margin-left: 3em; */ /* 不再需要 */
-                 gap: 3px; /* 進一步縮小標籤間距 */
+                  
+                 gap: 3px; 
             }
              .genre-tag {
                 font-size: 0.7rem;
@@ -1806,57 +1781,49 @@
     </div>
 
     <script>
-        // Tab switching functionality
+
         function showContent(contentId) {
-            // 隱藏所有內容區塊
+
             document.querySelectorAll('.content-section').forEach(section => {
                 section.classList.remove('active');
             });
 
-            // 顯示選中的內容區塊
             const targetSection = document.getElementById(contentId);
             if (targetSection) {
                 targetSection.classList.add('active');
             } else {
-                // 如果找不到目標區塊，顯示第一個區塊
+
                 document.querySelector('.content-section').classList.add('active');
-                contentId = document.querySelector('.content-section').id; // 更新 contentId
+                contentId = document.querySelector('.content-section').id; 
             }
 
-
-            // 更新選中的導航欄連結 (下拉菜單中的)
             const navLink = document.querySelector(`.dropdown-menu a[onclick*="'${contentId}'"]`);
 
-            // 移除所有下拉菜單連結的 active class
             document.querySelectorAll('.dropdown-menu a').forEach(link => link.classList.remove('active'));
 
             if (navLink) {
                 navLink.classList.add('active');
             }
 
-            // 阻止默認的錨點行為 (如果事件存在)
             if (event && event.preventDefault) event.preventDefault();
 
-            // 修改網址的hash值 (如果 contentId 有效)
             if (document.getElementById(contentId)) {
                  window.location.hash = contentId;
             }
         }
 
-        // 頁面載入時根據網址的hash值切換分頁
         window.addEventListener('load', () => {
             const hash = window.location.hash.substring(1);
             const defaultSectionId = document.querySelector('.content-section').id;
-            // 確保 hash 對應的元素存在，否則使用默認 ID
+
             const targetId = hash && document.getElementById(hash) ? hash : defaultSectionId;
             showContent(targetId);
-            // 如果 URL 沒有 hash，且默認分頁不是第一個，則更新 hash
+
             if (!hash && targetId !== defaultSectionId) {
                  window.location.hash = targetId;
             }
         });
 
-        // 處理瀏覽器歷史記錄變化 (前進/後退按鈕)
         window.addEventListener('popstate', () => {
             const hash = window.location.hash.substring(1);
              const defaultSectionId = document.querySelector('.content-section').id;
@@ -1864,83 +1831,73 @@
             showContent(targetId);
         });
 
-        // Theme toggle functionality
         const themeToggle = document.getElementById('theme-toggle');
         const root = document.documentElement;
 
-        // 檢查本地存儲中是否有主題設置
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark') {
             root.setAttribute('data-theme', 'dark');
-            themeToggle.textContent = '🌜'; // 深色模式顯示月亮
+            themeToggle.textContent = '🌜'; 
         } else {
-             root.setAttribute('data-theme', 'light'); // 默認為淺色
-             themeToggle.textContent = '🌞'; // 淺色模式顯示太陽
+             root.setAttribute('data-theme', 'light'); 
+             themeToggle.textContent = '🌞'; 
         }
-
 
         themeToggle.addEventListener('click', () => {
             const currentTheme = root.getAttribute('data-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
 
             root.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme); // 保存主題到本地存儲
-            themeToggle.textContent = newTheme === 'dark' ? '🌜' : '🌞'; // 更新按鈕圖標
+            localStorage.setItem('theme', newTheme); 
+            themeToggle.textContent = newTheme === 'dark' ? '🌜' : '🌞'; 
         });
 
-        // Navbar scroll behavior - 滾動時隱藏/顯示導航欄
         let lastScrollTop = 0;
         const navbar = document.querySelector('.navbar');
 
         window.addEventListener('scroll', () => {
             const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-            if (currentScroll > lastScrollTop && currentScroll > navbar.offsetHeight) { // 向下滾動且滾動距離超過導航欄高度
-                navbar.style.top = '-80px'; // 隱藏導航欄 (向上移出視窗)
-            } else { // 向上滾動或滾動到頂部
-                navbar.style.top = '0'; // 顯示導航欄
+            if (currentScroll > lastScrollTop && currentScroll > navbar.offsetHeight) { 
+                navbar.style.top = '-80px'; 
+            } else { 
+                navbar.style.top = '0'; 
             }
-            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // 更新上次滾動位置
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; 
         }, false);
 
-        // Lightbox 功能
         const lightbox = document.querySelector('.lightbox');
         const lightboxImg = lightbox.querySelector('img');
         const closeBtn = lightbox.querySelector('.close-lightbox');
 
-        // 為所有內容區塊中的圖片添加點擊事件監聽器
         document.querySelectorAll('.container img').forEach(img => {
             img.addEventListener('click', () => {
-                lightboxImg.src = img.src; // 設置 Lightbox 中的圖片來源
-                lightboxImg.alt = img.alt; // 設置 Lightbox 中的圖片替代文字
-                lightbox.classList.add('active'); // 顯示 Lightbox
-                document.body.style.overflow = 'hidden'; // 禁止背景滾動
+                lightboxImg.src = img.src; 
+                lightboxImg.alt = img.alt; 
+                lightbox.classList.add('active'); 
+                document.body.style.overflow = 'hidden'; 
             });
         });
 
-        // 關閉按鈕事件監聽器
         closeBtn.addEventListener('click', () => {
             closeLightbox();
         });
 
-        // 點擊 Lightbox 背景關閉
         lightbox.addEventListener('click', (e) => {
-            // 確保點擊的是背景本身，而不是圖片或按鈕
+
             if (e.target === lightbox) {
                 closeLightbox();
             }
         });
 
-        // 按下 ESC 鍵關閉 Lightbox
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && lightbox.classList.contains('active')) {
                 closeLightbox();
             }
         });
 
-        // 關閉 Lightbox 的函數
         function closeLightbox() {
-            lightbox.classList.remove('active'); // 隱藏 Lightbox
-            document.body.style.overflow = ''; // 恢復背景滾動
+            lightbox.classList.remove('active'); 
+            document.body.style.overflow = ''; 
         }
     </script>
 </body>
