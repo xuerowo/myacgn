@@ -12,8 +12,8 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            touch-action: manipulation; /* 優化觸摸體驗，避免縮放和雙擊問題 */
-            -webkit-user-select: none;  /* 全局防止文字選取 */
+            touch-action: manipulation; 
+            -webkit-user-select: none;  
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
@@ -28,7 +28,7 @@
             width: 100vw;
             background-color: #1a1a2e;
             color: #fff;
-            overflow: hidden; /* 防止滾動 */
+            overflow: hidden; 
         }
         
         .game-container {
@@ -40,8 +40,7 @@
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        
-        /* 首頁樣式 */
+
         .home-screen {
             position: absolute;
             top: 0;
@@ -140,8 +139,7 @@
             color: rgba(255,255,255,0.6);
             margin-top: 20px;
         }
-        
-        /* 遊戲說明畫面 */
+
         .instructions-screen {
             position: absolute;
             top: 0;
@@ -207,8 +205,7 @@
             gap: 15px;
             margin-top: 15px;
         }
-        
-        /* 靶子樣式 */
+
         .target {
             position: absolute;
             width: 100px;
@@ -216,7 +213,7 @@
             cursor: crosshair;
             display: none;
             transition: transform 0.2s ease;
-            touch-action: none; /* 禁止移動設備上的觸摸操作 */
+            touch-action: none; 
         }
         
         .target.circle-target {
@@ -295,8 +292,7 @@
         .leg-right {
             right: 25px;
         }
-        
-        /* 信息面板 */
+
         .info-panel {
             position: absolute;
             top: 0;
@@ -436,14 +432,13 @@
             margin-bottom: 20px;
             text-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
-        
-        /* 設置面板 */
+
         .settings-panel {
             position: absolute;
             top: 60px;
             right: -300px;
             width: 280px;
-            max-height: 80vh; /* 設置最大高度為視窗高度的80% */
+            max-height: 80vh; 
             background: linear-gradient(135deg, rgba(22, 33, 62, 0.95), rgba(15, 52, 96, 0.95));
             padding: 20px;
             border-radius: 10px;
@@ -451,12 +446,11 @@
             box-shadow: 0 0 20px rgba(0,0,0,0.5);
             transition: right 0.4s ease;
             border: 1px solid rgba(255,255,255,0.1);
-            overflow-y: auto; /* 添加垂直滾動 */
-            scrollbar-width: thin; /* Firefox */
-            scrollbar-color: rgba(255,255,255,0.3) rgba(0,0,0,0.2); /* Firefox */
+            overflow-y: auto; 
+            scrollbar-width: thin; 
+            scrollbar-color: rgba(255,255,255,0.3) rgba(0,0,0,0.2); 
         }
-        
-        /* WebKit瀏覽器的滾動條樣式 */
+
         .settings-panel::-webkit-scrollbar {
             width: 6px;
         }
@@ -478,8 +472,7 @@
         .settings-panel.show-settings {
             right: 10px;
         }
-        
-        /* 設定按鈕重新設計 - 改為只出現在首頁右上角 */
+
         .settings-toggle {
             position: absolute;
             top: 25px;
@@ -540,8 +533,7 @@
             background: linear-gradient(135deg, #4895ef, #3f37c9);
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
-        
-        /* 移動方式按鈕樣式 */
+
         .move-type-buttons {
             display: flex;
             gap: 8px;
@@ -551,9 +543,9 @@
             flex: 1;
             padding: 8px 5px;
             font-size: 14px;
-            background: rgba(128,128,128,0.3); /* 灰色背景 */
+            background: rgba(128,128,128,0.3); 
             border: 1px solid rgba(255,255,255,0.2);
-            color: rgba(255,255,255,0.6); /* 灰色文字 */
+            color: rgba(255,255,255,0.6); 
             transition: all 0.3s ease;
             cursor: pointer;
         }
@@ -561,19 +553,18 @@
         .move-button.active {
             background: linear-gradient(135deg, #4895ef, #3f37c9);
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            color: white; /* 恢復白色文字 */
+            color: white; 
         }
         
         .move-button:hover {
-            background: rgba(128,128,128,0.5); /* 灰色背景，但略微亮一些 */
+            background: rgba(128,128,128,0.5); 
         }
         
         .move-button.active:hover {
             background: linear-gradient(135deg, #5ba3f0, #4361ee);
             transform: translateY(-2px);
         }
-        
-        /* 視覺特效 */
+
         .bullet-hole {
             position: absolute;
             width: 12px;
@@ -619,8 +610,7 @@
             40%, 60% { transform: translate(1px, 1px); }
             50% { transform: translate(-1px, -1px); }
         }
-        
-        /* 倒數計時 */
+
         .countdown {
             position: absolute;
             top: 50%;
@@ -644,8 +634,7 @@
             50% { transform: translate(-50%, -50%) scale(1.2); }
             100% { transform: translate(-50%, -50%) scale(1); }
         }
-        
-        /* 飄字效果 */
+
         .floating-text {
             position: absolute;
             color: white;
@@ -678,8 +667,7 @@
             0% { transform: translate(-50%, -50%); opacity: 1; }
             100% { transform: translate(-50%, -100px); opacity: 0; }
         }
-        
-        /* 時間警告 */
+
         .time-warning {
             animation: pulse-warning 1s infinite;
             color: #ff3333 !important;
@@ -690,8 +678,7 @@
             50% { transform: scale(1.2); }
             100% { transform: scale(1); }
         }
-        
-        /* 新紀錄動畫 */
+
         .new-record {
             position: absolute;
             top: 20px;
@@ -712,8 +699,7 @@
             40% { transform: translateX(-50%) translateY(-20px); }
             60% { transform: translateX(-50%) translateY(-10px); }
         }
-        
-        /* 淡入淡出效果 */
+
         .fade-in {
             animation: fadeIn 0.5s ease-in-out forwards;
         }
@@ -722,8 +708,7 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        
-        /* 滑入效果 */
+
         .slide-in {
             animation: slideIn 0.5s ease-out forwards;
         }
@@ -732,8 +717,7 @@
             from { transform: translateY(20px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
-        
-        /* 粒子效果 */
+
         .particle {
             position: absolute;
             background-color: #fff;
@@ -741,8 +725,7 @@
             pointer-events: none;
             z-index: 100;
         }
-        
-        /* 彈藥和連擊顯示 */
+
         .combo-display {
             position: absolute;
             right: 15px;
@@ -763,17 +746,15 @@
             font-weight: bold;
             color: #ffcc00;
         }
-        
-        /* 設定游標為瞄準樣式 */
+
         .game-container {
             cursor: crosshair;
         }
-        
-        /* 歷史紀錄按鈕 */
+
         .history-toggle {
             position: absolute;
             top: 25px;
-            right: 130px; /* 放在設定按鈕左側 */
+            right: 130px; 
             background: linear-gradient(135deg, #f72585, #b5179e);
             color: white;
             border: none;
@@ -802,8 +783,7 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 12px rgba(0,0,0,0.4);
         }
-        
-        /* 歷史紀錄面板 */
+
         .history-panel {
             position: fixed;
             top: 60px;
@@ -818,11 +798,10 @@
             border: 1px solid rgba(255,255,255,0.1);
             max-height: 80vh;
             overflow-y: auto;
-            scrollbar-width: thin; /* Firefox */
-            scrollbar-color: rgba(255,255,255,0.3) rgba(0,0,0,0.2); /* Firefox */
+            scrollbar-width: thin; 
+            scrollbar-color: rgba(255,255,255,0.3) rgba(0,0,0,0.2); 
         }
-        
-        /* WebKit瀏覽器的滾動條樣式 */
+
         .history-panel::-webkit-scrollbar {
             width: 6px;
         }
@@ -917,8 +896,7 @@
             font-size: 14px;
             color: #4cc9f0;
         }
-        
-        /* 新增排行榜樣式 */
+
         .record-rank {
             background-color: #f72585;
             color: white;
@@ -963,8 +941,7 @@
             background: linear-gradient(135deg, #f94498, #c429b2);
             transform: translateY(-2px);
         }
-        
-        /* 歷史紀錄區域樣式 */
+
         .history-section {
             width: 80%;
             max-width: 600px;
@@ -1036,8 +1013,7 @@
             padding: 20px 0;
             font-style: italic;
         }
-        
-        /* 禁止所有元素的文字選取 */
+
         html, body, div, span, h1, h2, h3, p, a, button, input, label,
         .game-container, .target, .head, .body, .home-screen, .start-screen,
         .end-screen, .instructions-screen, .info-panel, .settings-panel,
@@ -1051,8 +1027,7 @@
             -webkit-user-drag: none;
             -webkit-tap-highlight-color: transparent;
         }
-        
-        /* 顏色選擇器樣式 */
+
         .color-options {
             display: flex;
             flex-wrap: wrap;
@@ -1078,8 +1053,7 @@
             border: 3px solid #fff;
             box-shadow: 0 0 10px rgba(255,255,255,0.5);
         }
-        
-        /* 自定義顏色輸入 */
+
         .color-custom {
             display: flex;
             align-items: center;
@@ -1121,8 +1095,7 @@
             background: linear-gradient(135deg, #4895ef, #3f37c9);
             transform: translateY(-2px);
         }
-        
-        /* 暫停畫面 */
+
         .pause-overlay {
             position: absolute;
             top: 0;
@@ -1177,8 +1150,7 @@
             border: 3px solid #fff;
             box-shadow: 0 0 10px rgba(255,255,255,0.5);
         }
-        
-        /* 響應式設計 */
+
         @media screen and (max-width: 768px) {
             .game-title h1 {
                 font-size: 40px;
@@ -1203,8 +1175,7 @@
                 max-width: 300px;
             }
         }
-        
-        /* 確保最小高度 */
+
         @media screen and (max-height: 600px) {
             .game-menu {
                 gap: 8px;
@@ -1222,7 +1193,7 @@
 </head>
 <body>
     <div class="game-container" id="game-container">
-        <!-- 信息面板 -->
+        
         <div class="info-panel">
             <div class="time"><i class="fas fa-clock"></i>時間: <span id="time-left">60</span></div>
             <div class="controls">
@@ -1231,13 +1202,11 @@
             </div>
             <div class="score"><i class="fas fa-star"></i>分數: <span id="score">0</span></div>
         </div>
-        
-        <!-- 連擊顯示 -->
+
         <div class="combo-display" id="combo-display" style="display: none;">
             連擊: <span id="combo-count" class="combo-count">0</span>
         </div>
-        
-        <!-- 人形靶子 -->
+
         <div class="target" id="target">
             <div class="head" id="head"></div>
             <div class="body"></div>
@@ -1246,13 +1215,11 @@
             <div class="leg-left"></div>
             <div class="leg-right"></div>
         </div>
-        
-        <!-- 首頁 -->
+
         <div class="home-screen" id="home-screen">
-            <!-- 設置按鈕 - 現在放置在首頁內 -->
-            <button id="settings-button" class="settings-toggle">設定</button>
             
-            <!-- 歷史記錄按鈕 -->
+            <button id="settings-button" class="settings-toggle">設定</button>
+
             <button id="history-button" class="history-toggle">歷史紀錄</button>
             
             <div class="game-title">
@@ -1282,8 +1249,7 @@
                 射擊挑戰遊戲 &copy; 2025
             </div>
         </div>
-        
-        <!-- 開始畫面 -->
+
         <div class="start-screen" id="start-screen">
             <h1>射擊挑戰遊戲</h1>
             <p>射擊人形靶子的<strong>頭部</strong>獲得分數，<strong>沒射中會扣1分</strong>，一分鐘內看看你能獲得多少分！</p>
@@ -1292,8 +1258,7 @@
                 <button id="back-to-home">返回首頁</button>
             </div>
         </div>
-        
-        <!-- 遊戲說明畫面 -->
+
         <div class="instructions-screen" id="instructions-screen">
             <h1>遊戲說明</h1>
             <div class="instructions-content">
@@ -1335,8 +1300,7 @@
             </div>
             <button id="back-from-instructions">返回首頁</button>
         </div>
-        
-        <!-- 結束畫面 -->
+
         <div class="end-screen" id="end-screen">
             <h1>遊戲結束！</h1>
             <div class="score-display">你的分數: <span id="final-score">0</span></div>
@@ -1367,8 +1331,7 @@
                 <button id="home-button">返回首頁</button>
             </div>
         </div>
-        
-        <!-- 設置面板 -->
+
         <div class="settings-panel" id="settings-panel">
             <h2>遊戲設定</h2>
             <div class="setting-item">
@@ -1438,18 +1401,16 @@
             </div>
             <button id="close-settings">關閉</button>
         </div>
-        
-        <!-- 歷史紀錄面板 -->
+
         <div class="history-panel" id="history-panel">
             <h2>遊戲歷史紀錄</h2>
             <div class="history-records" id="history-records">
-                <!-- 記錄項目將在這裡動態添加 -->
+                
                 <div class="no-records">尚無遊戲紀錄</div>
             </div>
             <button id="close-history">關閉</button>
         </div>
-        
-        <!-- 暫停覆蓋層 -->
+
         <div class="pause-overlay" id="pause-overlay">
             <h2>遊戲暫停</h2>
             <div class="pause-controls">
@@ -1457,11 +1418,7 @@
                 <button id="pause-end-game">結束遊戲</button>
             </div>
         </div>
-        
-        <!-- 設置按鈕 - 移到首頁內部 -->
-        <!--<button id="settings-button" class="settings-toggle">設定</button>-->
-        
-        <!-- 音效元素 -->
+
         <audio id="sound-shot" src="sounds/shot.mp3" preload="auto"></audio>
         <audio id="sound-hit" src="sounds/hit.mp3" preload="auto"></audio>
         <audio id="sound-miss" src="sounds/miss.mp3" preload="auto"></audio>
@@ -1472,7 +1429,7 @@
     </div>
     
     <script>
-        // 獲取元素
+
         const homeScreen = document.getElementById('home-screen');
         const startScreen = document.getElementById('start-screen');
         const endScreen = document.getElementById('end-screen');
@@ -1497,92 +1454,78 @@
         const accuracyDisplay = document.getElementById('accuracy');
         const bonusPointsDisplay = document.getElementById('bonus-points');
         const crosshair = document.getElementById('crosshair');
-        
-        // 使用函數來獲取靶子元素，而不是嘗試重新賦值給常量
+
         function getTarget() {
             return document.getElementById('target');
         }
-        
-        // 音效系統
+
         const sounds = {};
-        
-        // 遊戲變數
+
         let score = 0;
         let timeLeft = 60;
         let gameInterval;
         let isPlaying = false;
-        let isPaused = false; // 新增暫停狀態變數
-        let gameMode = "human"; // 預設為人形模式，另一個選項是"target"
-        let highScore = 0; // 記錄最高分
-        let combo = 0; // 連擊
-        let maxCombo = 0; // 最高連擊
-        let shotsFired = 0; // 射擊總數
-        let shotsHit = 0; // 命中數
-        let bonusPoints = 0; // 獎勵分數
-        let lastHitTime = 0; // 上次命中時間
-        let moveType = "transition"; // 靶子移動方式：transition(漸變) 或 instant(瞬間)
-        let gameHistory = []; // 遊戲歷史紀錄
-        
-        // 顏色設定
-        let bgColor = "#16213e"; // 默認背景顏色
-        let targetColor = "#4d96ff"; // 默認標靶顏色
-        
-        // 難度系統
+        let isPaused = false; 
+        let gameMode = "human"; 
+        let highScore = 0; 
+        let combo = 0; 
+        let maxCombo = 0; 
+        let shotsFired = 0; 
+        let shotsHit = 0; 
+        let bonusPoints = 0; 
+        let lastHitTime = 0; 
+        let moveType = "transition"; 
+        let gameHistory = []; 
+
+        let bgColor = "#16213e"; 
+        let targetColor = "#4d96ff"; 
+
         const difficulties = {
             easy: { targetSpeed: 1000, targetSize: 1.2 },
             medium: { targetSpeed: 700, targetSize: 1.0 },
             hard: { targetSpeed: 400, targetSize: 0.8 }
         };
         
-        let currentDifficulty = 'medium'; // 預設難度
-        
-        // 音效設置
+        let currentDifficulty = 'medium'; 
+
         const soundSettings = {
             volume: 0.7,
             muted: false
         };
-        
-        // 初始化音效
+
         function initSounds() {
             try {
-                // 記錄初始化開始
+
                 console.log('開始初始化音效...');
-                
-                // 獲取所有音頻元素
+
             sounds.shot = document.getElementById('sound-shot');
             sounds.hit = document.getElementById('sound-hit');
             sounds.miss = document.getElementById('sound-miss');
             sounds.gameStart = document.getElementById('sound-game-start');
             sounds.gameEnd = document.getElementById('sound-game-end');
             sounds.bgm = document.getElementById('sound-bgm');
-                
-                // 檢查每個音效元素
+
                 Object.entries(sounds).forEach(([key, sound]) => {
                     if (!sound) {
                         console.error(`找不到音效元素 ${key}`);
                     } else {
                         console.log(`音效 ${key} 初始化成功, 路徑: ${sound.src}`);
-                        
-                        // 主動加載音效
+
                         sound.load();
-            
-            // 設置初始音量
+
                 sound.volume = soundSettings.volume;
-                        
-                        // 添加錯誤處理
+
                         sound.onerror = function(e) {
                             console.error(`音效 ${key} 加載失敗:`, e);
                             console.error(`嘗試載入的路徑: ${sound.src}`);
                         };
-                        
-                        // 添加加載成功處理
+
                         sound.onloadeddata = function() {
                             console.log(`音效 ${key} 加載成功`);
                         };
                     }
                 });
-                
-                // 嘗試播放一個靜音的音頻來激活音頻系統
+
                 try {
                     const silentSound = new Audio("data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAASAAAeMwAUFBQUFCIiIiIiIjAwMDAwPj4+Pj4+TExMTExZWVlZWVlnZ2dnZ3V1dXV1dYODg4ODkZGRkZGRn5+fn5+frKysrKy6urq6urqIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIgAP/7UMQAABTBMi8PQZC8DpJ3h+DghVYGnP3N1dfWAAMDAyMECBAgAAGBgZGBAgQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//sQxCmAEhGNJ+gigGG2jab7IGaAAAAACQQghnhBBBCQQjgAAQQQSCCEEIIT//wQgghnhBBBCQQjgAAQQQSCCEEIIT//wQgghnhBBBCQQjgAAQQQSCCEEIIT//wQgghnhBBBCQQjgAAQQQSCCEEIIT//wQgghnhBBBCQQjgAAQQQSCCEEIIT//wQgghnhBBBCQQjg");
                     silentSound.volume = 0;
@@ -1598,20 +1541,17 @@
                 console.error('初始化音效時發生錯誤:', e);
             }
         }
-        
-        // 播放音效
+
         function playSound(soundName) {
-            // 先檢查聲音是否被靜音
+
             if (soundSettings.muted) {
                 console.log(`音效 ${soundName} 被靜音`);
                 return;
             }
-            
-            // 檢查聲音對象是否存在
+
             if (!sounds[soundName]) {
                 console.error(`音效 ${soundName} 不存在`);
-                
-                // 嘗試重新獲取音頻元素
+
                 const audioElement = document.getElementById(`sound-${soundName}`);
                 if (audioElement) {
                     console.log(`嘗試重新獲取音效元素 ${soundName}`);
@@ -1621,22 +1561,18 @@
                     return;
                 }
             }
-            
-            // 確保音頻元素已準備好
+
             if (sounds[soundName].readyState === 0) {
                 console.warn(`音效 ${soundName} 尚未加載完成，嘗試重新載入`);
                 sounds[soundName].load();
             }
-            
-            // 嘗試播放，並提供更詳細的錯誤處理
+
             try {
             sounds[soundName].currentTime = 0;
             sounds[soundName].volume = soundSettings.volume;
-                
-                // 使用 Promise API 播放音頻
+
                 const playPromise = sounds[soundName].play();
-                
-                // 現代瀏覽器返回 Promise
+
                 if (playPromise !== undefined) {
                     playPromise
                         .then(() => {
@@ -1644,12 +1580,10 @@
                         })
                         .catch(e => {
                             console.error(`播放音效 ${soundName} 失敗:`, e);
-                            
-                            // 如果是由於用戶交互限制，可以嘗試在下一次用戶交互時播放
+
                             if (e.name === 'NotAllowedError') {
                                 console.warn('播放音效需要用戶交互，將在下一次用戶交互時嘗試播放');
-                                
-                                // 在下一次點擊時嘗試再次播放
+
                                 const playOnClick = () => {
                                     sounds[soundName].play()
                                         .then(() => {
@@ -1667,8 +1601,7 @@
                 console.error(`嘗試播放音效 ${soundName} 時發生錯誤:`, e);
             }
         }
-        
-        // 音效測試函數
+
         function testSound(soundName) {
             const resultElement = document.getElementById('sound-test-result');
             resultElement.innerHTML = `嘗試播放 ${soundName} 音效...`;
@@ -1682,14 +1615,12 @@
                 
                 resultElement.innerHTML += `<br>音效元素找到: ${audioElement.id}`;
                 resultElement.innerHTML += `<br>音效檔案路徑: ${audioElement.src}`;
-                
-                // 檢查檔案是否能載入
+
                 const tempAudio = new Audio();
                 tempAudio.onloadeddata = function() {
                     resultElement.innerHTML += '<br>音效檔案載入成功！';
                     resultElement.innerHTML += '<br>嘗試播放...';
-                    
-                    // 嘗試播放
+
                     tempAudio.play()
                         .then(() => {
                             resultElement.innerHTML += '<br><span style="color: #4cc9f0;">播放成功！</span>';
@@ -1711,8 +1642,7 @@
                 resultElement.innerHTML += `<br><span style="color: #f72585;">錯誤: ${e.message}</span>`;
             }
         }
-        
-        // 音效測試面板功能
+
         document.addEventListener('DOMContentLoaded', function() {
             const openButton = document.getElementById('open-sound-test');
             const closeButton = document.getElementById('close-sound-test');
@@ -1751,8 +1681,7 @@
                 });
             }
         });
-        
-        // 初始化遊戲
+
         function initGame() {
             score = 0;
             timeLeft = 60;
@@ -1770,102 +1699,82 @@
             getTarget().style.display = 'none';
             isPlaying = false;
             clearInterval(gameInterval);
-            
-            // 更新最高分顯示
+
             highScoreDisplay.textContent = highScore;
-            
-            // 根據遊戲模式設置靶子
+
             setupTargetByMode();
-            
-            // 更新當前模式顯示
+
             currentModeDisplay.textContent = gameMode === "human" ? "人形靶子" : "靶心";
-            
-            // 更新移動方式顯示
+
             document.getElementById('current-move-type').textContent = moveType === 'transition' ? '漸變移動' : '瞬間移動';
-            
-            // 移除所有彈孔和特效
+
             document.querySelectorAll('.bullet-hole, .particle, .floating-text').forEach(el => {
                 el.remove();
             });
-            
-            // 重置時間警告樣式
+
             timeLeftDisplay.classList.remove('time-warning');
-            
-            // 確保游標為瞄準樣式
+
             gameContainer.style.cursor = 'crosshair';
-            
-            // 應用顏色設定
+
             setBgColor(bgColor);
             setTargetColor(targetColor);
         }
-        
-        // 顯示首頁
+
         function showHome() {
             homeScreen.style.display = 'flex';
             startScreen.style.display = 'none';
             endScreen.style.display = 'none';
             instructionsScreen.style.display = 'none';
             getTarget().style.display = 'none';
-            
-            // 添加動畫效果
+
             homeScreen.classList.add('fade-in');
             
             isPlaying = false;
             clearInterval(gameInterval);
-            
-            // 停止背景音樂
+
             if (sounds.bgm) {
                 sounds.bgm.pause();
                 sounds.bgm.currentTime = 0;
             }
-            
-            // 更新高分和當前模式顯示
+
             highScoreDisplay.textContent = highScore;
             currentModeDisplay.textContent = gameMode === "human" ? "人形靶子" : "靶心";
         }
-        
-        // 顯示開始畫面
+
         function showStartScreen() {
             homeScreen.style.display = 'none';
             startScreen.style.display = 'flex';
             endScreen.style.display = 'none';
             instructionsScreen.style.display = 'none';
             getTarget().style.display = 'none';
-            
-            // 關閉設定面板和歷史記錄面板
+
             document.getElementById('settings-panel').classList.remove('show-settings');
             document.getElementById('history-panel').classList.remove('show-history');
-            
-            // 添加動畫效果
+
             startScreen.classList.add('slide-in');
         }
-        
-        // 顯示說明畫面
+
         function showInstructions() {
             homeScreen.style.display = 'none';
             startScreen.style.display = 'none';
             endScreen.style.display = 'none';
             instructionsScreen.style.display = 'flex';
             getTarget().style.display = 'none';
-            
-            // 關閉設定面板和歷史記錄面板
+
             document.getElementById('settings-panel').classList.remove('show-settings');
             document.getElementById('history-panel').classList.remove('show-history');
-            
-            // 添加動畫效果
+
             instructionsScreen.classList.add('fade-in');
         }
-        
-        // 根據當前模式設置靶子
+
         function setupTargetByMode() {
-            // 獲取目標容器
+
             const targetElement = getTarget();
-            
-            // 清空目標容器
+
             targetElement.innerHTML = '';
             
             if (gameMode === "human") {
-                // 人形模式
+
                 targetElement.classList.remove('circle-target');
                 targetElement.innerHTML = `
                     <div class="head" id="head"></div>
@@ -1875,95 +1784,73 @@
                     <div class="leg-left"></div>
                     <div class="leg-right"></div>
                 `;
-                
-                // 更新說明文本
+
                 document.querySelector("#start-screen p").innerHTML = '射擊人形靶子的<strong>頭部</strong>獲得分數，一分鐘內看看你能獲得多少分！';
-                
-                // 為頭部添加射擊事件 - 使用mousedown而不是click
+
                 setTimeout(() => {
                     const head = document.getElementById('head');
                     if (head) {
-                        // 先移除可能存在的事件監聽器
+
                         head.removeEventListener('mousedown', handleHeadClick);
                         head.removeEventListener('touchstart', handleHeadTouchStart);
-                        
-                        // 添加防止拖曳和選取的屬性
+
                         head.setAttribute('draggable', 'false');
-                        
-                        // 添加新的事件監聽器
+
                         head.addEventListener('mousedown', handleHeadClick);
-                        // 為移動設備添加觸摸事件
+
                         head.addEventListener('touchstart', handleHeadTouchStart);
                     }
-                    
-                    // 應用標靶顏色
+
                     document.querySelectorAll('.head, .body, .arm-left, .arm-right, .leg-left, .leg-right').forEach(el => {
                         el.style.backgroundColor = targetColor;
                     });
                 }, 0);
-                
-                // 為靶子其他部位添加點擊事件
+
                 targetElement.addEventListener('mousedown', function(e) {
                     if (!isPlaying || isPaused || e.target.id === 'head') return;
-                    
-                    // 防止默認行為
+
                     e.preventDefault();
-                    
-                    // 增加射擊總數
+
                     shotsFired++;
-                    
-                    // 播放失敗音效
+
                     playSound('miss');
-                    
-                    // 創建彈孔效果
+
                     createBulletHole(e.clientX, e.clientY);
-                    
-                    // 點擊其他部位不計分，也不移動靶子
-                    // 添加視覺反饋
+
                     this.classList.add('missed');
                     setTimeout(() => {
                         this.classList.remove('missed');
                     }, 200);
-                    
-                    // 重置連擊
+
                     resetCombo();
-                    
-                    // 沒射到靶子頭部扣一分
+
                     if (score > 0) {
                         score--;
                         scoreDisplay.textContent = score;
                         showFloatingText('-1分', e.clientX, e.clientY, 'penalty-text');
                     }
                 });
-                
-                // 為移動設備添加觸摸事件
+
                 targetElement.addEventListener('touchstart', function(e) {
                     if (!isPlaying || isPaused || e.target.id === 'head') return;
-                    
-                    // 防止觸摸事件的默認行為和滾動
+
                     e.preventDefault();
                     
                     const touch = e.touches[0];
-                    
-                    // 增加射擊總數
+
                     shotsFired++;
-                    
-                    // 播放失敗音效
+
                     playSound('miss');
-                    
-                    // 創建彈孔效果
+
                     createBulletHole(touch.clientX, touch.clientY);
-                    
-                    // 添加視覺反饋
+
                     this.classList.add('missed');
                     setTimeout(() => {
                         this.classList.remove('missed');
                     }, 200);
-                    
-                    // 重置連擊
+
                     resetCombo();
-                    
-                    // 沒射到靶子頭部扣一分
+
                     if (score > 0) {
                         score--;
                         scoreDisplay.textContent = score;
@@ -1971,113 +1858,90 @@
                     }
                 });
             } else {
-                // 靶心模式
-                // 先移除舊的元素
+
                 const oldTarget = targetElement;
                 const newTarget = oldTarget.cloneNode(false);
                 oldTarget.parentNode.replaceChild(newTarget, oldTarget);
-                
-                // 設置靶心樣式
+
                 newTarget.classList.add('circle-target');
-                
-                // 添加防止拖曳和選取的屬性
+
                 newTarget.setAttribute('draggable', 'false');
-                
-                // 更新說明文本
+
                 document.querySelector("#start-screen p").innerHTML = '點擊靶心獲得分數，一分鐘內看看你能獲得多少分！';
-                
-                // 應用靶心顏色
+
                 newTarget.style.background = `radial-gradient(circle, white 10%, ${targetColor} 10%, ${targetColor} 30%, white 30%, white 50%, ${adjustColor(targetColor, -20)} 50%, ${adjustColor(targetColor, -20)} 70%, white 70%)`;
-                
-                // 為整個靶心添加射擊事件 - 使用mousedown而不是click
+
                 newTarget.addEventListener('mousedown', handleTargetClick);
-                
-                // 為移動設備添加觸摸事件
+
                 newTarget.addEventListener('touchstart', handleTargetTouchStart);
             }
-            
-            // 應用難度設置
+
             setDifficulty(currentDifficulty);
         }
-        
-        // 設置難度
+
         function setDifficulty(level) {
             currentDifficulty = level;
-            
-            // 更新目標大小
+
             const scale = difficulties[level].targetSize;
             const targetElement = getTarget();
             if (targetElement) {
                 targetElement.style.transform = `scale(${scale})`;
             }
         }
-        
-        // 更新難度按鈕
+
         function updateDifficultyButtons(activeDifficulty) {
             document.querySelectorAll('.diff-button').forEach(button => {
                 button.classList.remove('active');
             });
             document.getElementById(`${activeDifficulty}-button`).classList.add('active');
         }
-        
-        // 切換遊戲模式
+
         function toggleGameMode() {
-            // 如果遊戲正在進行，先結束當前遊戲
+
             if (isPlaying) {
                 endGame();
-                
-                // 修復模式切換bug：強制重置遊戲狀態
+
                 setTimeout(() => {
-                    // 切換模式
+
                     gameMode = gameMode === "human" ? "target" : "human";
-                    
-                    // 更新切換按鈕文本
+
                     document.getElementById('toggle-mode-button').textContent = 
                         gameMode === "human" ? "切換至靶心模式" : "切換至人形模式";
                     
                     homeToggleModeButton.textContent = 
                         gameMode === "human" ? "切換至靶心模式" : "切換至人形模式";
-                        
-                    // 更新當前模式顯示
+
                     currentModeDisplay.textContent = gameMode === "human" ? "人形靶子" : "靶心";
-                    
-                    // 重新設置靶子
+
                     setupTargetByMode();
-                    
-                    // 顯示開始畫面
+
                     showStartScreen();
-                }, 300); // 添加延遲以確保遊戲正確結束
+                }, 300); 
                 
                 return;
             }
-            
-            // 若不在遊戲中，直接切換模式
+
             gameMode = gameMode === "human" ? "target" : "human";
-            
-            // 更新切換按鈕文本
+
             document.getElementById('toggle-mode-button').textContent = 
                 gameMode === "human" ? "切換至靶心模式" : "切換至人形模式";
             
             homeToggleModeButton.textContent = 
                 gameMode === "human" ? "切換至靶心模式" : "切換至人形模式";
-                
-            // 更新當前模式顯示
+
             currentModeDisplay.textContent = gameMode === "human" ? "人形靶子" : "靶心";
-            
-            // 重新設置靶子
+
             setupTargetByMode();
-            
-            // 判斷當前顯示的是哪個畫面
+
             if (homeScreen.style.display === 'flex') {
-                // 如果是首頁，保持在首頁
+
                 showHome();
             } else {
-                // 否則顯示開始畫面
+
                 showStartScreen();
             }
         }
-        
-        // 創建倒數計時
+
         function showCountdown(callback) {
             const countdown = document.createElement('div');
             countdown.classList.add('countdown');
@@ -2091,7 +1955,7 @@
                 if (count > 0) {
                     countdown.textContent = count;
                     countdown.classList.add('countdown-pulse');
-                    // 播放倒數音效
+
                     playSound('gameStart');
                     setTimeout(() => {
                         countdown.classList.remove('countdown-pulse');
@@ -2106,12 +1970,10 @@
                 }
             }, 1000);
         }
-        
-        // 開始遊戲
+
         function startGame() {
             if (isPlaying) return;
-            
-            // 關閉設定面板和歷史記錄面板
+
             document.getElementById('settings-panel').classList.remove('show-settings');
             document.getElementById('history-panel').classList.remove('show-history');
             
@@ -2120,27 +1982,21 @@
             startScreen.style.display = 'none';
             endScreen.style.display = 'none';
             instructionsScreen.style.display = 'none';
-            
-            // 顯示3秒倒數計時
+
             showCountdown(() => {
                 getTarget().style.display = 'block';
                 isPlaying = true;
-                
-                // 播放開始音效
+
                 playSound('gameStart');
-                
-                // 啟動背景音樂
+
                 playSound('bgm');
-                
-                // 隨機放置靶子
+
                 placeTargetRandomly();
-                
-                // 開始計時器
+
                 gameInterval = setInterval(() => {
                     timeLeft--;
                     timeLeftDisplay.textContent = timeLeft;
-                    
-                    // 當剩餘時間少於10秒時，添加警告效果
+
                     if (timeLeft <= 10) {
                         timeLeftDisplay.classList.add('time-warning');
                     }
@@ -2151,62 +2007,49 @@
                 }, 1000);
             });
         }
-        
-        // 結束遊戲
+
         function endGame() {
             isPlaying = false;
-            isPaused = false; // 重置暫停狀態
+            isPaused = false; 
             clearInterval(gameInterval);
             getTarget().style.display = 'none';
-            
-            // 隱藏暫停覆蓋層
+
             document.getElementById('pause-overlay').style.display = 'none';
-            
-            // 停止背景音樂
+
             if (sounds.bgm) {
                 sounds.bgm.pause();
                 sounds.bgm.currentTime = 0;
             }
-            
-            // 播放結束音效
+
             playSound('gameEnd');
-            
-            // 隱藏連擊顯示
+
             comboDisplay.style.display = 'none';
-            
-            // 添加結束動畫
+
             endScreen.classList.add('fade-in');
             endScreen.style.display = 'flex';
-            
-            // 更新結束畫面數據
+
             finalScoreDisplay.textContent = score;
             maxComboDisplay.textContent = maxCombo;
             accuracyDisplay.textContent = shotsFired > 0 ? Math.round((shotsHit / shotsFired) * 100) + '%' : '0%';
             bonusPointsDisplay.textContent = bonusPoints;
-            
-            // 更新命中次數和未命中次數
+
             document.getElementById('shots-hit').textContent = shotsHit;
             document.getElementById('shots-missed').textContent = shotsFired - shotsHit;
-            
-            // 更新最高分
+
             if (score > highScore) {
                 highScore = score;
                 highScoreDisplay.textContent = highScore;
-                
-                // 添加新紀錄動畫
+
                 showNewRecord();
             }
-            
-            // 添加遊戲歷史紀錄
+
             addGameRecord();
-            
-            // 重置時間警告樣式
+
             timeLeftDisplay.classList.remove('time-warning');
         }
-        
-        // 添加遊戲紀錄
+
         function addGameRecord() {
-            // 創建新記錄
+
             const newRecord = {
                 date: new Date().toLocaleString(),
                 score: score,
@@ -2214,23 +2057,18 @@
                 moveType: moveType === "transition" ? "漸變移動" : "瞬間移動",
                 accuracy: shotsFired > 0 ? Math.round((shotsHit / shotsFired) * 100) : 0
             };
-            
-            // 將記錄添加到數組開頭（最新的在前面）
+
             gameHistory.unshift(newRecord);
-            
-            // 限制歷史記錄長度為10
+
             if (gameHistory.length > 10) {
                 gameHistory = gameHistory.slice(0, 10);
             }
-            
-            // 保存到本地存儲
+
             saveGameHistory();
-            
-            // 更新顯示
+
             updateHistoryDisplay();
         }
-        
-        // 保存遊戲歷史到localStorage
+
         function saveGameHistory() {
             try {
                 localStorage.setItem('shootingGameHistory', JSON.stringify(gameHistory));
@@ -2238,8 +2076,7 @@
                 console.error('保存遊戲歷史失敗:', e);
             }
         }
-        
-        // 載入遊戲歷史
+
         function loadGameHistory() {
             try {
                 const savedHistory = localStorage.getItem('shootingGameHistory');
@@ -2252,8 +2089,7 @@
                 gameHistory = [];
             }
         }
-        
-        // 更新歷史紀錄顯示（排行榜形式）
+
         function updateHistoryDisplay() {
             const historyRecords = document.getElementById('history-records');
             
@@ -2261,34 +2097,27 @@
                 console.error('找不到history-records元素');
                 return;
             }
-            
-            // 首先清空現有內容
+
             historyRecords.innerHTML = '';
-            
-            // 如果沒有記錄，顯示提示訊息
+
             if (gameHistory.length === 0) {
                 historyRecords.innerHTML = '<div class="no-records">尚無遊戲紀錄</div>';
                 return;
             }
-            
-            // 排序歷史記錄（按分數降序）
+
             const sortedHistory = [...gameHistory].sort((a, b) => b.score - a.score);
-            
-            // 更新歷史記錄面板標題
+
             document.querySelector('.history-panel h2').textContent = '遊戲排行榜';
-            
-            // 生成HTML
+
             sortedHistory.forEach((record, index) => {
                 const recordItem = document.createElement('div');
                 recordItem.className = 'record-item';
-                
-                // 排名
+
                 const rankSpan = document.createElement('div');
                 rankSpan.className = 'record-rank';
-                if (index < 3) rankSpan.classList.add('top-rank'); // 前三名特殊樣式
+                if (index < 3) rankSpan.classList.add('top-rank'); 
                 rankSpan.textContent = index + 1;
-                
-                // 記錄信息
+
                 const infoDiv = document.createElement('div');
                 infoDiv.className = 'record-info';
                 
@@ -2307,8 +2136,7 @@
                 const accuracyDiv = document.createElement('div');
                 accuracyDiv.className = 'record-accuracy';
                 accuracyDiv.textContent = `命中率: ${record.accuracy}%`;
-                
-                // 組合所有元素
+
                 infoDiv.appendChild(dateDiv);
                 infoDiv.appendChild(modeDiv);
                 infoDiv.appendChild(scoreDiv);
@@ -2320,39 +2148,31 @@
                 historyRecords.appendChild(recordItem);
             });
         }
-        
-        // 暫停遊戲
+
         function pauseGame() {
             if (!isPlaying || isPaused) return;
             
             isPaused = true;
             clearInterval(gameInterval);
-            
-            // 顯示暫停覆蓋層
+
             document.getElementById('pause-overlay').style.display = 'flex';
-            
-            // 更新暫停按鈕文字
+
             document.getElementById('pause-game-button').textContent = '繼續';
         }
-        
-        // 繼續遊戲
+
         function resumeGame() {
             if (!isPlaying || !isPaused) return;
             
             isPaused = false;
-            
-            // 隱藏暫停覆蓋層
+
             document.getElementById('pause-overlay').style.display = 'none';
-            
-            // 更新暫停按鈕文字
+
             document.getElementById('pause-game-button').textContent = '暫停';
-            
-            // 重新啟動計時器
+
             gameInterval = setInterval(() => {
                 timeLeft--;
                 timeLeftDisplay.textContent = timeLeft;
-                
-                // 當剩餘時間少於10秒時，添加警告效果
+
                 if (timeLeft <= 10) {
                     timeLeftDisplay.classList.add('time-warning');
                 }
@@ -2362,8 +2182,7 @@
                 }
             }, 1000);
         }
-        
-        // 暫停/繼續按鈕點擊
+
         document.getElementById('pause-game-button').addEventListener('click', function() {
             if (isPaused) {
                 resumeGame();
@@ -2371,76 +2190,61 @@
                 pauseGame();
             }
         });
-        
-        // 覆蓋層繼續按鈕點擊
+
         document.getElementById('resume-button').addEventListener('click', resumeGame);
-        
-        // 覆蓋層結束遊戲按鈕點擊
+
         document.getElementById('pause-end-game').addEventListener('click', endGame);
-        
-        // 歷史紀錄按鈕點擊
+
         document.getElementById('history-button').addEventListener('click', function() {
-            // 先關閉設定面板（如果打開的話）
+
             document.getElementById('settings-panel').classList.remove('show-settings');
-            
-            // 切換歷史記錄面板顯示狀態
+
             document.getElementById('history-panel').classList.toggle('show-history');
-            
-            // 更新歷史記錄顯示
+
             updateHistoryDisplay();
         });
-        
-        // 關閉歷史記錄按鈕點擊
+
         document.getElementById('close-history').addEventListener('click', function() {
             document.getElementById('history-panel').classList.remove('show-history');
         });
-        
-        // 設置按鈕點擊
+
         document.getElementById('settings-button').addEventListener('click', function() {
             const settingsPanel = document.getElementById('settings-panel');
             settingsPanel.classList.toggle('show-settings');
-            
-            // 如果首次打開設定面板，確保初始化移動方式按鈕和顏色選擇器
+
             if (settingsPanel.classList.contains('show-settings')) {
                 setupMoveTypeButtons();
                 setupColorOptions();
             }
         });
-        
-        // 設置背景顏色
+
         function setBgColor(color) {
             bgColor = color;
-            
-            // 應用顏色
+
             document.querySelector('.game-container').style.background = `linear-gradient(135deg, ${color}, ${adjustColor(color, -20)})`;
-            
-            // 保存設置
+
             saveColorSettings();
         }
-        
-        // 設置標靶顏色
+
         function setTargetColor(color) {
             targetColor = color;
-            
-            // 應用顏色
+
             const target = getTarget();
             if (gameMode === "human") {
-                // 人形模式
+
                 document.querySelectorAll('.head, .body, .arm-left, .arm-right, .leg-left, .leg-right').forEach(el => {
                     el.style.backgroundColor = color;
                 });
             } else {
-                // 靶心模式 - 這部分需要特殊處理，因為靶心使用背景漸變
+
                 if (target) {
                     target.style.background = `radial-gradient(circle, white 10%, ${color} 10%, ${color} 30%, white 30%, white 50%, ${adjustColor(color, -20)} 50%, ${adjustColor(color, -20)} 70%, white 70%)`;
                 }
             }
-            
-            // 保存設置
+
             saveColorSettings();
         }
-        
-        // 保存顏色設定
+
         function saveColorSettings() {
             try {
                 localStorage.setItem('shootingGameBgColor', bgColor);
@@ -2449,8 +2253,7 @@
                 console.error('保存顏色設定失敗:', e);
             }
         }
-        
-        // 載入顏色設定
+
         function loadColorSettings() {
             try {
                 const savedBgColor = localStorage.getItem('shootingGameBgColor');
@@ -2463,199 +2266,144 @@
                 if (savedTargetColor) {
                     targetColor = savedTargetColor;
                 }
-                
-                // 應用顏色
+
                 setBgColor(bgColor);
                 setTargetColor(targetColor);
             } catch (e) {
                 console.error('載入顏色設定失敗:', e);
             }
         }
-        
-        // 調整顏色明暗
+
         function adjustColor(color, amount) {
-            // 將顏色轉換為RGB
+
             let r = parseInt(color.substring(1, 3), 16);
             let g = parseInt(color.substring(3, 5), 16);
             let b = parseInt(color.substring(5, 7), 16);
-            
-            // 調整亮度
+
             r = Math.max(0, Math.min(255, r + amount));
             g = Math.max(0, Math.min(255, g + amount));
             b = Math.max(0, Math.min(255, b + amount));
-            
-            // 轉回十六進制
+
             return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
         }
-        
-        // 處理頭部點擊
+
         function handleHeadClick(e) {
-            if (!isPlaying || isPaused) return; // 添加暫停檢查
-            
-            // 防止默認行為和文字選取
+            if (!isPlaying || isPaused) return; 
+
             e.preventDefault();
-            
-            // 阻止事件冒泡
+
             e.stopPropagation();
-            
-            // 增加射擊總數和命中數
+
             shotsFired++;
             shotsHit++;
-            
-            // 添加分數
+
             score++;
             scoreDisplay.textContent = score;
-            
-            // 播放命中音效
+
             playSound('hit');
-            
-            // 創建彈孔效果
+
             createBulletHole(e.clientX, e.clientY);
-            
-            // 創建命中特效
+
             createHitEffect(this);
-            
-            // 創建粒子效果
+
             createParticles(e.clientX, e.clientY, '#4cc9f0');
-            
-            // 更新連擊
+
             updateCombo();
-            
-            // 畫面輕微震動
+
             screenShake(false);
-            
-            // 點擊後立即隨機放置靶子
+
             placeTargetRandomly();
         }
-        
-        // 處理頭部觸摸 (移動設備)
+
         function handleHeadTouchStart(e) {
             if (!isPlaying) return;
-            
-            // 防止默認行為和滾動
+
             e.preventDefault();
-            
-            // 阻止事件冒泡
+
             e.stopPropagation();
-            
-            // 獲取觸摸位置
+
             const touch = e.touches[0];
-            
-            // 增加射擊總數和命中數
+
             shotsFired++;
             shotsHit++;
-            
-            // 添加分數
+
             score++;
             scoreDisplay.textContent = score;
-            
-            // 播放命中音效
+
             playSound('hit');
-            
-            // 創建彈孔效果
+
             createBulletHole(touch.clientX, touch.clientY);
-            
-            // 創建命中特效
+
             createHitEffect(this);
-            
-            // 創建粒子效果
+
             createParticles(touch.clientX, touch.clientY, '#4cc9f0');
-            
-            // 更新連擊
+
             updateCombo();
-            
-            // 畫面輕微震動
+
             screenShake(false);
-            
-            // 點擊後立即隨機放置靶子
+
             placeTargetRandomly();
         }
-        
-        // 處理靶心點擊
+
         function handleTargetClick(e) {
-            if (!isPlaying || isPaused) return; // 添加暫停檢查
-            
-            // 防止默認行為和文字選取
+            if (!isPlaying || isPaused) return; 
+
             e.preventDefault();
-            
-            // 增加射擊總數和命中數
+
             shotsFired++;
             shotsHit++;
-            
-            // 添加分數
+
             score++;
             scoreDisplay.textContent = score;
-            
-            // 播放命中音效
+
             playSound('hit');
-            
-            // 創建彈孔效果
+
             createBulletHole(e.clientX, e.clientY);
-            
-            // 創建命中特效
+
             createHitEffect(this);
-            
-            // 創建粒子效果
+
             createParticles(e.clientX, e.clientY, '#4cc9f0');
-            
-            // 更新連擊
+
             updateCombo();
-            
-            // 畫面輕微震動
+
             screenShake(false);
-            
-            // 點擊後立即隨機放置靶子
+
             placeTargetRandomly();
         }
-        
-        // 處理靶心觸摸 (移動設備)
+
         function handleTargetTouchStart(e) {
             if (!isPlaying) return;
-            
-            // 防止默認行為和滾動
+
             e.preventDefault();
-            
-            // 獲取觸摸位置
+
             const touch = e.touches[0];
-            
-            // 增加射擊總數和命中數
+
             shotsFired++;
             shotsHit++;
-            
-            // 添加分數
+
             score++;
             scoreDisplay.textContent = score;
-            
-            // 播放命中音效
+
             playSound('hit');
-            
-            // 創建彈孔效果
+
             createBulletHole(touch.clientX, touch.clientY);
-            
-            // 創建命中特效
+
             createHitEffect(this);
-            
-            // 創建粒子效果
+
             createParticles(touch.clientX, touch.clientY, '#4cc9f0');
-            
-            // 更新連擊
+
             updateCombo();
-            
-            // 畫面輕微震動
+
             screenShake(false);
-            
-            // 點擊後立即隨機放置靶子
+
             placeTargetRandomly();
         }
-        
-        // 背景點擊（未命中）
+
         gameContainer.addEventListener('mousedown', function(e) {
-            if (!isPlaying || isPaused) return; // 添加暫停檢查
-            
-            // 防止默認行為和文字選取
+            if (!isPlaying || isPaused) return; 
+
             e.preventDefault();
-            
-            // 確認點擊不是靶子或UI元素
+
             if (e.target.closest('.target') || 
                 e.target.closest('.info-panel') || 
                 e.target.closest('.settings-panel') ||
@@ -2664,35 +2412,27 @@
                 e.target.closest('.history-panel') ||
                 e.target.closest('.pause-overlay') ||
                 e.target.closest('.combo-display')) return;
-            
-            // 增加射擊總數
+
             shotsFired++;
-            
-            // 播放失敗音效
+
             playSound('miss');
-            
-            // 創建彈孔效果
+
             createBulletHole(e.clientX, e.clientY);
-            
-            // 畫面輕微震動
+
             screenShake(true);
-            
-            // 重置連擊
+
             resetCombo();
-            
-            // 沒射到靶子扣一分
+
             if (score > 0) {
                 score--;
                 scoreDisplay.textContent = score;
                 showFloatingText('-1分', e.clientX, e.clientY, 'penalty-text');
             }
         });
-        
-        // 背景觸摸（未命中）- 移動設備
+
         gameContainer.addEventListener('touchstart', function(e) {
-            if (!isPlaying || isPaused) return; // 添加暫停檢查
-            
-            // 確認觸摸不是靶子或UI元素
+            if (!isPlaying || isPaused) return; 
+
             if (e.target.closest('.target') || 
                 e.target.closest('.info-panel') || 
                 e.target.closest('.settings-panel') ||
@@ -2701,41 +2441,31 @@
                 e.target.closest('.history-panel') ||
                 e.target.closest('.pause-overlay') ||
                 e.target.closest('.combo-display')) return;
-            
-            // 防止默認行為和滾動
+
             e.preventDefault();
-            
-            // 獲取觸摸位置
+
             const touch = e.touches[0];
-            
-            // 增加射擊總數
+
             shotsFired++;
-            
-            // 播放失敗音效
+
             playSound('miss');
-            
-            // 創建彈孔效果
+
             createBulletHole(touch.clientX, touch.clientY);
-            
-            // 畫面輕微震動
+
             screenShake(true);
-            
-            // 重置連擊
+
             resetCombo();
-            
-            // 沒射到靶子扣一分
+
             if (score > 0) {
                 score--;
                 scoreDisplay.textContent = score;
                 showFloatingText('-1分', touch.clientX, touch.clientY, 'penalty-text');
             }
         });
-        
-        // 更新連擊
+
         function updateCombo() {
             const now = Date.now();
-            
-            // 如果1.5秒內再次命中，增加連擊
+
             if (now - lastHitTime < 1500) {
                 combo++;
             } else {
@@ -2743,38 +2473,32 @@
             }
             
             lastHitTime = now;
-            
-            // 更新最高連擊
+
             if (combo > maxCombo) {
                 maxCombo = combo;
             }
-            
-            // 顯示連擊計數
+
             comboDisplay.style.display = 'flex';
             comboCountDisplay.textContent = combo;
-            
-            // 連擊獎勵：每10連擊額外加1分
+
             if (combo >= 10 && combo % 10 === 0) {
                 score++;
                 bonusPoints++;
                 scoreDisplay.textContent = score;
                 showBonusText();
             }
-            
-            // 如果連擊大於1，顯示連擊文本
+
             if (combo > 1) {
                 showComboText();
             }
         }
-        
-        // 重置連擊
+
         function resetCombo() {
             combo = 0;
             comboCountDisplay.textContent = combo;
             comboDisplay.style.display = 'none';
         }
-        
-        // 顯示連擊文本
+
         function showComboText() {
             const target = getTarget();
             const rect = target.getBoundingClientRect();
@@ -2782,8 +2506,7 @@
             const y = rect.top;
             showFloatingText(`${combo}連擊！`, x, y, 'combo-text');
         }
-        
-        // 顯示獎勵文本
+
         function showBonusText() {
             const target = getTarget();
             const rect = target.getBoundingClientRect();
@@ -2791,8 +2514,7 @@
             const y = rect.top - 30;
             showFloatingText('+1分獎勵！', x, y, 'bonus-text');
         }
-        
-        // 顯示新紀錄動畫
+
         function showNewRecord() {
             const newRecord = document.createElement('div');
             newRecord.classList.add('new-record');
@@ -2803,17 +2525,14 @@
                 newRecord.remove();
             }, 3000);
         }
-        
-        // 顯示飄字效果
+
         function showFloatingText(text, x, y, className) {
             const floatingText = document.createElement('div');
             floatingText.classList.add('floating-text', className);
             floatingText.textContent = text;
-            
-            // 獲取遊戲容器位置
+
             const rect = gameContainer.getBoundingClientRect();
-            
-            // 計算在遊戲容器內的相對位置
+
             const relativeX = x - rect.left;
             const relativeY = y - rect.top;
             
@@ -2825,90 +2544,73 @@
                 floatingText.remove();
             }, 1000);
         }
-        
-        // 創建彈孔效果
+
         function createBulletHole(x, y) {
             const bulletHole = document.createElement('div');
             bulletHole.classList.add('bullet-hole');
-            
-            // 獲取遊戲容器位置
+
             const rect = gameContainer.getBoundingClientRect();
-            
-            // 計算在遊戲容器內的相對位置
+
             const relativeX = x - rect.left;
             const relativeY = y - rect.top;
             
             bulletHole.style.left = `${relativeX}px`;
             bulletHole.style.top = `${relativeY}px`;
             gameContainer.appendChild(bulletHole);
-            
-            // 播放射擊音效
+
             playSound('shot');
-            
-            // 移除彈孔（避免太多元素）
+
             setTimeout(() => {
                 bulletHole.remove();
             }, 3000);
         }
-        
-        // 創建命中閃光效果
+
         function createHitEffect(element) {
             element.classList.add('hit-flash');
             setTimeout(() => {
                 element.classList.remove('hit-flash');
             }, 200);
         }
-        
-        // 創建粒子效果
+
         function createParticles(x, y, color) {
             const particleCount = 10;
-            
-            // 獲取遊戲容器位置
+
             const rect = gameContainer.getBoundingClientRect();
-            
-            // 計算在遊戲容器內的相對位置
+
             const relativeX = x - rect.left;
             const relativeY = y - rect.top;
             
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
                 particle.classList.add('particle');
-                
-                // 隨機大小
+
                 const size = Math.random() * 5 + 3;
                 particle.style.width = `${size}px`;
                 particle.style.height = `${size}px`;
-                
-                // 設置顏色
+
                 particle.style.backgroundColor = color;
-                
-                // 設置初始位置
+
                 particle.style.left = `${relativeX}px`;
                 particle.style.top = `${relativeY}px`;
-                
-                // 添加到容器
+
                 gameContainer.appendChild(particle);
-                
-                // 設置隨機方向和速度
+
                 const angle = Math.random() * Math.PI * 2;
                 const speed = Math.random() * 3 + 2;
                 const vx = Math.cos(angle) * speed;
                 const vy = Math.sin(angle) * speed;
-                
-                // 粒子動畫
+
                 let posX = relativeX;
                 let posY = relativeY;
                 
                 const animate = () => {
-                    // 更新位置
+
                     posX += vx;
                     posY += vy;
-                    
-                    // 設置新位置
+
                     particle.style.left = `${posX}px`;
                     particle.style.top = `${posY}px`;
-                    
-                    // 淡出效果
+
                     particle.style.opacity = parseFloat(particle.style.opacity || 1) - 0.02;
                     
                     if (parseFloat(particle.style.opacity) > 0) {
@@ -2921,8 +2623,7 @@
                 requestAnimationFrame(animate);
             }
         }
-        
-        // 畫面震動效果
+
         function screenShake(isLight) {
             if (isLight) {
                 gameContainer.classList.add('screen-shake-light');
@@ -2936,122 +2637,93 @@
                 }, 300);
             }
         }
-        
-        // 移除所有與準心相關的代碼
-        // document.addEventListener('mousemove', (e) => {...});
-        
-        // 首頁的開始遊戲按鈕點擊
+
         playButton.addEventListener('click', showStartScreen);
-        
-        // 開始畫面的開始按鈕點擊
+
         startButton.addEventListener('click', startGame);
-        
-        // 結束畫面的再玩一次按鈕點擊
+
         restartButton.addEventListener('click', startGame);
-        
-        // 結束畫面的返回首頁按鈕點擊
+
         homeButton.addEventListener('click', showHome);
-        
-        // 開始畫面的返回首頁按鈕點擊
+
         backToHomeButton.addEventListener('click', showHome);
-        
-        // 結束遊戲按鈕點擊
+
         document.getElementById('end-game-button').addEventListener('click', endGame);
-        
-        // 首頁的說明按鈕點擊
+
         instructionsButton.addEventListener('click', showInstructions);
-        
-        // 說明畫面的返回按鈕點擊
+
         backFromInstructionsButton.addEventListener('click', showHome);
-        
-        /* 按鍵監聽 - ESC鍵結束遊戲 */
+
         document.addEventListener('keydown', function(e) {
-            // ESC鍵結束遊戲
+
             if (e.key === 'Escape' && isPlaying) {
                 endGame();
             }
         });
-        
-        // 切換模式按鈕點擊（首頁）
+
         homeToggleModeButton.addEventListener('click', function() {
-            // 切換模式
+
             gameMode = gameMode === "human" ? "target" : "human";
-            
-            // 更新切換按鈕文本
+
             homeToggleModeButton.textContent = 
                 gameMode === "human" ? "切換至靶心模式" : "切換至人形模式";
-                
-            // 更新當前模式顯示
+
             currentModeDisplay.textContent = gameMode === "human" ? "人形靶子" : "靶心";
-            
-            // 重新設置靶子
+
             setupTargetByMode();
         });
-        
-        // 設置顏色選擇器
+
         function setupColorOptions() {
-            // 背景顏色選擇
+
             const bgColorOptions = document.querySelectorAll('#bg-color-options .color-option');
             bgColorOptions.forEach(option => {
-                // 標記當前選擇的顏色
+
                 if (option.getAttribute('data-color') === bgColor) {
                     option.classList.add('active');
                 } else {
                     option.classList.remove('active');
                 }
-                
-                // 添加點擊事件
+
                 option.addEventListener('click', function() {
-                    // 更新活動狀態
+
                     bgColorOptions.forEach(opt => opt.classList.remove('active'));
                     this.classList.add('active');
-                    
-                    // 獲取選擇的顏色
+
                     const color = this.getAttribute('data-color');
-                    
-                    // 更新背景顏色
+
                     setBgColor(color);
-                    
-                    // 更新自定義顏色輸入值
+
                     document.getElementById('bg-color-custom').value = color;
                 });
             });
-            
-            // 標靶顏色選擇
+
             const targetColorOptions = document.querySelectorAll('#target-color-options .color-option');
             targetColorOptions.forEach(option => {
-                // 標記當前選擇的顏色
+
                 if (option.getAttribute('data-color') === targetColor) {
                     option.classList.add('active');
                 } else {
                     option.classList.remove('active');
                 }
-                
-                // 添加點擊事件
+
                 option.addEventListener('click', function() {
-                    // 更新活動狀態
+
                     targetColorOptions.forEach(opt => opt.classList.remove('active'));
                     this.classList.add('active');
-                    
-                    // 獲取選擇的顏色
+
                     const color = this.getAttribute('data-color');
-                    
-                    // 更新標靶顏色
+
                     setTargetColor(color);
-                    
-                    // 更新自定義顏色輸入值
+
                     document.getElementById('target-color-custom').value = color;
                 });
             });
-            
-            // 自定義背景顏色
+
             document.getElementById('bg-color-apply').addEventListener('click', function() {
                 const customColor = document.getElementById('bg-color-custom').value;
-                
-                // 去除所有活動狀態
+
                 bgColorOptions.forEach(opt => opt.classList.remove('active'));
-                
-                // 檢查是否有匹配的預設顏色
+
                 let matchFound = false;
                 bgColorOptions.forEach(opt => {
                     if (opt.getAttribute('data-color') === customColor) {
@@ -3059,19 +2731,15 @@
                         matchFound = true;
                     }
                 });
-                
-                // 更新背景顏色
+
                 setBgColor(customColor);
             });
-            
-            // 自定義標靶顏色
+
             document.getElementById('target-color-apply').addEventListener('click', function() {
                 const customColor = document.getElementById('target-color-custom').value;
-                
-                // 去除所有活動狀態
+
                 targetColorOptions.forEach(opt => opt.classList.remove('active'));
-                
-                // 檢查是否有匹配的預設顏色
+
                 let matchFound = false;
                 targetColorOptions.forEach(opt => {
                     if (opt.getAttribute('data-color') === customColor) {
@@ -3079,50 +2747,41 @@
                         matchFound = true;
                     }
                 });
-                
-                // 更新標靶顏色
+
                 setTargetColor(customColor);
             });
-            
-            // 設置自定義顏色輸入器的初始值
+
             document.getElementById('bg-color-custom').value = bgColor;
             document.getElementById('target-color-custom').value = targetColor;
         }
-        
-        // 設置背景顏色
+
         function setBgColor(color) {
             bgColor = color;
-            
-            // 應用顏色
+
             document.querySelector('.game-container').style.background = `linear-gradient(135deg, ${color}, ${adjustColor(color, -20)})`;
-            
-            // 保存設置
+
             saveColorSettings();
         }
-        
-        // 設置標靶顏色
+
         function setTargetColor(color) {
             targetColor = color;
-            
-            // 應用顏色
+
             const target = getTarget();
             if (gameMode === "human") {
-                // 人形模式
+
                 document.querySelectorAll('.head, .body, .arm-left, .arm-right, .leg-left, .leg-right').forEach(el => {
                     el.style.backgroundColor = color;
                 });
             } else {
-                // 靶心模式 - 這部分需要特殊處理，因為靶心使用背景漸變
+
                 if (target) {
                     target.style.background = `radial-gradient(circle, white 10%, ${color} 10%, ${color} 30%, white 30%, white 50%, ${adjustColor(color, -20)} 50%, ${adjustColor(color, -20)} 70%, white 70%)`;
                 }
             }
-            
-            // 保存設置
+
             saveColorSettings();
         }
-        
-        // 保存顏色設定
+
         function saveColorSettings() {
             try {
                 localStorage.setItem('shootingGameBgColor', bgColor);
@@ -3131,8 +2790,7 @@
                 console.error('保存顏色設定失敗:', e);
             }
         }
-        
-        // 載入顏色設定
+
         function loadColorSettings() {
             try {
                 const savedBgColor = localStorage.getItem('shootingGameBgColor');
@@ -3145,36 +2803,31 @@
                 if (savedTargetColor) {
                     targetColor = savedTargetColor;
                 }
-                
-                // 應用顏色
+
                 setBgColor(bgColor);
                 setTargetColor(targetColor);
             } catch (e) {
                 console.error('載入顏色設定失敗:', e);
             }
         }
-        
-        // 調整顏色明暗
+
         function adjustColor(color, amount) {
-            // 將顏色轉換為RGB
+
             let r = parseInt(color.substring(1, 3), 16);
             let g = parseInt(color.substring(3, 5), 16);
             let b = parseInt(color.substring(5, 7), 16);
-            
-            // 調整亮度
+
             r = Math.max(0, Math.min(255, r + amount));
             g = Math.max(0, Math.min(255, g + amount));
             b = Math.max(0, Math.min(255, b + amount));
-            
-            // 轉回十六進制
+
             return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
         }
         
         document.getElementById('close-settings').addEventListener('click', function() {
             document.getElementById('settings-panel').classList.remove('show-settings');
         });
-        
-        // 難度按鈕事件處理
+
         document.getElementById('easy-button').addEventListener('click', function() {
             setDifficulty('easy');
             updateDifficultyButtons('easy');
@@ -3189,21 +2842,18 @@
             setDifficulty('hard');
             updateDifficultyButtons('hard');
         });
-        
-        // 設置靶子移動方式
+
         function setMoveType(type) {
             moveType = type;
             console.log(`移動方式已設置為: ${type}`);
-            
-            // 更新顯示的移動方式
+
             const moveTypeDisplay = document.getElementById('current-move-type');
             if (moveTypeDisplay) {
                 moveTypeDisplay.textContent = type === 'transition' ? '漸變移動' : '瞬間移動';
             } else {
                 console.error('找不到移動方式顯示元素');
             }
-            
-            // 立即更新靶子的transition屬性
+
             if (isPlaying) {
                 const targetElement = getTarget();
                 if (targetElement) {
@@ -3213,127 +2863,103 @@
                 }
             }
         }
-        
-        // 音量控制事件處理
+
         document.getElementById('volume-control').addEventListener('input', function(e) {
             soundSettings.volume = parseFloat(e.target.value);
-            
-            // 更新所有音效的音量
+
             Object.values(sounds).forEach(sound => {
                 sound.volume = soundSettings.volume;
             });
         });
-        
-        // 靜音切換事件處理
+
         document.getElementById('mute-toggle').addEventListener('change', function(e) {
             soundSettings.muted = e.target.checked;
-            
-            // 更新所有音效的靜音狀態
+
             Object.values(sounds).forEach(sound => {
                 sound.muted = soundSettings.muted;
             });
         });
-        
-        // 初始設置模式按鈕文本
+
         document.getElementById('toggle-mode-button').textContent = "切換至靶心模式";
         homeToggleModeButton.textContent = "切換至靶心模式";
-        
-        // 初始化遊戲
+
         document.addEventListener('DOMContentLoaded', function() {
-            // 防止文字選取
+
             document.addEventListener('selectstart', function(e) {
                 e.preventDefault();
             });
-            
-            // 防止拖曳
+
             document.addEventListener('dragstart', function(e) {
                 e.preventDefault();
             });
-            
-            // 初始化音效
+
             initSounds();
-            
-            // 確認音效初始化後進行額外檢查
+
             setTimeout(() => {
-                // 檢查shot.mp3是否成功加載
+
                 const shotSound = document.getElementById('sound-shot');
                 if (shotSound && shotSound.src) {
                     console.log('射擊音效已載入:', shotSound.src);
-                    // 主動加載
+
                     shotSound.load();
                 } else {
                     console.error('找不到射擊音效元素或其源文件');
                 }
-            }, 500); // 延遲檢查以確保DOM完全加載
-            
-            // 加載顏色設定
+            }, 500); 
+
             loadColorSettings();
-            
-            // 初始化遊戲
+
             initGame();
-            
-            // 載入遊戲歷史紀錄
+
             loadGameHistory();
-            
-            // 初始化顏色選擇器
+
             setupColorOptions();
-            
-            // 調整遊戲容器大小以適應螢幕
+
             adjustGameContainerSize();
-            
-            // 監聽視窗大小變化
+
             window.addEventListener('resize', adjustGameContainerSize);
-            
-            // 顯示首頁
+
             showHome();
-            
-            // 延遲加載移動方式按鈕設置，確保DOM元素已完全加載
+
             setTimeout(setupMoveTypeButtons, 500);
-            
-            // 測試準備好，添加一個提示
+
             console.log('遊戲初始化完成');
         });
-        
-        // 調整遊戲容器大小
+
         function adjustGameContainerSize() {
-            // 使遊戲容器填滿整個視窗
+
             gameContainer.style.width = `${window.innerWidth}px`;
             gameContainer.style.height = `${window.innerHeight}px`;
-            
-            // 確保CSS自定義屬性應用到整個文檔
+
             document.body.style.overflow = 'hidden';
             document.documentElement.style.overflow = 'hidden';
-            
-            // 防止長按選取和右鍵菜單
-            document.body.style.webkitTouchCallout = 'none'; // iOS Safari
-            document.body.style.webkitUserSelect = 'none';   // Safari
-            document.body.style.khtmlUserSelect = 'none';    // Konqueror HTML
-            document.body.style.mozUserSelect = 'none';      // Firefox
-            document.body.style.msUserSelect = 'none';       // Internet Explorer/Edge
-            document.body.style.userSelect = 'none';         // Non-prefixed version
-            
-            // 如果標靶已顯示，重新計算其位置
+
+            document.body.style.webkitTouchCallout = 'none'; 
+            document.body.style.webkitUserSelect = 'none';   
+            document.body.style.khtmlUserSelect = 'none';    
+            document.body.style.mozUserSelect = 'none';      
+            document.body.style.msUserSelect = 'none';       
+            document.body.style.userSelect = 'none';         
+
             if (isPlaying && !isPaused) {
                 placeTargetRandomly();
             }
         }
-        
-        // 設置移動方式按鈕
+
         function setupMoveTypeButtons() {
-            // 更新移動方式按鈕
+
             function updateMoveTypeButtons(activeType) {
                 document.querySelectorAll('.move-button').forEach(button => {
                     button.classList.remove('active');
                 });
                 document.getElementById(`${activeType}-move`).classList.add('active');
             }
-            
-            // 確保移動類型按鈕已經存在再添加事件
+
             const transitionButton = document.getElementById('transition-move');
             const instantButton = document.getElementById('instant-move');
             
             if (transitionButton && instantButton) {
-                // 移動方式按鈕事件處理
+
                 transitionButton.addEventListener('click', function() {
                     setMoveType('transition');
                     updateMoveTypeButtons('transition');
@@ -3349,44 +2975,35 @@
                 console.error('找不到移動方式按鈕');
             }
         }
-        
-        // 隨機放置靶子
+
         function placeTargetRandomly() {
             const target = getTarget();
             if (!target) return;
-            
-            // 獲取遊戲容器尺寸
+
             const gameContainer = document.getElementById('game-container');
             const containerWidth = gameContainer.clientWidth;
             const containerHeight = gameContainer.clientHeight;
-            
-            // 獲取靶子尺寸
+
             const targetWidth = target.offsetWidth;
             const targetHeight = target.offsetHeight;
-            
-            // 設置邊界，避免靶子部分超出容器
+
             const maxX = containerWidth - targetWidth;
             const maxY = containerHeight - targetHeight;
-            
-            // 設置上邊界，確保靶子不會出現在信息面板區域
-            const minY = 70; // 信息面板的高度大約為70px
-            
-            // 生成隨機位置
+
+            const minY = 70; 
+
             let randomX = Math.floor(Math.random() * maxX);
             let randomY = Math.floor(Math.random() * (maxY - minY)) + minY;
-            
-            // 設置靶子的移動過渡效果
+
             if (moveType === 'transition') {
                 target.style.transition = `left ${difficulties[currentDifficulty].targetSpeed}ms, top ${difficulties[currentDifficulty].targetSpeed}ms`;
             } else {
                 target.style.transition = 'none';
             }
-            
-            // 設置靶子位置
+
             target.style.left = `${randomX}px`;
             target.style.top = `${randomY}px`;
         }
-
     </script>
 </body>
 </html>
