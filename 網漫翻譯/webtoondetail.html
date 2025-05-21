@@ -221,7 +221,6 @@
             color: rgba(255, 255, 255, 0.8);
         }
 
-        /* Lightbox 樣式 */
         .lightbox {
             position: fixed;
             top: 0;
@@ -283,7 +282,6 @@
             }
         }
 
-        /* 為可點擊的圖片添加懸停效果 */
         .manga-cover {
             cursor: pointer;
             transition: transform 0.2s ease, filter 0.2s ease;
@@ -490,15 +488,14 @@
             methods: {
                 async fetchMangaData() {
                     try {
-                        // 先嘗試從URL參數獲取漫畫標題
+
                         const urlParams = new URLSearchParams(window.location.search);
                         let currentManga = urlParams.get('title');
-                        
-                        // 如果URL沒有參數，從localStorage獲取
+
                         if (!currentManga) {
                             currentManga = localStorage.getItem(STORAGE_KEYS.CURRENT_MANGA);
                             if (currentManga) {
-                                // 更新URL但不重新加載頁面
+
                                 const encodedTitle = encodeURIComponent(currentManga);
                                 if (window.history && window.history.pushState) {
                                     const newUrl = `${window.location.pathname}?title=${encodedTitle}`;
@@ -510,8 +507,7 @@
                         if (!currentManga) {
                             throw new Error('找不到漫畫資料');
                         }
-                        
-                        // 設置標題用於後續操作
+
                         this.currentMangaTitle = currentManga;
                         
                         const response = await fetch('/網漫翻譯/manga.json');
@@ -523,17 +519,14 @@
                         }
 
                         this.manga = mangaData;
-                        
-                        // 更新頁面標題和meta標籤
+
                         document.title = `${mangaData.title} - 網漫翻譯`;
-                        
-                        // 更新meta description標籤
+
                         const metaDescription = document.querySelector('meta[name="description"]');
                         if (metaDescription) {
                             metaDescription.setAttribute('content', `${mangaData.title}網漫在線閱讀。${mangaData.author}著。`);
                         }
-                        
-                        // 更新meta keywords標籤
+
                         const metaKeywords = document.querySelector('meta[name="keywords"]');
                         if (metaKeywords) {
                             metaKeywords.setAttribute('content', `${mangaData.title}, ${mangaData.author}, 網漫翻譯, 網漫閱讀, 在線閱讀`);
@@ -554,7 +547,7 @@
                         year: 'numeric',
                         month: '2-digit',
                         day: '2-digit'
-                    }).replace(/\//g, '-');
+                    }).replace(/\
                 },
                 goHome() {
                     window.location.href = '/acgntranslate.html#webtoons';
