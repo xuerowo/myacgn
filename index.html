@@ -45,7 +45,6 @@
             background-color: var(--secondary-color);
         }
 
-        /* 導航欄樣式 */
         .navbar {
             position: fixed;
             top: 0;
@@ -93,7 +92,6 @@
             color: var(--primary-color);
         }
 
-        /* 下拉菜單樣式 */
         .dropdown {
             position: relative;
             display: inline-block;
@@ -162,7 +160,6 @@
             transform: rotate(180deg);
         }
 
-        /* Hero 區域樣式 */
         .hero {
             height: 100vh;
             display: flex;
@@ -177,7 +174,6 @@
             animation: gradientBG 15s ease infinite;
         }
 
-        /* 主背景動畫效果 */
         @keyframes gradientBG {
             0% {
                 background-position: 0% 50%;
@@ -190,7 +186,6 @@
             }
         }
 
-        /* 浮動粒子效果 */
         .hero::before {
             content: '';
             position: absolute;
@@ -217,7 +212,6 @@
             }
         }
 
-        /* 光暈效果 */
         .hero::after {
             content: '';
             position: absolute;
@@ -282,7 +276,6 @@
             }
         }
 
-        /* 按鈕動畫效果 */
         .hero .cta-button {
             animation: fadeInUp 1s ease-out 0.6s both;
             position: relative;
@@ -358,7 +351,6 @@
             }
         }
 
-        /* 分類卡片樣式 */
         .categories {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -393,7 +385,6 @@
             transform: scale(1.1);
         }
 
-        /* 按鈕樣式 */
         .cta-button, .work-link {
             display: inline-flex;
             align-items: center;
@@ -417,7 +408,6 @@
             border-radius: 6px;
         }
 
-        /* 主題切換按鈕 */
         .theme-toggle {
             background: none;
             border: none;
@@ -432,7 +422,6 @@
             transform: rotate(360deg);
         }
 
-        /* 頁腳樣式 */
         footer {
             background: var(--background-color);
             padding: 2rem;
@@ -440,8 +429,6 @@
             color: var(--text-color);
         }
 
-        /* 響應式設計 */
-        /* 手機設備 (768px) */
         @media (max-width: 768px) {
             .navbar {
                 padding: 0.8rem;
@@ -496,7 +483,6 @@
             }
         }
 
-        /* 超小型設備 (480px) */
         @media (max-width: 480px) {
             .navbar {
                 padding: 0.6rem;
@@ -561,7 +547,6 @@
             }
         }
 
-        /* 版本資訊樣式 */
         .version-info, .update-date {
             display: inline-block;
             padding: 6px 12px;
@@ -648,11 +633,10 @@
     </section>
 
     <script>
-        // 主題切換功能
+
         const themeToggle = document.getElementById('theme-toggle');
         const root = document.documentElement;
-        
-        // 檢查本地存儲的主題設置
+
         if (localStorage.getItem('theme') === 'dark') {
             root.setAttribute('data-theme', 'dark');
             themeToggle.textContent = '🌜';
@@ -667,7 +651,6 @@
             themeToggle.textContent = newTheme === 'dark' ? '🌜' : '🌞';
         });
 
-        // 導航欄滾動效果
         let lastScrollTop = 0;
         const navbar = document.querySelector('.navbar');
         
