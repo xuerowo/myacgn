@@ -1,29 +1,9 @@
 {
-  "version": "1.2.10",
-  "releaseNotes": "啟動app後立即更新輕小說資訊",
-  "downloadUrl": "https://expo.dev/artifacts/eas/rYTX3UE4dG9CfzEsSq4ksL.apk",
+  "version": "1.2.6",
+  "releaseNotes": "新增了檢查app更新功能",
+  "downloadUrl": "https://expo.dev/artifacts/eas/4QofHaRo2xY1Ki4oj662aN.apk",
   "fullChangelogUrl": "https://xuerowo.com/%E8%BC%95%E5%B0%8F%E8%AA%AA%E7%BF%BB%E8%AD%AF/changelog.html",
   "history": [
-    {
-      "version": "1.2.10",
-      "date": "2025-05-28",
-      "changes": "啟動app後立即更新輕小說資訊"
-    },
-    {
-      "version": "1.2.9",
-      "date": "2025-05-11",
-      "changes": "修改了url路徑"
-    },
-    {
-      "version": "1.2.8",
-      "date": "2025-03-22",
-      "changes": "移除了閱讀時間記錄功能"
-    },
-    {
-      "version": "1.2.7",
-      "date": "2025-03-21",
-      "changes": "優化了大型內容章節滾動時的嚴重卡頓問題(比較沒那麼嚴重)"
-    },
     {
       "version": "1.2.6",
       "date": "2025-02-28",
