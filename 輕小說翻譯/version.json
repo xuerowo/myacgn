@@ -1,9 +1,14 @@
 {
-  "version": "1.2.9",
-  "releaseNotes": "修改了url路徑",
-  "downloadUrl": "https://expo.dev/artifacts/eas/dX7TwTUmjZqoVK2L9KAQ9o.apk",
+  "version": "1.2.10",
+  "releaseNotes": "啟動app後立即更新輕小說資訊",
+  "downloadUrl": "https://expo.dev/artifacts/eas/rYTX3UE4dG9CfzEsSq4ksL.apk",
   "fullChangelogUrl": "https://xuerowo.com/%E8%BC%95%E5%B0%8F%E8%AA%AA%E7%BF%BB%E8%AD%AF/changelog.html",
   "history": [
+    {
+      "version": "1.2.10",
+      "date": "2025-05-28",
+      "changes": "啟動app後立即更新輕小說資訊"
+    },
     {
       "version": "1.2.9",
       "date": "2025-05-11",
