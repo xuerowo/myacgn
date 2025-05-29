@@ -40,10 +40,6 @@
             background-color: var(--secondary-color);
         }
 
-        h2 {
-
-        }
-
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -517,7 +513,7 @@
 
                         const titleFormatted = currentNovel.replace(/^《|》$/g, '');
 
-                        const response = await fetch('/輕小說翻譯/novels.json');
+                        const response = await fetch('novels.json');
                         const data = await response.json();
                         const novelData = data.novels.find(novel => novel.title === titleFormatted);
                         
@@ -578,7 +574,7 @@
                 getCoverUrl() {
                     if (!this.currentNovelTitle) return '';
                     const encodedTitle = encodeURIComponent(this.currentNovelTitle);
-                    return `/輕小說翻譯/${encodedTitle}/cover.jpg`;
+                    return `${encodedTitle}/cover.jpg`;
                 },
                 getSourceLinkName(key) {
                     const names = {
