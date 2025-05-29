@@ -8,7 +8,7 @@
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
-        /* Root Variables */
+        
         :root {
             --primary-color: #4a90e2;
             --secondary-color: #f5f5f5;
@@ -20,7 +20,6 @@
             --content-padding: 2rem;
         }
 
-        /* Dark Theme */
         :root[data-theme="dark"] {
             --primary-color: #64b5f6;
             --secondary-color: #1a1a1a;
@@ -28,7 +27,6 @@
             --background-color: #121212;
         }
 
-        /* Basic Reset */
         * {
             margin: 0;
             padding: 0;
@@ -43,7 +41,6 @@
             background-color: var(--secondary-color);
         }
 
-        /* Header Styles */
         .header-bar {
             position: fixed;
             top: 0;
@@ -75,7 +72,6 @@
             margin: 0 1rem;
         }
 
-        /* Chapter Item Styles */
         .chapter-item {
             padding: 0.75rem 1rem;
             cursor: pointer;
@@ -95,7 +91,6 @@
             opacity: 0.5;
         }
 
-        /* Reader Container Styles */
         .reader-container {
             max-width: var(--max-width);
             margin: 4rem auto 5rem;
@@ -106,15 +101,14 @@
             font-size: var(--font-size);
         }
 
-        /* Novel Content Styles */
         .novel-content {
             margin-bottom: 2rem;
-            -webkit-touch-callout: none;  /* iOS Safari */
-            -webkit-user-select: none;    /* Safari */
-            -khtml-user-select: none;     /* Konqueror HTML */
-            -moz-user-select: none;       /* Firefox */
-            -ms-user-select: none;        /* Internet Explorer/Edge */
-            user-select: none;            /* Non-prefixed version */
+            -webkit-touch-callout: none;  
+            -webkit-user-select: none;    
+            -khtml-user-select: none;     
+            -moz-user-select: none;       
+            -ms-user-select: none;        
+            user-select: none;            
         }
 
         .novel-content p {
@@ -139,7 +133,6 @@
             transform: scale(1.02);
         }
 
-        /* Image Lightbox Styles */
         .image-lightbox {
             position: fixed;
             top: 0;
@@ -181,7 +174,6 @@
             padding: 10px;
         }
 
-        /* Control Button Styles */
         .control-btn {
             padding: 0.5rem 1rem;
             border: none;
@@ -225,7 +217,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Loading Overlay */
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -269,7 +260,6 @@
             color: var(--primary-color);
         }
 
-        /* Reader Controls Styles */
         .reader-controls {
             position: fixed;
             bottom: 0;
@@ -288,7 +278,6 @@
             transform: translateY(100%);
         }
 
-        /* Settings Modal Styles */
         .settings-modal {
             position: fixed;
             bottom: 60px;
@@ -367,7 +356,6 @@
             background: rgba(255,255,255,0.4);
         }
 
-        /* Animation */
         @keyframes zoomIn {
             from {
                 transform: scale(0.9);
@@ -379,7 +367,6 @@
             }
         }
 
-        /* Responsive Styles */
         @media (max-width: 768px) {
             :root {
                 --font-size: 16px;
@@ -421,7 +408,6 @@
             <img :src="currentImage" alt="" @click.stop>
         </div>
 
-        <!-- 載入指示器 -->
         <div class="loading-overlay" :class="{ show: isLoading }">
             <div style="text-align: center;">
                 <div class="loading-spinner"></div>
@@ -556,26 +542,23 @@
             methods: {
                 async fetchChapterData() {
                     try {
-                        // 從URL參數獲取小說標題
+
                         const params = new URLSearchParams(window.location.search);
                         let currentNovel = params.get('title');
-                        
-                        // 如果URL沒有標題參數，則從localStorage讀取
+
                         if (!currentNovel) {
                             currentNovel = localStorage.getItem(STORAGE_KEYS.CURRENT_NOVEL);
                         } else {
-                            // 確保localStorage也有最新值
+
                             localStorage.setItem(STORAGE_KEYS.CURRENT_NOVEL, currentNovel);
                         }
                         
                         if (!currentNovel) {
                             throw new Error('找不到小說資料');
                         }
-                        
-                        // 保存標題，用於後續操作
+
                         this.novelTitle = currentNovel;
-                        
-                        // 移除標題兩側的《》符號進行匹配
+
                         this.novelTitleFormatted = currentNovel.replace(/^《|》$/g, '');
                         
                         const response = await fetch('novels.json');
@@ -587,7 +570,7 @@
                         }
                         
                         this.allChapters = novelData.chapters
-                            .filter(chapter => chapter.id >= 0)  // 排除簡介等特殊章節
+                            .filter(chapter => chapter.id >= 0)  
                             .map(chapter => ({
                                 number: chapter.id,
                                 title: chapter.title,
@@ -607,17 +590,14 @@
                         }
 
                         this.currentChapter = currentChapterData;
-                        
-                        // 更新頁面標題和meta標籤
+
                         document.title = `${this.currentChapter.title} - ${this.novelTitleFormatted} - 輕小說翻譯`;
-                        
-                        // 更新meta description標籤
+
                         const metaDescription = document.querySelector('meta[name="description"]');
                         if (metaDescription) {
                             metaDescription.setAttribute('content', `閱讀${this.novelTitleFormatted}的${this.currentChapter.title}章節。`);
                         }
-                        
-                        // 更新meta keywords標籤
+
                         const metaKeywords = document.querySelector('meta[name="keywords"]');
                         if (metaKeywords) {
                             metaKeywords.setAttribute('content', `${this.novelTitleFormatted}, ${this.currentChapter.title}, 輕小說翻譯, 輕小說閱讀, 在線閱讀`);
@@ -628,7 +608,7 @@
                     } catch (error) {
                         console.error('讀取章節失敗:', error);
                         alert('讀取章節失敗');
-                        // 在出錯時也要帶上小說標題參數返回詳情頁
+
                         if (this.novelTitle) {
                             const encodedTitle = encodeURIComponent(this.novelTitle);
                             window.location.href = `noveldetail.html?title=${encodedTitle}`;
@@ -640,11 +620,9 @@
                 async loadChapterContent() {
                     try {
                         this.isLoading = true;
-                        
-                        // 獲取小說資料夾路徑
+
                         const folderPath = `${encodeURIComponent(this.novelTitle)}`;
-                        
-                        // 使用正確的文件名格式
+
                         const filename = `${folderPath}/${this.currentChapter.filename}`;
                         const response = await fetch(filename);
                         
@@ -665,7 +643,7 @@
                         this.isLoading = false;
                         console.error('讀取章節內容失敗:', error);
                         alert(`讀取章節內容失敗: ${error.message}`);
-                        // 嚴重錯誤時返回到詳情頁面
+
                         if (this.novelTitle) {
                             const encodedTitle = encodeURIComponent(this.novelTitle);
                             window.location.href = `noveldetail.html?title=${encodedTitle}`;
@@ -687,31 +665,25 @@
                     this.showImageLightbox = false;
                 },
                 saveScrollPosition() {
-                    // 獲取當前所有章節的滾動位置
+
                     const scrollPositions = JSON.parse(sessionStorage.getItem(STORAGE_KEYS.SCROLL_POSITION) || '{}');
-                    
-                    // 確保每部小說都有自己的滾動位置記錄
+
                     if (!scrollPositions[this.novelTitleFormatted]) {
                         scrollPositions[this.novelTitleFormatted] = {};
                     }
-                    
-                    // 更新當前章節的滾動位置
+
                     scrollPositions[this.novelTitleFormatted][this.currentChapter.number] = window.pageYOffset;
-                    
-                    // 保存回 sessionStorage
+
                     sessionStorage.setItem(STORAGE_KEYS.SCROLL_POSITION, JSON.stringify(scrollPositions));
                 },
                 restoreScrollPosition() {
-                    // 獲取所有章節的滾動位置
+
                     const scrollPositions = JSON.parse(sessionStorage.getItem(STORAGE_KEYS.SCROLL_POSITION) || '{}');
-                    
-                    // 獲取當前小說的滾動位置
+
                     const novelPositions = scrollPositions[this.novelTitleFormatted] || {};
-                    
-                    // 獲取當前章節的滾動位置
+
                     const savedPosition = novelPositions[this.currentChapter.number];
-                    
-                    // 如果有保存的位置，恢復到該位置
+
                     if (savedPosition !== undefined) {
                         window.scrollTo(0, parseInt(savedPosition));
                     }
@@ -732,8 +704,7 @@
                     }
 
                     this.lastScrollTop = st;
-                    
-                    // 保存當前章節的滾動位置
+
                     this.saveScrollPosition();
                 },
                 toggleSettings() {
@@ -748,8 +719,7 @@
                     if (number !== this.currentChapter.number && !this.isLoading) {
                         this.isLoading = true;
                         this.navigating = 'chapter';
-                        
-                        // 保存當前章節的滾動位置
+
                         this.saveScrollPosition();
                         const encodedTitle = encodeURIComponent(this.novelTitle);
                         window.location.href = `reader.html?title=${encodedTitle}&chapter=${number}`;
@@ -757,7 +727,7 @@
                     this.showChapterMenu = false;
                 },
                 goToDetail() {
-                    // 帶著小說標題參數返回詳情頁
+
                     const encodedTitle = encodeURIComponent(this.novelTitle);
                     window.location.href = `noveldetail.html?title=${encodedTitle}`;
                 },
@@ -772,7 +742,7 @@
                         const nextChapter = nextChapters.reduce((min, chapter) => 
                             chapter.number < min.number ? chapter : min
                         );
-                        // 保存當前章節的滾動位置
+
                         this.saveScrollPosition();
                         const encodedTitle = encodeURIComponent(this.novelTitle);
                         window.location.href = `reader.html?title=${encodedTitle}&chapter=${nextChapter.number}`;
@@ -789,7 +759,7 @@
                         const prevChapter = prevChapters.reduce((max, chapter) => 
                             chapter.number > max.number ? chapter : max
                         );
-                        // 保存當前章節的滾動位置
+
                         this.saveScrollPosition();
                         const encodedTitle = encodeURIComponent(this.novelTitle);
                         window.location.href = `reader.html?title=${encodedTitle}&chapter=${prevChapter.number}`;
@@ -816,16 +786,13 @@
             mounted() {
                 this.fetchChapterData();
 
-                // 設置初始主題和字體
                 const theme = localStorage.getItem(STORAGE_KEYS.THEME) || 'light';
                 document.documentElement.setAttribute('data-theme', theme);
                 document.documentElement.style.setProperty('--font-size', `${this.fontSize}px`);
                 document.documentElement.style.setProperty('--line-height', this.lineHeight);
 
-                // 設置滾動事件監聽
                 window.addEventListener('scroll', this.handleScroll);
 
-                // 監聽點擊事件來關閉設置面板和目錄
                 document.addEventListener('click', (e) => {
                     const settingsModal = document.querySelector('.settings-modal');
                     const chapterModal = document.querySelector('.settings-modal:nth-child(6)');
@@ -843,7 +810,6 @@
                     }
                 });
 
-                // 監聽 ESC 鍵
                 document.addEventListener('keydown', (e) => {
                     if (e.key === 'Escape') {
                         if (this.showImageLightbox) {
@@ -855,7 +821,6 @@
                     }
                 });
 
-                // 監聽左右方向鍵
                 document.addEventListener('keydown', (e) => {
                     if (!this.showImageLightbox && !this.showSettings && !this.showChapterMenu) {
                         if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
