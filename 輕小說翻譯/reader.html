@@ -190,6 +190,7 @@
             color: white;
             cursor: pointer;
             min-width: 80px;
+            position: relative;
         }
 
         .control-btn:hover {
@@ -199,6 +200,62 @@
         .control-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+        }
+
+        .control-btn.loading {
+            pointer-events: none;
+        }
+
+        .control-btn.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 16px;
+            height: 16px;
+            margin: -8px 0 0 -8px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loading-overlay.show {
+            display: flex;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loading-text {
+            color: white;
+            margin-top: 1rem;
+            font-size: 1.1rem;
         }
 
         .back-btn {
@@ -364,6 +421,14 @@
             <img :src="currentImage" alt="" @click.stop>
         </div>
 
+        <!-- 載入指示器 -->
+        <div class="loading-overlay" :class="{ show: isLoading }">
+            <div style="text-align: center;">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">載入中...</div>
+            </div>
+        </div>
+
         <div class="settings-modal" :class="{ active: showSettings }">
             <div class="settings-modal-header">
                 閱讀設置
@@ -405,21 +470,25 @@
         <div class="reader-controls" :class="{ hidden: hideControls }">
             <button class="control-btn" 
                     @click="goToPrevious"
-                    :disabled="!hasPrevious">
-                上一話
+                    :disabled="!hasPrevious || isLoading"
+                    :class="{ loading: isLoading && navigating === 'prev' }">
+                <span v-if="!(isLoading && navigating === 'prev')">上一話</span>
             </button>
             <button class="control-btn"
-                    @click="toggleChapterMenu">
+                    @click="toggleChapterMenu"
+                    :disabled="isLoading">
                 目錄
             </button>
             <button class="control-btn"
-                    @click="toggleSettings">
+                    @click="toggleSettings"
+                    :disabled="isLoading">
                 設置
             </button>
             <button class="control-btn" 
                     @click="goToNext"
-                    :disabled="!hasNext">
-                下一話
+                    :disabled="!hasNext || isLoading"
+                    :class="{ loading: isLoading && navigating === 'next' }">
+                <span v-if="!(isLoading && navigating === 'next')">下一話</span>
             </button>
         </div>
     </div>
@@ -453,7 +522,9 @@
                     lineHeight: parseFloat(localStorage.getItem(STORAGE_KEYS.LINE_HEIGHT)) || 1.8,
                     allChapters: [],
                     novelTitle: '',
-                    novelTitleFormatted: ''
+                    novelTitleFormatted: '',
+                    isLoading: false,
+                    navigating: null
                 }
             },
             computed: {
@@ -507,7 +578,7 @@
                         // 移除標題兩側的《》符號進行匹配
                         this.novelTitleFormatted = currentNovel.replace(/^《|》$/g, '');
                         
-                        const response = await fetch('/輕小說翻譯/novels.json');
+                        const response = await fetch('novels.json');
                         const data = await response.json();
                         const novelData = data.novels.find(novel => novel.title === this.novelTitleFormatted);
                         
@@ -568,22 +639,32 @@
                 },
                 async loadChapterContent() {
                     try {
+                        this.isLoading = true;
+                        
                         // 獲取小說資料夾路徑
-                        const folderPath = `/輕小說翻譯/${encodeURIComponent(this.novelTitle)}`;
+                        const folderPath = `${encodeURIComponent(this.novelTitle)}`;
                         
                         // 使用正確的文件名格式
                         const filename = `${folderPath}/${this.currentChapter.filename}`;
                         const response = await fetch(filename);
+                        
+                        if (!response.ok) {
+                            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                        }
+                        
                         this.chapterContent = await response.text();
                         this.scrollToTop();
+                        
                         this.$nextTick(() => {
                             this.setupImageViewer();
                             this.restoreScrollPosition();
                             this.markAsRead(); 
+                            this.isLoading = false;
                         });
                     } catch (error) {
+                        this.isLoading = false;
                         console.error('讀取章節內容失敗:', error);
-                        alert('讀取章節內容失敗');
+                        alert(`讀取章節內容失敗: ${error.message}`);
                         // 嚴重錯誤時返回到詳情頁面
                         if (this.novelTitle) {
                             const encodedTitle = encodeURIComponent(this.novelTitle);
@@ -664,7 +745,10 @@
                     this.showSettings = false;
                 },
                 goToChapter(number) {
-                    if (number !== this.currentChapter.number) {
+                    if (number !== this.currentChapter.number && !this.isLoading) {
+                        this.isLoading = true;
+                        this.navigating = 'chapter';
+                        
                         // 保存當前章節的滾動位置
                         this.saveScrollPosition();
                         const encodedTitle = encodeURIComponent(this.novelTitle);
@@ -678,7 +762,10 @@
                     window.location.href = `noveldetail.html?title=${encodedTitle}`;
                 },
                 goToNext() {
-                    if (this.hasNext) {
+                    if (this.hasNext && !this.isLoading) {
+                        this.navigating = 'next';
+                        this.isLoading = true;
+                        
                         const nextChapters = this.allChapters.filter(
                             chapter => chapter.number > this.currentChapter.number
                         );
@@ -692,7 +779,10 @@
                     }
                 },
                 goToPrevious() {
-                    if (this.hasPrevious) {
+                    if (this.hasPrevious && !this.isLoading) {
+                        this.navigating = 'prev';
+                        this.isLoading = true;
+                        
                         const prevChapters = this.allChapters.filter(
                             chapter => chapter.number < this.currentChapter.number
                         );
