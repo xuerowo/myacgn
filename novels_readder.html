@@ -1,0 +1,2585 @@
+<!DOCTYPE html>
+<!-- 
+    HTML5文檔類型聲明
+    告訴瀏覽器這是一個HTML5文檔，確保使用最新的HTML標準
+-->
+<html lang="zh-TW">
+<!-- 
+    根元素，lang屬性指定頁面的主要語言為繁體中文
+    這有助於搜索引擎優化(SEO)和無障礙功能
+-->
+<head>
+    <!-- 
+        head標籤包含頁面的元數據(metadata)
+        這些內容不會直接顯示在頁面上，但對瀏覽器和搜索引擎很重要
+    -->
+    
+    <meta charset="UTF-8">
+    <!-- 
+        設定字符編碼為UTF-8，支持多國語言字符
+        UTF-8是最常用的字符編碼，能顯示幾乎所有語言的文字
+    -->
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 
+        響應式設計的重要設定
+        width=device-width: 視窗寬度等於設備寬度
+        initial-scale=1.0: 初始縮放比例為100%
+        這確保網頁在移動設備上正確顯示
+    -->
+    
+    <title>輕小說翻譯</title>
+    <!-- 
+        網頁標題，顯示在瀏覽器標籤頁上
+        也是搜索引擎結果中顯示的標題
+    -->
+    
+    <link rel="icon" href="images/favicon.jpg" type="image/jpg">
+    <!-- 
+        設定網站圖標(favicon)
+        顯示在瀏覽器標籤頁和書籤中的小圖標
+        rel="icon": 表示這是網站圖標
+        href: 圖標文件的路徑
+        type: 指定文件類型
+    -->
+    
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- 
+        引入Vue.js 3框架
+        Vue是一個漸進式JavaScript框架，用於構建用戶界面
+        這裡使用CDN(內容分發網絡)的方式引入，無需本地下載
+    -->
+    
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- 
+        引入Marked.js庫
+        Marked是一個Markdown解析器，能將Markdown格式轉換為HTML
+        用於處理小說內容的格式化顯示
+    -->
+    
+    <style>
+        /* 
+            CSS樣式表開始
+            CSS用於控制HTML元素的外觀和佈局
+            這裡使用內部樣式表(embedded stylesheet)
+        */
+        
+        :root {
+            /* 
+                CSS自定義屬性(CSS變量)定義
+                :root選擇器表示文檔的根元素
+                自定義屬性以--開頭，可以在整個文檔中重複使用
+                這種方式便於統一管理顏色、尺寸等設計標準
+            */
+            
+            /* 顏色系統變量 - 用於統一管理整個網站的色彩方案 */
+            --primary-color: #4a90e2;          /* 主色調：藍色，用於按鈕、鏈接等重要元素 */
+            --primary-hover: #357abd;           /* 主色調懸停狀態：較深的藍色 */
+            --secondary-color: #f5f5f5;         /* 次要顏色：淺灰色，用於背景 */
+            --text-color: #333;                 /* 主要文字顏色：深灰色 */
+            --text-muted: #666;                 /* 次要文字顏色：中灰色，用於不太重要的文字 */
+            --border-color: #ddd;               /* 邊框顏色：淺灰色 */
+            --background-color: #fff;           /* 主要背景顏色：白色 */
+            --dropdown-background: #fff;        /* 下拉菜單背景顏色 */
+            --dropdown-hover: #f0f0f0;          /* 下拉菜單項目懸停背景顏色 */
+            
+            /* 陰影效果變量 - 用於創建深度感和層次 */
+            --shadow-light: 0 2px 4px rgba(0,0,0,0.1);      /* 輕微陰影 */
+            --shadow-medium: 0 2px 8px rgba(0,0,0,0.15);    /* 中等陰影 */
+            --shadow-heavy: 0 4px 12px rgba(0,0,0,0.15);    /* 較重陰影 */
+            
+            /* 字體相關變量 */
+            --font-size: 18px;                  /* 基礎字體大小 */
+            --font-size-sm: 14px;               /* 小字體大小 */
+            --font-size-lg: 1.1rem;             /* 大字體大小(相對單位) */
+            --line-height: 1.8;                 /* 行高，影響文字的垂直間距 */
+            
+            /* 佈局相關變量 */
+            --max-width: 800px;                 /* 最大寬度，用於限制內容區域寬度 */
+            --content-padding: 2rem;            /* 內容區域內邊距 */
+            
+            /* 邊框圓角變量 */
+            --border-radius: 4px;               /* 小圓角 */
+            --border-radius-lg: 8px;            /* 大圓角 */
+            
+            /* 間距變量 - 用於統一管理各種間距 */
+            --spacing-xs: 0.25rem;              /* 極小間距 */
+            --spacing-sm: 0.5rem;               /* 小間距 */
+            --spacing-md: 1rem;                 /* 中等間距 */
+            --spacing-lg: 1.5rem;               /* 大間距 */
+            --spacing-xl: 2rem;                 /* 極大間距 */
+            
+            /* 動畫過渡變量 */
+            --transition: 0.3s ease;            /* 標準過渡動畫時間和緩動函數 */
+            
+            /* 層級變量 - 控制元素的上下層疊順序 */
+            --z-dropdown: 1001;                 /* 下拉菜單層級 */
+            --z-modal: 1002;                    /* 模態框層級 */
+            --z-navbar: 1000;                   /* 導航欄層級 */
+            --z-lightbox: 2000;                 /* 燈箱層級 */
+            --z-loading: 9999;                  /* 載入畫面層級(最高) */
+            
+            /* 背景顏色的RGB值，用於透明度計算 */
+            --background-rgb: 255,255,255;      /* 白色的RGB值 */
+        }
+        
+        :root[data-theme="dark"] {
+            /* 
+                暗色主題的CSS變量重定義
+                使用屬性選擇器[data-theme="dark"]來指定暗色主題
+                當根元素有data-theme="dark"屬性時，使用這些顏色
+            */
+            --primary-color: #64b5f6;          /* 暗色主題的主色調：較亮的藍色 */
+            --primary-hover: #42a5f5;          /* 暗色主題的主色調懸停狀態 */
+            --secondary-color: #1a1a1a;        /* 暗色主題的次要顏色：深灰色 */
+            --text-color: #e0e0e0;             /* 暗色主題的主要文字顏色：淺灰色 */
+            --text-muted: #999;                /* 暗色主題的次要文字顏色 */
+            --border-color: #333;              /* 暗色主題的邊框顏色：深灰色 */
+            --background-color: #121212;       /* 暗色主題的主要背景顏色：深黑色 */
+            --dropdown-background: #1a1a1a;    /* 暗色主題的下拉菜單背景 */
+            --dropdown-hover: #2a2a2a;         /* 暗色主題的下拉菜單懸停背景 */
+            --shadow-heavy: 0 4px 12px rgba(0,0,0,0.3);  /* 暗色主題的較重陰影 */
+            --background-rgb: 18,18,18;        /* 暗色主題背景的RGB值 */
+        }
+        
+        /* 
+            暗色主題下特定元素的樣式覆蓋
+            這些規則只在暗色主題下生效
+        */
+        :root[data-theme="dark"] .chapter-item.read {
+            border-color: rgba(255, 255, 255, 0.1);  /* 已讀章節的邊框顏色 */
+        }
+        :root[data-theme="dark"] .settings-modal .chapter-item.read {
+            border-color: rgba(255, 255, 255, 0.1);  /* 設定模態框中已讀章節的邊框顏色 */
+        }
+        
+        *, *::before, *::after {
+            /* 
+                通用重置樣式
+                *: 選擇所有元素
+                ::before, ::after: 選擇所有偽元素
+                這些樣式確保所有元素都有一致的盒模型
+            */
+            margin: 0;                          /* 移除所有元素的默認外邊距 */
+            padding: 0;                         /* 移除所有元素的默認內邊距 */
+            box-sizing: border-box;             /* 使用border-box盒模型：寬高包含padding和border */
+        }
+        
+        html {
+            /* 
+                根元素樣式
+                設定整個網頁的基礎屬性
+            */
+            height: 100%;                       /* 設定HTML元素高度為100% */
+            scroll-behavior: smooth;            /* 啟用平滑滾動效果 */
+        }
+        
+        body {
+            /* 
+                頁面主體樣式
+                使用Flexbox佈局來創建響應式設計
+            */
+            display: flex;                      /* 使用Flexbox佈局 */
+            flex-direction: column;             /* 主軸方向為垂直(上下排列) */
+            min-height: 100vh;                  /* 最小高度為視窗高度(100vh = 100% viewport height) */
+            
+            /* 字體設定 */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            /* 
+                字體堆疊(font stack)：按優先級列出多個字體
+                -apple-system: 蘋果系統默認字體
+                BlinkMacSystemFont: 舊版蘋果系統字體
+                "Segoe UI": Windows系統字體
+                Roboto: Android系統字體
+                sans-serif: 通用無襯線字體(備用)
+            */
+            
+            line-height: var(--line-height);    /* 使用CSS變量設定行高 */
+            color: var(--text-color);           /* 使用CSS變量設定文字顏色 */
+            background-color: var(--secondary-color);  /* 使用CSS變量設定背景顏色 */
+            padding-top: 60px;                  /* 頂部內邊距，為固定導航欄留出空間 */
+            
+            /* 過渡動畫：當背景顏色和文字顏色改變時(如切換主題)會有平滑過渡 */
+            transition: background-color var(--transition), color var(--transition);
+        }
+        
+        #app {
+            /* 
+                Vue.js應用的根容器
+                flex-grow: 1 讓它佔據除導航欄和頁腳外的所有可用空間
+            */
+            flex-grow: 1;
+        }
+        
+        .container {
+            /* 
+                主要內容容器
+                使用最大寬度和自動邊距來居中內容
+            */
+            max-width: 1200px;                  /* 最大寬度限制 */
+            margin: var(--spacing-xl) auto 0;   /* 上邊距、左右自動(居中)、下邊距為0 */
+            padding: 20px;                      /* 內邊距 */
+        }
+        
+        .navbar {
+            /* 
+                導航欄樣式
+                使用fixed定位來創建固定在頂部的導航欄
+            */
+            position: fixed;                     /* 固定定位：不隨頁面滾動 */
+            top: 0;                             /* 距離頂部0像素 */
+            left: 0;                            /* 距離左側0像素 */
+            right: 0;                           /* 距離右側0像素 */
+            
+            /* 
+                半透明背景
+                rgba()函數中使用CSS變量來創建半透明效果
+                var(--background-rgb, 255,255,255): 使用CSS變量，如果變量不存在則使用默認值
+                0.85: 透明度85%
+            */
+            background-color: rgba( var(--background-rgb, 255,255,255), 0.85 );
+            
+            box-shadow: var(--shadow-light);    /* 使用CSS變量設定陰影 */
+            padding: var(--spacing-md);         /* 使用CSS變量設定內邊距 */
+            z-index: var(--z-navbar);           /* 使用CSS變量設定層級 */
+            
+            /* 過渡動畫：top屬性和背景顏色的變化會有平滑過渡 */
+            transition: top var(--transition), background-color var(--transition);
+        }
+        
+        .nav-container {
+            /* 
+                導航欄內容容器
+                使用Flexbox來創建響應式導航佈局
+            */
+            max-width: 1200px;                  /* 最大寬度限制 */
+            margin: 0 auto;                     /* 水平居中 */
+            display: flex;                      /* 使用Flexbox佈局 */
+            justify-content: space-between;     /* 主軸方向兩端對齊(左右分佈) */
+            align-items: center;                /* 交叉軸方向居中對齊(垂直居中) */
+            gap: var(--spacing-md);             /* Flexbox項目之間的間距 */
+        }
+        
+        .nav-left {
+            /* 
+                導航欄左側區域
+                包含返回按鈕和標題
+            */
+            display: flex;                      /* 使用Flexbox佈局 */
+            align-items: center;                /* 垂直居中對齊 */
+            gap: var(--spacing-xl);             /* 子元素之間的間距 */
+        }
+        
+        .nav-right {
+            /* 
+                導航欄右側區域
+                包含排序選項和主題切換按鈕
+            */
+            display: flex;                      /* 使用Flexbox佈局 */
+            align-items: center;                /* 垂直居中對齊 */
+            gap: var(--spacing-lg);             /* 子元素之間的間距 */
+            flex-shrink: 0;                     /* 不允許縮小，確保右側元素不會被壓縮 */
+        }
+        
+        .nav-title {
+            /* 
+                導航欄標題樣式
+                作為可點擊的標題鏈接
+            */
+            color: var(--primary-color);        /* 使用主色調 */
+            text-decoration: none;              /* 移除下劃線 */
+            font-size: 1.3rem;                 /* 字體大小(相對單位) */
+            font-weight: bold;                  /* 粗體 */
+            cursor: pointer;                    /* 滑鼠懸停時顯示手型游標 */
+            transition: opacity 0.2s ease;     /* 透明度變化的過渡動畫 */
+        }
+        
+        .nav-title:hover {
+            /* 
+                標題懸停狀態
+                :hover偽類選擇器在滑鼠懸停時觸發
+            */
+            opacity: 0.8;                       /* 透明度降至80% */
+        }
+        
+        .dropdown {
+            /* 
+                下拉菜單容器
+                使用相對定位作為絕對定位子元素的參考點
+            */
+            position: relative;                  /* 相對定位：為子元素提供定位上下文 */
+            display: inline-block;              /* 內聯塊元素：保持在行內但可設定寬高 */
+            z-index: var(--z-dropdown);         /* 設定層級，確保下拉菜單在其他元素之上 */
+        }
+        
+        .dropdown-toggle, .sort-selector {
+            /* 
+                下拉菜單觸發按鈕和排序選擇器的共同樣式
+                使用Flexbox來對齊內部元素
+            */
+            cursor: pointer;                    /* 滑鼠懸停時顯示手型游標 */
+            padding: var(--spacing-sm) 0;       /* 上下內邊距，左右為0 */
+            display: flex;                      /* 使用Flexbox佈局 */
+            align-items: center;                /* 垂直居中對齊 */
+            justify-content: center;            /* 水平居中對齊 */
+            gap: var(--spacing-sm);             /* 子元素間距 */
+            color: var(--text-color);           /* 文字顏色 */
+            background: none;                   /* 無背景 */
+            border: none;                       /* 無邊框 */
+            font-size: var(--font-size-lg);     /* 字體大小 */
+            user-select: none;                  /* 禁止用戶選擇文字 */
+            transition: color 0.2s ease;       /* 顏色變化的過渡動畫 */
+        }
+        
+        .dropdown-toggle:hover, .sort-selector:hover {
+            /* 
+                按鈕懸停狀態
+                滑鼠懸停時改變顏色
+            */
+            color: var(--primary-color);        /* 懸停時使用主色調 */
+        }
+        
+        .dropdown-toggle::after {
+            /* 
+                使用CSS偽元素添加下拉箭頭
+                ::after偽元素在元素內容之後插入內容
+            */
+            content: '▼';                       /* 插入向下箭頭符號 */
+            font-size: 0.8em;                  /* 相對字體大小 */
+            transition: transform var(--transition);  /* 變換效果的過渡動畫 */
+        }
+        
+        .dropdown-toggle.active::after {
+            /* 
+                下拉菜單展開時的箭頭狀態
+                .active類表示菜單已展開
+            */
+            transform: rotate(180deg);          /* 旋轉180度，箭頭朝上 */
+        }
+        
+        .dropdown-toggle.sort-selector::after {
+            /* 
+                排序選擇器不顯示箭頭
+                覆蓋之前的::after規則
+            */
+            content: none;                      /* 不顯示任何內容 */
+        }
+        
+        .dropdown-menu, .sort-menu {
+            /* 
+                下拉菜單和排序菜單的樣式
+                使用固定定位和動畫效果
+            */
+            position: fixed;                    /* 固定定位：相對於視窗定位 */
+            background-color: var(--dropdown-background);  /* 背景顏色 */
+            min-width: 160px;                   /* 最小寬度 */
+            box-shadow: var(--shadow-medium);   /* 陰影效果 */
+            border-radius: var(--border-radius);  /* 圓角 */
+            
+            /* 初始隱藏狀態 */
+            opacity: 0;                         /* 完全透明 */
+            visibility: hidden;                 /* 隱藏元素(不佔空間) */
+            transform: translateY(-10px);       /* 向上偏移10像素 */
+            
+            transition: all var(--transition);  /* 所有屬性變化的過渡動畫 */
+            z-index: var(--z-modal);           /* 設定較高的層級 */
+            padding: 4px;                      /* 內邊距 */
+        }
+        
+        .dropdown-menu.show, .sort-menu.show {
+            /* 
+                菜單顯示狀態
+                .show類用於控制菜單的顯示/隱藏
+            */
+            opacity: 1;                         /* 完全不透明 */
+            visibility: visible;                /* 顯示元素 */
+            transform: translateY(0);           /* 恢復原位置 */
+        }
+        
+        .dropdown-menu a, .sort-option {
+            /* 
+                下拉菜單項目的樣式
+                包括鏈接和排序選項
+            */
+            display: block;                     /* 塊級元素：佔滿一行 */
+            padding: 0.8rem var(--spacing-md); /* 內邊距 */
+            color: var(--text-color);           /* 文字顏色 */
+            text-decoration: none;              /* 移除下劃線 */
+            transition: background-color var(--transition);  /* 背景顏色過渡動畫 */
+            cursor: pointer;                    /* 滑鼠懸停時顯示手型游標 */
+            border-radius: var(--border-radius);  /* 圓角 */
+        }
+        
+        .dropdown-menu a:hover, .sort-option:hover, .sort-option.selected {
+            /* 
+                菜單項目懸停和選中狀態
+                :hover偽類 + .selected類
+            */
+            background-color: var(--dropdown-hover);  /* 懸停背景顏色 */
+            color: var(--primary-color);              /* 懸停文字顏色 */
+        }
+        
+        .sort-selector {
+            /* 
+                排序選擇器的額外樣式
+                覆蓋通用的.dropdown-toggle樣式
+            */
+            padding: 8px;                       /* 統一內邊距 */
+            border-radius: var(--border-radius);  /* 圓角 */
+        }
+        
+        .sort-selector:hover {
+            /* 排序選擇器懸停狀態 */
+            background-color: var(--dropdown-hover);  /* 懸停背景顏色 */
+        }
+        
+        .sort-option {
+            /* 
+                排序選項的特殊佈局
+                使用!important覆蓋之前的display設定
+            */
+            display: flex !important;           /* 強制使用Flexbox佈局 */
+            align-items: center;                /* 垂直居中對齊 */
+            justify-content: space-between;     /* 兩端對齊(文字在左，勾選在右) */
+            padding: 8px 12px;                 /* 縮小內邊距 */
+        }
+        
+        .sort-option-text {
+            /* 排序選項的文字部分 */
+            font-size: var(--font-size-sm);    /* 小字體 */
+            margin-right: 8px;                 /* 右邊距 */
+        }
+        
+        .sort-option-check {
+            /* 
+                排序選項的勾選符號
+                默認隱藏，選中時顯示
+            */
+            opacity: 0;                         /* 默認透明(隱藏) */
+            transition: opacity 0.2s ease;     /* 透明度變化的過渡動畫 */
+        }
+        
+        .sort-option.selected .sort-option-check {
+            /* 選中的排序選項顯示勾選符號 */
+            opacity: 1;                         /* 完全不透明(顯示) */
+        }
+        
+        .sort-chevron {
+            /* 排序按鈕的下拉箭頭 */
+            font-size: 0.9rem;                 /* 字體大小 */
+            transition: transform var(--transition);  /* 變換效果的過渡動畫 */
+            margin-left: 4px;                  /* 左邊距 */
+        }
+        
+        .theme-toggle {
+            /* 
+                主題切換按鈕
+                用於在明暗主題間切換
+            */
+            background: none;                   /* 無背景 */
+            border: none;                       /* 無邊框 */
+            color: var(--text-color);           /* 文字顏色 */
+            font-size: 1.5rem;                 /* 較大字體 */
+            cursor: pointer;                    /* 滑鼠懸停時顯示手型游標 */
+            padding: var(--spacing-sm);         /* 內邊距 */
+            transition: transform var(--transition);  /* 變換效果的過渡動畫 */
+        }
+        
+        .theme-toggle:hover {
+            /* 
+                主題切換按鈕懸停效果
+                添加360度旋轉動畫
+            */
+            transform: rotate(360deg);          /* 旋轉360度 */
+        }
+        .content-grid {
+            /* 
+                內容網格佈局 - 小說卡片的容器
+                使用CSS Grid來創建響應式的卡片佈局
+            */
+            display: grid;                      /* 使用CSS Grid佈局 */
+            /* 
+                grid-template-columns: 定義列的數量和大小
+                repeat(auto-fill, minmax(200px, 1fr)): 
+                - auto-fill: 自動填充盡可能多的列
+                - minmax(200px, 1fr): 每列最小200px，最大為可用空間的等份
+                - 這樣可以根據螢幕寬度自動調整列數
+            */
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: var(--spacing-xl);             /* 網格項目之間的間距 */
+        }
+        
+        .content-card {
+            /* 
+                小說卡片樣式
+                使用Flexbox佈局來處理內部元素排列
+            */
+            width: 196px;                       /* 固定寬度 */
+            background: var(--background-color); /* 背景顏色 */
+            border-radius: var(--border-radius-lg); /* 大圓角 */
+            overflow: hidden;                   /* 隱藏超出邊界的內容(圓角圖片) */
+            box-shadow: var(--shadow-light);    /* 輕微陰影 */
+            
+            /* 過渡動畫：變換和陰影的變化會有平滑過渡 */
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;                    /* 滑鼠懸停時顯示手型游標 */
+            
+            /* Flexbox佈局用於垂直排列封面和信息 */
+            display: flex;                      /* 使用Flexbox佈局 */
+            flex-direction: column;             /* 垂直排列(上下結構) */
+        }
+        
+        .content-card:hover {
+            /* 
+                卡片懸停效果
+                創建懸浮效果增加互動感
+            */
+            transform: translateY(-5px);        /* 向上移動5像素 */
+            box-shadow: var(--shadow-medium);   /* 增強陰影效果 */
+        }
+        
+        .content-card img {
+            /* 
+                卡片封面圖片樣式
+                確保圖片比例一致且填滿容器
+            */
+            width: 196px;                       /* 固定寬度 */
+            height: 280px;                      /* 固定高度 */
+            object-fit: cover;                  /* 保持縱橫比並裁剪超出部分 */
+        }
+        
+        .content-card-info {
+            /* 
+                卡片信息區域
+                包含標題、作者和更新時間
+            */
+            padding: var(--spacing-md);         /* 內邊距 */
+            background: var(--background-color); /* 背景顏色 */
+            flex: 1;                            /* 佔據剩餘空間 */
+            
+            /* 使用Flexbox來排列內部元素 */
+            display: flex;                      /* 使用Flexbox佈局 */
+            flex-direction: column;             /* 垂直排列 */
+            justify-content: space-between;     /* 垂直方向兩端對齊 */
+        }
+        
+        .content-title {
+            /* 小說標題樣式 */
+            font-size: var(--font-size-lg);     /* 較大字體 */
+            font-weight: bold;                  /* 粗體 */
+            color: var(--text-color);           /* 文字顏色 */
+        }
+        
+        .card-footer {
+            /* 
+                卡片底部信息
+                顯示作者和更新時間
+            */
+            display: flex;                      /* 使用Flexbox佈局 */
+            justify-content: space-between;     /* 兩端對齊(作者在左，時間在右) */
+            align-items: center;                /* 垂直居中對齊 */
+            margin-top: var(--spacing-sm);      /* 上邊距 */
+            font-size: 0.8rem;                 /* 較小字體 */
+            color: var(--text-muted);           /* 次要文字顏色 */
+        }
+        .novel-detail {
+            /* 
+                小說詳情頁面的主容器
+                包含小說封面、信息和章節列表
+            */
+            background: var(--background-color);    /* 背景顏色 */
+            border-radius: var(--border-radius-lg); /* 大圓角 */
+            padding: var(--spacing-xl);             /* 內邊距 */
+            margin-bottom: var(--spacing-xl);       /* 下邊距 */
+        }
+        
+        .novel-info {
+            /* 
+                小說基本信息區域
+                使用Grid佈局將封面和詳細信息並排顯示
+            */
+            display: grid;                          /* 使用CSS Grid佈局 */
+            grid-template-columns: 300px 1fr;       /* 第一列300px(封面)，第二列佔剩餘空間(信息) */
+            gap: var(--spacing-xl);                 /* 列之間的間距 */
+        }
+        
+        .novel-cover {
+            /* 
+                小說封面圖片樣式
+                可點擊放大查看
+            */
+            width: 100%;                            /* 寬度佔滿容器 */
+            border-radius: var(--border-radius);    /* 圓角 */
+            cursor: pointer;                        /* 滑鼠懸停時顯示手型游標 */
+            transition: transform 0.2s ease;       /* 變換效果的過渡動畫 */
+        }
+        
+        .novel-cover:hover {
+            /* 封面懸停效果：輕微放大 */
+            transform: scale(1.02);                 /* 放大至102% */
+        }
+        
+        .novel-title {
+            /* 小說標題樣式 */
+            font-size: 2.3rem;                     /* 大字體 */
+            margin-bottom: var(--spacing-md);       /* 下邊距 */
+            color: var(--text-color);              /* 文字顏色 */
+        }
+        
+        .novel-metadata {
+            /* 
+                小說元數據區域
+                包含作者、類型等信息
+            */
+            margin-bottom: var(--spacing-md);       /* 下邊距 */
+            color: var(--text-color);              /* 文字顏色 */
+        }
+        
+        .novel-description {
+            /* 
+                小說描述/簡介樣式
+                支持多行文字和換行顯示
+            */
+            margin-top: var(--spacing-md);          /* 上邊距 */
+            line-height: 1.8;                      /* 行高 */
+            white-space: pre-line;                  /* 保留換行符並自動換行 */
+        }
+        
+        .source-links {
+            /* 原文鏈接容器 */
+            margin-top: var(--spacing-sm);          /* 上邊距 */
+        }
+        
+        .source-link {
+            /* 
+                原文鏈接按鈕樣式
+                用於鏈接到原始網站
+            */
+            display: inline-block;                  /* 內聯塊元素：可設定寬高但保持在行內 */
+            padding: 0.25rem 0.75rem;              /* 內邊距：上下小，左右大 */
+            margin-left: var(--spacing-sm);         /* 左邊距 */
+            border-radius: var(--border-radius);    /* 圓角 */
+            color: var(--text-color);              /* 文字顏色 */
+            background: var(--secondary-color);     /* 背景顏色 */
+            text-decoration: none;                  /* 移除下劃線 */
+            transition: all 0.2s ease;             /* 所有屬性變化的過渡動畫 */
+        }
+        
+        .source-link:hover {
+            /* 
+                鏈接懸停效果
+                改變背景和文字顏色
+            */
+            background: var(--primary-hover);       /* 懸停背景顏色 */
+            color: #fff;                            /* 懸停文字顏色：白色 */
+        }
+        .chapter-list {
+            /* 
+                章節列表容器
+                使用Grid佈局創建響應式的章節卡片網格
+            */
+            display: grid;                              /* 使用CSS Grid佈局 */
+            /* 
+                自動填充網格列，每列最小150px
+                根據容器寬度自動調整列數
+            */
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: var(--spacing-md);                     /* 網格項目之間的間距 */
+            margin-top: var(--spacing-xl);              /* 上邊距 */
+        }
+        
+        .chapter-item {
+            /* 
+                單個章節項目的樣式
+                每個章節都是一個可點擊的卡片
+            */
+            background: var(--secondary-color);         /* 背景顏色 */
+            padding: var(--spacing-md);                 /* 內邊距 */
+            border-radius: var(--border-radius);        /* 圓角 */
+            cursor: pointer;                            /* 滑鼠懸停時顯示手型游標 */
+            transition: all 0.2s ease;                 /* 所有屬性變化的過渡動畫 */
+            
+            /* 使用Flexbox垂直排列章節標題和日期 */
+            display: flex;                              /* 使用Flexbox佈局 */
+            flex-direction: column;                     /* 垂直排列 */
+            gap: var(--spacing-sm);                     /* 子元素間距 */
+        }
+        
+        .chapter-item:hover {
+            /* 
+                章節項目懸停效果
+                創建視覺反饋增強用戶體驗
+            */
+            background: var(--primary-color);           /* 懸停背景顏色：主色調 */
+            color: #fff;                                /* 懸停文字顏色：白色 */
+            transform: translateY(-2px);                /* 向上移動2像素，創建懸浮效果 */
+        }
+        
+        .chapter-item.read {
+            /* 
+                已讀章節的特殊樣式
+                .read類用於標記用戶已經閱讀過的章節
+            */
+            opacity: 0.5;                               /* 降低透明度至50% */
+            border: 1px solid rgba(0, 0, 0, 0.1);      /* 添加淺色邊框 */
+            background: var(--secondary-color);         /* 保持原背景顏色 */
+        }
+        
+        .chapter-item.read .chapter-title {
+            /* 已讀章節的標題顏色 */
+            color: var(--text-muted);                   /* 使用次要文字顏色(較淡) */
+        }
+        
+        .chapter-item:hover .chapter-date {
+            /* 章節項目懸停時日期的顏色變化 */
+            color: rgba(255, 255, 255, 0.8);           /* 半透明白色 */
+        }
+        
+        .chapter-title {
+            /* 章節標題樣式 */
+            font-weight: 500;                          /* 中等粗細字體 */
+            flex-grow: 1;                              /* 佔據剩餘空間 */
+        }
+        
+        .chapter-date {
+            /* 章節日期樣式 */
+            font-size: 0.85rem;                        /* 較小字體 */
+            color: var(--text-muted);                  /* 次要文字顏色 */
+        }
+        .reader-container {
+            /* 
+                閱讀器主容器
+                為小說內容提供最佳的閱讀體驗
+            */
+            max-width: var(--max-width);                 /* 最大寬度限制，避免行太長影響閱讀 */
+            margin: 4rem auto 5rem;                     /* 上邊距4rem，左右自動居中，下邊距5rem */
+            padding: var(--content-padding);            /* 內邊距 */
+            background: var(--background-color);        /* 背景顏色 */
+            border-radius: var(--border-radius-lg);     /* 大圓角 */
+            box-shadow: var(--shadow-light);            /* 輕微陰影 */
+            font-size: var(--font-size);                /* 字體大小(可通過設定調整) */
+        }
+        
+        .novel-content {
+            /* 
+                小說正文內容區域
+                包含實際的小說文字和圖片
+            */
+            margin-bottom: var(--spacing-xl);           /* 下邊距 */
+            user-select: none;                          /* 禁止用戶選擇文字(防止意外選中) */
+        }
+        
+        .novel-content p {
+            /* 
+                小說內容段落樣式
+                確保段落間有適當間距
+            */
+            margin-bottom: var(--spacing-md);           /* 段落下邊距 */
+        }
+        
+        .novel-content a {
+            /* 
+                小說內容中的鏈接樣式
+                處理長URL的換行問題
+            */
+            word-break: break-all;                      /* 強制長單詞(如URL)換行 */
+        }
+        
+        .novel-content img {
+            /* 
+                小說內容中的圖片樣式
+                確保圖片響應式顯示且可點擊放大
+            */
+            max-width: 100%;                            /* 最大寬度不超過容器 */
+            height: auto;                               /* 高度自動，保持縱橫比 */
+            display: block;                             /* 塊級元素：獨佔一行 */
+            margin: var(--spacing-md) auto;             /* 上下邊距，左右自動居中 */
+            cursor: pointer;                            /* 滑鼠懸停時顯示手型游標 */
+            border-radius: var(--border-radius);        /* 圓角 */
+            transition: transform 0.2s ease;           /* 變換效果的過渡動畫 */
+        }
+        
+        .novel-content img:hover {
+            /* 圖片懸停效果：輕微放大 */
+            transform: scale(1.02);                     /* 放大至102% */
+        }
+        .control-btn {
+            /* 
+                控制按鈕的基礎樣式
+                用於各種操作按鈕(上一章、下一章、設定等)
+            */
+            padding: var(--spacing-sm) var(--spacing-md); /* 內邊距：上下小，左右大 */
+            border: none;                               /* 移除默認邊框 */
+            border-radius: var(--border-radius);        /* 圓角 */
+            background: var(--primary-color);           /* 主色調背景 */
+            color: white;                               /* 白色文字 */
+            cursor: pointer;                            /* 滑鼠懸停時顯示手型游標 */
+            min-width: 80px;                           /* 最小寬度，確保按鈕大小一致 */
+            transition: background-color 0.2s ease;    /* 背景顏色變化的過渡動畫 */
+        }
+        
+        .control-btn:hover {
+            /* 控制按鈕懸停效果 */
+            background: var(--primary-hover);           /* 懸停時使用較深的主色調 */
+        }
+        
+        .control-btn:disabled {
+            /* 
+                禁用狀態的按鈕樣式
+                當按鈕不可用時(如已經是第一章/最後一章)
+            */
+            opacity: 0.5;                               /* 透明度50%，視覺上表示禁用 */
+            cursor: not-allowed;                        /* 滑鼠懸停時顯示禁用游標 */
+        }
+        
+        .back-btn {
+            /* 
+                返回按鈕的特殊樣式
+                覆蓋通用控制按鈕樣式
+            */
+            background: transparent;                    /* 透明背景 */
+            min-width: auto;                           /* 移除最小寬度限制 */
+            padding: var(--spacing-sm);                /* 統一內邊距 */
+            color: var(--text-color);                  /* 文字顏色 */
+            display: flex;                             /* 使用Flexbox佈局 */
+            align-items: center;                       /* 垂直居中對齊 */
+            justify-content: center;                   /* 水平居中對齊 */
+            margin-right: var(--spacing-md);           /* 右邊距 */
+        }
+        
+        .back-btn:hover {
+            /* 返回按鈕懸停效果 */
+            background: transparent;                   /* 保持透明背景 */
+            color: var(--primary-color);               /* 懸停時使用主色調 */
+        }
+        
+        .navbar:not(.reader-navbar) .back-btn {
+            /* 
+                非閱讀器導航欄中的返回按鈕樣式
+                :not()偽類選擇器排除.reader-navbar類
+            */
+            color: var(--text-color);                  /* 文字顏色 */
+        }
+        
+        .navbar:not(.reader-navbar) .back-btn:hover {
+            /* 非閱讀器導航欄中返回按鈕的懸停效果 */
+            color: var(--primary-color);               /* 懸停時使用主色調 */
+        }
+        
+        .reader-controls {
+            /* 
+                閱讀器底部控制欄
+                包含上一章、下一章、目錄、設定等按鈕
+            */
+            /* 半透明背景，與導航欄一致 */
+            background: rgba( var(--background-rgb, 255,255,255), 0.85 );
+            color: var(--text-color);                  /* 文字顏色 */
+            position: fixed;                           /* 固定定位：不隨頁面滾動 */
+            bottom: 0;                                 /* 固定在底部 */
+            left: 0;                                   /* 左側對齊 */
+            right: 0;                                  /* 右側對齊(充滿寬度) */
+            padding: var(--spacing-md);                /* 內邊距 */
+            
+            /* 使用Flexbox水平排列控制按鈕 */
+            display: flex;                             /* 使用Flexbox佈局 */
+            justify-content: center;                   /* 水平居中對齊 */
+            gap: var(--spacing-md);                    /* 按鈕間距 */
+            
+            transition: transform var(--transition);   /* 變換效果的過渡動畫 */
+            z-index: var(--z-navbar);                  /* 設定層級 */
+        }
+        
+        .reader-controls.hidden {
+            /* 
+                隱藏狀態的控制欄
+                當用戶向下滾動時自動隱藏
+            */
+            transform: translateY(100%);               /* 向下移動100%，完全隱藏 */
+        }
+        
+        .reader-navbar {
+            /* 
+                閱讀器模式下的導航欄樣式
+                使用!important覆蓋其他樣式
+            */
+            background: rgba( var(--background-rgb, 255,255,255), 0.85 ) !important;
+            color: var(--text-color) !important;
+        }
+        
+        .reader-title {
+            /* 
+                閱讀器導航欄中的章節標題
+                顯示當前正在閱讀的章節名稱
+            */
+            text-align: center;                        /* 文字居中 */
+            flex-grow: 1;                              /* 佔據剩餘空間 */
+            margin: 0 1rem;                           /* 左右邊距 */
+        }
+        .settings-modal {
+            /* 
+                設定模態框
+                用於顯示閱讀設定和章節目錄
+                從底部滑入的彈窗設計
+            */
+            position: fixed;                            /* 固定定位：不隨頁面滾動 */
+            bottom: 60px;                              /* 距離底部60px(控制欄上方) */
+            left: 50%;                                 /* 左邊距50%(配合transform居中) */
+            transform: translate(-50%, 200%);          /* 水平居中，垂直向下200%(初始隱藏) */
+            width: 300px;                              /* 固定寬度 */
+            background: var(--background-color);       /* 背景顏色 */
+            border: 1px solid var(--border-color);     /* 邊框 */
+            border-radius: var(--border-radius-lg);    /* 大圓角 */
+            padding: var(--spacing-lg);                /* 內邊距 */
+            color: var(--text-color);                  /* 文字顏色 */
+            z-index: var(--z-navbar);                  /* 層級設定 */
+            transition: transform var(--transition);   /* 變換效果的過渡動畫 */
+            max-height: 60vh;                          /* 最大高度為視窗高度的60% */
+            
+            /* 使用Flexbox垂直佈局 */
+            display: flex;                             /* 使用Flexbox佈局 */
+            flex-direction: column;                    /* 垂直排列 */
+            box-shadow: var(--shadow-heavy);           /* 較重陰影 */
+        }
+        
+        .settings-modal.active {
+            /* 
+                模態框顯示狀態
+                .active類用於控制模態框的顯示/隱藏
+            */
+            transform: translate(-50%, 0);             /* 水平居中，垂直歸位(顯示) */
+        }
+        
+        .settings-modal-header {
+            /* 
+                模態框標題欄
+                使用sticky定位保持在頂部
+            */
+            position: sticky;                          /* 黏性定位：滾動時固定在容器頂部 */
+            top: 0;                                    /* 距離頂部0像素 */
+            padding: 0 0 var(--spacing-md) 0;          /* 只有下內邊距 */
+            border-bottom: 1px solid var(--border-color); /* 底部分隔線 */
+            font-weight: bold;                         /* 粗體 */
+            text-align: center;                        /* 文字居中 */
+            background: var(--background-color);       /* 背景顏色(遮蓋滾動內容) */
+            color: var(--text-color);                  /* 文字顏色 */
+        }
+        
+        .settings-group {
+            /* 
+                設定項目組容器
+                可滾動的內容區域
+            */
+            overflow-y: auto;                          /* 垂直方向自動滾動 */
+            flex: 1;                                   /* 佔據剩餘空間 */
+            margin: 0;                                 /* 移除外邊距 */
+            padding: var(--spacing-md) 0;              /* 上下內邊距 */
+        }
+        
+        .settings-group:last-child {
+            /* 最後一個設定組移除下邊距 */
+            margin-bottom: 0;
+        }
+        
+        .settings-group label {
+            /* 
+                設定項目標籤樣式
+                用於顯示設定項目的說明文字
+            */
+            display: block;                            /* 塊級元素：獨佔一行 */
+            margin-bottom: var(--spacing-sm);          /* 下邊距 */
+            color: var(--text-color);                  /* 文字顏色 */
+        }
+        
+        .settings-group input[type="range"] {
+            /* 
+                範圍滑桿樣式(字體大小、行距調整)
+                使用CSS屬性選擇器選擇特定類型的input
+            */
+            width: 100%;                               /* 寬度佔滿容器 */
+            accent-color: var(--primary-color);        /* 滑桿主色調 */
+        }
+        
+        .settings-group input[type="checkbox"] {
+            /* 
+                複選框樣式(夜間模式開關)
+                使用CSS屬性選擇器選擇checkbox類型的input
+            */
+            margin-right: var(--spacing-sm);           /* 右邊距 */
+            accent-color: var(--primary-color);        /* 複選框主色調 */
+        }
+        .settings-modal .chapter-item {
+            /* 
+                設定模態框中的章節項目樣式
+                與主頁面章節項目類似，但針對模態框進行了調整
+            */
+            background: var(--secondary-color);         /* 背景顏色 */
+            padding: 0.8rem;                           /* 內邊距 */
+            border-radius: var(--border-radius);        /* 圓角 */
+            cursor: pointer;                            /* 滑鼠懸停時顯示手型游標 */
+            transition: all 0.2s ease;                 /* 所有屬性變化的過渡動畫 */
+            
+            /* 使用Flexbox垂直排列章節信息 */
+            display: flex;                              /* 使用Flexbox佈局 */
+            flex-direction: column;                     /* 垂直排列 */
+            gap: 0.3rem;                               /* 子元素間距 */
+            margin-bottom: var(--spacing-sm);           /* 下邊距 */
+            border: 1px solid transparent;             /* 透明邊框(為懸停效果預留空間) */
+        }
+        
+        .settings-modal .chapter-item:hover {
+            /* 模態框中章節項目的懸停效果 */
+            background: var(--primary-color);           /* 懸停背景顏色 */
+            color: #fff;                                /* 懸停文字顏色 */
+            transform: translateY(-1px);                /* 向上移動1像素 */
+        }
+        
+        .settings-modal .chapter-item.read:hover {
+            /* 
+                已讀章節的懸停效果(明亮主題)
+                使用!important覆蓋其他樣式
+            */
+            background: var(--primary-color) !important; /* 強制設定背景顏色 */
+            color: #000 !important;                     /* 強制設定文字顏色為黑色 */
+            transform: translateY(-1px);                /* 向上移動1像素 */
+        }
+        
+        :root[data-theme="dark"] .settings-modal .chapter-item.read:hover {
+            /* 
+                暗色主題下已讀章節的懸停效果
+                在暗色主題中使用白色文字
+            */
+            background: var(--primary-color) !important; /* 強制設定背景顏色 */
+            color: #fff !important;                     /* 強制設定文字顏色為白色 */
+            transform: translateY(-1px);                /* 向上移動1像素 */
+        }
+        
+        .settings-modal .chapter-item.current {
+            /* 
+                當前正在閱讀章節的特殊樣式(明亮主題)
+                使用藍色系突出顯示
+            */
+            background: #bbdefb !important;             /* 淺藍色背景 */
+            color: #000 !important;                     /* 黑色文字 */
+            border-color: #bbdefb !important;           /* 藍色邊框 */
+        }
+        
+        :root[data-theme="dark"] .settings-modal .chapter-item.current {
+            /* 當前正在閱讀章節的特殊樣式(暗色主題) */
+            background: #1976d2 !important;             /* 深藍色背景 */
+            color: #fff !important;                     /* 白色文字 */
+            border-color: #1976d2 !important;           /* 深藍色邊框 */
+        }
+        
+        .settings-modal .chapter-item.read {
+            /* 
+                模態框中已讀章節的樣式
+                與主頁面已讀章節樣式一致
+            */
+            opacity: 0.4;                               /* 透明度40% */
+            border: 1px solid rgba(0, 0, 0, 0.1);      /* 淺色邊框 */
+            background: var(--secondary-color);         /* 背景顏色 */
+        }
+        
+        .settings-modal .chapter-item.read .chapter-title {
+            /* 已讀章節標題的顏色 */
+            color: var(--text-muted);                   /* 次要文字顏色 */
+        }
+        
+        .settings-modal .chapter-item:hover .chapter-title {
+            /* 章節項目懸停時標題顏色 */
+            color: #fff;                                /* 白色文字 */
+        }
+        
+        .settings-modal .chapter-item.read:hover .chapter-title {
+            /* 已讀章節懸停時標題顏色(明亮主題) */
+            color: #000 !important;                     /* 強制黑色文字 */
+        }
+        
+        :root[data-theme="dark"] .settings-modal .chapter-item.read:hover .chapter-title {
+            /* 已讀章節懸停時標題顏色(暗色主題) */
+            color: #fff !important;                     /* 強制白色文字 */
+        }
+        
+        .settings-modal .chapter-item.current .chapter-title {
+            /* 當前章節標題顏色(明亮主題) */
+            color: #000 !important;                     /* 強制黑色文字 */
+        }
+        
+        :root[data-theme="dark"] .settings-modal .chapter-item.current .chapter-title {
+            /* 當前章節標題顏色(暗色主題) */
+            color: #fff !important;                     /* 強制白色文字 */
+        }
+        
+        .settings-modal .chapter-title {
+            /* 
+                模態框中章節標題的基礎樣式
+                針對模態框環境進行了調整
+            */
+            font-weight: 500;                          /* 中等粗細字體 */
+            flex-grow: 1;                              /* 佔據剩餘空間 */
+            color: var(--text-color);                  /* 文字顏色 */
+            font-size: 0.9rem;                        /* 較小字體(適應模態框) */
+        }
+        .lightbox {
+            /* 
+                燈箱(圖片放大查看)容器
+                用於全屏顯示圖片
+            */
+            position: fixed;                            /* 固定定位：覆蓋整個視窗 */
+            inset: 0;                                   /* 上下左右都為0(充滿整個視窗) */
+            background: rgba(0, 0, 0, 0.9);            /* 半透明黑色背景 */
+            display: none;                             /* 初始隱藏 */
+            justify-content: center;                   /* 水平居中對齊 */
+            align-items: center;                       /* 垂直居中對齊 */
+            z-index: var(--z-lightbox);                /* 最高層級(覆蓋所有元素) */
+            opacity: 0;                                /* 初始透明 */
+            transition: opacity var(--transition);     /* 透明度變化的過渡動畫 */
+        }
+        
+        .lightbox.active {
+            /* 
+                燈箱激活狀態
+                .active類用於控制燈箱的顯示
+            */
+            display: flex;                             /* 使用Flexbox佈局(顯示燈箱) */
+            opacity: 1;                                /* 完全不透明 */
+        }
+        
+        .lightbox-content {
+            /* 
+                燈箱內容容器
+                包含圖片和關閉按鈕
+            */
+            position: relative;                        /* 相對定位：為子元素提供定位上下文 */
+            max-width: 95%;                           /* 最大寬度95%(留出邊距) */
+            max-height: 85vh;                         /* 最大高度85%(留出空間給關閉按鈕) */
+            animation: zoomIn var(--transition);       /* 縮放進入動畫 */
+        }
+        
+        .lightbox img {
+            /* 
+                燈箱中的圖片樣式
+                確保圖片在容器中正確顯示
+            */
+            max-width: 100%;                          /* 最大寬度不超過容器 */
+            max-height: 85vh;                         /* 最大高度限制 */
+            object-fit: contain;                      /* 保持縱橫比並完整顯示 */
+        }
+        
+        .close-lightbox {
+            /* 
+                燈箱關閉按鈕
+                位於圖片右上角外側
+            */
+            position: absolute;                       /* 絕對定位：相對於.lightbox-content */
+            top: -40px;                              /* 向上偏移40px(圖片外側) */
+            right: 0;                                /* 右側對齊 */
+            color: white;                            /* 白色文字 */
+            font-size: 24px;                        /* 較大字體 */
+            cursor: pointer;                         /* 滑鼠懸停時顯示手型游標 */
+            background: none;                        /* 無背景 */
+            border: none;                            /* 無邊框 */
+            padding: 8px;                           /* 內邊距 */
+            transition: transform 0.2s ease;        /* 變換效果的過渡動畫 */
+        }
+        
+        .close-lightbox:hover {
+            /* 關閉按鈕懸停效果：放大 */
+            transform: scale(1.2);                   /* 放大至120% */
+        }
+        
+        .loading-overlay {
+            /* 
+                載入遮罩層
+                在載入內容時顯示載入動畫
+            */
+            position: fixed;                         /* 固定定位：覆蓋整個視窗 */
+            inset: 0;                               /* 上下左右都為0(充滿整個視窗) */
+            background: rgba(0, 0, 0, 0.7);         /* 半透明黑色背景 */
+            display: none;                          /* 初始隱藏 */
+            justify-content: center;                /* 水平居中對齊 */
+            align-items: center;                    /* 垂直居中對齊 */
+            z-index: var(--z-loading);             /* 最高層級(載入時覆蓋所有元素) */
+        }
+        
+        .loading-overlay.show {
+            /* 
+                載入遮罩顯示狀態
+                .show類用於控制載入遮罩的顯示
+            */
+            display: flex;                          /* 使用Flexbox佈局(顯示載入畫面) */
+        }
+        
+        .loading-spinner {
+            /* 
+                載入動畫旋轉器
+                創建旋轉的圓環載入動畫
+            */
+            width: 50px;                            /* 寬度 */
+            height: 50px;                           /* 高度 */
+            border: 4px solid rgba(255, 255, 255, 0.3); /* 淺色圓環邊框 */
+            border-top: 4px solid white;            /* 頂部白色邊框(旋轉時形成動畫效果) */
+            border-radius: 50%;                     /* 圓形 */
+            animation: spin 1s linear infinite;     /* 旋轉動畫：1秒一圈，線性速度，無限循環 */
+        }
+        
+        .loading-text {
+            /* 載入文字樣式 */
+            color: white;                           /* 白色文字 */
+            margin-top: var(--spacing-md);          /* 上邊距 */
+            font-size: var(--font-size-lg);         /* 較大字體 */
+        }
+        @keyframes zoomIn {
+            /* 
+                縮放進入動畫
+                用於燈箱圖片的進入效果
+            */
+            from { 
+                transform: scale(0.9);               /* 起始：縮小至90% */
+                opacity: 0;                         /* 起始：完全透明 */
+            }
+            to { 
+                transform: scale(1);                /* 結束：原始大小100% */
+                opacity: 1;                         /* 結束：完全不透明 */
+            }
+        }
+        
+        @keyframes spin {
+            /* 
+                旋轉動畫
+                用於載入旋轉器的360度旋轉效果
+            */
+            0% { transform: rotate(0deg); }         /* 起始：0度 */
+            100% { transform: rotate(360deg); }     /* 結束：360度 */
+        }
+        
+        .hidden {
+            /* 
+                通用隱藏類
+                使用!important確保元素被隱藏
+            */
+            display: none !important;
+        }
+        
+        .page-list .reader-container,
+        .page-list .novel-detail,
+        .page-list .reader-controls,
+        .page-list .settings-modal,
+        .page-detail .content-grid,
+        .page-detail .reader-container,
+        .page-detail .reader-controls,
+        .page-detail .settings-modal,
+        .page-reader .content-grid,
+        .page-reader .novel-detail {
+            /* 
+                頁面狀態控制
+                根據當前頁面類型隱藏不相關的元素
+                
+                .page-list: 首頁(小說列表)狀態
+                .page-detail: 小說詳情頁狀態  
+                .page-reader: 閱讀器狀態
+                
+                這種設計允許單頁面應用(SPA)在不同狀態間切換
+                而不需要重新載入頁面
+            */
+            display: none;
+        }
+        
+        footer {
+            /* 
+                頁腳樣式
+                顯示版權信息和免責聲明
+            */
+            flex-shrink: 0;                         /* 不允許縮小：保持固定高度 */
+            text-align: center;                     /* 文字居中 */
+            padding: var(--spacing-md);             /* 內邊距 */
+            background-color: var(--background-color); /* 背景顏色 */
+        }
+        @media (max-width: 768px) {
+            /* 
+                響應式設計 - 移動設備樣式
+                當螢幕寬度小於或等於768px時應用這些樣式
+                主要針對手機和小平板設備進行優化
+            */
+            
+            :root {
+                /* 移動設備下調整CSS變量 */
+                --content-padding: var(--spacing-md);    /* 減少內容區域內邊距 */
+            }
+            
+            .navbar {
+                /* 移動設備導航欄調整 */
+                padding: 0.8rem;                        /* 減少內邊距 */
+            }
+            
+            .nav-container {
+                /* 
+                    移動設備導航容器
+                    支持水平滾動以適應較窄的螢幕
+                */
+                overflow-x: auto;                       /* 水平方向自動滾動 */
+                overflow-y: hidden;                     /* 垂直方向隱藏滾動 */
+                -webkit-overflow-scrolling: touch;      /* iOS設備平滑滾動 */
+                scrollbar-width: thin;                  /* 細滾動條 */
+                gap: 0.8rem;                           /* 減少元素間距 */
+            }
+            
+            .nav-title {
+                /* 移動設備標題字體調整 */
+                font-size: 1.2rem;                     /* 減小字體大小 */
+            }
+            
+            .nav-right {
+                /* 移動設備導航右側區域 */
+                gap: var(--spacing-md);                 /* 調整元素間距 */
+            }
+            
+            .container {
+                /* 移動設備主容器 */
+                padding: 12px;                         /* 減少內邊距 */
+            }
+            
+            .content-grid {
+                /* 
+                    移動設備內容網格
+                    改為2列佈局以適應較窄的螢幕
+                */
+                grid-template-columns: repeat(2, 1fr);  /* 固定2列，等寬分佈 */
+                gap: var(--spacing-md);                 /* 調整間距 */
+            }
+            
+            .content-card {
+                /* 移動設備小說卡片 */
+                width: 165px;                          /* 減小卡片寬度 */
+            }
+            
+            .content-card img {
+                /* 移動設備卡片圖片 */
+                width: 165px;                          /* 調整圖片寬度 */
+                height: 235px;                         /* 調整圖片高度 */
+            }
+            
+            .content-card-info {
+                /* 移動設備卡片信息區域 */
+                padding: 0.8rem;                       /* 減少內邊距 */
+            }
+            
+            .content-title {
+                /* 移動設備卡片標題 */
+                font-size: 0.95rem;                    /* 減小字體 */
+            }
+            
+            .card-footer {
+                /* 移動設備卡片底部信息 */
+                font-size: 0.75rem;                    /* 減小字體 */
+            }
+            
+            .novel-info {
+                /* 
+                    移動設備小說信息區域
+                    調整封面和信息的佈局比例
+                */
+                grid-template-columns: 200px 1fr;      /* 封面200px，信息佔剩餘空間 */
+                gap: var(--spacing-md);                 /* 調整間距 */
+            }
+            
+            .novel-cover {
+                /* 移動設備小說封面 */
+                max-width: 200px;                      /* 最大寬度限制 */
+                margin: 0 auto;                        /* 水平居中 */
+            }
+            
+            .novel-title {
+                /* 移動設備小說標題 */
+                font-size: 1.3rem;                     /* 減小字體 */
+            }
+            
+            .novel-metadata {
+                /* 移動設備小說元數據 */
+                font-size: var(--spacing-md);          /* 調整字體大小 */
+                margin-bottom: 0.7rem;                 /* 調整下邊距 */
+            }
+            
+            .novel-description {
+                /* 移動設備小說描述 */
+                font-size: var(--spacing-md);          /* 調整字體大小 */
+                margin-top: 0.7rem;                    /* 調整上邊距 */
+                line-height: 1.2;                      /* 調整行高 */
+            }
+            
+            .source-link {
+                /* 移動設備原文鏈接 */
+                padding: 0.2rem 0.6rem;                /* 減少內邊距 */
+                margin-left: 0.4rem;                   /* 減少左邊距 */
+                font-size: 0.9rem;                     /* 減小字體 */
+            }
+            
+            .chapter-list {
+                /* 
+                    移動設備章節列表
+                    調整網格列寬以適應小螢幕
+                */
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* 最小列寬100px */
+                gap: 0.6rem;                           /* 減少間距 */
+                margin-top: 1.2rem;                    /* 調整上邊距 */
+            }
+            
+            .chapter-item {
+                /* 移動設備章節項目 */
+                padding: 0.6rem;                       /* 減少內邊距 */
+            }
+            
+            .chapter-title {
+                /* 移動設備章節標題 */
+                font-size: 0.9rem;                     /* 減小字體 */
+            }
+            
+            .chapter-date {
+                /* 移動設備章節日期 */
+                font-size: 0.7rem;                     /* 減小字體 */
+            }
+            
+            .reader-container {
+                /* 
+                    移動設備閱讀器容器
+                    移除圓角和陰影以適應全屏閱讀
+                */
+                margin: 3.5rem 0 5rem;                 /* 調整邊距 */
+                border-radius: 0;                      /* 移除圓角 */
+                box-shadow: none;                      /* 移除陰影 */
+                padding: var(--spacing-md);            /* 調整內邊距 */
+            }
+            
+            .settings-modal {
+                /* 移動設備設定模態框 */
+                width: 90%;                            /* 寬度佔螢幕90% */
+            }
+            
+            .sort-text,
+            .dropdown-toggle {
+                /* 移動設備排序相關元素 */
+                font-size: 0.95rem;                    /* 減小字體 */
+            }
+            
+            .sort-chevron {
+                /* 移動設備排序箭頭 */
+                font-size: 0.8rem;                     /* 減小字體 */
+            }
+            
+            .sort-option-text {
+                /* 移動設備排序選項文字 */
+                font-size: 0.9rem;                     /* 減小字體 */
+            }
+            
+            .dropdown-menu {
+                /* 移動設備下拉菜單 */
+                min-width: 140px;                      /* 減小最小寬度 */
+            }
+            
+            .dropdown-menu a {
+                /* 移動設備下拉菜單項目 */
+                padding: 0.6rem 0.8rem;                /* 減少內邊距 */
+                font-size: 0.95rem;                    /* 減小字體 */
+            }
+        }
+    </style>
+    <!-- CSS樣式表結束 -->
+    
+</head>
+<!-- head標籤結束 -->
+
+<body>
+    <!-- 
+        body標籤：頁面主體
+        包含所有可見的頁面內容
+    -->
+    
+    <div id="app" :class="'page-' + currentPage">
+        <!-- 
+            Vue.js應用的根容器
+            id="app": Vue實例會掛載到這個元素上
+            :class="'page-' + currentPage": Vue動態類綁定
+            - 根據currentPage變量的值動態添加CSS類
+            - 例如：currentPage = 'list' 時，會添加 'page-list' 類
+            - 這用於控制不同頁面狀態下元素的顯示/隱藏
+        -->
+        <nav class="navbar" v-show="currentPage !== 'reader'">
+            <!-- 
+                導航欄組件
+                v-show="currentPage !== 'reader'": Vue條件顯示指令
+                - 當不是閱讀器頁面時顯示導航欄
+                - 閱讀器頁面使用不同的導航欄樣式
+            -->
+            
+            <div class="nav-container">
+                <!-- 導航欄內容容器 -->
+                
+                <div class="nav-left">
+                    <!-- 導航欄左側區域 -->
+                    
+                    <button v-if="currentPage === 'detail'" class="control-btn back-btn" @click="goToHome">
+                        <!-- 
+                            返回按鈕
+                            v-if="currentPage === 'detail'": Vue條件渲染指令
+                            - 只有在詳情頁時顯示返回按鈕
+                            @click="goToHome": Vue事件監聽器
+                            - 點擊時執行goToHome方法，返回首頁
+                        -->
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <!-- 
+                                SVG圖標：向左箭頭
+                                viewBox: 定義SVG的視圖框
+                                stroke: 線條顏色(使用currentColor繼承文字顏色)
+                                stroke-width: 線條寬度
+                                stroke-linecap: 線條端點樣式
+                                stroke-linejoin: 線條連接樣式
+                            -->
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                            <!-- path元素定義SVG路徑：箭頭形狀 -->
+                        </svg>
+                    </button>
+                    
+                    <a v-if="currentPage !== 'detail'" class="nav-title" @click="goToHome">輕小說翻譯</a>
+                    <!-- 
+                        網站標題
+                        v-if="currentPage !== 'detail'": 非詳情頁時顯示標題
+                        @click="goToHome": 點擊標題也可以返回首頁
+                    -->
+                </div>
+                
+                <div class="nav-right">
+                    <!-- 導航欄右側區域 -->
+                    
+                    <div class="dropdown" v-show="currentPage === 'list'">
+                        <!-- 
+                            排序下拉菜單容器
+                            v-show="currentPage === 'list'": 只在首頁顯示排序功能
+                        -->
+                        
+                        <button class="dropdown-toggle sort-selector" 
+                                @mouseenter="!isMobile && (activeDropdown = 'sort')"
+                                @click="isMobile && (activeDropdown = activeDropdown === 'sort' ? null : 'sort')"
+                                :class="{ active: activeDropdown === 'sort' }">
+                            <!-- 
+                                排序選擇器按鈕
+                                @mouseenter: 滑鼠進入事件(桌面設備)
+                                @click: 點擊事件(移動設備)
+                                :class="{ active: activeDropdown === 'sort' }": 動態類綁定
+                                - 當activeDropdown === 'sort'時添加active類
+                            -->
+                            
+                            <div class="sort-icon">
+                                <!-- 排序圖標容器 -->
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <!-- 排序圖標SVG -->
+                                    <path d="M4 7h10M4 12h8M4 17h6"></path>
+                                    <!-- 三條遞減的水平線 -->
+                                    <path d="M17 13l3 3l3-3"></path>
+                                    <!-- 向下箭頭 -->
+                                    <path d="M20 8v8"></path>
+                                    <!-- 垂直線 -->
+                                </svg>
+                            </div>
+                            
+                            <span class="sort-text">{{ currentSortLabel }}</span>
+                            <!-- 
+                                排序文字
+                                {{ currentSortLabel }}: Vue文本插值
+                                - 顯示當前選中的排序方式
+                            -->
+                            
+                            <span class="sort-chevron" :style="{ transform: activeDropdown === 'sort' ? 'rotate(180deg)' : 'rotate(0deg)' }">▼</span>
+                            <!-- 
+                                下拉箭頭
+                                :style: Vue樣式綁定
+                                - 根據菜單展開狀態旋轉箭頭
+                            -->
+                        </button>
+                        
+                        <div class="dropdown-menu sort-menu" 
+                             :class="{ show: activeDropdown === 'sort' }"
+                             :style="getDropdownPosition('sort')"
+                             @mouseenter="!isMobile && (activeDropdown = 'sort')"
+                             @mouseleave="!isMobile && (activeDropdown = null)">
+                            <!-- 
+                                下拉菜單
+                                :class="{ show: activeDropdown === 'sort' }": 控制顯示/隱藏
+                                :style="getDropdownPosition('sort')": 動態定位
+                                @mouseenter/@mouseleave: 桌面設備的懸停控制
+                            -->
+                            
+                            <a v-for="option in sortOptions" 
+                               :key="option.value"
+                               class="sort-option"
+                               :class="{ selected: currentSort === option.value }"
+                               @click="handleSortChange(option)">
+                               <!-- 
+                                   排序選項
+                                   v-for="option in sortOptions": Vue列表渲染
+                                   :key="option.value": 為每個項目提供唯一鍵值
+                                   :class="{ selected: currentSort === option.value }": 標記選中項
+                                   @click="handleSortChange(option)": 處理選項變更
+                               -->
+                               
+                                <span class="sort-option-text">{{ option.label }}</span>
+                                <!-- 選項文字 -->
+                                
+                                <span class="sort-option-check">✓</span>
+                                <!-- 選中標記(勾選符號) -->
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <button class="theme-toggle" @click="toggleTheme">{{ isDarkMode ? '🌜' : '🌞' }}</button>
+                    <!-- 
+                        主題切換按鈕
+                        @click="toggleTheme": 切換明暗主題
+                        {{ isDarkMode ? '🌜' : '🌞' }}: 條件表達式
+                        - 根據當前主題顯示不同的emoji圖標
+                    -->
+                </div>
+            </div>
+        </nav>
+        <!-- 導航欄結束 -->
+        
+        <div class="container" v-show="currentPage === 'list'">
+            <!-- 
+                首頁容器 - 小說列表頁面
+                v-show="currentPage === 'list'": 只在首頁狀態時顯示
+            -->
+            
+            <div class="content-grid">
+                <!-- 
+                    內容網格容器
+                    使用CSS Grid佈局創建響應式的卡片網格
+                -->
+                
+                <div v-for="item in sortedNovelList" 
+                     :key="item.title" 
+                     class="content-card"
+                     @click="goToDetail(item)">
+                    <!-- 
+                        小說卡片組件
+                        v-for="item in sortedNovelList": Vue列表渲染
+                        - 遍歷已排序的小說列表
+                        :key="item.title": 為每個卡片提供唯一識別
+                        @click="goToDetail(item)": 點擊卡片進入小說詳情頁
+                    -->
+                    
+                    <img :src="item.coverUrl" :alt="item.title">
+                    <!-- 
+                        小說封面圖片
+                        :src="item.coverUrl": Vue屬性綁定，動態設定圖片來源
+                        :alt="item.title": 設定圖片替代文字(無障礙功能)
+                    -->
+                    
+                    <div class="content-card-info">
+                        <!-- 卡片信息區域 -->
+                        
+                        <div class="content-title">{{ item.title }}</div>
+                        <!-- 
+                            小說標題
+                            {{ item.title }}: Vue文本插值，顯示小說標題
+                        -->
+                        
+                        <div class="card-footer">
+                            <!-- 卡片底部信息區域 -->
+                            
+                            <span class="author-name">{{ item.author }}</span>
+                            <!-- 
+                                作者名稱
+                                {{ item.author }}: 顯示小說作者
+                            -->
+                            
+                            <span class="update-time">{{ new Date(item.lastUpdated).toLocaleDateString() }}</span>
+                            <!-- 
+                                更新時間
+                                {{ new Date(item.lastUpdated).toLocaleDateString() }}: 
+                                - 將時間戳轉換為Date對象
+                                - 使用toLocaleDateString()格式化為本地日期格式
+                            -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 首頁容器結束 -->
+        
+        <div class="container" v-show="currentPage === 'detail'">
+            <!-- 
+                詳情頁容器 - 小說詳細信息頁面
+                v-show="currentPage === 'detail'": 只在詳情頁狀態時顯示
+            -->
+            
+            <div class="novel-detail">
+                <!-- 小說詳情主容器 -->
+                
+                <div class="novel-info">
+                    <!-- 
+                        小說基本信息區域
+                        使用Grid佈局：左側封面，右側詳細信息
+                    -->
+                    
+                    <img :src="getCoverUrl()" :alt="selectedNovel?.title" class="novel-cover" @click="openLightbox(getCoverUrl())">
+                    <!-- 
+                        小說封面圖片
+                        :src="getCoverUrl()": 調用方法獲取封面URL
+                        :alt="selectedNovel?.title": 使用可選鏈操作符安全訪問標題
+                        @click="openLightbox(getCoverUrl())": 點擊放大查看
+                    -->
+                    
+                    <div>
+                        <!-- 小說詳細信息區域 -->
+                        
+                        <h2 class="novel-title">{{ selectedNovel?.title }}</h2>
+                        <!-- 
+                            小說標題(h2標題標籤)
+                            {{ selectedNovel?.title }}: 使用可選鏈操作符安全顯示標題
+                        -->
+                        
+                        <div class="novel-metadata">
+                            <!-- 小說元數據區域 -->
+                            
+                            <p><strong>作者：</strong>{{ selectedNovel?.author }}</p>
+                            <!-- 
+                                作者信息
+                                <strong>標籤用於強調重要文字
+                            -->
+                            
+                            <p><strong>類型：</strong>{{ selectedNovel?.genres }}</p>
+                            <!-- 小說類型/標籤 -->
+                            
+                            <p class="source-links">
+                                <!-- 原文鏈接區域 -->
+                                <strong>原連結：</strong>
+                                <a v-for="(link, key) in selectedNovel?.sourceLinks" 
+                                   :key="key" 
+                                   :href="link" 
+                                   target="_blank" 
+                                   class="source-link">
+                                   <!-- 
+                                       原文網站鏈接
+                                       v-for="(link, key) in selectedNovel?.sourceLinks": 遍歷鏈接對象
+                                       :key="key": 使用鏈接類型作為鍵值
+                                       :href="link": 動態設定鏈接地址
+                                       target="_blank": 在新視窗中開啟鏈接
+                                   -->
+                                    {{ getSourceLinkName(key) }}
+                                    <!-- 顯示鏈接的友好名稱 -->
+                                </a>
+                            </p>
+                        </div>
+                        
+                        <div class="novel-description" v-html="parsedDescription"></div>
+                        <!-- 
+                            小說描述/簡介
+                            v-html="parsedDescription": Vue HTML綁定
+                            - 將Markdown格式的描述渲染為HTML
+                            - 注意：v-html會直接插入HTML，需確保內容安全
+                        -->
+                    </div>
+                </div>
+                
+                <div class="chapter-list">
+                    <!-- 
+                        章節列表容器
+                        使用Grid佈局創建響應式的章節卡片網格
+                    -->
+                    
+                    <div v-for="chapter in chaptersWithDates" 
+                         :key="chapter.number"
+                         class="chapter-item"
+                         :class="{ read: isChapterRead(chapter.number) }"
+                         @click="goToChapter(chapter.number)">
+                        <!-- 
+                            章節項目
+                            v-for="chapter in chaptersWithDates": 遍歷章節列表
+                            :key="chapter.number": 使用章節號作為唯一鍵值
+                            :class="{ read: isChapterRead(chapter.number) }": 動態類綁定
+                            - 如果章節已讀，添加read類改變樣式
+                            @click="goToChapter(chapter.number)": 點擊進入閱讀
+                        -->
+                        
+                        <div class="chapter-title">{{ chapter.title }}</div>
+                        <!-- 章節標題 -->
+                        
+                        <div class="chapter-date">{{ formatDate(chapter.date) }}</div>
+                        <!-- 
+                            章節日期
+                            {{ formatDate(chapter.date) }}: 調用格式化日期方法
+                        -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 詳情頁容器結束 -->
+        
+        <div v-show="currentPage === 'reader'">
+            <!-- 
+                閱讀器頁面容器
+                v-show="currentPage === 'reader'": 只在閱讀器狀態時顯示
+                提供沉浸式的小說閱讀體驗
+            -->
+            
+            <div class="navbar reader-navbar" :class="{ hidden: hideControls }">
+                <!-- 
+                    閱讀器導航欄
+                    reader-navbar: 閱讀器專用的導航欄樣式
+                    :class="{ hidden: hideControls }": 根據hideControls變量控制顯示/隱藏
+                    - 向下滾動時自動隱藏，提供更好的閱讀體驗
+                -->
+                
+                <div class="nav-container">
+                    <!-- 閱讀器導航容器 -->
+                    
+                    <button class="control-btn back-btn" @click="goBackToDetail">
+                        <!-- 
+                            返回詳情頁按鈕
+                            @click="goBackToDetail": 返回小說詳情頁
+                        -->
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <!-- 返回箭頭圖標 -->
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                    </button>
+                    
+                    <div class="reader-title">{{ currentChapter?.title }}</div>
+                    <!-- 
+                        當前章節標題
+                        {{ currentChapter?.title }}: 顯示正在閱讀的章節標題
+                        使用可選鏈操作符防止undefined錯誤
+                    -->
+                </div>
+            </div>
+            
+            <div class="reader-container">
+                <!-- 
+                    閱讀器內容容器
+                    專為閱讀體驗優化的佈局和樣式
+                -->
+                
+                <div class="novel-content" v-html="parsedContent"></div>
+                <!-- 
+                    小說正文內容
+                    v-html="parsedContent": 將Markdown格式的章節內容渲染為HTML
+                    - parsedContent是通過marked.js解析的HTML內容
+                    - 支持富文本格式（粗體、斜體、圖片、鏈接等）
+                -->
+            </div>
+            
+            <div class="reader-controls" :class="{ hidden: hideControls }">
+                <!-- 
+                    閱讀器控制欄
+                    固定在頁面底部，提供章節導航和設定功能
+                    :class="{ hidden: hideControls }": 與導航欄同步顯示/隱藏
+                -->
+                
+                <button class="control-btn" 
+                        @click="goToPrevious"
+                        :disabled="!hasPrevious || isLoading">
+                    <!-- 
+                        上一章按鈕
+                        @click="goToPrevious": 跳轉到上一章節
+                        :disabled="!hasPrevious || isLoading": 動態禁用狀態
+                        - !hasPrevious: 如果沒有上一章則禁用
+                        - isLoading: 載入期間禁用防止重複操作
+                    -->
+                    上一話
+                </button>
+                
+                <button class="control-btn"
+                        @click="toggleChapterMenu"
+                        :disabled="isLoading">
+                    <!-- 
+                        章節目錄按鈕
+                        @click="toggleChapterMenu": 顯示/隱藏章節目錄
+                        :disabled="isLoading": 載入期間禁用
+                    -->
+                    目錄
+                </button>
+                
+                <button class="control-btn"
+                        @click="toggleSettings"
+                        :disabled="isLoading">
+                    <!-- 
+                        設定按鈕
+                        @click="toggleSettings": 顯示/隱藏閱讀設定
+                        - 包含字體大小、行距、夜間模式等選項
+                    -->
+                    設置
+                </button>
+                
+                <button class="control-btn" 
+                        @click="goToNext"
+                        :disabled="!hasNext || isLoading">
+                    <!-- 
+                        下一章按鈕
+                        @click="goToNext": 跳轉到下一章節
+                        :disabled="!hasNext || isLoading": 動態禁用狀態
+                        - !hasNext: 如果沒有下一章則禁用
+                        - isLoading: 載入期間禁用
+                    -->
+                    下一話
+                </button>
+            </div>
+            <!-- 閱讀器控制欄結束 -->
+            
+            <div class="settings-modal" :class="{ active: showSettings || showChapterMenu }">
+                <!-- 
+                    設定模態框
+                    從底部滑入的彈窗，用於顯示閱讀設定或章節目錄
+                    :class="{ active: showSettings || showChapterMenu }": 動態控制顯示
+                    - 當任一設定面板開啟時，模態框會從底部滑入
+                -->
+                
+                <div class="settings-modal-header">{{ showSettings ? '閱讀設置' : '章節目錄' }}</div>
+                <!-- 
+                    模態框標題
+                    {{ showSettings ? '閱讀設置' : '章節目錄' }}: 條件表達式
+                    - 根據當前顯示的內容動態改變標題
+                -->
+                
+                <div class="settings-group" v-if="showSettings">
+                    <!-- 
+                        閱讀設定區域
+                        v-if="showSettings": 只有在顯示設定時才渲染這個區域
+                    -->
+                    
+                    <label>字體大小: {{ fontSize }}px</label>
+                    <!-- 
+                        字體大小標籤
+                        {{ fontSize }}px: 顯示當前字體大小數值
+                    -->
+                    
+                    <input type="range" v-model="fontSize" min="14" max="24" step="1">
+                    <!-- 
+                        字體大小滑桿
+                        type="range": HTML5範圍輸入控件
+                        v-model="fontSize": Vue雙向數據綁定
+                        - 滑桿變化會即時更新fontSize變量
+                        - fontSize變化也會更新滑桿位置
+                        min="14" max="24" step="1": 最小值14px，最大值24px，步進1px
+                    -->
+                    
+                    <label>行距: {{ lineHeight }}</label>
+                    <!-- 行距標籤和當前數值 -->
+                    
+                    <input type="range" v-model="lineHeight" min="1.5" max="2.5" step="0.1">
+                    <!-- 
+                        行距滑桿
+                        v-model="lineHeight": 雙向綁定行距值
+                        min="1.5" max="2.5" step="0.1": 範圍1.5到2.5，步進0.1
+                    -->
+                    
+                    <label>
+                        <!-- 夜間模式開關標籤 -->
+                        <input type="checkbox" v-model="isDarkMode">
+                        <!-- 
+                            夜間模式複選框
+                            type="checkbox": HTML複選框輸入
+                            v-model="isDarkMode": 雙向綁定夜間模式狀態
+                        -->
+                        夜間模式
+                    </label>
+                </div>
+                
+                <div class="settings-group" v-if="showChapterMenu">
+                    <!-- 
+                        章節目錄區域
+                        v-if="showChapterMenu": 只有在顯示章節目錄時才渲染
+                    -->
+                    
+                    <div v-for="chapter in allChapters" 
+                         :key="chapter.number"
+                         class="chapter-item"
+                         :class="{
+                            current: chapter.number === currentChapter?.number,
+                            read: isChapterRead(chapter.number)
+                        }"
+                         @click="goToChapterInReader(chapter.number)">
+                        <!-- 
+                            章節目錄項目
+                            v-for="chapter in allChapters": 遍歷所有章節
+                            :key="chapter.number": 使用章節號作為唯一鍵值
+                            :class="{ ... }": 動態類綁定對象語法
+                            - current: 當前正在閱讀的章節
+                            - read: 已讀過的章節
+                            @click="goToChapterInReader(chapter.number)": 點擊跳轉章節
+                        -->
+                        
+                        <div>{{ chapter.title }}</div>
+                        <!-- 章節標題 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 閱讀器頁面容器結束 -->
+        
+        <div class="lightbox" :class="{ active: isLightboxActive }" @click="closeLightbox">
+            <!-- 
+                燈箱圖片查看器
+                用於全屏顯示圖片，提供更好的圖片查看體驗
+                :class="{ active: isLightboxActive }": 根據狀態控制顯示/隱藏
+                @click="closeLightbox": 點擊背景關閉燈箱
+            -->
+            
+            <div class="lightbox-content">
+                <!-- 
+                    燈箱內容容器
+                    包含圖片和關閉按鈕
+                -->
+                
+                <button class="close-lightbox" @click.stop="closeLightbox">✕</button>
+                <!-- 
+                    關閉按鈕
+                    @click.stop="closeLightbox": 
+                    - .stop修飾符阻止事件冒泡
+                    - 防止點擊關閉按鈕時觸發背景的點擊事件
+                -->
+                
+                <img :src="lightboxImage" alt="" @click.stop>
+                <!-- 
+                    燈箱圖片
+                    :src="lightboxImage": 綁定要顯示的圖片URL
+                    @click.stop: 阻止點擊圖片時關閉燈箱
+                -->
+            </div>
+        </div>
+        
+        <div class="loading-overlay" :class="{ show: isLoading }">
+            <!-- 
+                載入遮罩層
+                在載入內容時顯示，提供視覺反饋
+                :class="{ show: isLoading }": 根據載入狀態控制顯示
+            -->
+            
+            <div style="text-align: center;">
+                <!-- 載入內容容器，使用內聯樣式居中對齊 -->
+                
+                <div class="loading-spinner"></div>
+                <!-- 
+                    載入旋轉器
+                    純CSS實現的旋轉動畫，表示正在載入
+                -->
+                
+                <div class="loading-text">載入中...</div>
+                <!-- 載入提示文字 -->
+            </div>
+        </div>
+        
+        <footer v-show="currentPage !== 'reader'">
+            <!-- 
+                網站頁腳
+                v-show="currentPage !== 'reader'": 
+                - 除了閱讀器頁面外都顯示頁腳
+                - 閱讀器頁面隱藏頁腳以提供更好的閱讀體驗
+            -->
+            
+            <p style="font-size: 0.8em; margin-top: 1em;">此網站僅供學習和參考使用，所有內容版權歸原作者所有。</p>
+            <!-- 
+                免責聲明
+                使用內聯樣式設定較小字體和上邊距
+                說明網站用途和版權歸屬
+            -->
+        </footer>
+    </div>
+    <script>
+        const { createApp } = Vue;
+        const STORAGE_KEYS = {
+            THEME: 'theme',
+            SORT: 'content_sort',
+            FONT_SIZE: 'font_size',
+            LINE_HEIGHT: 'line_height',
+            SCROLL_POSITION: 'novel_scroll_position',
+            READ_CHAPTERS: 'read_chapters',
+            CURRENT_NOVEL: 'currentNovel'
+        };
+        createApp({
+            data() {
+                return {
+                    currentPage: 'list', 
+                    novelList: [],
+                    selectedNovel: null,
+                    selectedNovelData: null,
+                    allChapters: [],
+                    currentChapter: null,
+                    chapterContent: '',
+                    isDarkMode: localStorage.getItem(STORAGE_KEYS.THEME) === 'dark',
+                    fontSize: parseInt(localStorage.getItem(STORAGE_KEYS.FONT_SIZE)) || 18,
+                    lineHeight: parseFloat(localStorage.getItem(STORAGE_KEYS.LINE_HEIGHT)) || 1.8,
+                    currentSort: localStorage.getItem(STORAGE_KEYS.SORT) || 'lastUpdated',
+                    sortOptions: [
+                        { value: 'lastUpdated', label: '最新更新' },
+                        { value: 'chapterCount', label: '章節數' },
+                        { value: 'wordCount', label: '文字數' }
+                    ],
+                    activeDropdown: null,
+                    isMobile: false,
+                    isLoading: false,
+                    hideControls: false,
+                    showSettings: false,
+                    showChapterMenu: false,
+                    isLightboxActive: false,
+                    lightboxImage: '',
+                    lastScrollTop: 0
+                }
+            },
+            computed: {
+                currentSortLabel() {
+                    return this.sortOptions.find(opt => opt.value === this.currentSort)?.label || '排序';
+                },
+                sortedNovelList() {
+                    return [...this.novelList].sort((a, b) => {
+                        switch (this.currentSort) {
+                            case 'lastUpdated':
+                                return new Date(b.lastUpdated) - new Date(a.lastUpdated);
+                            case 'chapterCount':
+                                return (b.chapters || []).length - (a.chapters || []).length;
+                            case 'wordCount':
+                                return (b.totalWordCount || 0) - (a.totalWordCount || 0);
+                            default:
+                                return 0;
+                        }
+                    });
+                },
+                chaptersWithDates() {
+                    return this.allChapters.sort((a, b) => b.number - a.number);
+                },
+                parsedDescription() {
+                    return this.selectedNovel?.description ? marked.parse(this.selectedNovel.description) : '';
+                },
+                parsedContent() {
+                    return this.chapterContent ? marked.parse(this.chapterContent) : '';
+                },
+                hasNext() {
+                    return this.allChapters.some(chapter => chapter.number > this.currentChapter?.number);
+                },
+                hasPrevious() {
+                    return this.allChapters.some(chapter => chapter.number < this.currentChapter?.number);
+                }
+            },
+            watch: {
+                isDarkMode(newValue) {
+                    const theme = newValue ? 'dark' : 'light';
+                    document.documentElement.setAttribute('data-theme', theme);
+                    localStorage.setItem(STORAGE_KEYS.THEME, theme);
+                },
+                fontSize(newValue) {
+                    document.documentElement.style.setProperty('--font-size', `${newValue}px`);
+                    localStorage.setItem(STORAGE_KEYS.FONT_SIZE, newValue);
+                },
+                lineHeight(newValue) {
+                    document.documentElement.style.setProperty('--line-height', newValue);
+                    localStorage.setItem(STORAGE_KEYS.LINE_HEIGHT, newValue);
+                },
+                currentPage(newValue) {
+                    if (newValue === 'reader') {
+                        this.$nextTick(() => {
+                            window.addEventListener('scroll', this.handleScroll);
+                            this.setupImageViewer();
+                        });
+                    } else {
+                        window.removeEventListener('scroll', this.handleScroll);
+                    }
+                }
+            },
+            methods: {
+                async fetchNovelList() {
+                    try {
+                        const response = await fetch('輕小說翻譯/novels.json');
+                        if (!response.ok) {
+                            throw new Error(`無法獲取novels.json: ${response.status} ${response.statusText}`);
+                        }
+                        const data = await response.json();
+                        this.novelList = data.novels.map(novel => {
+                            const titleWithBrackets = novel.title.startsWith('《') ? novel.title : `《${novel.title}》`;
+                            return {
+                                title: titleWithBrackets,
+                                coverUrl: `輕小說翻譯/${encodeURIComponent(titleWithBrackets)}/cover.jpg`,
+                                lastUpdated: novel.lastUpdated || new Date().toISOString(),
+                                author: novel.author || '未知作者',
+                                chapters: novel.chapters || [],
+                                totalWordCount: novel.totalWordCount || 0,
+                                originalData: novel
+                            };
+                        });
+                    } catch (error) {
+                        console.error('讀取小說列表失敗:', error);
+                    }
+                },
+                updateUrl(page, params = {}) {
+                    let url = window.location.pathname;
+                    const searchParams = new URLSearchParams();
+                    if (page === 'detail' && params.title) {
+                        searchParams.set('title', params.title);
+                    } else if (page === 'reader' && params.title && params.chapter) {
+                        searchParams.set('title', params.title);
+                        searchParams.set('chapter', params.chapter.toString());
+                    }
+                    const queryString = searchParams.toString();
+                    const newUrl = queryString ? `${url}?${queryString}` : url;
+                    window.history.pushState({ page, params }, '', newUrl);
+                    this.updatePageTitle(page, params);
+                },
+                updatePageTitle(page, params = {}) {
+                    let title = '輕小說翻譯';
+                    if (page === 'detail' && params.title) {
+                        title = `${params.title} - 輕小說翻譯`;
+                    } else if (page === 'reader' && params.title && this.currentChapter) {
+                        title = `${this.currentChapter.title} - ${params.title} - 輕小說翻譯`;
+                    }
+                    document.title = title;
+                },
+                async handleUrlParams() {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const titleParam = urlParams.get('title');
+                    const chapterParam = urlParams.get('chapter');
+                    if (titleParam) {
+                        if (this.novelList.length === 0) {
+                            await this.fetchNovelList();
+                        }
+                        const novel = this.novelList.find(n => n.title === titleParam);
+                        if (novel) {
+                            this.selectedNovel = novel;
+                            this.selectedNovelData = novel.originalData;
+                            this.setupNovelDetail();
+                            localStorage.setItem(STORAGE_KEYS.CURRENT_NOVEL, titleParam);
+                            if (chapterParam) {
+                                const chapterNumber = parseFloat(chapterParam);
+                                this.currentChapter = this.allChapters.find(ch => ch.number === chapterNumber);
+                                if (this.currentChapter) {
+                                    this.currentPage = 'reader';
+                                    await this.loadChapterContent();
+                                } else {
+                                    this.currentPage = 'detail';
+                                    this.updateUrl('detail', { title: titleParam });
+                                }
+                            } else {
+                                this.currentPage = 'detail';
+                            }
+                        } else {
+                            this.goToHome();
+                        }
+                    } else {
+                        this.currentPage = 'list';
+                    }
+                },
+                goToHome() {
+                    this.currentPage = 'list';
+                    this.selectedNovel = null;
+                    this.currentChapter = null;
+                    this.activeDropdown = null;
+                    window.history.pushState({ page: 'list' }, '輕小說翻譯', window.location.pathname);
+                    document.title = '輕小說翻譯';
+                },
+                goToDetail(novel) {
+                    this.selectedNovel = novel;
+                    this.selectedNovelData = novel.originalData;
+                    this.setupNovelDetail();
+                    this.currentPage = 'detail';
+                    this.activeDropdown = null;
+                    localStorage.setItem(STORAGE_KEYS.CURRENT_NOVEL, novel.title);
+                    this.updateUrl('detail', { title: novel.title });
+                },
+                goToChapter(chapterNumber) {
+                    this.currentChapter = this.allChapters.find(ch => ch.number === chapterNumber);
+                    this.loadChapterContent();
+                    this.currentPage = 'reader';
+                    this.showChapterMenu = false;
+                    this.updateUrl('reader', { title: this.selectedNovel.title, chapter: chapterNumber });
+                },
+                goToChapterInReader(chapterNumber) {
+                    if (chapterNumber !== this.currentChapter?.number && !this.isLoading) {
+                        this.saveScrollPosition();
+                        this.currentChapter = this.allChapters.find(ch => ch.number === chapterNumber);
+                        this.loadChapterContent();
+                        this.updateUrl('reader', { title: this.selectedNovel.title, chapter: chapterNumber });
+                    }
+                    this.showChapterMenu = false;
+                },
+                goBackToDetail() {
+                    this.currentPage = 'detail';
+                    this.hideControls = false;
+                    this.showSettings = false;
+                    this.showChapterMenu = false;
+                    this.updateUrl('detail', { title: this.selectedNovel.title });
+                },
+                setupNovelDetail() {
+                    if (!this.selectedNovelData) return;
+                    const sourceLinks = {};
+                    if (this.selectedNovelData.originalUrl) {
+                        const urls = this.selectedNovelData.originalUrl.split('、');
+                        urls.forEach(url => {
+                            if (url.includes('kakuyomu.jp')) {
+                                sourceLinks.kakuyomu = url;
+                            } else if (url.includes('syosetu.com')) {
+                                sourceLinks.syosetu = url;
+                            } else {
+                                sourceLinks.japanese = url;
+                            }
+                        });
+                    }
+                    this.selectedNovel = {
+                        ...this.selectedNovel,
+                        genres: this.selectedNovelData.tags?.join(', ') || '',
+                        description: this.selectedNovelData.description || '',
+                        sourceLinks: sourceLinks
+                    };
+                    this.allChapters = this.selectedNovelData.chapters
+                        .filter(chapter => chapter.id >= 0)
+                        .map(chapter => ({
+                            number: chapter.id,
+                            title: chapter.title,
+                            filename: `${chapter.id} ${chapter.title.replace(/^第\d+\.?\d*話\s+/, '')}.md`,
+                            date: new Date(chapter.lastUpdated).toISOString().split('T')[0]
+                        }))
+                        .sort((a, b) => a.number - b.number);
+                },
+                getCoverUrl() {
+                    if (!this.selectedNovel) return '';
+                    return `輕小說翻譯/${encodeURIComponent(this.selectedNovel.title)}/cover.jpg`;
+                },
+                getSourceLinkName(key) {
+                    const names = {
+                        kakuyomu: 'カクヨム',
+                        syosetu: '小説家になろう',
+                        japanese: '日文原文'
+                    };
+                    return names[key] || key;
+                },
+                formatDate(dateStr) {
+                    if (!dateStr) return '';
+                    const date = new Date(dateStr);
+                    return date.toLocaleDateString('zh-TW', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit'
+                    }).replace(/\//g, '-');
+                },
+                async loadChapterContent() {
+                    try {
+                        this.isLoading = true;
+                        const folderPath = encodeURIComponent(this.selectedNovel.title);
+                        const encodedFilename = encodeURIComponent(this.currentChapter.filename);
+                        const filename = `輕小說翻譯/${folderPath}/${encodedFilename}`;
+                        const response = await fetch(filename);
+                        if (!response.ok) {
+                            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                        }
+                        this.chapterContent = await response.text();
+                        this.$nextTick(() => {
+                            this.scrollToTop();
+                            this.setupImageViewer();
+                            this.restoreScrollPosition();
+                            this.markAsRead();
+                            this.isLoading = false;
+                            this.updatePageTitle('reader', { title: this.selectedNovel.title });
+                        });
+                    } catch (error) {
+                        this.isLoading = false;
+                        console.error('讀取章節內容失敗:', error);
+                        console.error('嘗試載入的檔案路徑:', encodedFilename);
+                        console.error('章節資訊:', this.currentChapter);
+                        alert(`讀取章節內容失敗: ${error.message}\n\n檔案路徑: ${encodedFilename}\n\n請檢查檔案是否存在並且檔案名稱正確。`);
+                    }
+                },
+                setupImageViewer() {
+                    this.$nextTick(() => {
+                        const content = document.querySelector('.novel-content');
+                        if (content) {
+                            content.addEventListener('click', (e) => {
+                                if (e.target.tagName === 'IMG') {
+                                    this.lightboxImage = e.target.src;
+                                    this.isLightboxActive = true;
+                                    this.showSettings = false;
+                                    this.showChapterMenu = false;
+                                }
+                            });
+                        }
+                    });
+                },
+                scrollToTop() {
+                    window.scrollTo(0, 0);
+                },
+                handleScroll() {
+                    const st = window.pageYOffset || document.documentElement.scrollTop;
+                    const isScrollingDown = st > this.lastScrollTop;
+                    const isAtBottom = window.innerHeight + window.pageYOffset >= document.body.offsetHeight - 100;
+                    if (isScrollingDown && !isAtBottom) {
+                        this.hideControls = true;
+                        this.showSettings = false;
+                        this.showChapterMenu = false;
+                    } else {
+                        this.hideControls = false;
+                    }
+                    this.lastScrollTop = st;
+                    this.saveScrollPosition();
+                },
+                saveScrollPosition() {
+                    if (!this.selectedNovel || !this.currentChapter) return;
+                    const scrollPositions = JSON.parse(sessionStorage.getItem(STORAGE_KEYS.SCROLL_POSITION) || '{}');
+                    const novelKey = this.selectedNovel.title.replace(/^《|》$/g, '');
+                    if (!scrollPositions[novelKey]) {
+                        scrollPositions[novelKey] = {};
+                    }
+                    scrollPositions[novelKey][this.currentChapter.number] = window.pageYOffset;
+                    sessionStorage.setItem(STORAGE_KEYS.SCROLL_POSITION, JSON.stringify(scrollPositions));
+                },
+                restoreScrollPosition() {
+                    if (!this.selectedNovel || !this.currentChapter) return;
+                    const scrollPositions = JSON.parse(sessionStorage.getItem(STORAGE_KEYS.SCROLL_POSITION) || '{}');
+                    const novelKey = this.selectedNovel.title.replace(/^《|》$/g, '');
+                    const novelPositions = scrollPositions[novelKey] || {};
+                    const savedPosition = novelPositions[this.currentChapter.number];
+                    if (savedPosition !== undefined) {
+                        window.scrollTo(0, parseInt(savedPosition));
+                    }
+                },
+                goToNext() {
+                    if (this.hasNext && !this.isLoading) {
+                        this.saveScrollPosition();
+                        const nextChapters = this.allChapters.filter(
+                            chapter => chapter.number > this.currentChapter.number
+                        );
+                        const nextChapter = nextChapters.reduce((min, chapter) => 
+                            chapter.number < min.number ? chapter : min
+                        );
+                        this.currentChapter = nextChapter;
+                        this.loadChapterContent();
+                        this.updateUrl('reader', { title: this.selectedNovel.title, chapter: nextChapter.number });
+                    }
+                },
+                goToPrevious() {
+                    if (this.hasPrevious && !this.isLoading) {
+                        this.saveScrollPosition();
+                        const prevChapters = this.allChapters.filter(
+                            chapter => chapter.number < this.currentChapter.number
+                        );
+                        const prevChapter = prevChapters.reduce((max, chapter) => 
+                            chapter.number > max.number ? chapter : max
+                        );
+                        this.currentChapter = prevChapter;
+                        this.loadChapterContent();
+                        this.updateUrl('reader', { title: this.selectedNovel.title, chapter: prevChapter.number });
+                    }
+                },
+                toggleTheme() {
+                    this.isDarkMode = !this.isDarkMode;
+                },
+                toggleSettings() {
+                    this.showSettings = !this.showSettings;
+                    this.showChapterMenu = false;
+                },
+                toggleChapterMenu() {
+                    this.showChapterMenu = !this.showChapterMenu;
+                    this.showSettings = false;
+                },
+                openLightbox(imageUrl) {
+                    this.lightboxImage = imageUrl;
+                    this.isLightboxActive = true;
+                    document.body.style.overflow = 'hidden';
+                },
+                closeLightbox() {
+                    this.isLightboxActive = false;
+                    document.body.style.overflow = '';
+                },
+                handleSortChange(sortOption) {
+                    this.currentSort = sortOption.value;
+                    localStorage.setItem(STORAGE_KEYS.SORT, sortOption.value);
+                    this.activeDropdown = null;
+                },
+                getDropdownPosition(dropdownId) {
+                    const element = document.querySelector('.sort-selector');
+                    if (!element) return {};
+                    const rect = element.getBoundingClientRect();
+                    return {
+                        position: 'fixed',
+                        top: `${rect.bottom + 5}px`,
+                        right: `${window.innerWidth - rect.right}px`
+                    };
+                },
+                closeDropdowns(e) {
+                    const target = e.target;
+                    if (!target.closest('.dropdown')) {
+                        this.activeDropdown = null;
+                    }
+                },
+                markAsRead() {
+                    if (!this.selectedNovel || !this.currentChapter) return;
+                    const readChapters = JSON.parse(localStorage.getItem(STORAGE_KEYS.READ_CHAPTERS) || '{}');
+                    const novelKey = this.selectedNovel.title.replace(/^《|》$/g, '');
+                    if (!readChapters[novelKey]) {
+                        readChapters[novelKey] = [];
+                    }
+                    if (!readChapters[novelKey].includes(this.currentChapter.number)) {
+                        readChapters[novelKey].push(this.currentChapter.number);
+                        localStorage.setItem(STORAGE_KEYS.READ_CHAPTERS, JSON.stringify(readChapters));
+                    }
+                },
+                isChapterRead(chapterNumber) {
+                    if (!this.selectedNovel) return false;
+                    const readChapters = JSON.parse(localStorage.getItem(STORAGE_KEYS.READ_CHAPTERS) || '{}');
+                    const novelKey = this.selectedNovel.title.replace(/^《|》$/g, '');
+                    return readChapters[novelKey]?.includes(chapterNumber);
+                }
+            },
+            created() {
+                this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+                window.addEventListener('resize', () => {
+                    this.isMobile = window.innerWidth <= 768;
+                });
+            },
+            mounted() {
+                const theme = localStorage.getItem(STORAGE_KEYS.THEME) || 'light';
+                document.documentElement.setAttribute('data-theme', theme);
+                document.documentElement.style.setProperty('--font-size', `${this.fontSize}px`);
+                document.documentElement.style.setProperty('--line-height', this.lineHeight);
+                this.fetchNovelList().then(() => {
+                    this.handleUrlParams();
+                });
+                window.addEventListener('popstate', (event) => {
+                    if (event.state) {
+                        this.handleUrlParams();
+                    } else {
+                        this.goToHome();
+                    }
+                });
+                document.addEventListener('click', this.closeDropdowns);
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        if (this.isLightboxActive) {
+                            this.closeLightbox();
+                        } else if (this.currentPage === 'reader') {
+                            this.showSettings = false;
+                            this.showChapterMenu = false;
+                        }
+                    }
+                });
+                document.addEventListener('keydown', (e) => {
+                    if (this.currentPage === 'reader' && !this.showSettings && !this.showChapterMenu && !this.isLightboxActive) {
+                        if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                            if (this.hasPrevious) {
+                                this.goToPrevious();
+                            }
+                        } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                            if (this.hasNext) {
+                                this.goToNext();
+                            }
+                        }
+                    }
+                });
+                document.addEventListener('click', (e) => {
+                    if (this.currentPage === 'reader') {
+                        const settingsModal = e.target.closest('.settings-modal');
+                        const controlBtn = e.target.closest('.control-btn');
+                        if (!settingsModal && !controlBtn) {
+                            this.showSettings = false;
+                            this.showChapterMenu = false;
+                        }
+                    }
+                });
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
