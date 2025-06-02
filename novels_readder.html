@@ -2083,469 +2083,990 @@
             -->
         </footer>
     </div>
+    <!-- Vue.js應用根容器結束 -->
+    
     <script>
+        /* 
+            JavaScript應用邏輯開始
+            
+            此部分包含完整的Vue.js應用代碼
+            實現小說閱讀器的所有功能：
+            - 小說列表顯示和排序
+            - 小說詳情頁面
+            - 章節閱讀器
+            - 用戶設定管理
+            - 本地存儲管理
+            - URL路由管理
+        */
+        
         const { createApp } = Vue;
+        /* 
+            從Vue全局對象中解構createApp函數
+            createApp是Vue 3的應用工廠函數，用於創建Vue應用實例
+        */
+        
         const STORAGE_KEYS = {
-            THEME: 'theme',
-            SORT: 'content_sort',
-            FONT_SIZE: 'font_size',
-            LINE_HEIGHT: 'line_height',
-            SCROLL_POSITION: 'novel_scroll_position',
-            READ_CHAPTERS: 'read_chapters',
-            CURRENT_NOVEL: 'currentNovel'
+            /* 
+                本地存儲鍵值常量對象
+                統一管理所有localStorage和sessionStorage的鍵名
+                避免鍵名錯誤和重複定義
+            */
+            THEME: 'theme',                           // 主題設定(明暗模式)
+            SORT: 'content_sort',                     // 排序方式
+            FONT_SIZE: 'font_size',                   // 字體大小設定
+            LINE_HEIGHT: 'line_height',               // 行距設定
+            SCROLL_POSITION: 'novel_scroll_position', // 閱讀位置記錄
+            READ_CHAPTERS: 'read_chapters',           // 已讀章節記錄
+            CURRENT_NOVEL: 'currentNovel'             // 當前選中的小說
         };
+        
         createApp({
+            /* 
+                創建Vue 3應用實例
+                包含應用的完整配置：data、computed、watch、methods等
+            */
+            
             data() {
+                /* 
+                    data函數：定義組件的響應式數據
+                    返回一個包含所有狀態變量的對象
+                    這些數據的任何變化都會觸發視圖更新
+                */
                 return {
-                    currentPage: 'list', 
-                    novelList: [],
-                    selectedNovel: null,
-                    selectedNovelData: null,
-                    allChapters: [],
-                    currentChapter: null,
-                    chapterContent: '',
-                    isDarkMode: localStorage.getItem(STORAGE_KEYS.THEME) === 'dark',
-                    fontSize: parseInt(localStorage.getItem(STORAGE_KEYS.FONT_SIZE)) || 18,
-                    lineHeight: parseFloat(localStorage.getItem(STORAGE_KEYS.LINE_HEIGHT)) || 1.8,
-                    currentSort: localStorage.getItem(STORAGE_KEYS.SORT) || 'lastUpdated',
+                    /* 頁面狀態管理 */
+                    currentPage: 'list',              // 當前頁面狀態：'list'(首頁)、'detail'(詳情頁)、'reader'(閱讀器)
+                    
+                    /* 數據狀態 */
+                    novelList: [],                    // 小說列表數組，從novels.json載入
+                    selectedNovel: null,              // 當前選中的小說對象
+                    selectedNovelData: null,          // 選中小說的原始數據
+                    allChapters: [],                  // 當前小說的所有章節列表
+                    currentChapter: null,             // 正在閱讀的章節對象
+                    chapterContent: '',               // 當前章節的Markdown內容
+                    
+                    /* 用戶設定 - 從localStorage載入或使用默認值 */
+                    isDarkMode: localStorage.getItem(STORAGE_KEYS.THEME) === 'dark',  // 夜間模式開關
+                    fontSize: parseInt(localStorage.getItem(STORAGE_KEYS.FONT_SIZE)) || 18,      // 閱讀字體大小
+                    lineHeight: parseFloat(localStorage.getItem(STORAGE_KEYS.LINE_HEIGHT)) || 1.8, // 閱讀行距
+                    currentSort: localStorage.getItem(STORAGE_KEYS.SORT) || 'lastUpdated',        // 當前排序方式
+                    
+                    /* 排序選項配置 */
                     sortOptions: [
-                        { value: 'lastUpdated', label: '最新更新' },
-                        { value: 'chapterCount', label: '章節數' },
-                        { value: 'wordCount', label: '文字數' }
+                        { value: 'lastUpdated', label: '最新更新' }, // 按最後更新時間排序
+                        { value: 'chapterCount', label: '章節數' },  // 按章節數量排序
+                        { value: 'wordCount', label: '文字數' }      // 按總字數排序
                     ],
-                    activeDropdown: null,
-                    isMobile: false,
-                    isLoading: false,
-                    hideControls: false,
-                    showSettings: false,
-                    showChapterMenu: false,
-                    isLightboxActive: false,
-                    lightboxImage: '',
-                    lastScrollTop: 0
+                    
+                    /* UI狀態控制 */
+                    activeDropdown: null,             // 當前活動的下拉菜單：null、'sort'
+                    isMobile: false,                  // 是否為移動設備
+                    isLoading: false,                 // 是否正在載入內容
+                    hideControls: false,              // 是否隱藏閱讀器控制欄
+                    showSettings: false,              // 是否顯示閱讀設定
+                    showChapterMenu: false,           // 是否顯示章節目錄
+                    isLightboxActive: false,          // 是否顯示圖片燈箱
+                    lightboxImage: '',                // 燈箱中顯示的圖片URL
+                    lastScrollTop: 0                  // 上次滾動位置，用於判斷滾動方向
                 }
             },
+            
             computed: {
+                /* 
+                    computed計算屬性：基於響應式數據計算得出的值
+                    特點：
+                    1. 基於依賴的響應式數據自動更新
+                    2. 具有緩存機制，只有依賴變化時才重新計算
+                    3. 在模板中可以像data屬性一樣使用
+                */
+                
                 currentSortLabel() {
+                    /* 
+                        獲取當前排序方式的顯示標籤
+                        根據currentSort值查找對應的標籤文字
+                    */
                     return this.sortOptions.find(opt => opt.value === this.currentSort)?.label || '排序';
                 },
+                
                 sortedNovelList() {
+                    /* 
+                        排序後的小說列表
+                        根據用戶選擇的排序方式對小說列表進行排序
+                        使用展開運算符[...array]創建新數組，避免修改原數組
+                    */
                     return [...this.novelList].sort((a, b) => {
                         switch (this.currentSort) {
                             case 'lastUpdated':
+                                // 按最後更新時間降序排列（最新的在前）
                                 return new Date(b.lastUpdated) - new Date(a.lastUpdated);
                             case 'chapterCount':
+                                // 按章節數量降序排列（章節多的在前）
                                 return (b.chapters || []).length - (a.chapters || []).length;
                             case 'wordCount':
+                                // 按總字數降序排列（字數多的在前）
                                 return (b.totalWordCount || 0) - (a.totalWordCount || 0);
                             default:
-                                return 0;
+                                return 0; // 默認不排序
                         }
                     });
                 },
+                
                 chaptersWithDates() {
+                    /* 
+                        帶日期的章節列表
+                        按章節號降序排列（最新章節在前）
+                    */
                     return this.allChapters.sort((a, b) => b.number - a.number);
                 },
+                
                 parsedDescription() {
+                    /* 
+                        解析後的小說描述
+                        使用marked.js將Markdown格式轉換為HTML
+                        使用可選鏈操作符(?.)安全訪問屬性
+                    */
                     return this.selectedNovel?.description ? marked.parse(this.selectedNovel.description) : '';
                 },
+                
                 parsedContent() {
+                    /* 
+                        解析後的章節內容
+                        將Markdown格式的章節內容轉換為HTML用於顯示
+                    */
                     return this.chapterContent ? marked.parse(this.chapterContent) : '';
                 },
+                
                 hasNext() {
+                    /* 
+                        是否有下一章
+                        檢查是否存在章節號大於當前章節的章節
+                    */
                     return this.allChapters.some(chapter => chapter.number > this.currentChapter?.number);
                 },
+                
                 hasPrevious() {
+                    /* 
+                        是否有上一章
+                        檢查是否存在章節號小於當前章節的章節
+                    */
                     return this.allChapters.some(chapter => chapter.number < this.currentChapter?.number);
                 }
             },
+            
             watch: {
+                /* 
+                    watch監聽器：監聽響應式數據的變化並執行相應操作
+                    特點：
+                    1. 當被監聽的數據發生變化時自動觸發
+                    2. 可以執行異步操作
+                    3. 適合處理數據變化的副作用
+                */
+                
                 isDarkMode(newValue) {
-                    const theme = newValue ? 'dark' : 'light';
-                    document.documentElement.setAttribute('data-theme', theme);
-                    localStorage.setItem(STORAGE_KEYS.THEME, theme);
+                    /* 
+                        監聽夜間模式切換
+                        當isDarkMode變化時：
+                        1. 更新文檔的data-theme屬性以切換CSS主題
+                        2. 保存設定到localStorage
+                    */
+                    const theme = newValue ? 'dark' : 'light';  // 根據布爾值確定主題字符串
+                    document.documentElement.setAttribute('data-theme', theme);  // 設定根元素的主題屬性
+                    localStorage.setItem(STORAGE_KEYS.THEME, theme);  // 持久化保存主題設定
                 },
+                
                 fontSize(newValue) {
-                    document.documentElement.style.setProperty('--font-size', `${newValue}px`);
-                    localStorage.setItem(STORAGE_KEYS.FONT_SIZE, newValue);
+                    /* 
+                        監聽字體大小變化
+                        當fontSize變化時：
+                        1. 即時更新CSS變量以改變字體大小
+                        2. 保存設定到localStorage
+                    */
+                    document.documentElement.style.setProperty('--font-size', `${newValue}px`);  // 更新CSS變量
+                    localStorage.setItem(STORAGE_KEYS.FONT_SIZE, newValue);  // 持久化保存字體設定
                 },
+                
                 lineHeight(newValue) {
-                    document.documentElement.style.setProperty('--line-height', newValue);
-                    localStorage.setItem(STORAGE_KEYS.LINE_HEIGHT, newValue);
+                    /* 
+                        監聽行距變化
+                        當lineHeight變化時：
+                        1. 即時更新CSS變量以改變行距
+                        2. 保存設定到localStorage
+                    */
+                    document.documentElement.style.setProperty('--line-height', newValue);  // 更新CSS變量
+                    localStorage.setItem(STORAGE_KEYS.LINE_HEIGHT, newValue);  // 持久化保存行距設定
                 },
+                
                 currentPage(newValue) {
+                    /* 
+                        監聽頁面狀態變化
+                        當進入/離開閱讀器頁面時：
+                        1. 進入閱讀器：添加滾動監聽和圖片查看器
+                        2. 離開閱讀器：移除滾動監聽，避免內存洩漏
+                    */
                     if (newValue === 'reader') {
+                        // 進入閱讀器頁面
                         this.$nextTick(() => {
-                            window.addEventListener('scroll', this.handleScroll);
-                            this.setupImageViewer();
+                            /* 
+                                $nextTick：等待DOM更新完成後執行
+                                確保閱讀器元素已經渲染到頁面上
+                            */
+                            window.addEventListener('scroll', this.handleScroll);  // 添加滾動監聽
+                            this.setupImageViewer();  // 設置圖片點擊放大功能
                         });
                     } else {
-                        window.removeEventListener('scroll', this.handleScroll);
+                        // 離開閱讀器頁面
+                        window.removeEventListener('scroll', this.handleScroll);  // 移除滾動監聽
                     }
                 }
             },
+            
             methods: {
+                /* 
+                    methods方法：定義組件的行為和操作
+                    包含所有業務邏輯、事件處理、API調用等功能
+                */
+                
                 async fetchNovelList() {
+                    /* 
+                        獲取小說列表數據
+                        從novels.json文件載入所有小說的基本信息
+                        這是應用啟動時的核心數據載入方法
+                    */
                     try {
+                        // 使用fetch API發送HTTP請求獲取小說列表
                         const response = await fetch('輕小說翻譯/novels.json');
+                        
+                        // 檢查HTTP響應狀態
                         if (!response.ok) {
                             throw new Error(`無法獲取novels.json: ${response.status} ${response.statusText}`);
                         }
+                        
+                        // 解析JSON響應數據
                         const data = await response.json();
+                        
+                        // 處理和格式化小說數據
                         this.novelList = data.novels.map(novel => {
+                            /* 
+                                標準化小說標題格式
+                                確保所有標題都有書名號《》包圍
+                            */
                             const titleWithBrackets = novel.title.startsWith('《') ? novel.title : `《${novel.title}》`;
+                            
                             return {
-                                title: titleWithBrackets,
+                                title: titleWithBrackets,  // 標準化的標題
+                                // 生成封面圖片URL，使用encodeURIComponent編碼避免特殊字符問題
                                 coverUrl: `輕小說翻譯/${encodeURIComponent(titleWithBrackets)}/cover.jpg`,
-                                lastUpdated: novel.lastUpdated || new Date().toISOString(),
-                                author: novel.author || '未知作者',
-                                chapters: novel.chapters || [],
-                                totalWordCount: novel.totalWordCount || 0,
-                                originalData: novel
+                                lastUpdated: novel.lastUpdated || new Date().toISOString(),  // 最後更新時間
+                                author: novel.author || '未知作者',  // 作者信息
+                                chapters: novel.chapters || [],  // 章節列表
+                                totalWordCount: novel.totalWordCount || 0,  // 總字數
+                                originalData: novel  // 保留原始數據供詳情頁使用
                             };
                         });
                     } catch (error) {
+                        // 錯誤處理：記錄到控制台
                         console.error('讀取小說列表失敗:', error);
                     }
                 },
+                
                 updateUrl(page, params = {}) {
-                    let url = window.location.pathname;
-                    const searchParams = new URLSearchParams();
+                    /* 
+                        更新瀏覽器URL
+                        實現單頁面應用(SPA)的URL路由功能
+                        支持瀏覽器的前進/後退按鈕和書籤功能
+                    */
+                    let url = window.location.pathname;  // 獲取當前路徑
+                    const searchParams = new URLSearchParams();  // 創建URL參數對象
+                    
+                    // 根據頁面類型設置URL參數
                     if (page === 'detail' && params.title) {
+                        // 詳情頁：添加title參數
                         searchParams.set('title', params.title);
                     } else if (page === 'reader' && params.title && params.chapter) {
+                        // 閱讀器頁：添加title和chapter參數
                         searchParams.set('title', params.title);
                         searchParams.set('chapter', params.chapter.toString());
                     }
+                    
+                    // 構建完整URL
                     const queryString = searchParams.toString();
                     const newUrl = queryString ? `${url}?${queryString}` : url;
+                    
+                    // 使用History API更新URL（不刷新頁面）
                     window.history.pushState({ page, params }, '', newUrl);
+                    
+                    // 同時更新頁面標題
                     this.updatePageTitle(page, params);
                 },
+                
                 updatePageTitle(page, params = {}) {
-                    let title = '輕小說翻譯';
+                    /* 
+                        更新瀏覽器標籤頁標題
+                        根據當前頁面和內容動態設定標題
+                        提升用戶體驗和SEO效果
+                    */
+                    let title = '輕小說翻譯';  // 默認標題
+                    
                     if (page === 'detail' && params.title) {
+                        // 詳情頁標題：小說名 - 網站名
                         title = `${params.title} - 輕小說翻譯`;
                     } else if (page === 'reader' && params.title && this.currentChapter) {
+                        // 閱讀器標題：章節名 - 小說名 - 網站名
                         title = `${this.currentChapter.title} - ${params.title} - 輕小說翻譯`;
                     }
-                    document.title = title;
+                    
+                    document.title = title;  // 設定文檔標題
                 },
+                
                 async handleUrlParams() {
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const titleParam = urlParams.get('title');
-                    const chapterParam = urlParams.get('chapter');
+                    /* 
+                        處理URL參數並相應地設定應用狀態
+                        實現深層鏈接功能，讓用戶可以直接訪問特定頁面
+                        支持分享具體章節的鏈接
+                    */
+                    const urlParams = new URLSearchParams(window.location.search);  // 解析URL查詢參數
+                    const titleParam = urlParams.get('title');      // 獲取小說標題參數
+                    const chapterParam = urlParams.get('chapter');  // 獲取章節參數
+                    
                     if (titleParam) {
+                        // 如果URL包含小說標題參數
                         if (this.novelList.length === 0) {
+                            // 如果小說列表還未載入，先載入列表
                             await this.fetchNovelList();
                         }
+                        
+                        // 根據標題查找對應的小說
                         const novel = this.novelList.find(n => n.title === titleParam);
+                        
                         if (novel) {
+                            // 找到對應小說，設定選中狀態
                             this.selectedNovel = novel;
                             this.selectedNovelData = novel.originalData;
-                            this.setupNovelDetail();
-                            localStorage.setItem(STORAGE_KEYS.CURRENT_NOVEL, titleParam);
+                            this.setupNovelDetail();  // 設置小說詳情
+                            localStorage.setItem(STORAGE_KEYS.CURRENT_NOVEL, titleParam);  // 記住當前小說
+                            
                             if (chapterParam) {
+                                // 如果還有章節參數，嘗試直接進入閱讀器
                                 const chapterNumber = parseFloat(chapterParam);
                                 this.currentChapter = this.allChapters.find(ch => ch.number === chapterNumber);
+                                
                                 if (this.currentChapter) {
+                                    // 找到對應章節，進入閱讀器
                                     this.currentPage = 'reader';
                                     await this.loadChapterContent();
                                 } else {
+                                    // 章節不存在，回到詳情頁
                                     this.currentPage = 'detail';
                                     this.updateUrl('detail', { title: titleParam });
                                 }
                             } else {
+                                // 沒有章節參數，顯示詳情頁
                                 this.currentPage = 'detail';
                             }
                         } else {
+                            // 小說不存在，回到首頁
                             this.goToHome();
                         }
                     } else {
+                        // 沒有參數，顯示首頁
                         this.currentPage = 'list';
                     }
                 },
+                
                 goToHome() {
-                    this.currentPage = 'list';
-                    this.selectedNovel = null;
-                    this.currentChapter = null;
-                    this.activeDropdown = null;
+                    /* 
+                        返回首頁
+                        重置所有狀態，清理選中的小說和章節
+                        更新URL和頁面標題
+                    */
+                    this.currentPage = 'list';           // 設定頁面狀態為首頁
+                    this.selectedNovel = null;           // 清除選中的小說
+                    this.currentChapter = null;          // 清除當前章節
+                    this.activeDropdown = null;          // 關閉所有下拉菜單
+                    
+                    // 更新瀏覽器歷史記錄，回到乾淨的首頁URL
                     window.history.pushState({ page: 'list' }, '輕小說翻譯', window.location.pathname);
-                    document.title = '輕小說翻譯';
+                    document.title = '輕小說翻譯';      // 重置頁面標題
                 },
+                
                 goToDetail(novel) {
-                    this.selectedNovel = novel;
-                    this.selectedNovelData = novel.originalData;
-                    this.setupNovelDetail();
-                    this.currentPage = 'detail';
-                    this.activeDropdown = null;
+                    /* 
+                        進入小說詳情頁
+                        設定選中的小說，載入詳情信息和章節列表
+                        更新URL以支持直接訪問
+                    */
+                    this.selectedNovel = novel;                    // 設定選中的小說
+                    this.selectedNovelData = novel.originalData;   // 保存原始數據供詳情頁使用
+                    this.setupNovelDetail();                      // 設置詳情頁數據
+                    this.currentPage = 'detail';                  // 切換到詳情頁
+                    this.activeDropdown = null;                   // 關閉下拉菜單
+                    
+                    // 記住當前選中的小說到localStorage
                     localStorage.setItem(STORAGE_KEYS.CURRENT_NOVEL, novel.title);
+                    
+                    // 更新URL，支持書籤和分享
                     this.updateUrl('detail', { title: novel.title });
                 },
+                
                 goToChapter(chapterNumber) {
-                    this.currentChapter = this.allChapters.find(ch => ch.number === chapterNumber);
-                    this.loadChapterContent();
-                    this.currentPage = 'reader';
-                    this.showChapterMenu = false;
+                    /* 
+                        從詳情頁進入指定章節的閱讀器
+                        設定當前章節並載入內容
+                    */
+                    this.currentChapter = this.allChapters.find(ch => ch.number === chapterNumber);  // 找到對應章節
+                    this.loadChapterContent();                      // 載入章節內容
+                    this.currentPage = 'reader';                    // 切換到閱讀器頁面
+                    this.showChapterMenu = false;                   // 關閉章節目錄
+                    
+                    // 更新URL以支持直接訪問此章節
                     this.updateUrl('reader', { title: this.selectedNovel.title, chapter: chapterNumber });
                 },
+                
                 goToChapterInReader(chapterNumber) {
+                    /* 
+                        在閱讀器內跳轉到指定章節
+                        包含防重複載入檢查和滾動位置保存
+                    */
                     if (chapterNumber !== this.currentChapter?.number && !this.isLoading) {
-                        this.saveScrollPosition();
-                        this.currentChapter = this.allChapters.find(ch => ch.number === chapterNumber);
-                        this.loadChapterContent();
+                        // 只有在章節不同且未在載入中時才執行跳轉
+                        this.saveScrollPosition();                  // 保存當前章節的閱讀位置
+                        this.currentChapter = this.allChapters.find(ch => ch.number === chapterNumber);  // 設定新章節
+                        this.loadChapterContent();                  // 載入新章節內容
+                        
+                        // 更新URL
                         this.updateUrl('reader', { title: this.selectedNovel.title, chapter: chapterNumber });
                     }
-                    this.showChapterMenu = false;
+                    this.showChapterMenu = false;                   // 關閉章節目錄
                 },
+                
                 goBackToDetail() {
-                    this.currentPage = 'detail';
-                    this.hideControls = false;
-                    this.showSettings = false;
-                    this.showChapterMenu = false;
+                    /* 
+                        從閱讀器返回到小說詳情頁
+                        重置閱讀器相關的UI狀態
+                    */
+                    this.currentPage = 'detail';                    // 切換到詳情頁
+                    this.hideControls = false;                      // 顯示控制欄（重置隱藏狀態）
+                    this.showSettings = false;                      // 關閉設定面板
+                    this.showChapterMenu = false;                   // 關閉章節目錄
+                    
+                    // 更新URL
                     this.updateUrl('detail', { title: this.selectedNovel.title });
                 },
+                
                 setupNovelDetail() {
-                    if (!this.selectedNovelData) return;
+                    /* 
+                        設置小說詳情頁的數據
+                        處理原始數據，格式化為詳情頁所需的結構
+                        包括原文鏈接整理和章節列表處理
+                    */
+                    if (!this.selectedNovelData) return;  // 如果沒有原始數據則退出
+                    
+                    // 整理原文鏈接
                     const sourceLinks = {};
                     if (this.selectedNovelData.originalUrl) {
+                        // 將多個URL按「、」分割
                         const urls = this.selectedNovelData.originalUrl.split('、');
                         urls.forEach(url => {
+                            // 根據域名分類鏈接
                             if (url.includes('kakuyomu.jp')) {
-                                sourceLinks.kakuyomu = url;
+                                sourceLinks.kakuyomu = url;         // カクヨム網站
                             } else if (url.includes('syosetu.com')) {
-                                sourceLinks.syosetu = url;
+                                sourceLinks.syosetu = url;          // 小説家になろう網站
                             } else {
-                                sourceLinks.japanese = url;
+                                sourceLinks.japanese = url;         // 其他日文原文網站
                             }
                         });
                     }
+                    
+                    // 擴展選中小說的數據結構
                     this.selectedNovel = {
-                        ...this.selectedNovel,
-                        genres: this.selectedNovelData.tags?.join(', ') || '',
-                        description: this.selectedNovelData.description || '',
-                        sourceLinks: sourceLinks
+                        ...this.selectedNovel,                      // 保留現有屬性
+                        genres: this.selectedNovelData.tags?.join(', ') || '',    // 將標籤陣列轉為字符串
+                        description: this.selectedNovelData.description || '',    // 小說描述
+                        sourceLinks: sourceLinks                    // 整理後的原文鏈接
                     };
+                    
+                    // 處理章節列表
                     this.allChapters = this.selectedNovelData.chapters
-                        .filter(chapter => chapter.id >= 0)
+                        .filter(chapter => chapter.id >= 0)        // 過濾掉無效章節（id < 0）
                         .map(chapter => ({
-                            number: chapter.id,
-                            title: chapter.title,
+                            number: chapter.id,                     // 章節號
+                            title: chapter.title,                   // 章節標題
+                            // 生成檔案名：移除「第X話」前綴，避免檔案名過長
                             filename: `${chapter.id} ${chapter.title.replace(/^第\d+\.?\d*話\s+/, '')}.md`,
+                            // 格式化日期為 YYYY-MM-DD 格式
                             date: new Date(chapter.lastUpdated).toISOString().split('T')[0]
                         }))
-                        .sort((a, b) => a.number - b.number);
+                        .sort((a, b) => a.number - b.number);       // 按章節號升序排列
                 },
+                
                 getCoverUrl() {
-                    if (!this.selectedNovel) return '';
+                    /* 
+                        獲取當前選中小說的封面圖片URL
+                        使用encodeURIComponent確保特殊字符被正確編碼
+                    */
+                    if (!this.selectedNovel) return '';  // 如果沒有選中小說則返回空字符串
                     return `輕小說翻譯/${encodeURIComponent(this.selectedNovel.title)}/cover.jpg`;
                 },
+                
                 getSourceLinkName(key) {
+                    /* 
+                        獲取原文鏈接的友好顯示名稱
+                        將鏈接類型轉換為可讀的網站名稱
+                    */
                     const names = {
-                        kakuyomu: 'カクヨム',
-                        syosetu: '小説家になろう',
-                        japanese: '日文原文'
+                        kakuyomu: 'カクヨム',              // カクヨム網站
+                        syosetu: '小説家になろう',         // 小説家になろう網站
+                        japanese: '日文原文'              // 其他日文原文網站
                     };
-                    return names[key] || key;
+                    return names[key] || key;             // 如果找不到對應名稱則返回原鍵值
                 },
+                
                 formatDate(dateStr) {
-                    if (!dateStr) return '';
+                    /* 
+                        格式化日期字符串為本地化格式
+                        將ISO日期字符串轉換為 YYYY-MM-DD 格式
+                    */
+                    if (!dateStr) return '';              // 如果沒有日期則返回空字符串
+                    
                     const date = new Date(dateStr);
                     return date.toLocaleDateString('zh-TW', {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit'
-                    }).replace(/\//g, '-');
+                        year: 'numeric',                  // 四位數年份
+                        month: '2-digit',                 // 兩位數月份
+                        day: '2-digit'                    // 兩位數日期
+                    }).replace(/\//g, '-');               // 將斜線替換為破折號
                 },
+                
                 async loadChapterContent() {
+                    /* 
+                        載入章節內容
+                        從服務器獲取Markdown格式的章節文件
+                        包含完整的錯誤處理和用戶體驗優化
+                    */
                     try {
-                        this.isLoading = true;
-                        const folderPath = encodeURIComponent(this.selectedNovel.title);
-                        const encodedFilename = encodeURIComponent(this.currentChapter.filename);
+                        this.isLoading = true;  // 設定載入狀態，顯示載入動畫
+                        
+                        // 構建章節文件路徑
+                        const folderPath = encodeURIComponent(this.selectedNovel.title);      // 編碼小說標題
+                        const encodedFilename = encodeURIComponent(this.currentChapter.filename);  // 編碼檔案名
                         const filename = `輕小說翻譯/${folderPath}/${encodedFilename}`;
+                        
+                        // 使用fetch API載入章節文件
                         const response = await fetch(filename);
+                        
+                        // 檢查HTTP響應狀態
                         if (!response.ok) {
                             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                         }
+                        
+                        // 獲取文件內容（Markdown格式）
                         this.chapterContent = await response.text();
+                        
+                        // 等待DOM更新後執行後續操作
                         this.$nextTick(() => {
-                            this.scrollToTop();
-                            this.setupImageViewer();
-                            this.restoreScrollPosition();
-                            this.markAsRead();
-                            this.isLoading = false;
+                            this.scrollToTop();                    // 滾動到頁面頂部
+                            this.setupImageViewer();               // 設置圖片點擊放大功能
+                            this.restoreScrollPosition();          // 恢復之前的閱讀位置
+                            this.markAsRead();                     // 標記章節為已讀
+                            this.isLoading = false;                // 關閉載入狀態
+                            
+                            // 更新頁面標題包含章節信息
                             this.updatePageTitle('reader', { title: this.selectedNovel.title });
                         });
                     } catch (error) {
-                        this.isLoading = false;
+                        // 錯誤處理
+                        this.isLoading = false;                    // 關閉載入狀態
+                        
+                        // 詳細的錯誤日誌，便於調試
                         console.error('讀取章節內容失敗:', error);
                         console.error('嘗試載入的檔案路徑:', encodedFilename);
                         console.error('章節資訊:', this.currentChapter);
+                        
+                        // 向用戶顯示友好的錯誤信息
                         alert(`讀取章節內容失敗: ${error.message}\n\n檔案路徑: ${encodedFilename}\n\n請檢查檔案是否存在並且檔案名稱正確。`);
                     }
                 },
                 setupImageViewer() {
+                    /* 
+                        設置圖片查看器功能
+                        為小說內容中的圖片添加點擊放大功能
+                        使用事件委托模式處理動態添加的圖片
+                    */
                     this.$nextTick(() => {
-                        const content = document.querySelector('.novel-content');
+                        /* 
+                            $nextTick確保DOM已完全更新
+                            這很重要因為章節內容是動態加載的
+                        */
+                        const content = document.querySelector('.novel-content');  // 獲取小說內容容器
+                        
                         if (content) {
+                            // 為內容容器添加點擊事件監聽器（事件委托）
                             content.addEventListener('click', (e) => {
+                                /* 
+                                    事件委托：
+                                    - 在父元素上監聽事件，而不是每個圖片上
+                                    - 好處：節省內存，支持動態添加的元素
+                                    - e.target是實際被點擊的元素
+                                */
                                 if (e.target.tagName === 'IMG') {
-                                    this.lightboxImage = e.target.src;
-                                    this.isLightboxActive = true;
-                                    this.showSettings = false;
-                                    this.showChapterMenu = false;
+                                    // 檢查點擊的是否為圖片元素
+                                    this.lightboxImage = e.target.src;     // 設定燈箱要顯示的圖片URL
+                                    this.isLightboxActive = true;           // 啟動燈箱
+                                    this.showSettings = false;             // 關閉設定面板
+                                    this.showChapterMenu = false;          // 關閉章節目錄
                                 }
                             });
                         }
                     });
                 },
                 scrollToTop() {
-                    window.scrollTo(0, 0);
+                    /* 
+                        滾動到頁面頂部
+                        在載入新章節時自動回到頂部，提供更好的閱讀體驗
+                        window.scrollTo(x, y): 瀏覽器原生方法，立即滾動到指定位置
+                    */
+                    window.scrollTo(0, 0);  // 滾動到座標(0, 0)，即頁面左上角
                 },
                 handleScroll() {
+                    /* 
+                        處理頁面滾動事件
+                        實現智能隱藏控制欄功能：
+                        - 向下滾動時隱藏控制欄（沉浸式閱讀）
+                        - 向上滾動或接近底部時顯示控制欄
+                        同時保存滾動位置以便下次恢復
+                    */
+                    
+                    // 獲取當前滾動位置（兼容不同瀏覽器）
                     const st = window.pageYOffset || document.documentElement.scrollTop;
+                    
+                    // 判斷滾動方向：當前位置 > 上次位置 = 向下滾動
                     const isScrollingDown = st > this.lastScrollTop;
+                    
+                    // 判斷是否接近頁面底部（距離底部100px以內）
                     const isAtBottom = window.innerHeight + window.pageYOffset >= document.body.offsetHeight - 100;
+                    
                     if (isScrollingDown && !isAtBottom) {
-                        this.hideControls = true;
-                        this.showSettings = false;
-                        this.showChapterMenu = false;
+                        // 向下滾動且不在底部：隱藏控制欄和菜單
+                        this.hideControls = true;               // 隱藏控制欄
+                        this.showSettings = false;             // 關閉設定面板
+                        this.showChapterMenu = false;          // 關閉章節目錄
                     } else {
-                        this.hideControls = false;
+                        // 向上滾動或在底部：顯示控制欄
+                        this.hideControls = false;             // 顯示控制欄
                     }
-                    this.lastScrollTop = st;
-                    this.saveScrollPosition();
+                    
+                    this.lastScrollTop = st;                   // 記錄當前位置，供下次比較使用
+                    this.saveScrollPosition();                 // 保存滾動位置到localStorage
                 },
                 saveScrollPosition() {
+                    /* 
+                        保存當前章節的閱讀位置
+                        使用sessionStorage存儲，瀏覽器關閉後會清除
+                        數據結構：{ "小說名": { "章節號": 滾動位置 } }
+                        讓用戶返回時能恢復到之前的閱讀位置
+                    */
+                    
+                    // 檢查必要條件：必須有選中的小說和當前章節
                     if (!this.selectedNovel || !this.currentChapter) return;
+                    
+                    // 從sessionStorage獲取現有的滾動位置記錄
                     const scrollPositions = JSON.parse(sessionStorage.getItem(STORAGE_KEYS.SCROLL_POSITION) || '{}');
+                    
+                    // 生成小說的鍵值：移除書名號《》
                     const novelKey = this.selectedNovel.title.replace(/^《|》$/g, '');
+                    
+                    // 如果該小說還沒有記錄，創建空對象
                     if (!scrollPositions[novelKey]) {
                         scrollPositions[novelKey] = {};
                     }
+                    
+                    // 保存當前章節的滾動位置
                     scrollPositions[novelKey][this.currentChapter.number] = window.pageYOffset;
+                    
+                    // 將更新後的數據保存回sessionStorage
                     sessionStorage.setItem(STORAGE_KEYS.SCROLL_POSITION, JSON.stringify(scrollPositions));
                 },
                 restoreScrollPosition() {
+                    /* 
+                        恢復之前保存的閱讀位置
+                        從sessionStorage讀取該章節的滾動位置並自動滾動到該位置
+                        提供無縫的閱讀體驗
+                    */
+                    
+                    // 檢查必要條件：必須有選中的小說和當前章節
                     if (!this.selectedNovel || !this.currentChapter) return;
+                    
+                    // 從sessionStorage獲取滾動位置記錄
                     const scrollPositions = JSON.parse(sessionStorage.getItem(STORAGE_KEYS.SCROLL_POSITION) || '{}');
+                    
+                    // 生成小說的鍵值：移除書名號《》
                     const novelKey = this.selectedNovel.title.replace(/^《|》$/g, '');
+                    
+                    // 獲取該小說的所有章節位置記錄，如果沒有則使用空對象
                     const novelPositions = scrollPositions[novelKey] || {};
+                    
+                    // 獲取當前章節的保存位置
                     const savedPosition = novelPositions[this.currentChapter.number];
+                    
+                    // 如果有保存的位置，恢復到該位置
                     if (savedPosition !== undefined) {
-                        window.scrollTo(0, parseInt(savedPosition));
+                        window.scrollTo(0, parseInt(savedPosition));  // 滾動到保存的位置
                     }
+                    // 如果沒有保存位置，預設會停留在頂部（scrollToTop已處理）
                 },
                 goToNext() {
+                    /* 
+                        跳轉到下一章節
+                        包含完整的安全檢查和狀態管理
+                        使用陣列方法找到章節號最小的下一章（處理章節號不連續的情況）
+                    */
                     if (this.hasNext && !this.isLoading) {
-                        this.saveScrollPosition();
+                        // 檢查有下一章且不在載入中
+                        
+                        this.saveScrollPosition();               // 保存當前章節的閱讀位置
+                        
+                        // 找到所有章節號大於當前章節的章節
                         const nextChapters = this.allChapters.filter(
                             chapter => chapter.number > this.currentChapter.number
                         );
+                        
+                        // 從候選章節中找到章節號最小的（最近的下一章）
                         const nextChapter = nextChapters.reduce((min, chapter) => 
                             chapter.number < min.number ? chapter : min
                         );
-                        this.currentChapter = nextChapter;
-                        this.loadChapterContent();
+                        
+                        this.currentChapter = nextChapter;        // 設定新的當前章節
+                        this.loadChapterContent();               // 載入新章節的內容
+                        
+                        // 更新URL以支持直接訪問和書籤
                         this.updateUrl('reader', { title: this.selectedNovel.title, chapter: nextChapter.number });
                     }
                 },
                 goToPrevious() {
+                    /* 
+                        跳轉到上一章節
+                        與goToNext類似，但找章節號最大的上一章
+                        處理章節號不連續的情況（如1, 3, 5, 7...）
+                    */
                     if (this.hasPrevious && !this.isLoading) {
-                        this.saveScrollPosition();
+                        // 檢查有上一章且不在載入中
+                        
+                        this.saveScrollPosition();               // 保存當前章節的閱讀位置
+                        
+                        // 找到所有章節號小於當前章節的章節
                         const prevChapters = this.allChapters.filter(
                             chapter => chapter.number < this.currentChapter.number
                         );
+                        
+                        // 從候選章節中找到章節號最大的（最近的上一章）
                         const prevChapter = prevChapters.reduce((max, chapter) => 
                             chapter.number > max.number ? chapter : max
                         );
-                        this.currentChapter = prevChapter;
-                        this.loadChapterContent();
+                        
+                        this.currentChapter = prevChapter;        // 設定新的當前章節
+                        this.loadChapterContent();               // 載入新章節的內容
+                        
+                        // 更新URL以支持直接訪問和書籤
                         this.updateUrl('reader', { title: this.selectedNovel.title, chapter: prevChapter.number });
                     }
                 },
                 toggleTheme() {
+                    /* 
+                        切換明暗主題
+                        簡單的布爾值切換，實際的主題應用由watch監聽器處理
+                        ! 運算符：邏輯非，true變false，false變true
+                    */
                     this.isDarkMode = !this.isDarkMode;
                 },
+                
                 toggleSettings() {
-                    this.showSettings = !this.showSettings;
-                    this.showChapterMenu = false;
+                    /* 
+                        切換閱讀設定面板的顯示狀態
+                        同時確保章節目錄面板關閉（一次只顯示一個面板）
+                    */
+                    this.showSettings = !this.showSettings;      // 切換設定面板狀態
+                    this.showChapterMenu = false;                // 確保章節目錄關閉
                 },
+                
                 toggleChapterMenu() {
-                    this.showChapterMenu = !this.showChapterMenu;
-                    this.showSettings = false;
+                    /* 
+                        切換章節目錄面板的顯示狀態
+                        同時確保閱讀設定面板關閉（一次只顯示一個面板）
+                    */
+                    this.showChapterMenu = !this.showChapterMenu;  // 切換章節目錄狀態
+                    this.showSettings = false;                     // 確保設定面板關閉
                 },
                 openLightbox(imageUrl) {
-                    this.lightboxImage = imageUrl;
-                    this.isLightboxActive = true;
-                    document.body.style.overflow = 'hidden';
+                    /* 
+                        開啟圖片燈箱
+                        全屏顯示圖片，同時阻止背景頁面滾動
+                        參數 imageUrl: 要顯示的圖片URL
+                    */
+                    this.lightboxImage = imageUrl;                // 設定要顯示的圖片
+                    this.isLightboxActive = true;                 // 啟動燈箱
+                    document.body.style.overflow = 'hidden';      // 禁止背景頁面滾動
                 },
+                
                 closeLightbox() {
-                    this.isLightboxActive = false;
-                    document.body.style.overflow = '';
+                    /* 
+                        關閉圖片燈箱
+                        恢復頁面的正常滾動功能
+                    */
+                    this.isLightboxActive = false;                // 關閉燈箱
+                    document.body.style.overflow = '';            // 恢復頁面滾動（''表示使用默認值）
                 },
                 handleSortChange(sortOption) {
-                    this.currentSort = sortOption.value;
-                    localStorage.setItem(STORAGE_KEYS.SORT, sortOption.value);
-                    this.activeDropdown = null;
+                    /* 
+                        處理排序方式變更
+                        更新當前排序設定並持久化保存，同時關閉下拉菜單
+                        參數 sortOption: 包含 { value, label } 的排序選項對象
+                    */
+                    this.currentSort = sortOption.value;          // 更新當前排序方式
+                    localStorage.setItem(STORAGE_KEYS.SORT, sortOption.value);  // 保存到localStorage
+                    this.activeDropdown = null;                  // 關閉下拉菜單
                 },
                 getDropdownPosition(dropdownId) {
-                    const element = document.querySelector('.sort-selector');
-                    if (!element) return {};
-                    const rect = element.getBoundingClientRect();
+                    /* 
+                        計算下拉菜單的動態定位
+                        根據觸發元素的位置計算菜單應該出現的位置
+                        使用fixed定位確保菜單不會超出視窗邊界
+                    */
+                    const element = document.querySelector('.sort-selector');  // 獲取排序選擇器元素
+                    if (!element) return {};                      // 如果元素不存在，返回空對象
+                    
+                    const rect = element.getBoundingClientRect(); // 獲取元素的位置和尺寸信息
+                    
                     return {
-                        position: 'fixed',
-                        top: `${rect.bottom + 5}px`,
-                        right: `${window.innerWidth - rect.right}px`
+                        position: 'fixed',                        // 使用固定定位
+                        top: `${rect.bottom + 5}px`,              // 菜單頂部 = 元素底部 + 5px間距
+                        right: `${window.innerWidth - rect.right}px`  // 菜單右側對齊元素右側
                     };
                 },
                 closeDropdowns(e) {
-                    const target = e.target;
+                    /* 
+                        關閉下拉菜單的事件處理器
+                        當用戶點擊下拉菜單外部時自動關閉菜單
+                        使用closest()方法檢查點擊目標是否在下拉菜單內
+                    */
+                    const target = e.target;                     // 獲取點擊的目標元素
+                    
+                    // closest()方法：向上遍歷DOM樹，找最近的匹配選擇器的祖先元素
                     if (!target.closest('.dropdown')) {
-                        this.activeDropdown = null;
+                        // 如果點擊的不是下拉菜單或其子元素
+                        this.activeDropdown = null;              // 關閉所有下拉菜單
                     }
                 },
                 markAsRead() {
+                    /* 
+                        標記當前章節為已讀
+                        在localStorage中記錄用戶已閱讀的章節
+                        數據結構：{ "小說名": [章節號陣列] }
+                        用於在詳情頁和目錄中顯示已讀狀態
+                    */
+                    
+                    // 檢查必要條件：必須有選中的小說和當前章節
                     if (!this.selectedNovel || !this.currentChapter) return;
+                    
+                    // 從localStorage獲取已讀章節記錄
                     const readChapters = JSON.parse(localStorage.getItem(STORAGE_KEYS.READ_CHAPTERS) || '{}');
+                    
+                    // 生成小說的鍵值：移除書名號《》
                     const novelKey = this.selectedNovel.title.replace(/^《|》$/g, '');
+                    
+                    // 如果該小說還沒有已讀記錄，創建空陣列
                     if (!readChapters[novelKey]) {
                         readChapters[novelKey] = [];
                     }
+                    
+                    // 檢查當前章節是否已在已讀列表中
                     if (!readChapters[novelKey].includes(this.currentChapter.number)) {
+                        // 如果未讀，添加到已讀列表
                         readChapters[novelKey].push(this.currentChapter.number);
+                        
+                        // 保存更新後的已讀記錄到localStorage
                         localStorage.setItem(STORAGE_KEYS.READ_CHAPTERS, JSON.stringify(readChapters));
                     }
                 },
                 isChapterRead(chapterNumber) {
+                    /* 
+                        檢查指定章節是否已讀
+                        從localStorage讀取已讀記錄並檢查特定章節
+                        參數 chapterNumber: 要檢查的章節號
+                        返回 boolean: true表示已讀，false表示未讀
+                    */
+                    
+                    // 如果沒有選中小說，返回false
                     if (!this.selectedNovel) return false;
+                    
+                    // 從localStorage獲取已讀章節記錄
                     const readChapters = JSON.parse(localStorage.getItem(STORAGE_KEYS.READ_CHAPTERS) || '{}');
+                    
+                    // 生成小說的鍵值：移除書名號《》
                     const novelKey = this.selectedNovel.title.replace(/^《|》$/g, '');
+                    
+                    // 使用可選鏈操作符(?.)安全檢查陣列是否包含指定章節號
+                    // 如果readChapters[novelKey]不存在，返回undefined，不會調用includes方法
                     return readChapters[novelKey]?.includes(chapterNumber);
                 }
             },
             created() {
+                /* 
+                    Vue生命週期鉤子：created
+                    在Vue實例創建完成後執行，此時data和methods已可用
+                    但DOM尚未掛載，適合進行數據初始化
+                */
+                
+                // 檢測是否為移動設備
+                // 使用正則表達式檢查User Agent字符串 + 視窗寬度檢查
                 this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+                
+                // 添加視窗大小變化監聽器，支持響應式切換
                 window.addEventListener('resize', () => {
-                    this.isMobile = window.innerWidth <= 768;
+                    this.isMobile = window.innerWidth <= 768;  // 768px以下視為移動設備
                 });
             },
             mounted() {
-                const theme = localStorage.getItem(STORAGE_KEYS.THEME) || 'light';
-                document.documentElement.setAttribute('data-theme', theme);
+                /* 
+                    Vue生命週期鉤子：mounted
+                    在Vue實例掛載到DOM後執行，此時可以訪問DOM元素
+                    適合進行DOM操作、事件監聽器添加、第三方庫初始化等
+                */
+                
+                // 初始化主題設定
+                const theme = localStorage.getItem(STORAGE_KEYS.THEME) || 'light';  // 獲取保存的主題或使用默認值
+                document.documentElement.setAttribute('data-theme', theme);          // 設定根元素的主題屬性
+                
+                // 應用保存的字體和行距設定到CSS變量
                 document.documentElement.style.setProperty('--font-size', `${this.fontSize}px`);
                 document.documentElement.style.setProperty('--line-height', this.lineHeight);
+                
+                // 載入小說列表並處理URL參數
                 this.fetchNovelList().then(() => {
-                    this.handleUrlParams();
+                    this.handleUrlParams();  // 處理直接訪問特定頁面的URL
                 });
+                
+                // 添加瀏覽器前進/後退按鈕支持
                 window.addEventListener('popstate', (event) => {
+                    /* 
+                        popstate事件：瀏覽器歷史記錄變化時觸發
+                        用戶點擊前進/後退按鈕時會觸發此事件
+                    */
                     if (event.state) {
-                        this.handleUrlParams();
+                        this.handleUrlParams();  // 如果有狀態數據，處理URL參數
                     } else {
-                        this.goToHome();
+                        this.goToHome();         // 沒有狀態數據，回到首頁
                     }
                 });
+                
+                // 添加全局點擊事件監聽器，用於關閉下拉菜單
                 document.addEventListener('click', this.closeDropdowns);
+                
+                // 添加鍵盤快捷鍵支持
                 document.addEventListener('keydown', (e) => {
+                    /* 
+                        ESC鍵功能：
+                        - 如果燈箱開啟，關閉燈箱
+                        - 如果在閱讀器頁面，關閉設定和目錄面板
+                    */
                     if (e.key === 'Escape') {
                         if (this.isLightboxActive) {
                             this.closeLightbox();
@@ -2555,7 +3076,15 @@
                         }
                     }
                 });
+                
+                // 添加方向鍵導航支持（僅在閱讀器頁面）
                 document.addEventListener('keydown', (e) => {
+                    /* 
+                        方向鍵章節導航：
+                        - 左箭頭/上箭頭：上一章
+                        - 右箭頭/下箭頭：下一章
+                        - 只有在閱讀器頁面且沒有面板開啟時才生效
+                    */
                     if (this.currentPage === 'reader' && !this.showSettings && !this.showChapterMenu && !this.isLightboxActive) {
                         if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
                             if (this.hasPrevious) {
@@ -2568,11 +3097,20 @@
                         }
                     }
                 });
+                
+                // 添加閱讀器頁面的點擊外部關閉面板功能
                 document.addEventListener('click', (e) => {
+                    /* 
+                        點擊外部關閉面板：
+                        - 在閱讀器頁面，點擊設定面板和控制按鈕外的區域
+                        - 自動關閉設定和章節目錄面板
+                    */
                     if (this.currentPage === 'reader') {
-                        const settingsModal = e.target.closest('.settings-modal');
-                        const controlBtn = e.target.closest('.control-btn');
+                        const settingsModal = e.target.closest('.settings-modal');  // 檢查是否點擊設定面板
+                        const controlBtn = e.target.closest('.control-btn');        // 檢查是否點擊控制按鈕
+                        
                         if (!settingsModal && !controlBtn) {
+                            // 如果都不是，關閉面板
                             this.showSettings = false;
                             this.showChapterMenu = false;
                         }
