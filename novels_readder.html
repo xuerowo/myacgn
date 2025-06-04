@@ -243,8 +243,13 @@
             padding: var(--spacing-md);         /* 使用CSS變量設定內邊距 */
             z-index: var(--z-navbar);           /* 使用CSS變量設定層級 */
             
-            /* 過渡動畫：top屬性和背景顏色的變化會有平滑過渡 */
-            transition: top var(--transition), background-color var(--transition);
+            /* 
+                🎬 過渡動畫：使用transform實現最佳性能的滑動效果
+                transform: 只觸發Composite層，不會重排(reflow)，性能更好
+                background-color: 主題切換時的背景顏色過渡
+                opacity: 淡入淡出效果（可選）
+            */
+            transition: transform var(--transition), background-color var(--transition), opacity var(--transition);
         }
         
         .nav-container {
@@ -728,6 +733,16 @@
         .chapter-item.read .chapter-title {
             /* 已讀章節的標題顏色 */
             color: var(--text-muted);                   /* 使用次要文字顏色(較淡) */
+        }
+        
+        .chapter-item.read:hover {
+            /* 
+                已讀章節的懸停效果（與一般章節相同）
+                覆蓋已讀章節的透明度設定，讓懸停時顯示完整效果
+            */
+            background: var(--primary-color) !important; /* 強制設定藍色背景 */
+            color: #fff !important;                      /* 強制設定白色文字 */
+            transform: translateY(-2px);                 /* 向上浮動2px，與一般章節相同 */
         }
         
         .chapter-item:hover .chapter-date {
@@ -1259,6 +1274,30 @@
                 使用!important確保元素被隱藏
             */
             display: none !important;
+        }
+        
+        .navbar.hidden {
+            /* 
+                🎯 導航欄專用隱藏效果（覆蓋通用 .hidden 類）
+                使用transform實現平滑的向上滑出動畫
+                display: block !important 覆蓋通用 .hidden 的 display: none
+                transform: translateY(-100%) 將導航欄向上移動100%的高度
+                這樣既保持了動畫效果，又達到了隱藏的目的
+            */
+            display: block !important;          /* 覆蓋通用.hidden的display:none，確保動畫可見 */
+            transform: translateY(-100%);       /* 向上滑出：移動自身高度的100% */
+        }
+        
+        .reader-controls.hidden {
+            /* 
+                🎯 閱讀器控制欄專用隱藏效果（覆蓋通用 .hidden 類）
+                使用transform實現平滑的向下滑出動畫
+                display: flex !important 覆蓋通用 .hidden 的 display: none
+                transform: translateY(100%) 將控制欄向下移動100%的高度
+                保持原有的flex佈局以確保按鈕正確排列
+            */
+            display: flex !important;           /* 覆蓋通用.hidden的display:none，保持flex佈局 */
+            transform: translateY(100%);        /* 向下滑出：移動自身高度的100% */
         }
         
         .page-list .reader-container,
