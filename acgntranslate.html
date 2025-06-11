@@ -1819,12 +1819,13 @@
                     this.allChapters = this.selectedNovelData.chapters
                         .filter(chapter => chapter.id >= 0)
                         .map(chapter => {
-                            // 根據章節 ID 和標題生成檔案名
-                            const filename = `${chapter.id} ${chapter.title.replace(/^第\d+\.?\d*話\s+/, '')}.md`;
+                            // 從URL中提取實際的檔案名
+                            const urlParts = chapter.url.split('/');
+                            const actualFilename = urlParts[urlParts.length - 1];
                             return {
                                 number: chapter.id,
                                 title: chapter.title,
-                                filename: filename,
+                                filename: actualFilename,
                                 date: new Date(chapter.lastUpdated).toISOString().split('T')[0]
                             };
                         })
