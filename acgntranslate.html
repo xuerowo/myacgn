@@ -4,27 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ACGN翻譯</title>
-    <meta name="description" content="網漫與輕小說中文翻譯閱讀網站。">
-    <meta name="keywords" content="網漫, 輕小說, 漫畫, 網漫翻譯, 輕小說翻譯, 漫畫翻譯, 網路漫畫, 漫畫閱讀, 中文翻譯, 閱讀器, 漫畫網站, webtoon, 漫畫推薦">
     <link rel="icon" href="images/favicon.jpg" type="image/jpg">
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/marked/marked.min.js"></script>
     <style>
         :root {
-            --primary-color: #4a90e2;
-            --secondary-color: #f5f5f5;
-            --text-color: #333;
-            --border-color: #ddd;
-            --background-color: #fff;
+            --primary: #4a90e2;
+            --primary-hover: #357abd;
+            --bg: #fff;
+            --text: #333;
+            --text-muted: #666;
+            --border: #ddd;
+            --secondary: #f5f5f5;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            --fs: clamp(16px, 4vw, 18px);
+            --lh: clamp(1.6, 0.2vw, 1.8);
+            --br: 8px;
+            --sp: 1rem;
+            --content-width: 80%;
+            --transition-fast: all 0.2s ease;
+            --transition-normal: all 0.3s ease;
             --dropdown-background: #fff;
             --dropdown-hover: #f0f0f0;
         }
 
         :root[data-theme="dark"] {
-            --primary-color: #64b5f6;
-            --secondary-color: #1a1a1a;
-            --text-color: #e0e0e0;
-            --border-color: #333;
-            --background-color: #121212;
+            --primary: #64b5f6;
+            --bg: #121212;
+            --text: #e0e0e0;
+            --text-muted: #999;
+            --border: #333;
+            --secondary: #1a1a1a;
             --dropdown-background: #1a1a1a;
             --dropdown-hover: #2a2a2a;
         }
@@ -38,21 +48,22 @@
 
         html {
             height: 100%;
-            }
+        }
 
         body {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        line-height: 1.6;
-        color: var(--text-color);
-        background-color: var(--secondary-color);
-        padding-top: 60px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background-color: var(--secondary);
+            padding-top: 60px;
+            transition: var(--transition-normal);
         }
 
         #app {
-        flex-grow: 1;
+            flex-grow: 1;
         }
 
         .container {
@@ -67,11 +78,31 @@
             top: 0;
             left: 0;
             width: 100%;
-            background-color: var(--background-color);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            background-color: var(--bg);
+            box-shadow: var(--shadow);
             padding: 1rem;
             z-index: 1000;
             transition: top 0.3s;
+        }
+
+        .fixed-overlay {
+            position: fixed;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            padding: var(--sp);
+            z-index: 1000;
+            transition: transform 0.3s;
+        }
+
+        [data-theme="dark"] .fixed-overlay {
+            background: rgba(18, 18, 18, 0.85);
+        }
+
+        .navbar.hidden {
+            transform: translateY(-100%);
         }
 
         .navbar[style*="-80px"] .dropdown-menu,
@@ -103,6 +134,12 @@
             cursor: grabbing;
         }
 
+        .nav-left {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
         .nav-links {
             display: flex;
             gap: 2rem;
@@ -116,7 +153,7 @@
         }
 
         .nav-links a {
-            color: var(--text-color);
+            color: var(--text);
             text-decoration: none;
             font-size: 1.1rem;
             transition: color 0.3s;
@@ -124,7 +161,7 @@
         }
 
         .nav-links a:hover {
-            color: var(--primary-color);
+            color: var(--primary);
         }
 
         .nav-right {
@@ -149,7 +186,7 @@
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
-            color: var(--text-color);
+            color: var(--text);
             background: none;
             border: none;
             font-size: 1.1rem;
@@ -158,7 +195,7 @@
         }
 
         .dropdown-toggle:hover {
-            color: var(--primary-color);
+            color: var(--primary);
         }
 
         .dropdown-toggle:after {
@@ -171,8 +208,8 @@
             position: fixed;
             background-color: var(--dropdown-background);
             min-width: 160px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            border-radius: 4px;
+            box-shadow: var(--shadow);
+            border-radius: var(--br);
             opacity: 0;
             visibility: hidden;
             transform: translateY(-10px);
@@ -189,14 +226,14 @@
         .dropdown-menu a {
             display: block;
             padding: 0.8rem 1rem;
-            color: var(--text-color);
+            color: var(--text);
             text-decoration: none;
             transition: background-color 0.3s;
         }
 
         .dropdown-menu a:hover {
             background-color: var(--dropdown-hover);
-            color: var(--primary-color);
+            color: var(--primary);
         }
 
         .dropdown-toggle.active:after {
@@ -205,21 +242,21 @@
 
         .dropdown-menu a.active {
             background-color: var(--dropdown-hover);
-            color: var(--primary-color);
+            color: var(--primary);
         }
 
         .app-download-button {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            color: var(--text-color);
+            color: var(--text);
             text-decoration: none;
             font-size: 1.1rem;
             position: relative;
         }
 
         .app-download-button:hover {
-            color: var(--primary-color);
+            color: var(--primary);
         }
 
         .app-icon-small {
@@ -236,11 +273,11 @@
             height: 150px;
             margin: 0.8rem auto;
             display: block;
-            border-radius: 4px;
+            border-radius: var(--br);
         }
 
         .version-info {
-            color: var(--primary-color);
+            color: var(--primary);
             font-weight: 500;
             display: block;
             margin-bottom: 0.5rem;
@@ -254,10 +291,10 @@
 
         .content-card {
             width: 196px;
-            background: var(--background-color);
-            border-radius: 8px;
+            background: var(--bg);
+            border-radius: var(--br);
             overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow);
             transition: transform 0.2s;
             cursor: pointer;
             position: relative;
@@ -277,7 +314,7 @@
 
         .content-card-info {
             padding: 1rem;
-            background: var(--background-color);
+            background: var(--bg);
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -290,7 +327,7 @@
             align-items: center;
             margin-top: 0.5rem;
             font-size: 0.8rem;
-            color: var(--text-color);
+            color: var(--text);
             opacity: 0.8;
         }
 
@@ -305,18 +342,18 @@
         .content-title {
             font-size: 1.1rem;
             font-weight: bold;
-            color: var(--text-color);
+            color: var(--text);
         }
 
         .reading-progress {
             font-size: 0.9rem;
-            color: var(--primary-color);
+            color: var(--primary);
         }
 
         .theme-toggle {
             background: none;
             border: none;
-            color: var(--text-color);
+            color: var(--text);
             font-size: 1.5rem;
             cursor: pointer;
             padding: 0.5rem;
@@ -332,19 +369,19 @@
             align-items: center;
             cursor: pointer;
             padding: 8px;
-            border-radius: 4px;
+            border-radius: var(--br);
             transition: background-color 0.2s;
             margin-right: 8px;
             user-select: none;
             background: none;
             border: none;
-            color: var(--text-color);
+            color: var(--text);
             font-size: 1.1rem;
         }
 
         .sort-selector:hover {
             background-color: var(--dropdown-hover);
-            color: var(--primary-color);
+            color: var(--primary);
         }
 
         .sort-icon {
@@ -355,7 +392,7 @@
 
         .sort-text {
             font-size: 1.1rem;
-            color: var(--text-color);
+            color: var(--text);
             margin-right: 4px;
         }
 
@@ -368,8 +405,8 @@
         .sort-menu {
             position: fixed;
             background-color: var(--dropdown-background);
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            border-radius: var(--br);
+            box-shadow: var(--shadow);
             padding: 4px;
             z-index: 1002;
             min-width: 120px;
@@ -391,19 +428,19 @@
             justify-content: space-between;
             padding: 8px 12px;
             cursor: pointer;
-            border-radius: 4px;
-            color: var(--text-color);
+            border-radius: var(--br);
+            color: var(--text);
             text-decoration: none;
         }
 
         .sort-option:hover {
             background-color: var(--dropdown-hover);
-            color: var(--primary-color);
+            color: var(--primary);
         }
 
         .sort-option.selected {
             background-color: var(--dropdown-hover);
-            color: var(--primary-color);
+            color: var(--primary);
         }
 
         .sort-option-text {
@@ -424,17 +461,496 @@
             content: none;
         }
 
-        footer {
-            flex-shrink: 0;
-            flex-shrink: 0;
-            text-align: center;
+        /* 詳情頁樣式 - 統一使用 novels_readder.html 的設計 */
+        .detail-page {
+            background: var(--bg);
+            border-radius: var(--br);
             padding: 2rem;
-            background-color: var(--background-color);
+            margin-bottom: 2rem;
+        }
+
+        .detail-info {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .detail-cover {
+            width: 100%;
+            border-radius: var(--br);
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .detail-cover:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .detail-title {
+            font-size: 2.3rem;
+            margin-bottom: var(--sp);
+            color: var(--text);
+        }
+
+        .detail-metadata {
+            margin-bottom: var(--sp);
+            color: var(--text);
+        }
+
+        .detail-description {
+            line-height: 1.8;
+            white-space: pre-line;
+        }
+
+        .source-link {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            margin-left: 0.5rem;
+            border-radius: var(--br);
+            color: var(--text);
+            background: var(--secondary);
+            text-decoration: none;
+            transition: var(--transition-fast);
+        }
+
+        .source-link:hover {
+            background: var(--primary-hover);
+            color: #fff;
+        }
+
+        .chapter-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: var(--sp);
+        }
+
+        .chapter-item {
+            background: var(--secondary);
+            padding: var(--sp);
+            border-radius: var(--br);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .chapter-item:hover,
+        .chapter-item.read:hover {
+            background: var(--primary);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .chapter-item.read {
+            opacity: 0.5;
+            border: 1px solid rgba(128, 128, 128, 0.3);
+        }
+
+        .chapter-title {
+            font-weight: 500;
+            flex-grow: 1;
+        }
+
+        .chapter-date {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* 閱讀器樣式 - 統一使用 novels_readder.html 的設計 */
+        .reader-container {
+            width: var(--content-width);
+            margin: 4rem auto 5rem;
+            padding: 2rem;
+            background: var(--bg);
+            border-radius: var(--br);
+            box-shadow: var(--shadow);
+            font-size: var(--fs);
+        }
+
+        .reader-content {
+            margin-bottom: 2rem;
+            line-height: var(--lh);
+        }
+
+        .reader-content p {
+            margin-bottom: var(--sp);
+        }
+
+        .reader-content img {
+            max-width: 50%;
+            height: auto;
+            display: block;
+            margin: var(--sp) auto;
+            cursor: pointer;
+            border-radius: var(--br);
+        }
+
+        /* 網漫閱讀器特殊樣式 */
+        .webtoon-reader {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding-bottom: 60px;
+        }
+
+        .manga-page {
+            width: 100%;
+            height: auto;
+            margin: 0;
+            display: block;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        .reader-controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            padding: var(--sp);
+            display: flex;
+            justify-content: center;
+            gap: var(--sp);
+            transition: transform 0.3s;
+            z-index: 1000;
+        }
+
+        [data-theme="dark"] .reader-controls {
+            background: rgba(18, 18, 18, 0.85);
+        }
+
+        .reader-controls.hidden {
+            transform: translateY(100%);
+        }
+
+        .reader-title {
+            text-align: center;
+            flex-grow: 1;
+            color: var(--text);
+        }
+
+        .btn {
+            padding: 0.5rem var(--sp);
+            border: none;
+            border-radius: var(--br);
+            cursor: pointer;
+            transition: var(--transition-normal);
+            font-size: var(--fs);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            min-width: 80px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-transparent {
+            background: transparent;
+            color: var(--text);
+            min-width: auto;
+        }
+
+        .btn-transparent:hover {
+            color: var(--primary);
+        }
+
+        /* 模態框樣式 - 統一使用 novels_readder.html 的設計 */
+        .modal {
+            position: fixed;
+            bottom: 60px;
+            left: 50%;
+            transform: translate(-50%, 200%);
+            width: 300px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--br);
+            padding: 1.5rem;
+            color: var(--text);
+            z-index: 1001;
+            transition: transform 0.3s;
+            max-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow);
+            line-height: 1.5;
+        }
+
+        .modal.active {
+            transform: translate(-50%, 0);
+        }
+
+        .modal-header {
+            padding: 0 0 var(--sp) 0;
+            border-bottom: 1px solid var(--border);
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .modal-group {
+            overflow-y: auto;
+            flex: 1;
+            margin: 0;
+            padding: var(--sp) 0;
+        }
+
+        .modal-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .modal-group input[type="range"] {
+            width: 100%;
+            accent-color: var(--primary);
+        }
+
+        .modal-group input[type="checkbox"] {
+            margin-right: 0.5rem;
+            accent-color: var(--primary);
+        }
+
+        .modal .chapter-item.current {
+            background: #bbdefb;
+            color: #000;
+        }
+
+        [data-theme="dark"] .modal .chapter-item.current {
+            background: #1976d2;
+            color: #fff;
+        }
+
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.3s, visibility 0s 0.3s;
+        }
+
+        .lightbox.active {
+            visibility: visible;
+            opacity: 1;
+            pointer-events: auto;
+            transition: opacity 0.3s, visibility 0s 0s;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 95%;
+            max-height: 85vh;
+        }
+
+        .lightbox img {
+            max-width: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+        }
+
+        .close-lightbox {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 8px;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loading-overlay.show {
+            display: flex;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg) }
+            100% { transform: rotate(360deg) }
+        }
+
+        .footer {
+            flex-shrink: 0;
+            background: var(--bg);
+            border-top: 1px solid var(--border);
+            padding: 2rem 0;
+            margin-top: 3rem;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--sp);
+        }
+
+        .footer-text {
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .app-download-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0 1rem;
+            color: var(--text);
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s;
+            border-top: 1px solid var(--border);
+            margin-top: 0;
+            margin-bottom: 0;
+            width: 100%;
+            height: 40px;
+            box-sizing: border-box;
+            line-height: 1;
+        }
+
+        .app-download-link:hover {
+            background-color: var(--dropdown-hover);
+            color: var(--primary);
+        }
+
+        .app-download-link svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .desktop-only {
+            display: block;
         }
 
         @media (max-width: 768px) {
+            * {
+                user-select: none;
+            }
+
+            .desktop-only {
+                display: none;
+            }
+
             .navbar {
-                padding: 0.8rem;
+                padding: clamp(0.5rem, 2vw, 0.8rem);
+            }
+
+            .nav-title {
+                font-size: clamp(1rem, 4vw, 1.3rem);
+            }
+
+            .container {
+                padding: clamp(8px, 2vw, 16px);
+            }
+
+            .content-grid {
+                grid-template-columns: repeat(auto-fit, minmax(clamp(140px, 35vw, 180px), 1fr));
+                gap: clamp(18px, 4.5vw, 36px);
+                padding: 0 clamp(4px, 1vw, 12px);
+            }
+
+            .content-card {
+                width: clamp(140px, 35vw, 180px);
+            }
+
+            .content-card img {
+                width: clamp(140px, 35vw, 180px);
+                height: clamp(200px, 50vw, 260px);
+            }
+
+            .content-title {
+                font-size: clamp(0.9rem, 3vw, 1.1rem);
+            }
+
+            .card-footer {
+                font-size: clamp(0.7rem, 2vw, 0.8rem);
+            }
+
+            .detail-info {
+                grid-template-columns: clamp(120px, 30vw, 200px) 1fr;
+                gap: clamp(0.8rem, 2vw, 1.5rem);
+            }
+
+            .detail-title {
+                font-size: clamp(1.2rem, 5vw, 2rem);
+            }
+
+            .chapter-list {
+                grid-template-columns: repeat(auto-fill, minmax(clamp(80px, 20vw, 140px), 1fr));
+            }
+
+            .chapter-title {
+                font-size: clamp(0.8rem, 2.5vw, 1rem);
+            }
+
+            .reader-container {
+                width: 100%;
+                margin: clamp(4px, 1vw, 8px) 0 clamp(60px, 15vw, 80px);
+                padding: clamp(0.5rem, 2vw, 1rem);
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .reader-controls {
+                padding: clamp(0.5rem, 2vw, 1rem);
+            }
+
+            .btn {
+                padding: clamp(0.3rem, 1vw, 0.5rem) clamp(0.5rem, 2vw, 1rem);
+                font-size: clamp(0.8rem, 2.5vw, 1rem);
+                min-width: clamp(60px, 15vw, 80px);
+            }
+
+            .modal {
+                width: clamp(280px, 85vw, 350px);
+                max-width: 90vw;
             }
 
             .nav-links {
@@ -443,58 +959,6 @@
 
             .nav-links > * {
                 min-width: 60px;
-            }
-
-            .container {
-                padding: 12px;
-            }
-
-            .content-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1rem;
-            }
-
-            .content-card {
-                width: 165px;
-            }
-
-            .content-card img {
-                width: 165px;
-                height: 235px;
-            }
-
-            .content-card-info {
-                padding: 0.8rem;
-            }
-
-            .content-title {
-                font-size: 0.95rem;
-            }
-
-            .reading-progress {
-                font-size: 0.85rem;
-            }
-
-            .sort-text {
-                font-size: 0.95rem;
-            }
-            
-            .sort-chevron {
-                font-size: 0.8rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .navbar {
-                padding: 0.6rem;
-            }
-
-            .nav-links {
-                gap: 0.8rem;
-            }
-
-            .nav-links > * {
-                min-width: 50px;
             }
 
             .nav-links a {
@@ -536,49 +1000,30 @@
         }
 
         .nav-container::-webkit-scrollbar-thumb {
-            background: var(--primary-color);
+            background: var(--primary);
             border-radius: 4px;
         }
 
         .nav-container::-webkit-scrollbar-thumb:hover {
-            background: var(--primary-color);
-        }
-
-        .app-download-link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 0 1rem;
-            color: var(--text-color);
-            text-decoration: none;
-            transition: background-color 0.3s, color 0.3s;
-            border-top: 1px solid var(--border-color);
-            margin-top: 0;
-            margin-bottom: 0;
-            width: 100%;
-            height: 40px;
-            box-sizing: border-box;
-            line-height: 1;
-        }
-
-        .app-download-link:hover {
-            background-color: var(--dropdown-hover);
-            color: var(--primary-color);
-        }
-
-        .app-download-link svg {
-            width: 16px;
-            height: 16px;
+            background: var(--primary);
         }
     </style>
 </head>
 <body>
     <div id="app">
-        <nav class="navbar">
+        <nav class="navbar" v-show="currentPage !== 'reader'">
             <div class="nav-container">
-                <div class="nav-links">
-                    <a href="index.html">首頁</a>
+                <div class="nav-left">
+                    <button 
+                        v-if="currentPage === 'detail'" 
+                        class="btn btn-transparent" 
+                        @click="goToHome">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                    </button>
+                    <div v-if="currentPage !== 'detail'" class="nav-links">
+                        <a href="index.html">首頁</a>
                     <div class="dropdown">
                         <button class="dropdown-toggle" 
                                 data-dropdown="recommendations"
@@ -602,24 +1047,25 @@
                                 @mouseenter="!isMobile && (activeDropdown = 'acgn')"
                                 @click="isMobile && (activeDropdown = activeDropdown === 'acgn' ? null : 'acgn')"
                                 :class="{ active: activeDropdown === 'acgn' }"
-                                style="color: var(--primary-color)">ACGN翻譯</button>
+                                style="color: var(--primary)">ACGN翻譯</button>
                         <div class="dropdown-menu" 
                              :class="{ show: activeDropdown === 'acgn' }"
                              :style="getDropdownPosition('acgn')"
                              @mouseenter="!isMobile && (activeDropdown = 'acgn')"
                              @mouseleave="!isMobile && (activeDropdown = null)">
-                            <a href="#webtoons" 
+                            <a href="javascript:void(0)" 
                                @click="switchContent('webtoons')" 
                                :class="{ active: currentContent === 'webtoons' }">網漫</a>
-                            <a href="#novels" 
+                            <a href="javascript:void(0)" 
                                @click="switchContent('novels')" 
                                :class="{ active: currentContent === 'novels' }">輕小說</a>
                         </div>
                     </div>
                     <a href="commentsection.html">留言區</a>
+                    </div>
                 </div>
                 <div class="nav-right">
-                    <div v-if="currentContent === 'novels'" class="dropdown">
+                    <div v-if="currentContent === 'novels' && currentPage === 'list'" class="dropdown">
                         <button class="dropdown-toggle app-download-button" 
                                 data-dropdown="app"
                                 @mouseenter="!isMobile && (activeDropdown = 'app')"
@@ -634,17 +1080,17 @@
                              @mouseenter="!isMobile && (activeDropdown = 'app')"
                              @mouseleave="!isMobile && (activeDropdown = null)">
                             <div class="app-info-content">
-                                <span class="version-info">v1.2.11</span>
-                                <span>更新於 2025/6/8</span>
+                                <span class="version-info" v-if="appVersion">v{{ appVersion.version }}</span>
+                                <span v-if="appVersion">更新於 {{ appVersion.date }}</span>
                                 <img class="qr-code-img" 
                                      src="images/app_download_qr_code.png" 
                                      alt="掃描下載 App">
                                 <span style="margin-top: 10px; display: block;">掃描下載 App</span>
-                                <a href="輕小說翻譯/changelog.html"
+                                <a :href="appVersion?.changelogUrl || '輕小說翻譯/changelog.html'"
                                    class="app-download-link">
                                    查看更新日誌
                                 </a>
-                                <a href="https://expo.dev/artifacts/eas/44xWoSepLHejUNqZfvK9eF.apk"
+                                <a :href="appVersion?.downloadUrl || 'https://expo.dev/artifacts/eas/44xWoSepLHejUNqZfvK9eF.apk'"
                                    download="acgn閱讀器.apk"
                                    class="app-download-link">
                                    點擊下載 App
@@ -652,7 +1098,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="dropdown">
+                    <div class="dropdown" v-show="currentPage === 'list'">
                         <button class="dropdown-toggle sort-selector" 
                                 data-dropdown="sort"
                                 @mouseenter="!isMobile && (activeDropdown = 'sort')"
@@ -688,7 +1134,8 @@
             </div>
         </nav>
 
-        <div class="container">
+        <!-- 列表頁 -->
+        <div v-show="currentPage === 'list'" class="container">
             <div class="content-grid">
                 <template v-if="currentContent === 'webtoons'">
                     <div v-for="item in sortedMangaList" 
@@ -725,26 +1172,261 @@
                 </template>
             </div>
         </div>
+
+        <!-- 詳情頁 -->
+        <div v-show="currentPage === 'detail'" class="container">
+            <div class="detail-page">
+                <div class="detail-info">
+                    <img :src="getCoverUrl()" 
+                         :alt="selectedItem?.title" 
+                         class="detail-cover" 
+                         @click="openLightbox(getCoverUrl())"
+                         @error="handleImageError">
+                    <div>
+                        <h1 class="detail-title">{{ selectedItem?.title }}</h1>
+                        <div class="detail-metadata">
+                            <p><strong>作者：</strong>{{ selectedItem?.author }}</p>
+                            <p v-if="selectedItem?.genres"><strong>類型：</strong>{{ selectedItem?.genres }}</p>
+                            <p v-if="selectedItem?.tags"><strong>類型：</strong>{{ selectedItem?.tags?.join('、') }}</p>
+                            <p v-if="selectedItem?.sourceLinks && Object.keys(selectedItem.sourceLinks).length" class="source-links">
+                                <strong>原連結：</strong>
+                                <a v-for="(link, key) in selectedItem.sourceLinks" 
+                                   :key="key" 
+                                   :href="link" 
+                                   target="_blank" 
+                                   class="source-link">
+                                    {{ getSourceLinkName(key) }}
+                                </a>
+                            </p>
+                            <p v-if="selectedItem?.koreanUrl || selectedItem?.englishUrl" class="source-links">
+                                <strong>正版連結：</strong>
+                                <a v-if="selectedItem?.koreanUrl" :href="selectedItem.koreanUrl" target="_blank" class="source-link">韓文版</a>
+                                <a v-if="selectedItem?.englishUrl" :href="selectedItem.englishUrl" target="_blank" class="source-link">英文版</a>
+                            </p>
+                        </div>
+                        <div class="detail-description" 
+                             v-if="parsedDescription" 
+                             v-html="parsedDescription">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chapter-list">
+                    <div v-for="chapter in chaptersWithDates" 
+                         :key="chapter.number"
+                         class="chapter-item"
+                         :class="{ read: isChapterRead(chapter.number) }"
+                         @click="goToChapter(chapter.number)">
+                        <div class="chapter-title">{{ chapter.title }}</div>
+                        <div class="chapter-date">{{ formatDate(chapter.date) }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer" v-show="currentPage !== 'reader'">
+            <div class="footer-content">
+                <div class="footer-text">
+                    <p>此網站僅供學習和參考使用，所有內容版權歸原作者所有。</p>
+                </div>
+            </div>
+        </footer>
+
+        <!-- 閱讀器頁面 -->
+        <div v-show="currentPage === 'reader'">
+            <!-- 頂部導航欄 -->
+            <nav class="navbar fixed-overlay" :class="{ hidden: hideControls }">
+                <div class="nav-container">
+                    <button class="btn btn-transparent" @click="goBackToDetail">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                    </button>
+                    <div class="reader-title">{{ currentChapter?.title || (selectedItem?.title + ' - 第' + currentChapterNumber + '話') }}</div>
+                    <div v-if="currentContent === 'webtoons'" class="nav-controls">
+                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" v-model="isDarkMode">
+                            夜間模式
+                        </label>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- 輕小說閱讀器 -->
+            <div v-if="currentContent === 'novels'" class="reader-container">
+                <div v-if="isLoading" style="text-align: center; padding: 2rem;">
+                    載入中...
+                </div>
+                
+                <div v-else-if="error" style="text-align: center; padding: 2rem; color: red;">
+                    {{ error }}
+                </div>
+                
+                <div v-else 
+                     ref="novelContent" 
+                     class="reader-content" 
+                     v-html="parsedContent">
+                </div>
+            </div>
+
+            <!-- 網漫閱讀器 -->
+            <div v-else-if="currentContent === 'webtoons'">
+                <div v-if="isLoading" style="text-align: center; padding: 2rem; color: var(--text);">
+                    載入中...
+                </div>
+                
+                <div v-else-if="error" style="text-align: center; padding: 2rem; color: red;">
+                    {{ error }}
+                </div>
+                
+                <div v-else class="webtoon-reader">
+                    <img v-for="page in pages"
+                         :key="page"
+                         :src="page"
+                         class="manga-page"
+                         loading="lazy"
+                         @load="handleImageLoad"
+                         @error="handleImageError($event, page)"
+                         contextmenu="return false;"
+                         oncontextmenu="return false;"
+                         onselectstart="return false;"
+                         ondragstart="return false;">
+                </div>
+            </div>
+
+            <!-- 底部控制欄 -->
+            <div class="reader-controls" :class="{ hidden: hideControls }">
+                <button class="btn btn-primary" 
+                        @click="navigateChapter('prev')"
+                        :disabled="!hasPrevious || isLoading">
+                    上一話
+                </button>
+                <button class="btn btn-primary" 
+                        @click="toggleModal('showChapterMenu')"
+                        :disabled="isLoading">
+                    目錄
+                </button>
+                <button v-if="currentContent === 'novels'" 
+                        class="btn btn-primary" 
+                        @click="toggleModal('showSettings')"
+                        :disabled="isLoading">
+                    設置
+                </button>
+                <button class="btn btn-primary" 
+                        @click="navigateChapter('next')"
+                        :disabled="!hasNext || isLoading">
+                    下一話
+                </button>
+            </div>
+
+            <!-- 模態框 -->
+            <div class="modal" :class="{ active: showModal }">
+                <div class="modal-header">
+                    {{ showSettings ? '閱讀設置' : '章節目錄' }}
+                </div>
+                <div class="modal-group" v-if="showSettings">
+                    <label>字體大小: {{ fontSize }}px</label>
+                    <input type="range" 
+                           v-model="fontSize" 
+                           min="14" 
+                           max="24" 
+                           step="1"
+                           @mousedown="onSettingsInputStart" 
+                           @mouseup="onSettingsInputEnd" 
+                           @touchstart="onSettingsInputStart" 
+                           @touchend="onSettingsInputEnd">
+                    <label>行距: {{ lineHeight }}</label>
+                    <input type="range" 
+                           v-model="lineHeight" 
+                           min="1.5" 
+                           max="2.5" 
+                           step="0.1"
+                           @mousedown="onSettingsInputStart" 
+                           @mouseup="onSettingsInputEnd" 
+                           @touchstart="onSettingsInputStart" 
+                           @touchend="onSettingsInputEnd">
+                    <div class="desktop-only">
+                        <label>內容寬度: {{ contentWidth }}%</label>
+                        <input type="range" 
+                               v-model="contentWidth" 
+                               min="50" 
+                               max="100" 
+                               step="5"
+                               @mousedown="onSettingsInputStart" 
+                               @mouseup="onSettingsInputEnd" 
+                               @touchstart="onSettingsInputStart" 
+                               @touchend="onSettingsInputEnd">
+                    </div>
+                    <label>
+                        <input type="checkbox" v-model="isDarkMode">
+                        夜間模式
+                    </label>
+                </div>
+                <div class="modal-group" v-if="showChapterMenu">
+                    <div v-for="chapter in chaptersWithDates" 
+                         :key="chapter.number"
+                         class="chapter-item"
+                         :class="{
+                             current: chapter.number === currentChapterNumber,
+                             read: isChapterRead(chapter.number)
+                         }"
+                         @click="goToChapter(chapter.number, true)">
+                        <div>{{ chapter.title }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lightbox -->
+        <div class="lightbox" :class="{ active: isLightboxActive }" @click="isLightboxActive = false">
+            <div class="lightbox-content">
+                <button class="close-lightbox" @click.stop="isLightboxActive = false">✕</button>
+                <img :src="lightboxImage" alt="" @click.stop>
+            </div>
+        </div>
+
+        <!-- 載入覆蓋層 -->
+        <div class="loading-overlay" :class="{ show: isLoading }">
+            <div style="text-align: center">
+                <div class="loading-spinner"></div>
+                <div style="color: white; margin-top: var(--sp); font-size: 1.1rem">
+                    載入中...
+                </div>
+            </div>
+        </div>
     </div>
 
-    <footer>
-        <p style="font-size: 0.8em; margin-top: 1em;">此網站僅供學習和參考使用，所有內容版權歸原作者所有。</p>
-    </footer>
 
     <script>
         const { createApp } = Vue;
 
         const STORAGE_KEYS = {
             THEME: 'theme',
-            SORT: 'content_sort'
+            SORT: 'content_sort',
+            READ_CHAPTERS: 'read_chapters',
+            SCROLL_POSITION: 'scroll_positions',
+            FONT_SIZE: 'font_size',
+            LINE_HEIGHT: 'line_height',
+            CONTENT_WIDTH: 'content_width',
+            CURRENT_MANGA: 'currentManga',
+            CURRENT_NOVEL: 'currentNovel'
         };
 
         createApp({
             data() {
                 return {
                     currentContent: 'webtoons',
+                    currentPage: 'list', // list, detail, reader
                     mangaList: [],
                     novelList: [],
+                    appVersion: null,
+                    selectedItem: null,
+                    selectedNovelData: null,
+                    allChapters: [],
+                    currentChapter: null,
+                    currentChapterNumber: null,
+                    chapterContent: '',
+                    pages: [],
                     isDarkMode: localStorage.getItem(STORAGE_KEYS.THEME) === 'dark',
                     showSortMenu: false,
                     currentSort: localStorage.getItem(STORAGE_KEYS.SORT) || 'lastUpdated',
@@ -761,7 +1443,23 @@
                     startX: 0,
                     scrollLeft: 0,
                     activeDropdown: null,
-                    isMobile: false
+                    isMobile: false,
+                    isLoading: false,
+                    error: null,
+                    hideControls: false,
+                    showSettings: false,
+                    showChapterMenu: false,
+                    isLightboxActive: false,
+                    lightboxImage: null,
+                    fontSize: parseInt(localStorage.getItem(STORAGE_KEYS.FONT_SIZE)) || 18,
+                    lineHeight: parseFloat(localStorage.getItem(STORAGE_KEYS.LINE_HEIGHT)) || 1.8,
+                    contentWidth: parseInt(localStorage.getItem(STORAGE_KEYS.CONTENT_WIDTH)) || 80,
+                    retryCount: {},
+                    maxRetries: 3,
+                    loadedImages: 0,
+                    _adjustingSettings: false,
+                    _adjustingTimer: null,
+                    _loadingContent: false
                 }
             },
             created() {
@@ -803,6 +1501,41 @@
                                 return 0;
                         }
                     });
+                },
+                chaptersWithDates() {
+                    if (this.currentContent === 'webtoons') {
+                        return this.selectedItem?.chapters?.sort((a, b) => b.id - a.id) || [];
+                    } else {
+                        return [...this.allChapters].sort((a, b) => b.number - a.number);
+                    }
+                },
+                parsedDescription() {
+                    if (!this.selectedItem?.description) return '';
+                    return marked.parse ? marked.parse(this.selectedItem.description) : this.selectedItem.description;
+                },
+                parsedContent() {
+                    if (!this.chapterContent) return '';
+                    return marked.parse ? marked.parse(this.chapterContent) : this.chapterContent;
+                },
+                hasNext() {
+                    if (this.currentContent === 'webtoons') {
+                        return this.selectedItem?.chapters?.some(chapter => chapter.id > this.currentChapterNumber) || false;
+                    } else {
+                        return this.allChapters.some(chapter => chapter.number > this.currentChapterNumber);
+                    }
+                },
+                hasPrevious() {
+                    if (this.currentContent === 'webtoons') {
+                        return this.selectedItem?.chapters?.some(chapter => chapter.id < this.currentChapterNumber) || false;
+                    } else {
+                        return this.allChapters.some(chapter => chapter.number < this.currentChapterNumber);
+                    }
+                },
+                showModal() {
+                    return this.showSettings || this.showChapterMenu;
+                },
+                novelKey() {
+                    return this.selectedItem?.title?.replace(/[《》]/g, '') || '';
                 }
             },
             watch: {
@@ -817,9 +1550,132 @@
                     const theme = newValue ? 'dark' : 'light';
                     document.documentElement.setAttribute('data-theme', theme);
                     localStorage.setItem(STORAGE_KEYS.THEME, theme);
+                },
+                fontSize(newValue) {
+                    this.updateSetting('--fs', `${newValue}px`, STORAGE_KEYS.FONT_SIZE, newValue);
+                },
+                lineHeight(newValue) {
+                    this.updateSetting('--lh', newValue, STORAGE_KEYS.LINE_HEIGHT, newValue);
+                },
+                contentWidth(newValue) {
+                    this.updateSetting('--content-width', `${newValue}%`, STORAGE_KEYS.CONTENT_WIDTH, newValue);
+                },
+                currentPage(newValue) {
+                    if (newValue === 'reader') {
+                        this.$nextTick(() => {
+                            window.addEventListener('scroll', this.handleScroll);
+                            if (this.currentContent === 'novels') {
+                                this.setupImageViewer();
+                            }
+                        });
+                    } else {
+                        window.removeEventListener('scroll', this.handleScroll);
+                        this.hideControls = false;
+                    }
                 }
             },
             methods: {
+                // URL路由系統 - 來自 novels_readder.html
+                updateUrl(page, params = {}) {
+                    const searchParams = new URLSearchParams();
+                    
+                    if (page === 'detail' && params.title) {
+                        searchParams.set('type', this.currentContent === 'webtoons' ? 'webtoon' : 'novel');
+                        searchParams.set('title', params.title);
+                    } else if (page === 'reader' && params.title && params.chapter) {
+                        searchParams.set('type', this.currentContent === 'webtoons' ? 'webtoon' : 'novel');
+                        searchParams.set('title', params.title);
+                        searchParams.set('chapter', params.chapter.toString());
+                    } else if (page === 'list') {
+                        searchParams.set('type', this.currentContent);
+                    }
+                    
+                    const queryString = searchParams.toString();
+                    const newUrl = queryString ? 
+                        `${window.location.pathname}?${queryString}` : 
+                        window.location.pathname;
+                    
+                    window.history.pushState({ page, params }, '', newUrl);
+                    
+                    this.updatePageTitle();
+                },
+                
+                updatePageTitle() {
+                    let title = 'ACGN翻譯';
+                    if (this.currentPage === 'detail' && this.selectedItem) {
+                        title = `${this.selectedItem.title} - ${this.currentContent === 'webtoons' ? '網漫翻譯' : '輕小說翻譯'}`;
+                    } else if (this.currentPage === 'reader' && this.selectedItem && this.currentChapter) {
+                        title = `${this.currentChapter.title || `第${this.currentChapterNumber}話`} - ${this.selectedItem.title} - ${this.currentContent === 'webtoons' ? '網漫翻譯' : '輕小說翻譯'}`;
+                    }
+                    document.title = title;
+                },
+
+                async handleUrlParams() {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const typeParam = urlParams.get('type');
+                    const titleParam = urlParams.get('title');
+                    const chapterParam = urlParams.get('chapter');
+                    
+                    if (typeParam) {
+                        this.currentContent = typeParam === 'webtoon' ? 'webtoons' : 'novels';
+                        
+                        if (titleParam) {
+                            // 確保資料已載入
+                            if (this.currentContent === 'webtoons' && this.mangaList.length === 0) {
+                                await this.fetchMangaList();
+                            } else if (this.currentContent === 'novels' && this.novelList.length === 0) {
+                                await this.fetchNovelList();
+                            }
+                            
+                            const item = this.currentContent === 'webtoons' ? 
+                                this.mangaList.find(m => m.title === titleParam) :
+                                this.novelList.find(n => n.title === titleParam);
+                            
+                            if (!item) return this.goToHome();
+                            
+                            this.setCurrentItem(item);
+                            
+                            if (chapterParam) {
+                                const chapterNumber = parseFloat(chapterParam);
+                                this.currentChapterNumber = chapterNumber;
+                                if (this.currentContent === 'novels') {
+                                    this.currentChapter = this.findChapter(chapterNumber);
+                                }
+                                if (this.currentContent === 'novels' && this.currentChapter || this.currentContent === 'webtoons') {
+                                    this.currentPage = 'reader';
+                                    await this.loadChapterContent();
+                                } else {
+                                    this.currentPage = 'detail';
+                                    this.updateUrl('detail', { title: titleParam });
+                                }
+                            } else {
+                                this.currentPage = 'detail';
+                            }
+                        } else {
+                            this.currentPage = 'list';
+                        }
+                    } else {
+                        // 處理舊版hash路由
+                        const hash = window.location.hash.substring(1);
+                        if (hash === 'novels' || hash === 'webtoons') {
+                            this.switchContent(hash);
+                            // 清除hash以避免URL污染
+                            window.history.replaceState(null, null, window.location.pathname + window.location.search);
+                        } else {
+                            this.currentPage = 'list';
+                        }
+                    }
+                },
+
+                goToHome() {
+                    this.currentPage = 'list';
+                    this.selectedItem = null;
+                    this.currentChapter = null;
+                    this.currentChapterNumber = null;
+                    this.updateUrl('list');
+                    window.scrollTo(0, 0);
+                },
+
                 async fetchMangaList() {
                     try {
                         const response = await fetch('網漫翻譯/manga.json');
@@ -837,7 +1693,6 @@
                 },
                 async fetchNovelList() {
                     try {
-
                         const response = await fetch('輕小說翻譯/novels.json');
                         if (!response.ok) {
                             throw new Error(`無法獲取novels.json: ${response.status} ${response.statusText}`);
@@ -854,42 +1709,408 @@
                                     lastUpdated: novel.lastUpdated || new Date().toISOString(),
                                     author: novel.author || '未知作者',
                                     chapters: novel.chapters || [],
-                                    totalWordCount: novel.totalWordCount || 0
+                                    totalWordCount: novel.totalWordCount || 0,
+                                    originalData: novel
                                 };
                             });
                     } catch (error) {
                         console.error('讀取小說列表失敗:', error);
                     }
                 },
+                async fetchAppVersion() {
+                    try {
+                        const response = await fetch('輕小說翻譯/version.json');
+                        if (!response.ok) {
+                            throw new Error(`無法獲取version.json: ${response.status} ${response.statusText}`);
+                        }
+                        const data = await response.json();
+                        const latestVersion = data.history?.[0];
+                        this.appVersion = {
+                            version: latestVersion?.version || '未知版本',
+                            date: latestVersion?.date || '未知日期',
+                            releaseNotes: latestVersion?.changes || '',
+                            downloadUrl: data.downloadUrl,
+                            changelogUrl: data.fullChangelogUrl
+                        };
+                    } catch (error) {
+                        console.error('讀取版本信息失敗:', error);
+                        // 使用後備版本信息
+                        this.appVersion = {
+                            version: '1.2.11',
+                            date: '2025-06-08',
+                            downloadUrl: 'https://expo.dev/artifacts/eas/44xWoSepLHejUNqZfvK9eF.apk',
+                            changelogUrl: '輕小說翻譯/changelog.html'
+                        };
+                    }
+                },
                 switchContent(type) {
                     this.currentContent = type;
                     if (type === 'webtoons') {
                         this.fetchMangaList();
-                        window.location.hash = 'webtoons';
+                        this.updateUrl('list');
                     } else {
                         this.fetchNovelList();
-                        window.location.hash = 'novels';
+                        if (!this.appVersion) {
+                            this.fetchAppVersion();
+                        }
+                        this.updateUrl('list');
                     }
                 },
                 goToDetail(item) {
+                    this.setCurrentItem(item);
+                    this.currentPage = 'detail';
+                    this.updateUrl('detail', { title: item.title });
+                    window.scrollTo(0, 0);
+                },
+                setCurrentItem(item) {
+                    this.selectedItem = item;
                     if (item.type === 'novel') {
-                        localStorage.setItem('currentNovel', item.title);
-                        const encodedTitle = encodeURIComponent(item.title);
-                        window.location.href = `輕小說翻譯/noveldetail.html?title=${encodedTitle}`;
+                        this.selectedNovelData = item.originalData;
+                        this.setupNovelDetail();
+                        localStorage.setItem(STORAGE_KEYS.CURRENT_NOVEL, item.title);
                     } else {
-                        localStorage.setItem('currentManga', item.title);
-                        const encodedTitle = encodeURIComponent(item.title);
-                        window.location.href = `網漫翻譯/webtoondetail.html?title=${encodedTitle}`;
+                        localStorage.setItem(STORAGE_KEYS.CURRENT_MANGA, item.title);
                     }
                 },
-                getReadingProgress(item) {
-                    return this.readingProgress[`${item.type}_${item.title}`];
+                setupNovelDetail() {
+                    if (!this.selectedNovelData) return;
+                    
+                    const sourceLinks = {};
+                    if (this.selectedNovelData.originalUrl) {
+                        const urls = this.selectedNovelData.originalUrl.split('、');
+                        urls.forEach(url => {
+                            if (url.includes('kakuyomu.jp')) {
+                                sourceLinks.kakuyomu = url;
+                            } else if (url.includes('syosetu.com')) {
+                                sourceLinks.syosetu = url;
+                            } else {
+                                sourceLinks.japanese = url;
+                            }
+                        });
+                    }
+                    
+                    this.selectedItem = {
+                        ...this.selectedItem,
+                        genres: this.selectedNovelData.tags?.join(', ') || '',
+                        description: this.selectedNovelData.description || '',
+                        sourceLinks: sourceLinks
+                    };
+                    
+                    this.allChapters = this.selectedNovelData.chapters
+                        .filter(chapter => chapter.id >= 0)
+                        .map(chapter => {
+                            // 從URL中提取實際的文件名
+                            const urlParts = chapter.url.split('/');
+                            const actualFilename = urlParts[urlParts.length - 1];
+                            return {
+                                number: chapter.id,
+                                title: chapter.title,
+                                filename: actualFilename,
+                                date: new Date(chapter.lastUpdated).toISOString().split('T')[0]
+                            };
+                        })
+                        .sort((a, b) => a.number - b.number);
+                },
+                getCoverUrl() {
+                    if (!this.selectedItem) return '';
+                    if (this.selectedItem.type === 'novel') {
+                        return `輕小說翻譯/${encodeURIComponent(this.selectedItem.title)}/cover.jpg`;
+                    } else {
+                        return this.selectedItem.cover;
+                    }
+                },
+                getSourceLinkName(key) {
+                    const names = {
+                        kakuyomu: 'カクヨム',
+                        syosetu: '小説家になろう',
+                        japanese: '日文原文'
+                    };
+                    return names[key] || key;
+                },
+                formatDate(dateStr) {
+                    if (!dateStr) return '';
+                    const date = new Date(dateStr);
+                    return date.toLocaleDateString('zh-TW', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit'
+                    }).replace(/\//g, '-');
+                },
+                goToChapter(chapterNumber, fromReader = false) {
+                    if (fromReader && chapterNumber === this.currentChapterNumber) {
+                        this.closeAllModals();
+                        return;
+                    }
+                    
+                    if (fromReader) this.saveScrollPosition();
+                    
+                    this.currentChapterNumber = chapterNumber;
+                    if (this.currentContent === 'novels') {
+                        this.currentChapter = this.findChapter(chapterNumber);
+                    }
+                    this.loadChapterContent();
+                    
+                    if (!fromReader) {
+                        this.currentPage = 'reader';
+                    }
+                    
+                    this.closeAllModals();
+                    this.updateUrl('reader', { 
+                        title: this.selectedItem.title, 
+                        chapter: chapterNumber 
+                    });
+                },
+                goBackToDetail() {
+                    this.saveScrollPosition();
+                    this.currentPage = 'detail';
+                    this.hideControls = false;
+                    this.closeAllModals();
+                    this.updateUrl('detail', { title: this.selectedItem.title });
+                    window.scrollTo(0, 0);
+                },
+                async loadChapterContent() {
+                    this.isLoading = true;
+                    this.error = null;
+                    this._loadingContent = true;
+                    
+                    try {
+                        if (this.currentContent === 'novels') {
+                            // 確保當前章節對象存在
+                            if (!this.currentChapter) {
+                                this.currentChapter = this.findChapter(this.currentChapterNumber);
+                                if (!this.currentChapter) {
+                                    throw new Error(`找不到章節 ${this.currentChapterNumber}`);
+                                }
+                            }
+                            
+                            // 使用原始JSON中的URL路徑
+                            const originalChapter = this.selectedNovelData.chapters.find(ch => ch.id === this.currentChapterNumber);
+                            if (!originalChapter) {
+                                throw new Error(`找不到原始章節資料 ${this.currentChapterNumber}`);
+                            }
+                            
+                            // 從原始URL中提取相對路徑
+                            const urlPath = originalChapter.url.replace('https://raw.githubusercontent.com/xuerowo/myacgn/main/', '');
+                            const response = await fetch(urlPath);
+                            
+                            if (!response.ok) {
+                                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                            }
+                            
+                            this.chapterContent = await response.text();
+                            
+                            this.$nextTick(() => {
+                                window.scrollTo(0, 0);
+                                this.setupImageViewer();
+                                this.markAsRead();
+                                this.restoreScrollPosition();
+                                this._loadingContent = false;
+                            });
+                        } else {
+                            // 網漫載入
+                            const currentChapterData = this.selectedItem.chapters.find(
+                                c => c.id === this.currentChapterNumber
+                            );
+
+                            if (!currentChapterData) {
+                                throw new Error('找不到此章節');
+                            }
+
+                            this.pages = Array.from(
+                                { length: currentChapterData.total },
+                                (_, i) => `${this.selectedItem.r2Url}/${this.currentChapterNumber}/${i + 1}.jpg?v=${Date.now()}`
+                            );
+
+                            this.markAsRead();
+                            this._loadingContent = false;
+                            
+                            this.$nextTick(() => {
+                                window.scrollTo(0, 0);
+                                this.restoreScrollPosition();
+                            });
+                        }
+                        
+                        this.updatePageTitle();
+                    } catch (error) {
+                        console.error('讀取章節內容失敗:', error);
+                        this.error = `讀取章節內容失敗: ${error.message}`;
+                        this._loadingContent = false;
+                    } finally {
+                        this.isLoading = false;
+                    }
+                },
+                setupImageViewer() {
+                    const content = this.$refs.novelContent;
+                    if (content) {
+                        content.removeEventListener('click', this.handleContentClick);
+                        content.addEventListener('click', this.handleContentClick);
+                    }
+                },
+                handleContentClick(e) {
+                    if (e.target.tagName === 'IMG') {
+                        this.lightboxImage = e.target.src;
+                        this.isLightboxActive = true;
+                        this.closeAllModals();
+                    }
+                },
+                handleImageLoad() {
+                    this.loadedImages++;
+                    if (this.loadedImages === this.pages.length) {
+                        this.restoreScrollPosition();
+                    }
+                },
+                handleImageError(event, page) {
+                    if (event) {
+                        event.target.src = 'images/ImageError.png';
+                    }
+                    
+                    if (page) {
+                        this.retryCount[page] = (this.retryCount[page] || 0) + 1;
+                        
+                        if (this.retryCount[page] <= this.maxRetries) {
+                            event.target.src = `${page.split('?')[0]}?v=${Date.now()}`;
+                        } else {
+                            console.error('圖片載入失敗:', page);
+                            this.error = '部分圖片載入失敗，請稍後重試';
+                        }
+                    }
+                },
+                navigateChapter(direction) {
+                    if (this.isLoading) return;
+                    
+                    if (this.currentContent === 'webtoons') {
+                        const currentIndex = this.selectedItem.chapters.findIndex(
+                            ch => ch.id === this.currentChapterNumber
+                        );
+                        const targetIndex = direction === 'next' ? currentIndex + 1 : currentIndex - 1;
+                        const targetChapter = this.selectedItem.chapters[targetIndex];
+                        
+                        if (targetChapter) {
+                            this.goToChapter(targetChapter.id, true);
+                        }
+                    } else {
+                        const currentIndex = this.allChapters.findIndex(
+                            ch => ch.number === this.currentChapterNumber
+                        );
+                        const targetIndex = direction === 'next' ? currentIndex + 1 : currentIndex - 1;
+                        const targetChapter = this.allChapters[targetIndex];
+                        
+                        if (targetChapter) {
+                            this.goToChapter(targetChapter.number, true);
+                        }
+                    }
+                },
+                toggleModal(type) {
+                    if (this[type]) {
+                        this[type] = false;
+                    } else {
+                        this.closeAllModals();
+                        this[type] = true;
+                        
+                        if (type === 'showChapterMenu') {
+                            this.$nextTick(() => {
+                                const currentElement = document.querySelector(
+                                    '.modal .chapter-item.current'
+                                );
+                                currentElement?.scrollIntoView({
+                                    behavior: 'smooth',
+                                    block: 'center'
+                                });
+                            });
+                        }
+                    }
+                },
+                closeAllModals() {
+                    this.showSettings = false;
+                    this.showChapterMenu = false;
+                },
+                findChapter(chapterNumber) {
+                    return this.allChapters.find(ch => ch.number === chapterNumber);
+                },
+                isChapterRead(chapterNumber) {
+                    if (!this.selectedItem) return false;
+                    
+                    let readChapters;
+                    try {
+                        readChapters = JSON.parse(localStorage.getItem(STORAGE_KEYS.READ_CHAPTERS)) || {};
+                    } catch {
+                        readChapters = {};
+                    }
+                    
+                    const key = this.currentContent === 'novels' ? this.novelKey : this.selectedItem.title;
+                    return readChapters[key]?.includes(chapterNumber) || false;
+                },
+                markAsRead() {
+                    if (!this.selectedItem || !this.currentChapterNumber) return;
+                    
+                    let readChapters;
+                    try {
+                        readChapters = JSON.parse(localStorage.getItem(STORAGE_KEYS.READ_CHAPTERS)) || {};
+                    } catch {
+                        readChapters = {};
+                    }
+                    
+                    const key = this.currentContent === 'novels' ? this.novelKey : this.selectedItem.title;
+                    if (!readChapters[key]) {
+                        readChapters[key] = [];
+                    }
+                    
+                    if (!readChapters[key].includes(this.currentChapterNumber)) {
+                        readChapters[key].push(this.currentChapterNumber);
+                        try {
+                            localStorage.setItem(STORAGE_KEYS.READ_CHAPTERS, JSON.stringify(readChapters));
+                        } catch {
+                        }
+                    }
+                },
+                saveScrollPosition() {
+                    if (!this.selectedItem || !this.currentChapterNumber) return;
+                    if (this._loadingContent) return;
+                    
+                    try {
+                        const scrollPositions = JSON.parse(
+                            localStorage.getItem(STORAGE_KEYS.SCROLL_POSITION)
+                        ) || {};
+                        const key = this.currentContent === 'novels' ? this.novelKey : this.selectedItem.title;
+                        const itemPositions = scrollPositions[key] || {};
+                        const currentPosition = window.pageYOffset;
+                        itemPositions[this.currentChapterNumber] = currentPosition;
+                        scrollPositions[key] = itemPositions;
+                        localStorage.setItem(STORAGE_KEYS.SCROLL_POSITION, JSON.stringify(scrollPositions));
+                    } catch {
+                    }
+                },
+                restoreScrollPosition() {
+                    if (!this.selectedItem || !this.currentChapterNumber) {
+                        return;
+                    }
+                    
+                    try {
+                        const scrollPositions = JSON.parse(
+                            localStorage.getItem(STORAGE_KEYS.SCROLL_POSITION)
+                        ) || {};
+                        const key = this.currentContent === 'novels' ? this.novelKey : this.selectedItem.title;
+                        const itemPositions = scrollPositions[key] || {};
+                        const savedPosition = itemPositions[this.currentChapterNumber];
+                        
+                        if (savedPosition !== undefined && savedPosition > 0) {
+                            setTimeout(() => {
+                                window.scrollTo({
+                                    top: parseInt(savedPosition),
+                                    left: 0,
+                                    behavior: 'smooth'
+                                });
+                            }, 100);
+                        }
+                    } catch (error) {
+                    }
+                },
+                openLightbox(imageUrl) {
+                    this.lightboxImage = imageUrl;
+                    this.isLightboxActive = true;
                 },
                 toggleTheme() {
                     this.isDarkMode = !this.isDarkMode;
-                },
-                toggleSortMenu() {
-                    this.showSortMenu = !this.showSortMenu;
                 },
                 handleSortChange(sortOption) {
                     this.currentSort = sortOption.value;
@@ -902,13 +2123,43 @@
                         this.novelList = [...this.novelList];
                     }
                 },
-                getReadingTime(title) {
-                    try {
-                        const readingTimes = JSON.parse(localStorage.getItem('reader_settings'))?.readingTime || {};
-                        return readingTimes[title] || 0;
-                    } catch {
-                        return 0;
+                updateSetting(cssVar, cssValue, storageKey, storageValue) {
+                    this._adjustingSettings = true;
+                    document.documentElement.style.setProperty(cssVar, cssValue);
+                    localStorage.setItem(storageKey, storageValue);
+                    clearTimeout(this._adjustingTimer);
+                    this._adjustingTimer = setTimeout(() => this._adjustingSettings = false, 500);
+                },
+                onSettingsInputStart() {
+                    this._adjustingSettings = true;
+                    clearTimeout(this._adjustingTimer);
+                },
+                onSettingsInputEnd() {
+                    clearTimeout(this._adjustingTimer);
+                    this._adjustingTimer = setTimeout(() => this._adjustingSettings = false, 500);
+                },
+                handleScroll() {
+                    if (this._adjustingSettings) return;
+                    
+                    const st = window.pageYOffset || document.documentElement.scrollTop;
+                    const isAtBottom = window.innerHeight + window.pageYOffset >= 
+                        document.body.offsetHeight - 15;
+                    const lastScrollTop = this._lastScrollTop || 0;
+                    const scrollDelta = Math.abs(st - lastScrollTop);
+                    
+                    if (scrollDelta < 10) return;
+                    
+                    const isScrollingDown = st > lastScrollTop;
+                    
+                    if (isScrollingDown && !isAtBottom && st > 100) {
+                        this.hideControls = true;
+                        this.closeAllModals();
+                    } else if (!isScrollingDown || isAtBottom || st <= 50) {
+                        this.hideControls = false;
                     }
+                    
+                    this._lastScrollTop = st;
+                    this.saveScrollPosition();
                 },
                 toggleDropdown(dropdownId) {
                     if (this.isDragging) {
@@ -999,19 +2250,27 @@
                     if (this.activeDropdown !== null) {
                         this.activeDropdown = null;
                     }
-                },
+                }
             },
-            mounted() {
+            async mounted() {
                 const hash = window.location.hash.substring(1);
                 if (hash === 'novels' || hash === 'webtoons') {
                     this.switchContent(hash);
+                    // 清除hash以避免URL污染
+                    window.history.replaceState(null, null, window.location.pathname + window.location.search);
                 } else {
-                    this.fetchMangaList();
+                    await Promise.all([this.fetchMangaList(), this.fetchNovelList(), this.fetchAppVersion()]);
+                    this.handleUrlParams();
                 }
                 
                 const theme = localStorage.getItem(STORAGE_KEYS.THEME) || 'light';
                 document.documentElement.setAttribute('data-theme', theme);
                 this.isDarkMode = theme === 'dark';
+
+                // 設置輕小說閱讀器CSS變數
+                document.documentElement.style.setProperty('--fs', `${this.fontSize}px`);
+                document.documentElement.style.setProperty('--lh', this.lineHeight);
+                document.documentElement.style.setProperty('--content-width', `${this.contentWidth}%`);
 
                 let lastScrollTop = 0;
                 const navbar = document.querySelector('.navbar');
@@ -1027,20 +2286,12 @@
                     lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
                 });
 
-                window.addEventListener('hashchange', () => {
-                    const newHash = window.location.hash.substring(1);
-                    if (newHash === 'novels' || newHash === 'webtoons') {
-                        this.switchContent(newHash);
-                    }
-                });
+                // hashchange 監聽器已移除，因為不再使用hash路由
 
-                document.removeEventListener('click', (e) => {
-                    const sortSelector = document.querySelector('.sort-selector');
-                    if (sortSelector && !sortSelector.contains(e.target)) {
-                        this.showSortMenu = false;
-                    }
-                });
-                
+                // URL路由事件監聽
+                const handlePopstate = () => this.handleUrlParams();
+                window.addEventListener('popstate', handlePopstate);
+
                 document.addEventListener('click', this.closeDropdowns);
                 
                 const navContainer = document.querySelector('.nav-container');
@@ -1078,6 +2329,7 @@
                     window.removeEventListener('touchmove', this.drag);
                     window.removeEventListener('touchend', this.stopDragging);
                     document.removeEventListener('click', this.closeDropdowns);
+                    window.removeEventListener('popstate', handlePopstate);
                 };
                 
                 this.$nextTick(() => {
