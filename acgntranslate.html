@@ -1819,13 +1819,12 @@
                     this.allChapters = this.selectedNovelData.chapters
                         .filter(chapter => chapter.id >= 0)
                         .map(chapter => {
-                            // 從URL中提取實際的文件名
-                            const urlParts = chapter.url.split('/');
-                            const actualFilename = urlParts[urlParts.length - 1];
+                            // 根據章節 ID 和標題生成檔案名
+                            const filename = `${chapter.id} ${chapter.title.replace(/^第\d+\.?\d*話\s+/, '')}.md`;
                             return {
                                 number: chapter.id,
                                 title: chapter.title,
-                                filename: actualFilename,
+                                filename: filename,
                                 date: new Date(chapter.lastUpdated).toISOString().split('T')[0]
                             };
                         })
@@ -1903,15 +1902,11 @@
                                 }
                             }
                             
-                            // 使用原始JSON中的URL路徑
-                            const originalChapter = this.selectedNovelData.chapters.find(ch => ch.id === this.currentChapterNumber);
-                            if (!originalChapter) {
-                                throw new Error(`找不到原始章節資料 ${this.currentChapterNumber}`);
-                            }
-                            
-                            // 從原始URL中提取相對路徑
-                            const urlPath = originalChapter.url.replace('https://raw.githubusercontent.com/xuerowo/myacgn/main/', '');
-                            const response = await fetch(urlPath);
+                            // 直接使用本地路徑構建章節檔案路徑
+                            const folderPath = encodeURIComponent(this.selectedItem.title);
+                            const encodedFilename = encodeURIComponent(this.currentChapter.filename);
+                            const filename = `輕小說翻譯/${folderPath}/${encodedFilename}`;
+                            const response = await fetch(filename);
                             
                             if (!response.ok) {
                                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
