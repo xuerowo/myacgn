@@ -1524,7 +1524,11 @@
                 },
                 chaptersWithDates() {
                     if (this.currentContent === 'webtoons') {
-                        return this.selectedItem?.chapters?.sort((a, b) => b.id - a.id) || [];
+                        return this.selectedItem?.chapters?.map(chapter => ({
+                            number: chapter.id,
+                            title: `第${chapter.id}話`,
+                            date: new Date(chapter.lastUpdated).toISOString().split('T')[0]
+                        })).sort((a, b) => b.number - a.number) || [];
                     } else {
                         return [...this.allChapters].sort((a, b) => b.number - a.number);
                     }
