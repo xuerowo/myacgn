@@ -64,6 +64,13 @@
 
         #app {
             flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100vh - 60px);
+        }
+
+        .main-content {
+            flex: 1;
         }
 
         .container {
@@ -286,35 +293,33 @@
         .content-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 2rem;
+            gap: calc(var(--sp) * 2);
         }
 
-        .content-card {
-            width: 196px;
+        .card {
             background: var(--bg);
             border-radius: var(--br);
             overflow: hidden;
             box-shadow: var(--shadow);
-            transition: transform 0.2s;
+            transition: var(--transition-fast);
             cursor: pointer;
-            position: relative;
             display: flex;
             flex-direction: column;
         }
 
-        .content-card:hover {
+        .card:hover {
             transform: translateY(-5px);
         }
 
-        .content-card img {
-            width: 196px;
-            height: 280px;
+        .card img {
+            width: 100%;
+            aspect-ratio: 0.7;
             object-fit: cover;
+            object-position: center top;
         }
 
-        .content-card-info {
-            padding: 1rem;
-            background: var(--bg);
+        .card-info {
+            padding: var(--sp);
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -339,7 +344,7 @@
             text-align: right;
         }
 
-        .content-title {
+        .card-title {
             font-size: 1.1rem;
             font-weight: bold;
             color: var(--text);
@@ -639,6 +644,14 @@
             color: var(--text);
         }
 
+        .btn-base {
+            padding: 0.5rem var(--sp);
+            border: none;
+            border-radius: var(--br);
+            cursor: pointer;
+            transition: var(--transition-normal);
+        }
+
         .btn {
             padding: 0.5rem var(--sp);
             border: none;
@@ -670,8 +683,10 @@
 
         .btn-transparent {
             background: transparent;
-            color: var(--text);
             min-width: auto;
+            color: var(--text);
+            display: flex;
+            align-items: center;
         }
 
         .btn-transparent:hover {
@@ -821,7 +836,7 @@
             background: var(--bg);
             border-top: 1px solid var(--border);
             padding: 2rem 0;
-            margin-top: 3rem;
+            margin-top: auto;
             text-align: center;
             color: var(--text-muted);
         }
@@ -896,16 +911,16 @@
                 padding: 0 clamp(4px, 1vw, 12px);
             }
 
-            .content-card {
+            .card {
                 width: clamp(140px, 35vw, 180px);
             }
 
-            .content-card img {
+            .card img {
                 width: clamp(140px, 35vw, 180px);
                 height: clamp(200px, 50vw, 260px);
             }
 
-            .content-title {
+            .card-title {
                 font-size: clamp(0.9rem, 3vw, 1.1rem);
             }
 
@@ -1134,44 +1149,47 @@
             </div>
         </nav>
 
+        <div class="main-content">
         <!-- 列表頁 -->
-        <div v-show="currentPage === 'list'" class="container">
-            <div class="content-grid">
+        <main v-show="currentPage === 'list'" class="container">
+            <section class="content-grid">
                 <template v-if="currentContent === 'webtoons'">
-                    <div v-for="item in sortedMangaList" 
-                         :key="item.title" 
-                         class="content-card">
+                    <article v-for="item in sortedMangaList" 
+                             :key="item.title" 
+                             class="card" 
+                             @click="goToDetail(item)">
                         <img :src="item.cover" 
                              :alt="item.title" 
-                             @click="goToDetail(item)">
-                        <div class="content-card-info" @click="goToDetail(item)">
-                            <div class="content-title">{{ item.title }}</div>
+                             @error="handleImageError">
+                        <div class="card-info">
+                            <div class="card-title">{{ item.title }}</div>
                             <div class="card-footer">
-                                <span class="author-name">{{ item.author }}</span>
-                                <span class="update-time">{{ new Date(item.lastUpdated).toLocaleDateString() }}</span>
+                                <span>{{ item.author }}</span>
+                                <span>{{ formatDate(item.lastUpdated, 'list') }}</span>
                             </div>
                         </div>
-                    </div>
+                    </article>
                 </template>
 
                 <template v-else>
-                    <div v-for="item in sortedNovelList" 
-                         :key="item.title" 
-                         class="content-card">
+                    <article v-for="item in sortedNovelList" 
+                             :key="item.title" 
+                             class="card" 
+                             @click="goToDetail(item)">
                         <img :src="item.coverUrl" 
                              :alt="item.title" 
-                             @click="goToDetail(item)">
-                        <div class="content-card-info" @click="goToDetail(item)">
-                            <div class="content-title">{{ item.title }}</div>
+                             @error="handleImageError">
+                        <div class="card-info">
+                            <div class="card-title">{{ item.title }}</div>
                             <div class="card-footer">
-                                <span class="author-name">{{ item.author }}</span>
-                                <span class="update-time">{{ new Date(item.lastUpdated).toLocaleDateString() }}</span>
+                                <span>{{ item.author }}</span>
+                                <span>{{ formatDate(item.lastUpdated, 'list') }}</span>
                             </div>
                         </div>
-                    </div>
+                    </article>
                 </template>
-            </div>
-        </div>
+            </section>
+        </main>
 
         <!-- 詳情頁 -->
         <div v-show="currentPage === 'detail'" class="container">
@@ -1224,13 +1242,6 @@
             </div>
         </div>
 
-        <footer class="footer" v-show="currentPage !== 'reader'">
-            <div class="footer-content">
-                <div class="footer-text">
-                    <p>此網站僅供學習和參考使用，所有內容版權歸原作者所有。</p>
-                </div>
-            </div>
-        </footer>
 
         <!-- 閱讀器頁面 -->
         <div v-show="currentPage === 'reader'">
@@ -1384,6 +1395,7 @@
                 <img :src="lightboxImage" alt="" @click.stop>
             </div>
         </div>
+        </div>
 
         <!-- 載入覆蓋層 -->
         <div class="loading-overlay" :class="{ show: isLoading }">
@@ -1394,6 +1406,14 @@
                 </div>
             </div>
         </div>
+
+        <footer class="footer" v-show="currentPage !== 'reader'">
+            <div class="footer-content">
+                <div class="footer-text">
+                    <p>此網站僅供學習和參考使用，所有內容版權歸原作者所有。</p>
+                </div>
+            </div>
+        </footer>
     </div>
 
 
@@ -1974,6 +1994,17 @@
                             this.error = '部分圖片載入失敗，請稍後重試';
                         }
                     }
+                },
+                formatDate(dateStr, format = 'detail') {
+                    if (!dateStr) return '';
+                    const date = new Date(dateStr);
+                    return format === 'list' ?
+                        date.toLocaleDateString() :
+                        date.toLocaleDateString('zh-TW', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit'
+                        }).replace(/\//g, '-');
                 },
                 navigateChapter(direction) {
                     if (this.isLoading) return;
