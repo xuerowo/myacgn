@@ -112,10 +112,13 @@ def extract_author_from_intro(intro_path):
         print(f"無法讀取或解析簡介文件中的作者資訊：{e}")
         return ""
 
-def process_novel_directory(novel_dir):
+def process_novel_directory(novel_dir, script_dir):
     try:
         print(f"\n開始處理目錄：{os.path.basename(novel_dir)}")
         print(f"處理小說目錄：{novel_dir}")
+        
+        # 計算相對於腳本目錄的相對路徑
+        relative_novel_path = os.path.relpath(novel_dir, script_dir)
         
         # 獲取目錄中的所有markdown文件，並過濾掉不需要的文件
         files = []
@@ -160,8 +163,8 @@ def process_novel_directory(novel_dir):
             print(f"警告：無法從簡介中找到作者資訊，使用預設值")
             author = "未知作者"
         
-        # 讀取封面圖片URL
-        cover_url = f"https://raw.githubusercontent.com/xuerowo/myacgn/main/輕小說翻譯/{os.path.basename(novel_dir)}/cover.jpg"
+        # 讀取封面圖片路徑（動態偵測相對路徑）
+        cover_url = f"{relative_novel_path}/cover.jpg".replace('\\', '/')
         
         # 初始化章節列表和小說最後更新時間
         chapters = []
@@ -188,8 +191,8 @@ def process_novel_directory(novel_dir):
             elif '簡介' not in title and last_modified > latest_chapter_time:
                 latest_chapter_time = last_modified
             
-            # 構建章節URL
-            url = f"https://raw.githubusercontent.com/xuerowo/myacgn/main/輕小說翻譯/{os.path.basename(novel_dir)}/{file}"
+            # 構建章節路徑（動態偵測相對路徑）
+            url = f"{relative_novel_path}/{file}".replace('\\', '/')
             
             # 添加章節信息
             chapter = {
@@ -266,7 +269,7 @@ def main():
             novel_dir = os.path.join(script_dir, item)
             if os.path.isdir(novel_dir):
                 print(f"\n開始處理目錄：{item}")
-                novel_data = process_novel_directory(novel_dir)
+                novel_data = process_novel_directory(novel_dir, script_dir)
                 if novel_data:
                     novels.append(novel_data)
                     print(f"成功處理小說：{novel_data['title']}")
