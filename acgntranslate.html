@@ -1295,7 +1295,6 @@
                          :key="page"
                          :src="page"
                          class="manga-page"
-                         loading="lazy"
                          @load="handleImageLoad"
                          @error="handleImageError($event, page)"
                          contextmenu="return false;"
@@ -1941,12 +1940,17 @@
                                 (_, i) => `${this.selectedItem.r2Url}/${this.currentChapterNumber}/${i + 1}.jpg?v=${Date.now()}`
                             );
 
+                            this.loadedImages = 0; // 重置已載入圖片計數
                             this.markAsRead();
                             this._loadingContent = false;
                             
                             this.$nextTick(() => {
                                 window.scrollTo(0, 0);
-                                this.restoreScrollPosition();
+                                // 如果沒有圖片或圖片很少，直接恢復滾動位置
+                                if (this.pages.length <= 3) {
+                                    setTimeout(() => this.restoreScrollPosition(), 500);
+                                }
+                                // 否則等待 handleImageLoad() 中的邏輯處理
                             });
                         }
                         
@@ -2099,15 +2103,20 @@
                     if (this._loadingContent) return;
                     
                     try {
+                        // 網漫使用 sessionStorage，輕小說使用 localStorage
+                        const storage = this.currentContent === 'webtoons' ? sessionStorage : localStorage;
                         const scrollPositions = JSON.parse(
-                            localStorage.getItem(STORAGE_KEYS.SCROLL_POSITION)
+                            storage.getItem(STORAGE_KEYS.SCROLL_POSITION)
                         ) || {};
                         const key = this.currentContent === 'novels' ? this.novelKey : this.selectedItem.title;
                         const itemPositions = scrollPositions[key] || {};
                         const currentPosition = window.pageYOffset;
-                        itemPositions[this.currentChapterNumber] = currentPosition;
-                        scrollPositions[key] = itemPositions;
-                        localStorage.setItem(STORAGE_KEYS.SCROLL_POSITION, JSON.stringify(scrollPositions));
+                        // 只有當滾動位置大於100px時才記錄（避免記錄頂部位置）
+                        if (currentPosition > 100) {
+                            itemPositions[this.currentChapterNumber] = currentPosition;
+                            scrollPositions[key] = itemPositions;
+                            storage.setItem(STORAGE_KEYS.SCROLL_POSITION, JSON.stringify(scrollPositions));
+                        }
                     } catch {
                     }
                 },
@@ -2117,8 +2126,10 @@
                     }
                     
                     try {
+                        // 網漫使用 sessionStorage，輕小說使用 localStorage
+                        const storage = this.currentContent === 'webtoons' ? sessionStorage : localStorage;
                         const scrollPositions = JSON.parse(
-                            localStorage.getItem(STORAGE_KEYS.SCROLL_POSITION)
+                            storage.getItem(STORAGE_KEYS.SCROLL_POSITION)
                         ) || {};
                         const key = this.currentContent === 'novels' ? this.novelKey : this.selectedItem.title;
                         const itemPositions = scrollPositions[key] || {};
