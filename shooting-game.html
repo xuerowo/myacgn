@@ -81,6 +81,9 @@
             transition: all 0.5s ease;
             overflow-y: auto;
             gap: 15px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
         
         .game-title {
@@ -546,7 +549,7 @@
         }
         
         .settings-panel.show-settings {
-            right: 10px;
+            right: 10px !important;
         }
 
         .settings-toggle {
@@ -560,10 +563,10 @@
             width: auto;
             height: auto;
             padding: 8px 15px;
+            z-index: 1000;
             font-size: 16px;
             font-weight: 500;
             cursor: pointer;
-            z-index: 30;
             box-shadow: 0 3px 8px rgba(0,0,0,0.3);
             transition: all 0.3s ease;
             display: flex;
@@ -1076,6 +1079,215 @@
             transform: translateY(-2px);
         }
 
+        /* 背景模式按鈕 */
+        .bg-mode-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 5px;
+        }
+        
+        .bg-mode-button {
+            flex: 1;
+            padding: 8px 5px;
+            font-size: 14px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.6);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .bg-mode-button.active {
+            background: linear-gradient(135deg, #4895ef, #3f37c9);
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        
+        .bg-mode-button:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .bg-mode-button.active:hover {
+            background: linear-gradient(135deg, #5ba3f0, #4361ee);
+            transform: translateY(-2px);
+        }
+
+        /* 背景圖片選項 */
+        .bg-image-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .bg-image-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 8px;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .bg-image-option:hover {
+            border-color: rgba(255,255,255,0.5);
+            transform: translateY(-2px);
+        }
+        
+        .bg-image-option.active {
+            border-color: #4895ef;
+            background: rgba(72, 149, 239, 0.2);
+            box-shadow: 0 0 10px rgba(72, 149, 239, 0.3);
+        }
+        
+        .bg-image-preview {
+            width: 60px;
+            height: 40px;
+            border-radius: 5px;
+            border: 1px solid rgba(255,255,255,0.3);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 5px;
+        }
+        
+        .no-image-text {
+            font-size: 10px;
+            color: #666;
+            text-align: center;
+        }
+        
+        .bg-image-name {
+            font-size: 12px;
+            text-align: center;
+            color: white;
+        }
+
+        /* 預設背景圖片樣式 */
+        .tech-bg {
+            background-image: linear-gradient(45deg, #0a0a0a 25%, #1a1a2e 25%, #1a1a2e 50%, #0a0a0a 50%, #0a0a0a 75%, #1a1a2e 75%);
+            background-size: 20px 20px;
+        }
+        
+        .space-bg {
+            background: radial-gradient(circle at 20% 80%, #120458 0%, #000000 50%), radial-gradient(circle at 80% 20%, #000428 0%, #004e92 50%), radial-gradient(circle at 40% 40%, #000000 0%, #0f0f23 50%);
+        }
+        
+        .abstract-bg {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%), linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%);
+        }
+        
+        .military-bg {
+            background: repeating-linear-gradient(45deg, #2d2d2d 0px, #2d2d2d 10px, #3d3d3d 10px, #3d3d3d 20px), linear-gradient(135deg, #1a1a1a, #2a2a2a);
+        }
+
+        /* 圖片上傳區域 */
+        .bg-image-upload {
+            margin-top: 15px;
+            padding: 10px;
+            border: 2px dashed rgba(255,255,255,0.3);
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .bg-upload-button {
+            padding: 8px 15px;
+            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .bg-upload-button:hover {
+            background: linear-gradient(135deg, #4895ef, #3f37c9);
+            transform: translateY(-2px);
+        }
+        
+        .uploaded-image-preview {
+            max-width: 100%;
+            max-height: 80px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        .remove-image-button {
+            padding: 5px 10px;
+            background: linear-gradient(135deg, #e63946, #dc2626);
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .remove-image-button:hover {
+            background: linear-gradient(135deg, #f77f00, #e63946);
+            transform: translateY(-1px);
+        }
+
+        /* 透明度控制 */
+        .bg-image-opacity {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .bg-image-opacity label {
+            font-size: 14px;
+            margin-bottom: 0;
+            white-space: nowrap;
+        }
+        
+        .bg-image-opacity input[type="range"] {
+            flex: 1;
+            height: 6px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .bg-image-opacity input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: linear-gradient(135deg, #4895ef, #3f37c9);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        
+        .bg-image-opacity input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            background: linear-gradient(135deg, #4895ef, #3f37c9);
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        
+        #bg-opacity-value {
+            font-size: 12px;
+            color: #4895ef;
+            font-weight: bold;
+            min-width: 35px;
+        }
+
         .pause-overlay {
             position: absolute;
             top: 0;
@@ -1318,7 +1530,10 @@
                     當前模式: <span id="current-mode">人形靶子</span>
                 </div>
                 <div class="move-display">
-                    移動方式: <span id="current-move-type">漸變移動</span>
+                    移動效果: <span id="current-move-type">漸變移動</span>
+                </div>
+                <div class="trigger-display">
+                    觸發方式: <span id="current-move-trigger">手動移動</span>
                 </div>
                 <div class="high-score">
                     最高分數: <span id="high-score">0</span>
@@ -1349,7 +1564,8 @@
                 <h2>遊戲規則</h2>
                 <ul>
                     <li>遊戲時間為60秒</li>
-                    <li>射擊有效目標後，目標會隨機移動位置</li>
+                    <li><strong>手動移動：</strong>射擊有效目標後，目標會隨機移動位置</li>
+                    <li><strong>自動連續移動：</strong>靶子會定時自動移動，移動間隔根據難度調整（簡單：3-5秒，中等：2-4秒，困難：1-3秒）</li>
                     <li>每次射擊成功得1分</li>
                     <li>沒射到靶子會扣1分</li>
                     <li>連續命中可獲得連擊加成</li>
@@ -1359,14 +1575,15 @@
                 
                 <h2>難度設定</h2>
                 <ul>
-                    <li><strong>簡單：</strong>目標移動速度慢，尺寸較大</li>
-                    <li><strong>中等：</strong>目標移動速度中等，標準尺寸</li>
-                    <li><strong>困難：</strong>目標移動速度快，尺寸較小</li>
+                    <li><strong>簡單：</strong>目標移動速度慢，尺寸較大（自動移動間隔：3-5秒）</li>
+                    <li><strong>中等：</strong>目標移動速度中等，標準尺寸（自動移動間隔：2-4秒）</li>
+                    <li><strong>困難：</strong>目標移動速度快，尺寸較小（自動移動間隔：1-3秒）</li>
                 </ul>
                 
                 <h2>遊戲設定</h2>
                 <ul>
-                    <li><strong>靶子移動方式：</strong>可選擇漸變移動或瞬間移動</li>
+                    <li><strong>移動效果：</strong>可選擇漸變移動或瞬間移動</li>
+                    <li><strong>移動觸發方式：</strong>可選擇手動移動（射擊命中後移動）或自動連續移動（定時自動移動）</li>
                     <li><strong>顏色設定：</strong>可自定義背景和標靶顏色</li>
                     <li><strong>音效設定：</strong>可調整音量或設為靜音</li>
                 </ul>
@@ -1431,13 +1648,27 @@
                 </div>
             </div>
             <div class="setting-item">
-                <label>靶子移動方式</label>
+                <label>移動效果</label>
                 <div class="move-type-buttons">
                     <button id="transition-move" class="move-button active">漸變移動</button>
                     <button id="instant-move" class="move-button">瞬間移動</button>
                 </div>
             </div>
             <div class="setting-item">
+                <label>移動觸發方式</label>
+                <div class="move-trigger-buttons">
+                    <button id="manual-move" class="move-button active">手動移動</button>
+                    <button id="auto-move" class="move-button">自動連續</button>
+                </div>
+            </div>
+            <div class="setting-item">
+                <label>背景模式</label>
+                <div class="bg-mode-buttons">
+                    <button id="bg-mode-color" class="bg-mode-button active">顏色背景</button>
+                    <button id="bg-mode-image" class="bg-mode-button">圖片背景</button>
+                </div>
+            </div>
+            <div class="setting-item" id="bg-color-setting">
                 <label>背景顏色</label>
                 <div class="color-options" id="bg-color-options">
                     <div class="color-option" data-color="#16213e" style="background-color: #16213e;"></div>
@@ -1456,6 +1687,45 @@
                 <div class="color-custom">
                     <input type="color" id="bg-color-custom" class="color-input" value="#16213e">
                     <button id="bg-color-apply" class="color-apply">套用</button>
+                </div>
+            </div>
+            <div class="setting-item" id="bg-image-setting" style="display: none;">
+                <label>背景圖片</label>
+                <div class="bg-image-options" id="bg-image-options">
+                    <div class="bg-image-option" data-image="none">
+                        <div class="bg-image-preview" style="background: linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%); background-size: 10px 10px; background-position: 0 0, 0 5px, 5px -5px, -5px 0px;">
+                            <span class="no-image-text">無圖片</span>
+                        </div>
+                    </div>
+                    <div class="bg-image-option" data-image="tech">
+                        <div class="bg-image-preview tech-bg"></div>
+                        <span class="bg-image-name">科技風格</span>
+                    </div>
+                    <div class="bg-image-option" data-image="space">
+                        <div class="bg-image-preview space-bg"></div>
+                        <span class="bg-image-name">太空場景</span>
+                    </div>
+                    <div class="bg-image-option" data-image="abstract">
+                        <div class="bg-image-preview abstract-bg"></div>
+                        <span class="bg-image-name">抽象圖案</span>
+                    </div>
+                    <div class="bg-image-option" data-image="military">
+                        <div class="bg-image-preview military-bg"></div>
+                        <span class="bg-image-name">軍事風格</span>
+                    </div>
+                </div>
+                <div class="bg-image-upload">
+                    <input type="file" id="bg-image-file" accept="image/*" style="display: none;">
+                    <button id="bg-image-upload-btn" class="bg-upload-button">上傳自訂圖片</button>
+                    <div id="bg-image-preview-container" style="display: none;">
+                        <img id="bg-image-preview" class="uploaded-image-preview" alt="預覽圖片">
+                        <button id="bg-image-remove" class="remove-image-button">移除</button>
+                    </div>
+                </div>
+                <div class="bg-image-opacity">
+                    <label for="bg-opacity-control">背景透明度</label>
+                    <input type="range" id="bg-opacity-control" min="0.1" max="1" step="0.1" value="0.8">
+                    <span id="bg-opacity-value">80%</span>
                 </div>
             </div>
             <div class="setting-item">
@@ -1593,7 +1863,7 @@
         let gameInterval;
         let isPlaying = false;
         let isPaused = false; 
-        let gameMode = "human"; 
+        let gameMode = "human"; // "human", "target"
         let highScore = 0; 
         let combo = 0; 
         let maxCombo = 0; 
@@ -1601,11 +1871,17 @@
         let shotsHit = 0; 
         let bonusPoints = 0; 
         let lastHitTime = 0; 
-        let moveType = "transition"; 
+        let moveType = "transition";
+        let moveTrigger = "manual"; // "manual" 手動移動, "auto" 自動連續移動
+        let movingInterval = null; // 持續移動計時器 
  
 
         let bgColor = "#16213e"; 
-        let targetColor = "#4d96ff"; 
+        let targetColor = "#4d96ff";
+        let bgMode = "color"; // "color" 或 "image"
+        let bgImage = "none"; // 背景圖片類型或base64數據
+        let bgOpacity = 0.8; // 背景透明度
+        let customBgImage = null; // 自訂背景圖片數據 
 
         const difficulties = {
             easy: { targetSpeed: 1000, targetSize: 1.2 },
@@ -1831,9 +2107,10 @@
 
             setupTargetByMode();
 
-            currentModeDisplay.textContent = gameMode === "human" ? "人形靶子" : "靶心";
+            currentModeDisplay.textContent = gameMode === "human" ? "人形靶子" : gameMode === "target" ? "靶心" : "人形靶子";
 
             document.getElementById('current-move-type').textContent = moveType === 'transition' ? '漸變移動' : '瞬間移動';
+            document.getElementById('current-move-trigger').textContent = moveTrigger === 'manual' ? '手動移動' : '自動連續';
 
             document.querySelectorAll('.bullet-hole, .particle, .floating-text').forEach(el => {
                 el.remove();
@@ -1865,7 +2142,7 @@
             }
 
             highScoreDisplay.textContent = highScore;
-            currentModeDisplay.textContent = gameMode === "human" ? "人形靶子" : "靶心";
+            updateModeUI();
         }
 
         function showStartScreen() {
@@ -1892,6 +2169,22 @@
             instructionsScreen.classList.add('fade-in');
         }
 
+        function updateModeUI() {
+            // 更新按鈕文字
+            const nextMode = gameMode === "human" ? "靶心模式" : "人形模式";
+            
+            const toggleModeButton = document.getElementById('toggle-mode-button');
+            if (toggleModeButton) {
+                toggleModeButton.textContent = `切換至${nextMode}`;
+            }
+            
+            homeToggleModeButton.textContent = `切換至${nextMode}`;
+
+            // 更新當前模式顯示
+            const modeText = gameMode === "human" ? "人形靶子" : "靶心";
+            currentModeDisplay.textContent = modeText;
+        }
+
         function setupTargetByMode() {
 
             const targetElement = getTarget();
@@ -1910,7 +2203,10 @@
                     <div class="leg-right"></div>
                 `;
 
-                document.querySelector("#start-screen p").innerHTML = '射擊人形靶子的<strong>頭部</strong>獲得分數，一分鐘內看看你能獲得多少分！';
+                const gameDescription = moveTrigger === "auto" ? 
+                    '射擊人形靶子的<strong>頭部</strong>獲得分數，靶子會自動移動！一分鐘內看看你能獲得多少分！' :
+                    '射擊人形靶子的<strong>頭部</strong>獲得分數，一分鐘內看看你能獲得多少分！';
+                document.querySelector("#start-screen p").innerHTML = gameDescription;
 
                 setTimeout(() => {
                     const head = document.getElementById('head');
@@ -2027,17 +2323,14 @@
                 endGame();
 
                 setTimeout(() => {
+                    // 兩種模式循環切換: human -> target -> human
+                    if (gameMode === "human") {
+                        gameMode = "target";
+                    } else {
+                        gameMode = "human";
+                    }
 
-                    gameMode = gameMode === "human" ? "target" : "human";
-
-                    document.getElementById('toggle-mode-button').textContent = 
-                        gameMode === "human" ? "切換至靶心模式" : "切換至人形模式";
-                    
-                    homeToggleModeButton.textContent = 
-                        gameMode === "human" ? "切換至靶心模式" : "切換至人形模式";
-
-                    currentModeDisplay.textContent = gameMode === "human" ? "人形靶子" : "靶心";
-
+                    updateModeUI();
                     setupTargetByMode();
 
                     showStartScreen();
@@ -2046,16 +2339,14 @@
                 return;
             }
 
-            gameMode = gameMode === "human" ? "target" : "human";
+            // 兩種模式循環切換
+            if (gameMode === "human") {
+                gameMode = "target";
+            } else {
+                gameMode = "human";
+            }
 
-            document.getElementById('toggle-mode-button').textContent = 
-                gameMode === "human" ? "切換至靶心模式" : "切換至人形模式";
-            
-            homeToggleModeButton.textContent = 
-                gameMode === "human" ? "切換至靶心模式" : "切換至人形模式";
-
-            currentModeDisplay.textContent = gameMode === "human" ? "人形靶子" : "靶心";
-
+            updateModeUI();
             setupTargetByMode();
 
             if (homeScreen.style.display === 'flex') {
@@ -2117,6 +2408,11 @@
 
                 placeTargetRandomly();
 
+                // 如果是自動連續移動模式，啟動持續移動
+                if (moveTrigger === 'auto') {
+                    startContinuousMovement();
+                }
+
                 gameInterval = setInterval(() => {
                     timeLeft--;
                     timeLeftDisplay.textContent = timeLeft;
@@ -2136,6 +2432,7 @@
             isPlaying = false;
             isPaused = false; 
             clearInterval(gameInterval);
+            stopContinuousMovement(); // 停止持續移動
             getTarget().style.display = 'none';
 
             document.getElementById('pause-overlay').style.display = 'none';
@@ -2179,7 +2476,7 @@
             const newRecord = {
                 date: new Date().toLocaleString(),
                 score: score,
-                mode: gameMode === "human" ? "人形靶子" : "靶心",
+                mode: gameMode === "human" ? "人形靶子" : gameMode === "target" ? "靶心" : "持續移動靶子",
                 moveType: moveType === "transition" ? "漸變移動" : "瞬間移動",
                 accuracy: shotsFired > 0 ? Math.round((shotsHit / shotsFired) * 100) : 0
             };
@@ -2309,7 +2606,7 @@
                         <div class="player-info">
                             <div class="player-name">${escapeHtml(record.playerName)}</div>
                             <div class="game-details">
-                                <span>模式: ${record.gameMode === 'human' ? '人形' : '靶心'}</span>
+                                <span>模式: ${record.gameMode === 'human' ? '人形' : record.gameMode === 'target' ? '靶心' : '持續移動'}</span>
                                 <span>難度: ${getDifficultyText(record.difficulty)}</span>
                                 <span>命中率: ${record.accuracy}%</span>
                                 <span>日期: ${date}</span>
@@ -2369,6 +2666,7 @@
             
             isPaused = true;
             clearInterval(gameInterval);
+            stopContinuousMovement(); // 暫停時停止持續移動
 
             document.getElementById('pause-overlay').style.display = 'flex';
 
@@ -2384,6 +2682,11 @@
 
             document.getElementById('pause-game-button').textContent = '暫停';
 
+            // 如果是自動連續移動模式，恢復持續移動
+            if (moveTrigger === 'auto') {
+                startContinuousMovement();
+            }
+
             gameInterval = setInterval(() => {
                 timeLeft--;
                 timeLeftDisplay.textContent = timeLeft;
@@ -2398,97 +2701,21 @@
             }, 1000);
         }
 
-        document.getElementById('pause-game-button').addEventListener('click', function() {
-            if (isPaused) {
-                resumeGame();
-            } else {
-                pauseGame();
-            }
-        });
-
-        document.getElementById('resume-button').addEventListener('click', resumeGame);
-
-        document.getElementById('pause-end-game').addEventListener('click', endGame);
 
 
-        document.getElementById('settings-button').addEventListener('click', function() {
-            const settingsPanel = document.getElementById('settings-panel');
-            settingsPanel.classList.toggle('show-settings');
 
-            if (settingsPanel.classList.contains('show-settings')) {
-                setupMoveTypeButtons();
-                setupColorOptions();
-            }
-        });
 
         function setBgColor(color) {
             bgColor = color;
-
-            document.querySelector('.game-container').style.background = `linear-gradient(135deg, ${color}, ${adjustColor(color, -20)})`;
-
+            if (bgMode === 'color') {
+                applyBackground();
+            }
             saveColorSettings();
         }
 
-        function setTargetColor(color) {
-            targetColor = color;
 
-            const target = getTarget();
-            if (gameMode === "human") {
 
-                document.querySelectorAll('.head, .body, .arm-left, .arm-right, .leg-left, .leg-right').forEach(el => {
-                    el.style.backgroundColor = color;
-                });
-            } else {
 
-                if (target) {
-                    target.style.background = `radial-gradient(circle, white 10%, ${color} 10%, ${color} 30%, white 30%, white 50%, ${adjustColor(color, -20)} 50%, ${adjustColor(color, -20)} 70%, white 70%)`;
-                }
-            }
-
-            saveColorSettings();
-        }
-
-        function saveColorSettings() {
-            try {
-                localStorage.setItem('shootingGameBgColor', bgColor);
-                localStorage.setItem('shootingGameTargetColor', targetColor);
-            } catch (e) {
-                console.error('保存顏色設定失敗:', e);
-            }
-        }
-
-        function loadColorSettings() {
-            try {
-                const savedBgColor = localStorage.getItem('shootingGameBgColor');
-                const savedTargetColor = localStorage.getItem('shootingGameTargetColor');
-                
-                if (savedBgColor) {
-                    bgColor = savedBgColor;
-                }
-                
-                if (savedTargetColor) {
-                    targetColor = savedTargetColor;
-                }
-
-                setBgColor(bgColor);
-                setTargetColor(targetColor);
-            } catch (e) {
-                console.error('載入顏色設定失敗:', e);
-            }
-        }
-
-        function adjustColor(color, amount) {
-
-            let r = parseInt(color.substring(1, 3), 16);
-            let g = parseInt(color.substring(3, 5), 16);
-            let b = parseInt(color.substring(5, 7), 16);
-
-            r = Math.max(0, Math.min(255, r + amount));
-            g = Math.max(0, Math.min(255, g + amount));
-            b = Math.max(0, Math.min(255, b + amount));
-
-            return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-        }
 
         function handleHeadClick(e) {
             if (!isPlaying || isPaused) return; 
@@ -2515,7 +2742,10 @@
 
             screenShake(false);
 
-            placeTargetRandomly();
+            // 只有在手動移動模式下才射擊後移動靶子
+            if (moveTrigger === 'manual') {
+                placeTargetRandomly();
+            }
         }
 
         function handleHeadTouchStart(e) {
@@ -2545,7 +2775,10 @@
 
             screenShake(false);
 
-            placeTargetRandomly();
+            // 只有在手動移動模式下才射擊後移動靶子
+            if (moveTrigger === 'manual') {
+                placeTargetRandomly();
+            }
         }
 
         function handleTargetClick(e) {
@@ -2571,7 +2804,10 @@
 
             screenShake(false);
 
-            placeTargetRandomly();
+            // 只有在手動移動模式下才射擊後移動靶子
+            if (moveTrigger === 'manual') {
+                placeTargetRandomly();
+            }
         }
 
         function handleTargetTouchStart(e) {
@@ -2599,7 +2835,10 @@
 
             screenShake(false);
 
-            placeTargetRandomly();
+            // 只有在手動移動模式下才射擊後移動靶子
+            if (moveTrigger === 'manual') {
+                placeTargetRandomly();
+            }
         }
 
         gameContainer.addEventListener('mousedown', function(e) {
@@ -2837,38 +3076,6 @@
             }
         }
 
-        // 排行榜事件監聽器
-        leaderboardButton.addEventListener('click', function() {
-            homeScreen.style.display = 'none';
-            leaderboardScreen.style.display = 'flex';
-            loadLeaderboard('all');
-        });
-
-        closeLeaderboardButton.addEventListener('click', function() {
-            leaderboardScreen.style.display = 'none';
-            homeScreen.style.display = 'flex';
-        });
-
-        // 排行榜篩選按鈕
-        document.getElementById('filter-all').addEventListener('click', function() {
-            setActiveFilter('filter-all');
-            loadLeaderboard('all');
-        });
-
-        document.getElementById('filter-human').addEventListener('click', function() {
-            setActiveFilter('filter-human');
-            loadLeaderboard('human');
-        });
-
-        document.getElementById('filter-circle').addEventListener('click', function() {
-            setActiveFilter('filter-circle');
-            loadLeaderboard('circle');
-        });
-
-        document.getElementById('filter-today').addEventListener('click', function() {
-            setActiveFilter('filter-today');
-            loadLeaderboard('today');
-        });
 
         function setActiveFilter(activeId) {
             document.querySelectorAll('.filter-button').forEach(btn => {
@@ -2877,40 +3084,247 @@
             document.getElementById(activeId).classList.add('active');
         }
 
-        playButton.addEventListener('click', showStartScreen);
 
-        startButton.addEventListener('click', startGame);
+        // 背景圖片相關函數
+        function setupBgModeButtons() {
+            const colorModeButton = document.getElementById('bg-mode-color');
+            const imageModeButton = document.getElementById('bg-mode-image');
+            const colorSetting = document.getElementById('bg-color-setting');
+            const imageSetting = document.getElementById('bg-image-setting');
 
-        restartButton.addEventListener('click', startGame);
+            colorModeButton.addEventListener('click', function() {
+                setBgMode('color');
+                updateBgModeButtons();
+                colorSetting.style.display = 'block';
+                imageSetting.style.display = 'none';
+            });
 
-        homeButton.addEventListener('click', showHome);
+            imageModeButton.addEventListener('click', function() {
+                setBgMode('image');
+                updateBgModeButtons();
+                colorSetting.style.display = 'none';
+                imageSetting.style.display = 'block';
+            });
+        }
 
-        backToHomeButton.addEventListener('click', showHome);
+        function updateBgModeButtons() {
+            const colorModeButton = document.getElementById('bg-mode-color');
+            const imageModeButton = document.getElementById('bg-mode-image');
+            
+            colorModeButton.classList.toggle('active', bgMode === 'color');
+            imageModeButton.classList.toggle('active', bgMode === 'image');
+        }
 
-        document.getElementById('end-game-button').addEventListener('click', endGame);
+        function setBgMode(mode) {
+            bgMode = mode;
+            applyBackground();
+            saveBgSettings();
+        }
 
-        instructionsButton.addEventListener('click', showInstructions);
+        function setupBgImageOptions() {
+            const bgImageOptions = document.querySelectorAll('#bg-image-options .bg-image-option');
+            
+            bgImageOptions.forEach(option => {
+                // 設定初始狀態
+                if (option.getAttribute('data-image') === bgImage) {
+                    option.classList.add('active');
+                } else {
+                    option.classList.remove('active');
+                }
 
-        backFromInstructionsButton.addEventListener('click', showHome);
+                option.addEventListener('click', function() {
+                    // 移除其他選項的active類
+                    bgImageOptions.forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
 
-        document.addEventListener('keydown', function(e) {
+                    const imageType = this.getAttribute('data-image');
+                    setBgImage(imageType);
+                });
+            });
+        }
 
-            if (e.key === 'Escape' && isPlaying) {
-                endGame();
+        function setBgImage(imageType) {
+            bgImage = imageType;
+            if (imageType !== 'custom') {
+                customBgImage = null; // 清除自訂圖片
+                document.getElementById('bg-image-preview-container').style.display = 'none';
             }
-        });
+            applyBackground();
+            saveBgSettings();
+        }
 
-        homeToggleModeButton.addEventListener('click', function() {
+        function applyBackground() {
+            const gameContainer = document.querySelector('.game-container');
+            const homeScreen = document.querySelector('.home-screen');
+            
+            if (bgMode === 'color') {
+                // 使用顏色背景
+                const gradientColor = `linear-gradient(135deg, ${bgColor}, ${adjustColor(bgColor, -20)})`;
+                gameContainer.style.background = gradientColor;
+                if (homeScreen) homeScreen.style.background = gradientColor;
+            } else {
+                // 使用圖片背景
+                let backgroundStyle = '';
+                
+                if (bgImage === 'none') {
+                    backgroundStyle = `linear-gradient(135deg, ${bgColor}, ${adjustColor(bgColor, -20)})`;
+                } else if (bgImage === 'custom' && customBgImage) {
+                    backgroundStyle = `linear-gradient(rgba(0,0,0,${1-bgOpacity}), rgba(0,0,0,${1-bgOpacity})), url(${customBgImage})`;
+                } else {
+                    // 預設圖片背景
+                    const bgClass = bgImage + '-bg';
+                    const tempDiv = document.createElement('div');
+                    tempDiv.className = bgClass;
+                    document.body.appendChild(tempDiv);
+                    const computedStyle = getComputedStyle(tempDiv);
+                    const bgValue = computedStyle.backgroundImage || computedStyle.background;
+                    document.body.removeChild(tempDiv);
+                    
+                    backgroundStyle = `linear-gradient(rgba(0,0,0,${1-bgOpacity}), rgba(0,0,0,${1-bgOpacity})), ${bgValue}`;
+                }
+                
+                gameContainer.style.background = backgroundStyle;
+                gameContainer.style.backgroundSize = 'cover';
+                gameContainer.style.backgroundPosition = 'center';
+                gameContainer.style.backgroundRepeat = 'no-repeat';
+                
+                if (homeScreen) {
+                    homeScreen.style.background = backgroundStyle;
+                    homeScreen.style.backgroundSize = 'cover';
+                    homeScreen.style.backgroundPosition = 'center';
+                    homeScreen.style.backgroundRepeat = 'no-repeat';
+                }
+            }
+        }
 
-            gameMode = gameMode === "human" ? "target" : "human";
+        function setupBgOpacityControl() {
+            const opacityControl = document.getElementById('bg-opacity-control');
+            const opacityValue = document.getElementById('bg-opacity-value');
+            
+            opacityControl.addEventListener('input', function() {
+                bgOpacity = parseFloat(this.value);
+                opacityValue.textContent = Math.round(bgOpacity * 100) + '%';
+                if (bgMode === 'image') {
+                    applyBackground();
+                }
+                saveBgSettings();
+            });
+            
+            // 設定初始值
+            opacityControl.value = bgOpacity;
+            opacityValue.textContent = Math.round(bgOpacity * 100) + '%';
+        }
 
-            homeToggleModeButton.textContent = 
-                gameMode === "human" ? "切換至靶心模式" : "切換至人形模式";
+        function setupBgImageUpload() {
+            const uploadBtn = document.getElementById('bg-image-upload-btn');
+            const fileInput = document.getElementById('bg-image-file');
+            const previewContainer = document.getElementById('bg-image-preview-container');
+            const previewImg = document.getElementById('bg-image-preview');
+            const removeBtn = document.getElementById('bg-image-remove');
 
-            currentModeDisplay.textContent = gameMode === "human" ? "人形靶子" : "靶心";
+            uploadBtn.addEventListener('click', function() {
+                fileInput.click();
+            });
 
-            setupTargetByMode();
-        });
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    // 檢查檔案大小 (限制為2MB)
+                    if (file.size > 2 * 1024 * 1024) {
+                        alert('圖片檔案過大，請選擇小於2MB的圖片');
+                        return;
+                    }
+                    
+                    // 檢查檔案類型
+                    if (!file.type.startsWith('image/')) {
+                        alert('請選擇有效的圖片檔案');
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        customBgImage = e.target.result;
+                        previewImg.src = customBgImage;
+                        previewContainer.style.display = 'block';
+                        
+                        // 設定為自訂圖片
+                        document.querySelectorAll('#bg-image-options .bg-image-option').forEach(opt => {
+                            opt.classList.remove('active');
+                        });
+                        setBgImage('custom');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            removeBtn.addEventListener('click', function() {
+                customBgImage = null;
+                previewContainer.style.display = 'none';
+                fileInput.value = '';
+                setBgImage('none');
+            });
+        }
+
+        function saveBgSettings() {
+            try {
+                localStorage.setItem('shootingGameBgMode', bgMode);
+                localStorage.setItem('shootingGameBgImage', bgImage);
+                localStorage.setItem('shootingGameBgOpacity', bgOpacity.toString());
+                if (customBgImage) {
+                    localStorage.setItem('shootingGameCustomBgImage', customBgImage);
+                } else {
+                    localStorage.removeItem('shootingGameCustomBgImage');
+                }
+            } catch (e) {
+                console.error('保存背景設定失敗:', e);
+            }
+        }
+
+        function loadBgSettings() {
+            try {
+                const savedBgMode = localStorage.getItem('shootingGameBgMode');
+                const savedBgImage = localStorage.getItem('shootingGameBgImage');
+                const savedBgOpacity = localStorage.getItem('shootingGameBgOpacity');
+                const savedCustomBgImage = localStorage.getItem('shootingGameCustomBgImage');
+                
+                if (savedBgMode) {
+                    bgMode = savedBgMode;
+                }
+                
+                if (savedBgImage) {
+                    bgImage = savedBgImage;
+                }
+                
+                if (savedBgOpacity) {
+                    bgOpacity = parseFloat(savedBgOpacity);
+                }
+                
+                if (savedCustomBgImage) {
+                    customBgImage = savedCustomBgImage;
+                    document.getElementById('bg-image-preview').src = customBgImage;
+                    document.getElementById('bg-image-preview-container').style.display = 'block';
+                }
+
+                // 更新UI
+                updateBgModeButtons();
+                const colorSetting = document.getElementById('bg-color-setting');
+                const imageSetting = document.getElementById('bg-image-setting');
+                
+                if (bgMode === 'color') {
+                    colorSetting.style.display = 'block';
+                    imageSetting.style.display = 'none';
+                } else {
+                    colorSetting.style.display = 'none';
+                    imageSetting.style.display = 'block';
+                }
+                
+                setupBgImageOptions(); // 更新圖片選項的active狀態
+                setupBgOpacityControl(); // 更新透明度控制
+                applyBackground();
+            } catch (e) {
+                console.error('載入背景設定失敗:', e);
+            }
+        }
 
         function setupColorOptions() {
 
@@ -2996,9 +3410,9 @@
 
         function setBgColor(color) {
             bgColor = color;
-
-            document.querySelector('.game-container').style.background = `linear-gradient(135deg, ${color}, ${adjustColor(color, -20)})`;
-
+            if (bgMode === 'color') {
+                applyBackground();
+            }
             saveColorSettings();
         }
 
@@ -3007,12 +3421,10 @@
 
             const target = getTarget();
             if (gameMode === "human") {
-
                 document.querySelectorAll('.head, .body, .arm-left, .arm-right, .leg-left, .leg-right').forEach(el => {
                     el.style.backgroundColor = color;
                 });
             } else {
-
                 if (target) {
                     target.style.background = `radial-gradient(circle, white 10%, ${color} 10%, ${color} 30%, white 30%, white 50%, ${adjustColor(color, -20)} 50%, ${adjustColor(color, -20)} 70%, white 70%)`;
                 }
@@ -3025,6 +3437,7 @@
             try {
                 localStorage.setItem('shootingGameBgColor', bgColor);
                 localStorage.setItem('shootingGameTargetColor', targetColor);
+                saveBgSettings(); // 同時保存背景設定
             } catch (e) {
                 console.error('保存顏色設定失敗:', e);
             }
@@ -3043,7 +3456,7 @@
                     targetColor = savedTargetColor;
                 }
 
-                setBgColor(bgColor);
+                loadBgSettings(); // 載入背景設定
                 setTargetColor(targetColor);
             } catch (e) {
                 console.error('載入顏色設定失敗:', e);
@@ -3051,7 +3464,6 @@
         }
 
         function adjustColor(color, amount) {
-
             let r = parseInt(color.substring(1, 3), 16);
             let g = parseInt(color.substring(3, 5), 16);
             let b = parseInt(color.substring(5, 7), 16);
@@ -3063,24 +3475,6 @@
             return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
         }
         
-        document.getElementById('close-settings').addEventListener('click', function() {
-            document.getElementById('settings-panel').classList.remove('show-settings');
-        });
-
-        document.getElementById('easy-button').addEventListener('click', function() {
-            setDifficulty('easy');
-            updateDifficultyButtons('easy');
-        });
-        
-        document.getElementById('medium-button').addEventListener('click', function() {
-            setDifficulty('medium');
-            updateDifficultyButtons('medium');
-        });
-        
-        document.getElementById('hard-button').addEventListener('click', function() {
-            setDifficulty('hard');
-            updateDifficultyButtons('hard');
-        });
 
         function setMoveType(type) {
             moveType = type;
@@ -3103,24 +3497,30 @@
             }
         }
 
-        document.getElementById('volume-control').addEventListener('input', function(e) {
-            soundSettings.volume = parseFloat(e.target.value);
+        function setMoveTrigger(trigger) {
+            moveTrigger = trigger;
+            console.log(`移動觸發方式已設置為: ${trigger}`);
 
-            Object.values(sounds).forEach(sound => {
-                sound.volume = soundSettings.volume;
-            });
-        });
+            const moveTriggerDisplay = document.getElementById('current-move-trigger');
+            if (moveTriggerDisplay) {
+                moveTriggerDisplay.textContent = trigger === 'manual' ? '手動移動' : '自動連續';
+            } else {
+                console.error('找不到移動觸發方式顯示元素');
+            }
 
-        document.getElementById('mute-toggle').addEventListener('change', function(e) {
-            soundSettings.muted = e.target.checked;
+            // 如果遊戲正在進行中，需要調整移動邏輯
+            if (isPlaying && !isPaused) {
+                if (trigger === 'auto') {
+                    // 啟動自動移動
+                    startContinuousMovement();
+                } else {
+                    // 停止自動移動
+                    stopContinuousMovement();
+                }
+            }
+        }
 
-            Object.values(sounds).forEach(sound => {
-                sound.muted = soundSettings.muted;
-            });
-        });
 
-        document.getElementById('toggle-mode-button').textContent = "切換至靶心模式";
-        homeToggleModeButton.textContent = "切換至靶心模式";
 
         document.addEventListener('DOMContentLoaded', function() {
 
@@ -3153,8 +3553,13 @@
 
             initGame();
 
-
             setupColorOptions();
+            
+            // 設定背景相關功能
+            setupBgModeButtons();
+            setupBgImageOptions();
+            setupBgOpacityControl();
+            setupBgImageUpload();
 
             adjustGameContainerSize();
 
@@ -3163,6 +3568,141 @@
             showHome();
 
             setTimeout(setupMoveTypeButtons, 500);
+            setTimeout(setupMoveTriggerButtons, 500);
+
+            // 設定按鈕事件監聽器
+            document.getElementById('settings-button').addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('設定按鈕被點擊');
+                const settingsPanel = document.getElementById('settings-panel');
+                settingsPanel.classList.toggle('show-settings');
+                console.log('設定面板顯示狀態:', settingsPanel.classList.contains('show-settings'));
+
+                if (settingsPanel.classList.contains('show-settings')) {
+                    setupMoveTypeButtons();
+                    setupMoveTriggerButtons();
+                    // 確保背景設定UI正確顯示
+                    updateBgModeButtons();
+                    const colorSetting = document.getElementById('bg-color-setting');
+                    const imageSetting = document.getElementById('bg-image-setting');
+                    
+                    if (bgMode === 'color') {
+                        colorSetting.style.display = 'block';
+                        imageSetting.style.display = 'none';
+                    } else {
+                        colorSetting.style.display = 'none';
+                        imageSetting.style.display = 'block';
+                    }
+                    setupColorOptions();
+                }
+            });
+
+            // 其他設定相關的事件監聽器
+            document.getElementById('close-settings').addEventListener('click', function() {
+                document.getElementById('settings-panel').classList.remove('show-settings');
+            });
+
+            document.getElementById('easy-button').addEventListener('click', function() {
+                setDifficulty('easy');
+                updateDifficultyButtons('easy');
+            });
+
+            document.getElementById('medium-button').addEventListener('click', function() {
+                setDifficulty('medium');
+                updateDifficultyButtons('medium');
+            });
+
+            document.getElementById('hard-button').addEventListener('click', function() {
+                setDifficulty('hard');
+                updateDifficultyButtons('hard');
+            });
+
+            document.getElementById('volume-control').addEventListener('input', function(e) {
+                soundSettings.volume = parseFloat(e.target.value);
+                Object.values(sounds).forEach(sound => {
+                    sound.volume = soundSettings.volume;
+                });
+            });
+
+            document.getElementById('mute-toggle').addEventListener('change', function(e) {
+                soundSettings.muted = e.target.checked;
+                Object.values(sounds).forEach(sound => {
+                    sound.muted = soundSettings.muted;
+                });
+            });
+
+            // 暫停和恢復遊戲的事件監聽器
+            document.getElementById('resume-button').addEventListener('click', resumeGame);
+            document.getElementById('pause-end-game').addEventListener('click', endGame);
+
+            // 主要按鈕事件監聽器
+            playButton.addEventListener('click', showStartScreen);
+            startButton.addEventListener('click', startGame);
+            restartButton.addEventListener('click', startGame);
+            homeButton.addEventListener('click', showHome);
+            backToHomeButton.addEventListener('click', showHome);
+            document.getElementById('end-game-button').addEventListener('click', endGame);
+            instructionsButton.addEventListener('click', showInstructions);
+            backFromInstructionsButton.addEventListener('click', showHome);
+
+            // 排行榜事件監聽器
+            leaderboardButton.addEventListener('click', function() {
+                homeScreen.style.display = 'none';
+                leaderboardScreen.style.display = 'flex';
+                loadLeaderboard('all');
+            });
+
+            closeLeaderboardButton.addEventListener('click', function() {
+                leaderboardScreen.style.display = 'none';
+                homeScreen.style.display = 'flex';
+            });
+
+            // 篩選按鈕事件監聽器
+            document.getElementById('filter-all').addEventListener('click', function() {
+                setActiveFilter('filter-all');
+                loadLeaderboard('all');
+            });
+
+            document.getElementById('filter-human').addEventListener('click', function() {
+                setActiveFilter('filter-human');
+                loadLeaderboard('human');
+            });
+
+            document.getElementById('filter-circle').addEventListener('click', function() {
+                setActiveFilter('filter-circle');
+                loadLeaderboard('circle');
+            });
+
+            document.getElementById('filter-today').addEventListener('click', function() {
+                setActiveFilter('filter-today');
+                loadLeaderboard('today');
+            });
+
+            // 暫停遊戲按鈕
+            document.getElementById('pause-game-button').addEventListener('click', function() {
+                if (isPaused) {
+                    resumeGame();
+                } else {
+                    pauseGame();
+                }
+            });
+
+            // 鍵盤事件監聽器
+            document.addEventListener('keydown', function(e) {
+                if (e.code === 'Space' || e.key === ' ') {
+                    e.preventDefault();
+                    if (isPlaying && !isPaused) {
+                        pauseGame();
+                    }
+                }
+                if (e.key === 'Escape' && isPlaying) {
+                    endGame();
+                }
+            });
+
+            // 模式切換按鈕
+            homeToggleModeButton.addEventListener('click', toggleGameMode);
 
             console.log('遊戲初始化完成');
         });
@@ -3190,7 +3730,7 @@
         function setupMoveTypeButtons() {
 
             function updateMoveTypeButtons(activeType) {
-                document.querySelectorAll('.move-button').forEach(button => {
+                document.querySelectorAll('.move-type-buttons .move-button').forEach(button => {
                     button.classList.remove('active');
                 });
                 document.getElementById(`${activeType}-move`).classList.add('active');
@@ -3214,6 +3754,36 @@
                 });
             } else {
                 console.error('找不到移動方式按鈕');
+            }
+        }
+
+        function setupMoveTriggerButtons() {
+
+            function updateMoveTriggerButtons(activeTrigger) {
+                document.querySelectorAll('.move-trigger-buttons .move-button').forEach(button => {
+                    button.classList.remove('active');
+                });
+                document.getElementById(`${activeTrigger}-move`).classList.add('active');
+            }
+
+            const manualButton = document.getElementById('manual-move');
+            const autoButton = document.getElementById('auto-move');
+            
+            if (manualButton && autoButton) {
+
+                manualButton.addEventListener('click', function() {
+                    setMoveTrigger('manual');
+                    updateMoveTriggerButtons('manual');
+                    console.log('設置為手動移動');
+                });
+                
+                autoButton.addEventListener('click', function() {
+                    setMoveTrigger('auto');
+                    updateMoveTriggerButtons('auto');
+                    console.log('設置為自動連續移動');
+                });
+            } else {
+                console.error('找不到移動觸發方式按鈕');
             }
         }
 
@@ -3244,6 +3814,50 @@
 
             target.style.left = `${randomX}px`;
             target.style.top = `${randomY}px`;
+        }
+
+        // 持續移動相關函數
+        function startContinuousMovement() {
+            if (movingInterval) {
+                clearInterval(movingInterval);
+            }
+            
+            // 根據難度設定移動間隔
+            const moveIntervals = {
+                easy: { min: 3000, max: 5000 },    // 3-5秒
+                medium: { min: 2000, max: 4000 },  // 2-4秒
+                hard: { min: 1000, max: 3000 }     // 1-3秒
+            };
+            
+            function scheduleNextMove() {
+                const interval = moveIntervals[currentDifficulty];
+                const randomDelay = Math.random() * (interval.max - interval.min) + interval.min;
+                
+                movingInterval = setTimeout(() => {
+                    if (isPlaying && !isPaused && moveTrigger === 'auto') {
+                        placeTargetRandomly();
+                        scheduleNextMove(); // 安排下一次移動
+                    }
+                }, randomDelay);
+            }
+            
+            scheduleNextMove();
+        }
+
+        function stopContinuousMovement() {
+            if (movingInterval) {
+                clearTimeout(movingInterval);
+                movingInterval = null;
+            }
+        }
+
+        function getMovingModeIntervalRange() {
+            const moveIntervals = {
+                easy: "3-5秒",
+                medium: "2-4秒", 
+                hard: "1-3秒"
+            };
+            return moveIntervals[currentDifficulty] || "2-4秒";
         }
     </script>
 </body>
