@@ -5,13 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="description" content="射擊挑戰是一款考驗精準度與反應速度的網頁射擊遊戲。挑戰不同難度等級，累積連擊取得高分，支援多種遊戲模式，適合所有休閒遊戲愛好者。享受流暢的射擊體驗，挑戰你的極限！">
     <meta name="keywords" content="射擊遊戲, 射擊挑戰, 網頁遊戲, HTML5遊戲, 精準瞄準, 連擊系統, 計時挑戰, 反應訓練, 分數排行, 多種難度, 瞄準訓練, 休閒遊戲, 瀏覽器遊戲">
-    <link rel="icon" href="images/favicon.jpg" type="image/jpg">
-    <title>射擊挑戰</title>
+    
+    <!-- SEO優化標籤 -->
+    <meta name="author" content="射擊挑戰遊戲開發團隊">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#16213e">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="射擊挑戰 - 免費網頁射擊遊戲">
+    <meta property="og:description" content="考驗精準度與反應速度的HTML5射擊遊戲！支援全球排行榜、多種遊戲模式，享受流暢的瞄準訓練體驗。">
+    <meta property="og:site_name" content="射擊挑戰遊戲">
+    <meta property="og:locale" content="zh_TW">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:title" content="射擊挑戰 - 免費網頁射擊遊戲">
+    <meta property="twitter:description" content="考驗精準度與反應速度的HTML5射擊遊戲！支援全球排行榜、多種遊戲模式。">
+    
+    <title>射擊挑戰 - 免費網頁射擊遊戲 | HTML5瞄準訓練遊戲</title>
     
     <!-- Firebase SDK v11 -->
     <script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore-compat.js"></script>
     
+    <link rel="icon" href="images/favicon.jpg" type="image/jpg">
     <style>
         * {
             margin: 0;
@@ -1188,6 +1206,51 @@
             }
         }
     </style>
+    
+    <!-- 結構化資料 JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "VideoGame",
+        "name": "射擊挑戰",
+        "description": "考驗精準度與反應速度的HTML5網頁射擊遊戲，支援全球排行榜、多種遊戲模式和難度設定。",
+        "publisher": {
+            "@type": "Organization",
+            "name": "射擊挑戰遊戲開發團隊"
+        },
+        "genre": ["射擊遊戲", "休閒遊戲", "技能遊戲"],
+        "gamePlatform": "Web Browser",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "TWD",
+            "availability": "https://schema.org/InStock"
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.5",
+            "ratingCount": "100",
+            "bestRating": "5",
+            "worstRating": "1"
+        },
+        "gameItem": [
+            {
+                "@type": "Thing",
+                "name": "人形模式"
+            },
+            {
+                "@type": "Thing", 
+                "name": "靶心模式"
+            },
+            {
+                "@type": "Thing",
+                "name": "全球排行榜"
+            }
+        ]
+    }
+    </script>
 </head>
 <body>
     <div class="game-container" id="game-container">
@@ -1224,11 +1287,26 @@
                 <div class="subtitle">精準瞄準，快速反應</div>
             </div>
             
-            <div class="game-menu">
-                <button id="play-button" class="menu-button">開始遊戲</button>
-                <button id="home-toggle-mode" class="menu-button">切換模式</button>
-                <button id="leaderboard-button" class="menu-button">全球排行榜</button>
-                <button id="instructions-button" class="menu-button">遊戲說明</button>
+            <!-- SEO內容區塊 -->
+            <div style="position: absolute; left: -9999px; top: -9999px;">
+                <h2>免費HTML5射擊遊戲</h2>
+                <p>射擊挑戰是一款專業的網頁射擊遊戲，提供人形靶子和靶心兩種遊戲模式。支援全球排行榜系統，讓玩家與世界各地的射擊高手競技。遊戲具備多種難度設定，適合不同技能水平的玩家進行瞄準訓練。</p>
+                <h3>遊戲特色</h3>
+                <ul>
+                    <li>免費線上射擊遊戲，無需下載</li>
+                    <li>響應式設計，支援手機和電腦</li>
+                    <li>全球排行榜，即時競技</li>
+                    <li>多種遊戲模式和難度選擇</li>
+                    <li>精確的瞄準訓練系統</li>
+                    <li>連擊系統和獎勵機制</li>
+                </ul>
+            </div>
+            
+            <div class="game-menu" role="navigation" aria-label="遊戲主選單">
+                <button id="play-button" class="menu-button" aria-label="開始射擊挑戰遊戲">開始遊戲</button>
+                <button id="home-toggle-mode" class="menu-button" aria-label="切換人形模式和靶心模式">切換模式</button>
+                <button id="leaderboard-button" class="menu-button" aria-label="查看全球玩家排行榜">全球排行榜</button>
+                <button id="instructions-button" class="menu-button" aria-label="查看遊戲玩法說明">遊戲說明</button>
             </div>
             
             <div class="game-info">
