@@ -620,13 +620,14 @@
         
         .move-button {
             flex: 1;
-            padding: 8px 5px;
-            font-size: 14px;
+            padding: 8px 3px;
+            font-size: 12px;
             background: rgba(128,128,128,0.3); 
             border: 1px solid rgba(255,255,255,0.2);
             color: rgba(255,255,255,0.6); 
             transition: all 0.3s ease;
             cursor: pointer;
+            white-space: nowrap;
         }
         
         .move-button.active {
@@ -1566,6 +1567,7 @@
                     <li>遊戲時間為60秒</li>
                     <li><strong>手動移動：</strong>射擊有效目標後，目標會隨機移動位置</li>
                     <li><strong>自動連續移動：</strong>靶子會定時自動移動，移動間隔根據難度調整（簡單：3-5秒，中等：2-4秒，困難：1-3秒）</li>
+                    <li><strong>持續移動：</strong>靶子會以固定間隔持續移動，移動更加頻繁（簡單：2秒，中等：1.5秒，困難：1秒）</li>
                     <li>每次射擊成功得1分</li>
                     <li>沒射到靶子會扣1分</li>
                     <li>連續命中可獲得連擊加成</li>
@@ -1575,15 +1577,15 @@
                 
                 <h2>難度設定</h2>
                 <ul>
-                    <li><strong>簡單：</strong>目標移動速度慢，尺寸較大（自動移動間隔：3-5秒）</li>
-                    <li><strong>中等：</strong>目標移動速度中等，標準尺寸（自動移動間隔：2-4秒）</li>
-                    <li><strong>困難：</strong>目標移動速度快，尺寸較小（自動移動間隔：1-3秒）</li>
+                    <li><strong>簡單：</strong>目標移動速度慢，尺寸較大（自動移動間隔：3-5秒，持續移動間隔：2秒）</li>
+                    <li><strong>中等：</strong>目標移動速度中等，標準尺寸（自動移動間隔：2-4秒，持續移動間隔：1.5秒）</li>
+                    <li><strong>困難：</strong>目標移動速度快，尺寸較小（自動移動間隔：1-3秒，持續移動間隔：1秒）</li>
                 </ul>
                 
                 <h2>遊戲設定</h2>
                 <ul>
                     <li><strong>移動效果：</strong>可選擇漸變移動或瞬間移動</li>
-                    <li><strong>移動觸發方式：</strong>可選擇手動移動（射擊命中後移動）或自動連續移動（定時自動移動）</li>
+                    <li><strong>移動觸發方式：</strong>可選擇手動移動（射擊命中後移動）、自動連續移動（定時自動移動）或持續移動（固定間隔持續移動）</li>
                     <li><strong>顏色設定：</strong>可自定義背景和標靶顏色</li>
                     <li><strong>音效設定：</strong>可調整音量或設為靜音</li>
                 </ul>
@@ -1659,6 +1661,7 @@
                 <div class="move-trigger-buttons">
                     <button id="manual-move" class="move-button active">手動移動</button>
                     <button id="auto-move" class="move-button">自動連續</button>
+                    <button id="continuous-move" class="move-button">持續移動</button>
                 </div>
             </div>
             <div class="setting-item">
@@ -1872,8 +1875,9 @@
         let bonusPoints = 0; 
         let lastHitTime = 0; 
         let moveType = "transition";
-        let moveTrigger = "manual"; // "manual" 手動移動, "auto" 自動連續移動
-        let movingInterval = null; // 持續移動計時器 
+        let moveTrigger = "manual"; // "manual" 手動移動, "auto" 自動連續移動, "continuous" 持續移動
+        let movingInterval = null; // 自動移動計時器
+        let continuousInterval = null; // 持續移動計時器 
  
 
         let bgColor = "#16213e"; 
@@ -2110,7 +2114,13 @@
             currentModeDisplay.textContent = gameMode === "human" ? "人形靶子" : gameMode === "target" ? "靶心" : "人形靶子";
 
             document.getElementById('current-move-type').textContent = moveType === 'transition' ? '漸變移動' : '瞬間移動';
-            document.getElementById('current-move-trigger').textContent = moveTrigger === 'manual' ? '手動移動' : '自動連續';
+            let moveTriggerText = '手動移動';
+            if (moveTrigger === 'auto') {
+                moveTriggerText = '自動連續';
+            } else if (moveTrigger === 'continuous') {
+                moveTriggerText = '持續移動';
+            }
+            document.getElementById('current-move-trigger').textContent = moveTriggerText;
 
             document.querySelectorAll('.bullet-hole, .particle, .floating-text').forEach(el => {
                 el.remove();
@@ -2203,9 +2213,14 @@
                     <div class="leg-right"></div>
                 `;
 
-                const gameDescription = moveTrigger === "auto" ? 
-                    '射擊人形靶子的<strong>頭部</strong>獲得分數，靶子會自動移動！一分鐘內看看你能獲得多少分！' :
-                    '射擊人形靶子的<strong>頭部</strong>獲得分數，一分鐘內看看你能獲得多少分！';
+                let gameDescription = '射擊人形靶子的<strong>頭部</strong>獲得分數，一分鐘內看看你能獲得多少分！';
+                if (moveTrigger === "auto") {
+                    const interval = getMovingModeIntervalRange();
+                    gameDescription = `射擊人形靶子的<strong>頭部</strong>獲得分數，靶子會自動移動(${interval})！一分鐘內看看你能獲得多少分！`;
+                } else if (moveTrigger === "continuous") {
+                    const interval = getContinuousModeIntervalRange();
+                    gameDescription = `射擊人形靶子的<strong>頭部</strong>獲得分數，靶子會持續移動(每${interval})！一分鐘內看看你能獲得多少分！`;
+                }
                 document.querySelector("#start-screen p").innerHTML = gameDescription;
 
                 setTimeout(() => {
@@ -2288,7 +2303,15 @@
 
                 newTarget.setAttribute('draggable', 'false');
 
-                document.querySelector("#start-screen p").innerHTML = '點擊靶心獲得分數，一分鐘內看看你能獲得多少分！';
+                let circleGameDescription = '點擊靶心獲得分數，一分鐘內看看你能獲得多少分！';
+                if (moveTrigger === "auto") {
+                    const interval = getMovingModeIntervalRange();
+                    circleGameDescription = `點擊靶心獲得分數，靶子會自動移動(${interval})！一分鐘內看看你能獲得多少分！`;
+                } else if (moveTrigger === "continuous") {
+                    const interval = getContinuousModeIntervalRange();
+                    circleGameDescription = `點擊靶心獲得分數，靶子會持續移動(每${interval})！一分鐘內看看你能獲得多少分！`;
+                }
+                document.querySelector("#start-screen p").innerHTML = circleGameDescription;
 
                 newTarget.style.background = `radial-gradient(circle, white 10%, ${targetColor} 10%, ${targetColor} 30%, white 30%, white 50%, ${adjustColor(targetColor, -20)} 50%, ${adjustColor(targetColor, -20)} 70%, white 70%)`;
 
@@ -2408,8 +2431,10 @@
 
                 placeTargetRandomly();
 
-                // 如果是自動連續移動模式，啟動持續移動
+                // 根據移動觸發方式啟動對應的移動模式
                 if (moveTrigger === 'auto') {
+                    startAutoMovement();
+                } else if (moveTrigger === 'continuous') {
                     startContinuousMovement();
                 }
 
@@ -2432,6 +2457,7 @@
             isPlaying = false;
             isPaused = false; 
             clearInterval(gameInterval);
+            stopContinuousMovement(); // 停止自動移動
             stopContinuousMovement(); // 停止持續移動
             getTarget().style.display = 'none';
 
@@ -2666,6 +2692,7 @@
             
             isPaused = true;
             clearInterval(gameInterval);
+            stopContinuousMovement(); // 暫停時停止自動移動
             stopContinuousMovement(); // 暫停時停止持續移動
 
             document.getElementById('pause-overlay').style.display = 'flex';
@@ -2682,8 +2709,10 @@
 
             document.getElementById('pause-game-button').textContent = '暫停';
 
-            // 如果是自動連續移動模式，恢復持續移動
+            // 根據移動觸發方式恢復對應的移動模式
             if (moveTrigger === 'auto') {
+                startAutoMovement();
+            } else if (moveTrigger === 'continuous') {
                 startContinuousMovement();
             }
 
@@ -3503,7 +3532,13 @@
 
             const moveTriggerDisplay = document.getElementById('current-move-trigger');
             if (moveTriggerDisplay) {
-                moveTriggerDisplay.textContent = trigger === 'manual' ? '手動移動' : '自動連續';
+                let displayText = '手動移動';
+                if (trigger === 'auto') {
+                    displayText = '自動連續';
+                } else if (trigger === 'continuous') {
+                    displayText = '持續移動';
+                }
+                moveTriggerDisplay.textContent = displayText;
             } else {
                 console.error('找不到移動觸發方式顯示元素');
             }
@@ -3512,9 +3547,13 @@
             if (isPlaying && !isPaused) {
                 if (trigger === 'auto') {
                     // 啟動自動移動
+                    startAutoMovement();
+                } else if (trigger === 'continuous') {
+                    // 啟動持續移動
                     startContinuousMovement();
                 } else {
-                    // 停止自動移動
+                    // 停止自動移動和持續移動
+                    stopContinuousMovement();
                     stopContinuousMovement();
                 }
             }
@@ -3768,8 +3807,9 @@
 
             const manualButton = document.getElementById('manual-move');
             const autoButton = document.getElementById('auto-move');
+            const continuousButton = document.getElementById('continuous-move');
             
-            if (manualButton && autoButton) {
+            if (manualButton && autoButton && continuousButton) {
 
                 manualButton.addEventListener('click', function() {
                     setMoveTrigger('manual');
@@ -3781,6 +3821,12 @@
                     setMoveTrigger('auto');
                     updateMoveTriggerButtons('auto');
                     console.log('設置為自動連續移動');
+                });
+                
+                continuousButton.addEventListener('click', function() {
+                    setMoveTrigger('continuous');
+                    updateMoveTriggerButtons('continuous');
+                    console.log('設置為持續移動');
                 });
             } else {
                 console.error('找不到移動觸發方式按鈕');
@@ -3817,7 +3863,7 @@
         }
 
         // 持續移動相關函數
-        function startContinuousMovement() {
+        function startAutoMovement() {
             if (movingInterval) {
                 clearInterval(movingInterval);
             }
@@ -3851,6 +3897,86 @@
             }
         }
 
+        // 持續移動模式函數 - 真正的持續不間斷移動
+        let continuousMovementActive = false;
+        let continuousMovementCount = 0;
+        let lastContinuousMove = 0;
+        
+        function startContinuousMovement() {
+            console.log('啟動持續移動模式');
+            
+            // 停止之前的計時器
+            stopContinuousMovement();
+            
+            // 標記持續移動為啟用狀態
+            continuousMovementActive = true;
+            continuousMovementCount = 0;
+            
+            // 優化的移動間隔 - 更短更頻繁
+            const moveIntervals = {
+                easy: 1000,   // 1秒
+                medium: 800,  // 0.8秒  
+                hard: 600     // 0.6秒
+            };
+            
+            const interval = moveIntervals[currentDifficulty];
+            console.log(`持續移動間隔設定為: ${interval}ms`);
+            
+            // 立即進行第一次移動
+            if (isPlaying && !isPaused && moveTrigger === 'continuous') {
+                placeTargetRandomly();
+                continuousMovementCount++;
+                lastContinuousMove = Date.now();
+            }
+            
+            // 設定持續移動計時器
+            continuousInterval = setInterval(() => {
+                if (continuousMovementActive && isPlaying && !isPaused && moveTrigger === 'continuous') {
+                    placeTargetRandomly();
+                    continuousMovementCount++;
+                    lastContinuousMove = Date.now();
+                    console.log(`持續移動次數: ${continuousMovementCount}`);
+                } else if (!continuousMovementActive || moveTrigger !== 'continuous') {
+                    // 如果不應該持續移動了，停止計時器
+                    console.log('停止持續移動 - 狀態變更');
+                    stopContinuousMovement();
+                }
+            }, interval);
+            
+            // 設定監控計時器 - 每3秒檢查一次計時器健康狀況
+            setTimeout(monitorContinuousMovement, 3000);
+        }
+        
+        function monitorContinuousMovement() {
+            if (!continuousMovementActive || moveTrigger !== 'continuous') {
+                return; // 不需要監控了
+            }
+            
+            const now = Date.now();
+            const timeSinceLastMove = now - lastContinuousMove;
+            
+            // 如果超過3秒沒有移動，重啟計時器
+            if (timeSinceLastMove > 3000) {
+                console.log('檢測到持續移動停滯，重啟計時器');
+                startContinuousMovement();
+            } else {
+                // 持續監控
+                setTimeout(monitorContinuousMovement, 3000);
+            }
+        }
+
+        function stopContinuousMovement() {
+            console.log('停止持續移動模式');
+            continuousMovementActive = false;
+            
+            if (continuousInterval) {
+                clearInterval(continuousInterval);
+                continuousInterval = null;
+            }
+            
+            console.log(`持續移動總次數: ${continuousMovementCount}`);
+        }
+
         function getMovingModeIntervalRange() {
             const moveIntervals = {
                 easy: "3-5秒",
@@ -3858,6 +3984,15 @@
                 hard: "1-3秒"
             };
             return moveIntervals[currentDifficulty] || "2-4秒";
+        }
+        
+        function getContinuousModeIntervalRange() {
+            const moveIntervals = {
+                easy: "1秒",
+                medium: "0.8秒", 
+                hard: "0.6秒"
+            };
+            return moveIntervals[currentDifficulty] || "0.8秒";
         }
     </script>
 </body>
