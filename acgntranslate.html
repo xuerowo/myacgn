@@ -2103,10 +2103,9 @@
                     if (this._loadingContent) return;
                     
                     try {
-                        // 網漫使用 sessionStorage，輕小說使用 localStorage
-                        const storage = this.currentContent === 'webtoons' ? sessionStorage : localStorage;
+                        // 統一使用 localStorage 永久保存
                         const scrollPositions = JSON.parse(
-                            storage.getItem(STORAGE_KEYS.SCROLL_POSITION)
+                            localStorage.getItem(STORAGE_KEYS.SCROLL_POSITION)
                         ) || {};
                         const key = this.currentContent === 'novels' ? this.novelKey : this.selectedItem.title;
                         const itemPositions = scrollPositions[key] || {};
@@ -2115,7 +2114,7 @@
                         if (currentPosition > 100) {
                             itemPositions[this.currentChapterNumber] = currentPosition;
                             scrollPositions[key] = itemPositions;
-                            storage.setItem(STORAGE_KEYS.SCROLL_POSITION, JSON.stringify(scrollPositions));
+                            localStorage.setItem(STORAGE_KEYS.SCROLL_POSITION, JSON.stringify(scrollPositions));
                         }
                     } catch {
                     }
@@ -2126,10 +2125,9 @@
                     }
                     
                     try {
-                        // 網漫使用 sessionStorage，輕小說使用 localStorage
-                        const storage = this.currentContent === 'webtoons' ? sessionStorage : localStorage;
+                        // 統一使用 localStorage 永久保存
                         const scrollPositions = JSON.parse(
-                            storage.getItem(STORAGE_KEYS.SCROLL_POSITION)
+                            localStorage.getItem(STORAGE_KEYS.SCROLL_POSITION)
                         ) || {};
                         const key = this.currentContent === 'novels' ? this.novelKey : this.selectedItem.title;
                         const itemPositions = scrollPositions[key] || {};
