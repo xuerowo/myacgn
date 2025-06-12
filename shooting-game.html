@@ -7,6 +7,11 @@
     <meta name="keywords" content="射擊遊戲, 射擊挑戰, 網頁遊戲, HTML5遊戲, 精準瞄準, 連擊系統, 計時挑戰, 反應訓練, 分數排行, 多種難度, 瞄準訓練, 休閒遊戲, 瀏覽器遊戲">
     <link rel="icon" href="images/favicon.jpg" type="image/jpg">
     <title>射擊挑戰</title>
+    
+    <!-- Firebase SDK v11 -->
+    <script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore-compat.js"></script>
+    
     <style>
         * {
             margin: 0;
@@ -51,16 +56,18 @@
             color: white;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: center;
-            padding: 40px 20px;
+            padding: 20px 20px;
             z-index: 20;
             transition: all 0.5s ease;
+            overflow-y: auto;
+            gap: 15px;
         }
         
         .game-title {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 5px;
         }
         
         .game-title h1 {
@@ -134,10 +141,61 @@
             font-weight: bold;
         }
         
+        .player-name-input {
+            margin: 8px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .player-name-input label {
+            font-size: 14px;
+            color: #e2e2e2;
+        }
+        
+        .player-name-input input {
+            padding: 8px 12px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 5px;
+            background: rgba(0,0,0,0.3);
+            color: white;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .player-name-input input:focus {
+            outline: none;
+            border-color: #4cc9f0;
+            box-shadow: 0 0 10px rgba(76, 201, 240, 0.3);
+        }
+        
+        .player-name-input input::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+        
         .footer {
             font-size: 14px;
             color: rgba(255,255,255,0.6);
-            margin-top: 20px;
+            margin-top: 10px;
+        }
+
+        /* 首頁滾動條樣式 */
+        .home-screen::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .home-screen::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+        }
+        
+        .home-screen::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+        }
+        
+        .home-screen::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.4);
         }
 
         .instructions-screen {
@@ -751,275 +809,179 @@
             cursor: crosshair;
         }
 
-        .history-toggle {
+        .leaderboard-screen {
             position: absolute;
-            top: 25px;
-            right: 130px; 
-            background: linear-gradient(135deg, #f72585, #b5179e);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #16213e, #0f3460);
             color: white;
-            border: none;
-            border-radius: 10px;
-            width: auto;
-            height: auto;
-            padding: 8px 15px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            z-index: 30;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
-            transition: all 0.3s ease;
-            display: flex;
+            display: none;
+            flex-direction: column;
             align-items: center;
-            gap: 5px;
-        }
-        
-        .history-toggle::before {
-            content: "📖";
-            font-size: 18px;
-        }
-        
-        .history-toggle:hover {
-            background: linear-gradient(135deg, #f94498, #c429b2);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 12px rgba(0,0,0,0.4);
-        }
-
-        .history-panel {
-            position: fixed;
-            top: 60px;
-            right: -350px;
-            width: 350px;
-            background: linear-gradient(135deg, rgba(22, 33, 62, 0.95), rgba(15, 52, 96, 0.95));
             padding: 20px;
-            border-radius: 10px;
-            z-index: 25;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            transition: right 0.4s ease;
-            border: 1px solid rgba(255,255,255,0.1);
-            max-height: 80vh;
+            z-index: 20;
             overflow-y: auto;
-            scrollbar-width: thin; 
-            scrollbar-color: rgba(255,255,255,0.3) rgba(0,0,0,0.2); 
-        }
-
-        .history-panel::-webkit-scrollbar {
-            width: 6px;
         }
         
-        .history-panel::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.2);
-            border-radius: 10px;
+        .leaderboard-screen h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #fff;
+            text-shadow: 0 0 15px rgba(80, 140, 255, 0.7);
         }
         
-        .history-panel::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.3);
-            border-radius: 10px;
+        .leaderboard-filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
         
-        .history-panel::-webkit-scrollbar-thumb:hover {
-            background: rgba(255,255,255,0.4);
+        .filter-button {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
         }
         
-        .history-panel h2 {
-            color: #f72585;
-            margin-bottom: 15px;
-            text-align: center;
-            font-size: 22px;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-            padding-bottom: 10px;
-        }
-        
-        .history-panel.show-history {
-            right: 10px;
-        }
-        
-        .history-records {
-            max-height: calc(80vh - 100px);
-            overflow-y: auto;
-            padding-right: 5px;
-        }
-        
-        .history-records::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        .history-records::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.1);
-            border-radius: 10px;
-        }
-        
-        .history-records::-webkit-scrollbar-thumb {
+        .filter-button:hover {
             background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+        
+        .filter-button.active {
+            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+            border-color: #4361ee;
+            box-shadow: 0 0 10px rgba(67, 97, 238, 0.5);
+        }
+        
+        .leaderboard-content {
+            width: 100%;
+            max-width: 600px;
+            background: rgba(0,0,0,0.3);
             border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            max-height: 60vh;
+            overflow-y: auto;
         }
         
-        .history-records::-webkit-scrollbar-thumb:hover {
-            background: rgba(255,255,255,0.3);
-        }
-        
-        .record-item {
+        .leaderboard-item {
             display: flex;
             align-items: center;
-            padding: 10px;
+            padding: 12px;
             margin-bottom: 10px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            background: rgba(0,0,0,0.2);
-            border-radius: 5px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            border-left: 4px solid #4cc9f0;
+            transition: all 0.3s ease;
         }
         
-        .record-item:last-child {
-            margin-bottom: 0;
+        .leaderboard-item:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateX(5px);
         }
         
-        .record-info {
-            flex: 1;
-        }
-        
-        .record-date {
-            font-size: 12px;
-            color: #ccc;
-            margin-bottom: 5px;
-        }
-        
-        .record-mode {
-            font-size: 14px;
-            margin-bottom: 3px;
-        }
-        
-        .record-score {
-            font-weight: bold;
-            color: #f72585;
-            font-size: 18px;
-        }
-        
-        .record-accuracy {
-            font-size: 14px;
-            color: #4cc9f0;
-        }
-
-        .record-rank {
-            background-color: #f72585;
+        .rank-number {
+            background: linear-gradient(135deg, #f72585, #7209b7);
             color: white;
-            width: 30px;
-            height: 30px;
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             font-weight: bold;
-            margin-right: 10px;
+            margin-right: 15px;
             flex-shrink: 0;
         }
         
-        .top-rank {
-            background: linear-gradient(135deg, #f72585, #7209b7);
-            box-shadow: 0 0 10px rgba(247, 37, 133, 0.5);
+        .rank-number.top-rank {
+            background: linear-gradient(135deg, #ffd60a, #ff8500);
+            box-shadow: 0 0 15px rgba(255, 214, 10, 0.5);
         }
         
-        .no-records {
-            text-align: center;
-            color: rgba(255,255,255,0.5);
-            padding: 20px 0;
-            font-style: italic;
-        }
-        
-        #close-history {
-            width: 100%;
-            padding: 10px;
-            margin-top: 20px;
-            background: linear-gradient(135deg, #f72585, #b5179e);
-            border: none;
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-        
-        #close-history:hover {
-            background: linear-gradient(135deg, #f94498, #c429b2);
-            transform: translateY(-2px);
-        }
-
-        .history-section {
-            width: 80%;
-            max-width: 600px;
-            background-color: rgba(0,0,0,0.3);
-            border-radius: 10px;
-            padding: 15px;
-            margin: 20px 0;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        
-        .history-section h3 {
-            color: #4cc9f0;
-            margin-bottom: 10px;
-            text-align: center;
-            font-size: 20px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-        }
-        
-        .history-records {
-            max-height: 180px;
-            overflow-y: auto;
-            padding-right: 5px;
-        }
-        
-        .history-records::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        .history-records::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.1);
-            border-radius: 10px;
-        }
-        
-        .history-records::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.2);
-            border-radius: 10px;
-        }
-        
-        .history-records::-webkit-scrollbar-thumb:hover {
-            background: rgba(255,255,255,0.3);
-        }
-        
-        .record-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            font-size: 14px;
-        }
-        
-        .record-item:last-child {
-            border-bottom: none;
-        }
-        
-        .record-date, .record-mode {
+        .player-info {
             flex: 1;
         }
         
-        .record-score {
+        .player-name {
             font-weight: bold;
-            color: #4cc9f0;
+            font-size: 16px;
+            color: #fff;
+            margin-bottom: 4px;
         }
         
-        .no-records {
+        .game-details {
+            font-size: 12px;
+            color: rgba(255,255,255,0.7);
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .score-display {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4cc9f0;
+            margin-left: 10px;
+        }
+        
+        .loading-message, .no-records {
             text-align: center;
-            color: rgba(255,255,255,0.5);
-            padding: 20px 0;
+            color: rgba(255,255,255,0.6);
+            padding: 40px 20px;
             font-style: italic;
+        }
+        
+        .upload-status {
+            background: rgba(0,0,0,0.5);
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .upload-status.success {
+            background: rgba(76, 201, 240, 0.2);
+            border: 1px solid #4cc9f0;
+        }
+        
+        .upload-status.error {
+            background: rgba(247, 37, 133, 0.2);
+            border: 1px solid #f72585;
+        }
+        
+        .close-button {
+            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .close-button:hover {
+            background: linear-gradient(135deg, #4895ef, #3f37c9);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
         html, body, div, span, h1, h2, h3, p, a, button, input, label,
         .game-container, .target, .head, .body, .home-screen, .start-screen,
         .end-screen, .instructions-screen, .info-panel, .settings-panel,
-        .history-panel, .game-title, .subtitle, .game-menu, .game-info,
-        .footer, .settings-toggle, .history-toggle, .menu-button, .combo-display,
-        .record-item, .floating-text, .countdown {
+        .game-title, .subtitle, .game-menu, .game-info,
+        .footer, .settings-toggle, .menu-button, .combo-display,
+        .floating-text, .countdown {
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
@@ -1152,12 +1114,18 @@
         }
 
         @media screen and (max-width: 768px) {
+            .home-screen {
+                padding: 15px 15px;
+                gap: 10px;
+            }
+            
             .game-title h1 {
-                font-size: 40px;
+                font-size: 36px;
+                margin-bottom: 5px;
             }
             
             .subtitle {
-                font-size: 18px;
+                font-size: 16px;
             }
             
             .game-menu {
@@ -1168,6 +1136,16 @@
             .game-info {
                 width: 80%;
                 max-width: 300px;
+                padding: 10px;
+            }
+            
+            .player-name-input {
+                margin: 5px 0;
+            }
+            
+            .player-name-input input {
+                padding: 6px 10px;
+                font-size: 13px;
             }
             
             .settings-panel {
@@ -1177,16 +1155,36 @@
         }
 
         @media screen and (max-height: 600px) {
+            .home-screen {
+                padding: 10px 20px;
+                gap: 8px;
+            }
+            
+            .game-title h1 {
+                font-size: 32px;
+                margin-bottom: 3px;
+            }
+            
+            .game-title {
+                margin-bottom: 0px;
+            }
+            
             .game-menu {
                 gap: 8px;
             }
             
-            .game-title {
-                margin-bottom: 10px;
+            .menu-button {
+                padding: 10px 15px;
+                font-size: 16px;
             }
             
-            .menu-button {
+            .game-info {
                 padding: 10px;
+            }
+            
+            .footer {
+                margin-top: 5px;
+                font-size: 12px;
             }
         }
     </style>
@@ -1220,7 +1218,6 @@
             
             <button id="settings-button" class="settings-toggle">設定</button>
 
-            <button id="history-button" class="history-toggle">歷史紀錄</button>
             
             <div class="game-title">
                 <h1>射擊挑戰</h1>
@@ -1230,10 +1227,15 @@
             <div class="game-menu">
                 <button id="play-button" class="menu-button">開始遊戲</button>
                 <button id="home-toggle-mode" class="menu-button">切換模式</button>
+                <button id="leaderboard-button" class="menu-button">全球排行榜</button>
                 <button id="instructions-button" class="menu-button">遊戲說明</button>
             </div>
             
             <div class="game-info">
+                <div class="player-name-input">
+                    <label for="player-name">玩家名稱:</label>
+                    <input type="text" id="player-name" placeholder="請輸入您的名稱" maxlength="20">
+                </div>
                 <div class="mode-display">
                     當前模式: <span id="current-mode">人形靶子</span>
                 </div>
@@ -1294,8 +1296,8 @@
                 <h2>其他功能</h2>
                 <ul>
                     <li><strong>暫停功能：</strong>遊戲中可隨時暫停</li>
-                    <li><strong>歷史紀錄：</strong>保存遊戲分數、連擊和命中率等數據</li>
                     <li><strong>最高分數：</strong>自動記錄最高分</li>
+                    <li><strong>全球排行榜：</strong>與全世界玩家比拼分數</li>
                 </ul>
             </div>
             <button id="back-from-instructions">返回首頁</button>
@@ -1402,14 +1404,6 @@
             <button id="close-settings">關閉</button>
         </div>
 
-        <div class="history-panel" id="history-panel">
-            <h2>遊戲歷史紀錄</h2>
-            <div class="history-records" id="history-records">
-                
-                <div class="no-records">尚無遊戲紀錄</div>
-            </div>
-            <button id="close-history">關閉</button>
-        </div>
 
         <div class="pause-overlay" id="pause-overlay">
             <h2>遊戲暫停</h2>
@@ -1417,6 +1411,27 @@
                 <button id="resume-button">繼續遊戲</button>
                 <button id="pause-end-game">結束遊戲</button>
             </div>
+        </div>
+
+        <div class="leaderboard-screen" id="leaderboard-screen">
+            <h1>🏆 全球排行榜</h1>
+            
+            <div class="leaderboard-filters">
+                <button id="filter-all" class="filter-button active">全部</button>
+                <button id="filter-human" class="filter-button">人形模式</button>
+                <button id="filter-circle" class="filter-button">靶心模式</button>
+                <button id="filter-today" class="filter-button">今日</button>
+            </div>
+            
+            <div class="leaderboard-content" id="leaderboard-content">
+                <div class="loading-message">載入中...</div>
+            </div>
+            
+            <div class="upload-status" id="upload-status" style="display: none;">
+                <span id="upload-message"></span>
+            </div>
+            
+            <button id="close-leaderboard" class="close-button">返回首頁</button>
         </div>
 
         <audio id="sound-shot" src="sounds/shot.mp3" preload="auto"></audio>
@@ -1429,6 +1444,31 @@
     </div>
     
     <script>
+        // Firebase 配置
+        const firebaseConfig = {
+            apiKey: "AIzaSyB8K49Pme6uCR3WKMjbmXXT8YDbJTJdkoc",
+            authDomain: "shooting-game-leaderboard.firebaseapp.com",
+            projectId: "shooting-game-leaderboard",
+            storageBucket: "shooting-game-leaderboard.firebasestorage.app",
+            messagingSenderId: "454346518154",
+            appId: "1:454346518154:web:b0610b87774425f57cc773",
+            measurementId: "G-RDZDLCPZCL"
+        };
+
+        // 初始化 Firebase
+        let db = null;
+        let isFirebaseEnabled = false;
+        
+        try {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.firestore();
+            isFirebaseEnabled = true;
+            console.log('Firebase 初始化成功');
+            console.log('排行榜功能已啟用');
+        } catch (error) {
+            console.error('Firebase 初始化失敗:', error);
+            console.log('排行榜功能暫時無法使用');
+        }
 
         const homeScreen = document.getElementById('home-screen');
         const startScreen = document.getElementById('start-screen');
@@ -1454,6 +1494,15 @@
         const accuracyDisplay = document.getElementById('accuracy');
         const bonusPointsDisplay = document.getElementById('bonus-points');
         const crosshair = document.getElementById('crosshair');
+        
+        // 排行榜相關元素
+        const leaderboardScreen = document.getElementById('leaderboard-screen');
+        const leaderboardButton = document.getElementById('leaderboard-button');
+        const closeLeaderboardButton = document.getElementById('close-leaderboard');
+        const leaderboardContent = document.getElementById('leaderboard-content');
+        const uploadStatus = document.getElementById('upload-status');
+        const uploadMessage = document.getElementById('upload-message');
+        const playerNameInput = document.getElementById('player-name');
 
         function getTarget() {
             return document.getElementById('target');
@@ -1475,7 +1524,7 @@
         let bonusPoints = 0; 
         let lastHitTime = 0; 
         let moveType = "transition"; 
-        let gameHistory = []; 
+ 
 
         let bgColor = "#16213e"; 
         let targetColor = "#4d96ff"; 
@@ -1749,7 +1798,6 @@
             getTarget().style.display = 'none';
 
             document.getElementById('settings-panel').classList.remove('show-settings');
-            document.getElementById('history-panel').classList.remove('show-history');
 
             startScreen.classList.add('slide-in');
         }
@@ -1762,7 +1810,6 @@
             getTarget().style.display = 'none';
 
             document.getElementById('settings-panel').classList.remove('show-settings');
-            document.getElementById('history-panel').classList.remove('show-history');
 
             instructionsScreen.classList.add('fade-in');
         }
@@ -1975,7 +2022,6 @@
             if (isPlaying) return;
 
             document.getElementById('settings-panel').classList.remove('show-settings');
-            document.getElementById('history-panel').classList.remove('show-history');
             
             initGame();
             homeScreen.style.display = 'none';
@@ -2044,12 +2090,14 @@
             }
 
             addGameRecord();
+            
+            // 上傳分數到排行榜
+            uploadScoreToLeaderboard();
 
             timeLeftDisplay.classList.remove('time-warning');
         }
 
         function addGameRecord() {
-
             const newRecord = {
                 date: new Date().toLocaleString(),
                 score: score,
@@ -2057,97 +2105,186 @@
                 moveType: moveType === "transition" ? "漸變移動" : "瞬間移動",
                 accuracy: shotsFired > 0 ? Math.round((shotsHit / shotsFired) * 100) : 0
             };
-
-            gameHistory.unshift(newRecord);
-
-            if (gameHistory.length > 10) {
-                gameHistory = gameHistory.slice(0, 10);
-            }
-
-            saveGameHistory();
-
-            updateHistoryDisplay();
         }
 
-        function saveGameHistory() {
+        // 排行榜功能
+        async function uploadScoreToLeaderboard() {
+            if (!isFirebaseEnabled) {
+                console.log('Firebase 未啟用，跳過分數上傳');
+                return;
+            }
+
+            const playerName = playerNameInput.value.trim();
+            if (!playerName) {
+                showUploadStatus('請輸入玩家名稱才能上傳分數', 'error');
+                return;
+            }
+
+            if (playerName.length > 20) {
+                showUploadStatus('玩家名稱不能超過20個字符', 'error');
+                return;
+            }
+
+            // 防作弊檢查
+            if (score > 1000) {
+                console.warn('分數異常高，可能存在作弊行為');
+            }
+
+            const gameRecord = {
+                playerName: playerName,
+                score: score,
+                gameMode: gameMode,
+                difficulty: currentDifficulty,
+                moveType: moveType,
+                accuracy: shotsFired > 0 ? Math.round((shotsHit / shotsFired) * 100) : 0,
+                maxCombo: maxCombo,
+                shotsHit: shotsHit,
+                shotsFired: shotsFired,
+                bonusPoints: bonusPoints,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                playTime: 60 - timeLeft,
+                ipHash: await getSimpleHash(getClientIP())
+            };
+
             try {
-                localStorage.setItem('shootingGameHistory', JSON.stringify(gameHistory));
-            } catch (e) {
-                console.error('保存遊戲歷史失敗:', e);
+                showUploadStatus('正在上傳分數...', 'info');
+                
+                await db.collection('leaderboard').add(gameRecord);
+                
+                showUploadStatus('分數上傳成功！', 'success');
+                console.log('分數上傳成功');
+                
+                // 保存玩家名稱
+                localStorage.setItem('shootingGamePlayerName', playerName);
+                
+            } catch (error) {
+                console.error('分數上傳失敗:', error);
+                showUploadStatus('分數上傳失敗，請檢查網路連線', 'error');
             }
         }
 
-        function loadGameHistory() {
-            try {
-                const savedHistory = localStorage.getItem('shootingGameHistory');
-                if (savedHistory) {
-                    gameHistory = JSON.parse(savedHistory);
-                    updateHistoryDisplay();
-                }
-            } catch (e) {
-                console.error('載入遊戲歷史失敗:', e);
-                gameHistory = [];
-            }
-        }
-
-        function updateHistoryDisplay() {
-            const historyRecords = document.getElementById('history-records');
+        function showUploadStatus(message, type) {
+            uploadMessage.textContent = message;
+            uploadStatus.className = `upload-status ${type}`;
+            uploadStatus.style.display = 'block';
             
-            if (!historyRecords) {
-                console.error('找不到history-records元素');
-                return;
-            }
-
-            historyRecords.innerHTML = '';
-
-            if (gameHistory.length === 0) {
-                historyRecords.innerHTML = '<div class="no-records">尚無遊戲紀錄</div>';
-                return;
-            }
-
-            const sortedHistory = [...gameHistory].sort((a, b) => b.score - a.score);
-
-            document.querySelector('.history-panel h2').textContent = '遊戲排行榜';
-
-            sortedHistory.forEach((record, index) => {
-                const recordItem = document.createElement('div');
-                recordItem.className = 'record-item';
-
-                const rankSpan = document.createElement('div');
-                rankSpan.className = 'record-rank';
-                if (index < 3) rankSpan.classList.add('top-rank'); 
-                rankSpan.textContent = index + 1;
-
-                const infoDiv = document.createElement('div');
-                infoDiv.className = 'record-info';
-                
-                const dateDiv = document.createElement('div');
-                dateDiv.className = 'record-date';
-                dateDiv.textContent = record.date;
-                
-                const modeDiv = document.createElement('div');
-                modeDiv.className = 'record-mode';
-                modeDiv.textContent = `${record.mode} / ${record.moveType}`;
-                
-                const scoreDiv = document.createElement('div');
-                scoreDiv.className = 'record-score';
-                scoreDiv.textContent = `分數: ${record.score}`;
-                
-                const accuracyDiv = document.createElement('div');
-                accuracyDiv.className = 'record-accuracy';
-                accuracyDiv.textContent = `命中率: ${record.accuracy}%`;
-
-                infoDiv.appendChild(dateDiv);
-                infoDiv.appendChild(modeDiv);
-                infoDiv.appendChild(scoreDiv);
-                infoDiv.appendChild(accuracyDiv);
-                
-                recordItem.appendChild(rankSpan);
-                recordItem.appendChild(infoDiv);
-                
-                historyRecords.appendChild(recordItem);
-            });
+            setTimeout(() => {
+                uploadStatus.style.display = 'none';
+            }, 3000);
         }
+
+        async function loadLeaderboard(filter = 'all') {
+            if (!isFirebaseEnabled) {
+                leaderboardContent.innerHTML = '<div class="no-records">排行榜功能需要 Firebase 配置</div>';
+                return;
+            }
+
+            try {
+                leaderboardContent.innerHTML = '<div class="loading-message">載入中...</div>';
+                
+                let query = db.collection('leaderboard');
+                
+                // 根據篩選條件調整查詢
+                if (filter === 'human') {
+                    query = query.where('gameMode', '==', 'human');
+                } else if (filter === 'circle') {
+                    query = query.where('gameMode', '==', 'target');
+                } else if (filter === 'today') {
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    query = query.where('timestamp', '>=', today);
+                }
+                
+                // 按分數降序排列，限制50條記錄
+                query = query.orderBy('score', 'desc').limit(50);
+                
+                const snapshot = await query.get();
+                const records = [];
+                
+                snapshot.forEach(doc => {
+                    records.push({ id: doc.id, ...doc.data() });
+                });
+                
+                displayLeaderboard(records);
+                
+            } catch (error) {
+                console.error('載入排行榜失敗:', error);
+                leaderboardContent.innerHTML = '<div class="no-records">載入排行榜失敗，請稍後再試</div>';
+            }
+        }
+
+        function displayLeaderboard(records) {
+            if (records.length === 0) {
+                leaderboardContent.innerHTML = '<div class="no-records">暫無排行記錄</div>';
+                return;
+            }
+
+            let html = '';
+            records.forEach((record, index) => {
+                const rank = index + 1;
+                const isTopRank = rank <= 3;
+                const date = record.timestamp ? record.timestamp.toDate().toLocaleDateString() : '未知';
+                
+                html += `
+                    <div class="leaderboard-item">
+                        <div class="rank-number ${isTopRank ? 'top-rank' : ''}">${rank}</div>
+                        <div class="player-info">
+                            <div class="player-name">${escapeHtml(record.playerName)}</div>
+                            <div class="game-details">
+                                <span>模式: ${record.gameMode === 'human' ? '人形' : '靶心'}</span>
+                                <span>難度: ${getDifficultyText(record.difficulty)}</span>
+                                <span>命中率: ${record.accuracy}%</span>
+                                <span>日期: ${date}</span>
+                            </div>
+                        </div>
+                        <div class="score-display">${record.score}</div>
+                    </div>
+                `;
+            });
+            
+            leaderboardContent.innerHTML = html;
+        }
+
+        function getDifficultyText(difficulty) {
+            const diffMap = { easy: '簡單', medium: '中等', hard: '困難' };
+            return diffMap[difficulty] || difficulty;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // 簡單的IP獲取（用於防作弊）
+        function getClientIP() {
+            // 簡化版本，實際使用中可以使用第三方服務
+            return 'unknown';
+        }
+
+        // 簡單的雜湊函數
+        async function getSimpleHash(str) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(str + new Date().toDateString());
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('').substring(0, 8);
+        }
+
+        // 載入玩家名稱
+        function loadPlayerName() {
+            try {
+                const savedName = localStorage.getItem('shootingGamePlayerName');
+                if (savedName) {
+                    playerNameInput.value = savedName;
+                }
+            } catch (error) {
+                console.error('載入玩家名稱失敗:', error);
+            }
+        }
+
+
+
 
         function pauseGame() {
             if (!isPlaying || isPaused) return;
@@ -2195,18 +2332,6 @@
 
         document.getElementById('pause-end-game').addEventListener('click', endGame);
 
-        document.getElementById('history-button').addEventListener('click', function() {
-
-            document.getElementById('settings-panel').classList.remove('show-settings');
-
-            document.getElementById('history-panel').classList.toggle('show-history');
-
-            updateHistoryDisplay();
-        });
-
-        document.getElementById('close-history').addEventListener('click', function() {
-            document.getElementById('history-panel').classList.remove('show-history');
-        });
 
         document.getElementById('settings-button').addEventListener('click', function() {
             const settingsPanel = document.getElementById('settings-panel');
@@ -2408,8 +2533,6 @@
                 e.target.closest('.info-panel') || 
                 e.target.closest('.settings-panel') ||
                 e.target.closest('.settings-toggle') ||
-                e.target.closest('.history-toggle') ||
-                e.target.closest('.history-panel') ||
                 e.target.closest('.pause-overlay') ||
                 e.target.closest('.combo-display')) return;
 
@@ -2437,8 +2560,6 @@
                 e.target.closest('.info-panel') || 
                 e.target.closest('.settings-panel') ||
                 e.target.closest('.settings-toggle') ||
-                e.target.closest('.history-toggle') ||
-                e.target.closest('.history-panel') ||
                 e.target.closest('.pause-overlay') ||
                 e.target.closest('.combo-display')) return;
 
@@ -2636,6 +2757,46 @@
                     gameContainer.classList.remove('screen-shake');
                 }, 300);
             }
+        }
+
+        // 排行榜事件監聽器
+        leaderboardButton.addEventListener('click', function() {
+            homeScreen.style.display = 'none';
+            leaderboardScreen.style.display = 'flex';
+            loadLeaderboard('all');
+        });
+
+        closeLeaderboardButton.addEventListener('click', function() {
+            leaderboardScreen.style.display = 'none';
+            homeScreen.style.display = 'flex';
+        });
+
+        // 排行榜篩選按鈕
+        document.getElementById('filter-all').addEventListener('click', function() {
+            setActiveFilter('filter-all');
+            loadLeaderboard('all');
+        });
+
+        document.getElementById('filter-human').addEventListener('click', function() {
+            setActiveFilter('filter-human');
+            loadLeaderboard('human');
+        });
+
+        document.getElementById('filter-circle').addEventListener('click', function() {
+            setActiveFilter('filter-circle');
+            loadLeaderboard('circle');
+        });
+
+        document.getElementById('filter-today').addEventListener('click', function() {
+            setActiveFilter('filter-today');
+            loadLeaderboard('today');
+        });
+
+        function setActiveFilter(activeId) {
+            document.querySelectorAll('.filter-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(activeId).classList.add('active');
         }
 
         playButton.addEventListener('click', showStartScreen);
@@ -2908,10 +3069,12 @@
             }, 500); 
 
             loadColorSettings();
+            
+            // 載入玩家名稱
+            loadPlayerName();
 
             initGame();
 
-            loadGameHistory();
 
             setupColorOptions();
 
