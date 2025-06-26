@@ -466,7 +466,6 @@
             content: none;
         }
 
-        /* 詳情頁樣式 - 統一使用 novels_readder.html 的設計 */
         .detail-page {
             background: var(--bg);
             border-radius: var(--br);
@@ -564,7 +563,6 @@
             color: var(--text-muted);
         }
 
-        /* 閱讀器樣式 - 統一使用 novels_readder.html 的設計 */
         .reader-container {
             width: var(--content-width);
             margin: 4rem auto 5rem;
@@ -593,7 +591,6 @@
             border-radius: var(--br);
         }
 
-        /* 網漫閱讀器特殊樣式 */
         .webtoon-reader {
             width: 100%;
             max-width: 800px;
@@ -693,7 +690,6 @@
             color: var(--primary);
         }
 
-        /* 模態框樣式 - 統一使用 novels_readder.html 的設計 */
         .modal {
             position: fixed;
             bottom: 60px;
@@ -723,6 +719,10 @@
             border-bottom: 1px solid var(--border);
             font-weight: bold;
             text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
         }
 
         .modal-group {
@@ -756,6 +756,52 @@
         [data-theme="dark"] .modal .chapter-item.current {
             background: #1976d2;
             color: #fff;
+        }
+
+        .chapter-list-container {
+            margin-top: 2rem;
+        }
+        
+        .chapter-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--sp);
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .chapter-list-header h3 {
+            margin: 0;
+            color: var(--text);
+            font-size: 1.3rem;
+        }
+        
+        .chapter-sort-btn {
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: var(--br);
+            padding: 0.4rem;
+            cursor: pointer;
+            color: var(--text);
+            transition: var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .chapter-sort-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+        
+        .modal-sort-btn {
+            position: absolute;
+            right: 0;
+            padding: 0.3rem;
+            font-size: 0.9rem;
         }
 
         .lightbox {
@@ -1004,6 +1050,18 @@
             .sort-option-text {
                 font-size: 0.95rem;
             }
+            
+            .chapter-list-header h3 {
+                font-size: clamp(1rem, 4vw, 1.3rem);
+            }
+            
+            .chapter-sort-btn {
+                padding: clamp(0.25rem, 1vw, 0.4rem);
+            }
+            
+            .modal-sort-btn {
+                padding: clamp(0.2rem, 1vw, 0.3rem);
+            }
         }
 
         .nav-container::-webkit-scrollbar {
@@ -1150,7 +1208,7 @@
         </nav>
 
         <div class="main-content">
-        <!-- 列表頁 -->
+        
         <main v-show="currentPage === 'list'" class="container">
             <section class="content-grid">
                 <template v-if="currentContent === 'webtoons'">
@@ -1191,7 +1249,6 @@
             </section>
         </main>
 
-        <!-- 詳情頁 -->
         <div v-show="currentPage === 'detail'" class="container">
             <div class="detail-page">
                 <div class="detail-info">
@@ -1229,23 +1286,48 @@
                     </div>
                 </div>
                 
-                <div class="chapter-list">
-                    <div v-for="chapter in chaptersWithDates" 
-                         :key="chapter.number"
-                         class="chapter-item"
-                         :class="{ read: isChapterRead(chapter.number) }"
-                         @click="goToChapter(chapter.number)">
-                        <div class="chapter-title">{{ chapter.title }}</div>
-                        <div class="chapter-date">{{ formatDate(chapter.date) }}</div>
+                <div class="chapter-list-container">
+                    <div class="chapter-list-header">
+                        <h3>章節列表</h3>
+                        <button class="chapter-sort-btn" 
+                                @click="toggleChapterSort" 
+                                :title="chapterSortOrder === 'asc' ? '舊章節在前（升序）' : '新章節在前（降序）'">
+                            <svg v-if="chapterSortOrder === 'desc'" 
+                                 width="16" height="16" 
+                                 viewBox="0 0 24 24" 
+                                 fill="none" 
+                                 stroke="currentColor" 
+                                 stroke-width="2">
+                                <path d="M7 14l5-5 5 5"/>
+                                <path d="M12 19V9"/>
+                            </svg>
+                            <svg v-else 
+                                 width="16" height="16" 
+                                 viewBox="0 0 24 24" 
+                                 fill="none" 
+                                 stroke="currentColor" 
+                                 stroke-width="2">
+                                <path d="M17 10l-5 5-5-5"/>
+                                <path d="M12 5v10"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="chapter-list">
+                        <div v-for="chapter in chaptersWithDates" 
+                             :key="chapter.number"
+                             class="chapter-item"
+                             :class="{ read: isChapterRead(chapter.number) }"
+                             @click="goToChapter(chapter.number)">
+                            <div class="chapter-title">{{ chapter.title }}</div>
+                            <div class="chapter-date">{{ formatDate(chapter.date) }}</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-
-        <!-- 閱讀器頁面 -->
         <div v-show="currentPage === 'reader'">
-            <!-- 頂部導航欄 -->
+            
             <nav class="navbar fixed-overlay" :class="{ hidden: hideControls }">
                 <div class="nav-container">
                     <button class="btn btn-transparent" @click="goBackToDetail">
@@ -1263,7 +1345,6 @@
                 </div>
             </nav>
 
-            <!-- 輕小說閱讀器 -->
             <div v-if="currentContent === 'novels'" class="reader-container">
                 <div v-if="isLoading" style="text-align: center; padding: 2rem;">
                     載入中...
@@ -1280,7 +1361,6 @@
                 </div>
             </div>
 
-            <!-- 網漫閱讀器 -->
             <div v-else-if="currentContent === 'webtoons'">
                 <div v-if="isLoading" style="text-align: center; padding: 2rem; color: var(--text);">
                     載入中...
@@ -1304,7 +1384,6 @@
                 </div>
             </div>
 
-            <!-- 底部控制欄 -->
             <div class="reader-controls" :class="{ hidden: hideControls }">
                 <button class="btn btn-primary" 
                         @click="navigateChapter('prev')"
@@ -1329,10 +1408,32 @@
                 </button>
             </div>
 
-            <!-- 模態框 -->
             <div class="modal" :class="{ active: showModal }">
                 <div class="modal-header">
-                    {{ showSettings ? '閱讀設置' : '章節目錄' }}
+                    <span>{{ showSettings ? '閱讀設置' : '章節目錄' }}</span>
+                    <button v-if="showChapterMenu" 
+                            class="chapter-sort-btn modal-sort-btn" 
+                            @click.stop="toggleChapterSort" 
+                            :title="chapterSortOrder === 'asc' ? '舊章節在前（升序）' : '新章節在前（降序）'">
+                        <svg v-if="chapterSortOrder === 'desc'" 
+                             width="14" height="14" 
+                             viewBox="0 0 24 24" 
+                             fill="none" 
+                             stroke="currentColor" 
+                             stroke-width="2">
+                            <path d="M7 14l5-5 5 5"/>
+                            <path d="M12 19V9"/>
+                        </svg>
+                        <svg v-else 
+                             width="14" height="14" 
+                             viewBox="0 0 24 24" 
+                             fill="none" 
+                             stroke="currentColor" 
+                             stroke-width="2">
+                            <path d="M17 10l-5 5-5-5"/>
+                            <path d="M12 5v10"/>
+                        </svg>
+                    </button>
                 </div>
                 <div class="modal-group" v-if="showSettings">
                     <label>字體大小: {{ fontSize }}px</label>
@@ -1387,7 +1488,6 @@
             </div>
         </div>
 
-        <!-- Lightbox -->
         <div class="lightbox" :class="{ active: isLightboxActive }" @click="isLightboxActive = false">
             <div class="lightbox-content">
                 <button class="close-lightbox" @click.stop="isLightboxActive = false">✕</button>
@@ -1396,7 +1496,6 @@
         </div>
         </div>
 
-        <!-- 載入覆蓋層 -->
         <div class="loading-overlay" :class="{ show: isLoading }">
             <div style="text-align: center">
                 <div class="loading-spinner"></div>
@@ -1415,7 +1514,6 @@
         </footer>
     </div>
 
-
     <script>
         const { createApp } = Vue;
 
@@ -1428,14 +1526,15 @@
             LINE_HEIGHT: 'line_height',
             CONTENT_WIDTH: 'content_width',
             CURRENT_MANGA: 'currentManga',
-            CURRENT_NOVEL: 'currentNovel'
+            CURRENT_NOVEL: 'currentNovel',
+            CHAPTER_SORT_ORDER: 'chapter_sort_order'
         };
 
         createApp({
             data() {
                 return {
                     currentContent: 'webtoons',
-                    currentPage: 'list', // list, detail, reader
+                    currentPage: 'list', 
                     mangaList: [],
                     novelList: [],
                     appVersion: null,
@@ -1473,6 +1572,7 @@
                     fontSize: parseInt(localStorage.getItem(STORAGE_KEYS.FONT_SIZE)) || 18,
                     lineHeight: parseFloat(localStorage.getItem(STORAGE_KEYS.LINE_HEIGHT)) || 1.8,
                     contentWidth: parseInt(localStorage.getItem(STORAGE_KEYS.CONTENT_WIDTH)) || 80,
+                    chapterSortOrder: localStorage.getItem(STORAGE_KEYS.CHAPTER_SORT_ORDER) || 'desc',
                     retryCount: {},
                     maxRetries: 3,
                     loadedImages: 0,
@@ -1523,13 +1623,18 @@
                 },
                 chaptersWithDates() {
                     if (this.currentContent === 'webtoons') {
-                        return this.selectedItem?.chapters?.map(chapter => ({
+                        const chapters = this.selectedItem?.chapters?.map(chapter => ({
                             number: chapter.id,
                             title: `第${chapter.id}話`,
                             date: new Date(chapter.lastUpdated).toISOString().split('T')[0]
-                        })).sort((a, b) => b.number - a.number) || [];
+                        })) || [];
+                        return this.chapterSortOrder === 'asc' 
+                            ? chapters.sort((a, b) => a.number - b.number)
+                            : chapters.sort((a, b) => b.number - a.number);
                     } else {
-                        return [...this.allChapters].sort((a, b) => b.number - a.number);
+                        return this.chapterSortOrder === 'asc'
+                            ? [...this.allChapters].sort((a, b) => a.number - b.number)
+                            : [...this.allChapters].sort((a, b) => b.number - a.number);
                     }
                 },
                 parsedDescription() {
@@ -1598,7 +1703,7 @@
                 }
             },
             methods: {
-                // URL路由系統 - 來自 novels_readder.html
+
                 updateUrl(page, params = {}) {
                     const searchParams = new URLSearchParams();
                     
@@ -1643,7 +1748,7 @@
                         this.currentContent = typeParam === 'webtoon' ? 'webtoons' : 'novels';
                         
                         if (titleParam) {
-                            // 確保資料已載入
+
                             if (this.currentContent === 'webtoons' && this.mangaList.length === 0) {
                                 await this.fetchMangaList();
                             } else if (this.currentContent === 'novels' && this.novelList.length === 0) {
@@ -1678,11 +1783,11 @@
                             this.currentPage = 'list';
                         }
                     } else {
-                        // 處理舊版hash路由
+
                         const hash = window.location.hash.substring(1);
                         if (hash === 'novels' || hash === 'webtoons') {
                             this.switchContent(hash);
-                            // 清除hash以避免URL污染
+
                             window.history.replaceState(null, null, window.location.pathname + window.location.search);
                         } else {
                             this.currentPage = 'list';
@@ -1757,7 +1862,7 @@
                         };
                     } catch (error) {
                         console.error('讀取版本信息失敗:', error);
-                        // 使用後備版本信息
+
                         this.appVersion = {
                             version: '1.2.11',
                             date: '2025-06-08',
@@ -1822,7 +1927,7 @@
                     this.allChapters = this.selectedNovelData.chapters
                         .filter(chapter => chapter.id >= 0)
                         .map(chapter => {
-                            // 從URL中提取實際的檔案名
+
                             const urlParts = chapter.url.split('/');
                             const actualFilename = urlParts[urlParts.length - 1];
                             return {
@@ -1898,15 +2003,14 @@
                     
                     try {
                         if (this.currentContent === 'novels') {
-                            // 確保當前章節對象存在
+
                             if (!this.currentChapter) {
                                 this.currentChapter = this.findChapter(this.currentChapterNumber);
                                 if (!this.currentChapter) {
                                     throw new Error(`找不到章節 ${this.currentChapterNumber}`);
                                 }
                             }
-                            
-                            // 直接使用本地路徑構建章節檔案路徑
+
                             const folderPath = encodeURIComponent(this.selectedItem.title);
                             const encodedFilename = encodeURIComponent(this.currentChapter.filename);
                             const filename = `輕小說翻譯/${folderPath}/${encodedFilename}`;
@@ -1926,7 +2030,7 @@
                                 this._loadingContent = false;
                             });
                         } else {
-                            // 網漫載入
+
                             const currentChapterData = this.selectedItem.chapters.find(
                                 c => c.id === this.currentChapterNumber
                             );
@@ -1940,17 +2044,17 @@
                                 (_, i) => `${this.selectedItem.r2Url}/${this.currentChapterNumber}/${i + 1}.jpg?v=${Date.now()}`
                             );
 
-                            this.loadedImages = 0; // 重置已載入圖片計數
+                            this.loadedImages = 0; 
                             this.markAsRead();
                             this._loadingContent = false;
                             
                             this.$nextTick(() => {
                                 window.scrollTo(0, 0);
-                                // 如果沒有圖片或圖片很少，直接恢復滾動位置
+
                                 if (this.pages.length <= 3) {
                                     setTimeout(() => this.restoreScrollPosition(), 500);
                                 }
-                                // 否則等待 handleImageLoad() 中的邏輯處理
+
                             });
                         }
                         
@@ -2103,14 +2207,14 @@
                     if (this._loadingContent) return;
                     
                     try {
-                        // 統一使用 localStorage 永久保存
+
                         const scrollPositions = JSON.parse(
                             localStorage.getItem(STORAGE_KEYS.SCROLL_POSITION)
                         ) || {};
                         const key = this.currentContent === 'novels' ? this.novelKey : this.selectedItem.title;
                         const itemPositions = scrollPositions[key] || {};
                         const currentPosition = window.pageYOffset;
-                        // 只有當滾動位置大於100px時才記錄（避免記錄頂部位置）
+
                         if (currentPosition > 100) {
                             itemPositions[this.currentChapterNumber] = currentPosition;
                             scrollPositions[key] = itemPositions;
@@ -2125,7 +2229,7 @@
                     }
                     
                     try {
-                        // 統一使用 localStorage 永久保存
+
                         const scrollPositions = JSON.parse(
                             localStorage.getItem(STORAGE_KEYS.SCROLL_POSITION)
                         ) || {};
@@ -2290,13 +2394,27 @@
                     if (this.activeDropdown !== null) {
                         this.activeDropdown = null;
                     }
+                },
+                toggleChapterSort() {
+                    this.chapterSortOrder = this.chapterSortOrder === 'desc' ? 'asc' : 'desc';
+                    localStorage.setItem(STORAGE_KEYS.CHAPTER_SORT_ORDER, this.chapterSortOrder);
+
+                    if (this.showChapterMenu && (this.currentChapterNumber || this.currentChapter)) {
+                        this.$nextTick(() => {
+                            const currentElement = document.querySelector('.modal .chapter-item.current');
+                            currentElement?.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'center'
+                            });
+                        });
+                    }
                 }
             },
             async mounted() {
                 const hash = window.location.hash.substring(1);
                 if (hash === 'novels' || hash === 'webtoons') {
                     this.switchContent(hash);
-                    // 清除hash以避免URL污染
+
                     window.history.replaceState(null, null, window.location.pathname + window.location.search);
                 } else {
                     await Promise.all([this.fetchMangaList(), this.fetchNovelList(), this.fetchAppVersion()]);
@@ -2307,7 +2425,6 @@
                 document.documentElement.setAttribute('data-theme', theme);
                 this.isDarkMode = theme === 'dark';
 
-                // 設置輕小說閱讀器CSS變數
                 document.documentElement.style.setProperty('--fs', `${this.fontSize}px`);
                 document.documentElement.style.setProperty('--lh', this.lineHeight);
                 document.documentElement.style.setProperty('--content-width', `${this.contentWidth}%`);
@@ -2326,9 +2443,6 @@
                     lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
                 });
 
-                // hashchange 監聽器已移除，因為不再使用hash路由
-
-                // URL路由事件監聽
                 const handlePopstate = () => this.handleUrlParams();
                 window.addEventListener('popstate', handlePopstate);
 
