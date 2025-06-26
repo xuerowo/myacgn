@@ -160,98 +160,98 @@ def decode_filename(filename):
     try:
         # 處理 Git 的引號包圍檔名
         if filename.startswith('"'):
-            # 移除開頭的引號
-            filename = filename[1:]
-            # 移除結尾的引號（如果有的話）
-            if filename.endswith('"'):
-                filename = filename[:-1]
+            # 移除引號
+            filename = filename.strip('"')
             
-            # 檢查是否包含轉義序列
+            # 檢查是否包含八進制轉義序列
             if '\\' in filename:
-                # 方法1: 完整處理八進制編碼序列
+                # 終極方法：使用 codecs 解碼八進制序列
                 try:
+                    # 將八進制序列轉換為原始字節
                     import re
-                    # 匹配所有八進制編碼模式 (\351\200\232 格式)
-                    octal_pattern = r'\\([0-7]{3})'
-                    octal_matches = re.findall(octal_pattern, filename)
+                    import codecs
                     
-                    if octal_matches:
-                        # 將所有八進制值轉換為字節
-                        byte_values = []
-                        result = filename
+                    # 替換八進制序列為實際字節
+                    def octal_replacer(match):
+                        octal_str = match.group(1)
+                        byte_val = int(octal_str, 8)
+                        return chr(byte_val)
+                    
+                    # 處理所有八進制序列
+                    decoded = re.sub(r'\\([0-7]{3})', octal_replacer, filename)
+                    
+                    # 嘗試將結果編碼為 bytes 然後解碼為 UTF-8
+                    byte_data = decoded.encode('latin1')
+                    result = byte_data.decode('utf-8')
+                    return result
+                    
+                except Exception:
+                    pass
+                
+                # 備用方法：直接使用 Python 的字節串解碼
+                try:
+                    # 將 \351\200\232 格式轉換為 Python bytes 字面量
+                    import re
+                    
+                    # 構建字節序列
+                    byte_pattern = r'\\([0-7]{3})'
+                    matches = re.findall(byte_pattern, filename)
+                    
+                    if matches:
+                        # 創建字節數組
+                        byte_values = [int(match, 8) for match in matches]
                         
-                        # 逐個替換八進制序列並收集字節值
-                        for match in re.finditer(octal_pattern, filename):
-                            octal_val = int(match.group(1), 8)
-                            byte_values.append(octal_val)
+                        # 找到非八進制部分
+                        non_octal_parts = re.split(byte_pattern, filename)
                         
-                        # 嘗試將字節序列解碼為 UTF-8
+                        # 重建字符串：非八進制部分 + 解碼的字節
+                        result_parts = []
+                        byte_index = 0
+                        
+                        for i, part in enumerate(non_octal_parts):
+                            if i % 2 == 0:  # 非八進制部分
+                                result_parts.append(part)
+                            else:  # 這是八進制值，跳過（已在 byte_values 中處理）
+                                pass
+                        
+                        # 解碼字節序列
                         try:
-                            bytes_data = bytes(byte_values)
-                            decoded_part = bytes_data.decode('utf-8')
-                            
-                            # 替換原字符串中的八進制序列
-                            result = re.sub(octal_pattern, '', filename)
-                            # 將解碼後的字符插入正確位置
-                            first_match = re.search(octal_pattern, filename)
-                            if first_match:
-                                start_pos = first_match.start()
-                                result = filename[:start_pos] + decoded_part + result[start_pos:]
-                                return result
+                            decoded_text = bytes(byte_values).decode('utf-8')
+                            # 將解碼的文字插入到正確位置
+                            # 簡化：假設所有八進制序列都是連續的
+                            first_octal_pos = filename.find('\\')
+                            if first_octal_pos >= 0:
+                                prefix = filename[:first_octal_pos]
+                                # 找到八進制序列後的部分
+                                remaining = filename
+                                for _ in range(len(byte_values)):
+                                    # 移除一個八進制序列 \xxx
+                                    remaining = re.sub(r'\\[0-7]{3}', '', remaining, count=1)
+                                
+                                return prefix + decoded_text + remaining
                         except UnicodeDecodeError:
                             pass
-                except:
+                except Exception:
                     pass
                 
-                # 方法2: 改進的逐個八進制解碼
+                # 最後嘗試：標準解碼方法
                 try:
-                    import re
-                    # 使用更精確的替換方法
-                    def octal_to_utf8(text):
-                        octal_pattern = r'\\([0-7]{3})'
-                        
-                        def replace_octal_sequence(match_obj):
-                            octal_val = int(match_obj.group(1), 8)
-                            # 返回對應的字節值
-                            return bytes([octal_val]).decode('latin1')
-                        
-                        # 替換所有八進制序列
-                        intermediate = re.sub(octal_pattern, replace_octal_sequence, text)
-                        
-                        # 嘗試將結果作為 UTF-8 解碼
-                        try:
-                            return intermediate.encode('latin1').decode('utf-8')
-                        except:
-                            return intermediate
-                    
-                    result = octal_to_utf8(filename)
-                    if result != filename:
-                        return result
+                    # 嘗試 unicode_escape
+                    decoded = filename.encode().decode('unicode_escape')
+                    return decoded
                 except:
-                    pass
-                
-                # 方法3: 標準 unicode_escape 解碼
-                try:
-                    decoded = filename.encode('latin1').decode('unicode_escape')
-                    # 嘗試 UTF-8 解碼
                     try:
-                        return decoded.encode('latin1').decode('utf-8')
-                    except:
+                        # 嘗試 raw_unicode_escape
+                        decoded = filename.encode().decode('raw_unicode_escape')
                         return decoded
-                except:
-                    pass
-                
-                # 方法4: 直接 unicode_escape
-                try:
-                    return filename.encode().decode('unicode_escape')
-                except:
-                    pass
+                    except:
+                        pass
         
-        # 沒有引號或解碼失敗，返回處理後的檔名
+        # 如果沒有引號或所有解碼都失敗，返回處理後的字符串
         return filename if filename != original_filename else original_filename
         
     except Exception:
-        # 所有解碼嘗試都失敗，返回原始字符串
+        # 最終回退到原始字符串
         return original_filename
 
 def generate_commit_message(git_status):
