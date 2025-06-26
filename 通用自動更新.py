@@ -10,6 +10,7 @@ import sys
 import subprocess
 import argparse
 import time
+import locale
 from pathlib import Path
 
 def print_colored(text, color='white'):
@@ -25,6 +26,25 @@ def print_colored(text, color='white'):
         'reset': '\033[0m'
     }
     print(f"{colors.get(color, colors['white'])}{text}{colors['reset']}")
+
+def setup_console_encoding():
+    """設置控制台編碼為 UTF-8"""
+    if os.name == 'nt':  # Windows
+        try:
+            # 設置控制台代碼頁為 UTF-8
+            os.system('chcp 65001 >nul 2>&1')
+            # 設置 Python 的標準輸出編碼
+            import codecs
+            sys.stdout = codecs.getwriter('utf-8')(sys.stdout.detach())
+            sys.stderr = codecs.getwriter('utf-8')(sys.stderr.detach())
+        except:
+            pass
+    
+    # 設置 locale
+    try:
+        locale.setlocale(locale.LC_ALL, '')
+    except:
+        pass
 
 def set_window_title(title):
     """設置終端視窗標題"""
@@ -130,6 +150,42 @@ def fix_git_safe_directory():
         print_colored(f"⚠️  修復 Git 安全目錄時發生錯誤: {e}", 'yellow')
         return False
 
+def decode_filename(filename):
+    """解碼檔案名稱，處理各種編碼情況"""
+    if not filename:
+        return filename
+    
+    try:
+        # 處理 Git 的引號包圍檔名
+        if filename.startswith('"') and filename.endswith('"'):
+            filename = filename[1:-1]
+            
+            # 嘗試解碼 Unicode 轉義序列
+            try:
+                # 處理類似 \350\207\252\345\213\225\346\233\264\346\226\260.py 的情況
+                if '\\' in filename:
+                    # 嘗試 bytes 解碼
+                    decoded = filename.encode('latin1').decode('unicode_escape')
+                    # 再嘗試 UTF-8 解碼
+                    try:
+                        decoded = decoded.encode('latin1').decode('utf-8')
+                        return decoded
+                    except:
+                        return decoded
+                else:
+                    # 簡單的 unicode_escape 解碼
+                    return filename.encode().decode('unicode_escape')
+            except:
+                # 如果解碼失敗，返回去除引號的原始字符串
+                return filename
+        
+        # 沒有引號包圍，直接返回
+        return filename
+        
+    except Exception:
+        # 所有解碼嘗試都失敗，返回原始字符串
+        return filename
+
 def generate_commit_message(git_status):
     """根據 Git 狀態生成智慧 commit 訊息"""
     if not git_status.strip():
@@ -147,20 +203,15 @@ def generate_commit_message(git_status):
         status = line[:2].strip()
         filename = line[3:]
         
-        # 清理檔名中的編碼問題
-        try:
-            if filename.startswith('"') and filename.endswith('"'):
-                filename = filename[1:-1]
-                filename = filename.encode().decode('unicode_escape')
-        except:
-            pass
+        # 解碼檔名
+        decoded_filename = decode_filename(filename)
         
         if status in ['A', '??']:
-            added_files.append(filename)
+            added_files.append(decoded_filename)
         elif status == 'M':
-            modified_files.append(filename)
+            modified_files.append(decoded_filename)
         elif status == 'D':
-            deleted_files.append(filename)
+            deleted_files.append(decoded_filename)
     
     # 根據變更類型生成訊息
     total_changes = len(added_files) + len(modified_files) + len(deleted_files)
@@ -199,14 +250,8 @@ def display_file_changes(git_status):
         status = line[:2]
         filename = line[3:]
         
-        # 清理檔名顯示
-        try:
-            if filename.startswith('"') and filename.endswith('"'):
-                display_name = filename[1:-1].encode().decode('unicode_escape')
-            else:
-                display_name = filename
-        except:
-            display_name = filename
+        # 解碼檔名以正確顯示中文
+        display_name = decode_filename(filename)
         
         if status.strip() == 'M':
             print_colored(f"   📝 修改: {display_name}", 'yellow')
@@ -226,6 +271,9 @@ def main():
     parser.add_argument("--no-add", action="store_true", help="不自動添加所有檔案，只處理已暫存的檔案")
     
     args = parser.parse_args()
+    
+    # 設置控制台編碼
+    setup_console_encoding()
     
     # 設置視窗標題
     set_window_title("通用 GitHub 自動更新工具")
