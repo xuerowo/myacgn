@@ -1626,7 +1626,7 @@
                         const chapters = this.selectedItem?.chapters?.map(chapter => ({
                             number: chapter.id,
                             title: `第${chapter.id}話`,
-                            date: new Date(chapter.lastUpdated).toISOString().split('T')[0]
+                            date: chapter.lastUpdated.split(' ')[0]
                         })) || [];
                         return this.chapterSortOrder === 'asc' 
                             ? chapters.sort((a, b) => a.number - b.number)
@@ -1934,7 +1934,7 @@
                                 number: chapter.id,
                                 title: chapter.title,
                                 filename: actualFilename,
-                                date: new Date(chapter.lastUpdated).toISOString().split('T')[0]
+                                date: chapter.lastUpdated.split(' ')[0]
                             };
                         })
                         .sort((a, b) => a.number - b.number);
