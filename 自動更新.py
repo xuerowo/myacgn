@@ -223,8 +223,19 @@ def generate_commit_message(git_status):
         if len(line) < 3:
             continue
             
-        status = line[:2].strip()
-        filename = line[3:]
+        # Git --porcelain 格式：正確解析狀態和檔名
+        if len(line) >= 3 and line[2] == ' ':
+            # 標準格式：XY filename
+            status = line[:2].strip()
+            filename = line[3:]
+        else:
+            # 可能是簡化格式，需要找到第一個空格
+            space_index = line.find(' ')
+            if space_index > 0:
+                status = line[:space_index].strip()
+                filename = line[space_index + 1:]
+            else:
+                continue
         
         # 解碼檔名
         decoded_filename = decode_filename(filename)
@@ -362,8 +373,20 @@ def main():
         if len(line) < 3:
             continue
             
-        status = line[:2]
-        filename = line[3:]
+        # Git --porcelain 格式：前兩個字符是狀態，第三個字符是空格，之後是檔名
+        # 但有時第一個字符是狀態，第二個是空格，所以需要正確解析
+        if len(line) >= 3 and line[2] == ' ':
+            # 標準格式：XY filename
+            status = line[:2]
+            filename = line[3:]
+        else:
+            # 可能是簡化格式，需要找到第一個空格
+            space_index = line.find(' ')
+            if space_index > 0:
+                status = line[:space_index]
+                filename = line[space_index + 1:]
+            else:
+                continue
         
         # 解碼檔名以正確顯示中文
         display_filename = decode_filename(filename)
