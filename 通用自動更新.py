@@ -331,8 +331,19 @@ def display_file_changes(git_status):
         if len(line) < 3:
             continue
             
-        status = line[:2]
-        filename = line[3:]
+        # Git --porcelain 格式：正確解析狀態和檔名
+        if len(line) >= 3 and line[2] == ' ':
+            # 標準格式：XY filename
+            status = line[:2]
+            filename = line[3:]
+        else:
+            # 可能是簡化格式，需要找到第一個空格
+            space_index = line.find(' ')
+            if space_index > 0:
+                status = line[:space_index]
+                filename = line[space_index + 1:]
+            else:
+                continue
         
         # 解碼檔名以正確顯示中文
         display_name = decode_filename(filename)
