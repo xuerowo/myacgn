@@ -957,13 +957,10 @@
                 padding: 0 clamp(4px, 1vw, 12px);
             }
 
-            .card {
-                width: clamp(140px, 35vw, 180px);
-            }
-
             .card img {
-                width: clamp(140px, 35vw, 180px);
-                height: clamp(200px, 50vw, 260px);
+                width: 100%;
+                height: auto;
+                aspect-ratio: 0.7;
             }
 
             .card-title {
@@ -984,7 +981,7 @@
             }
 
             .chapter-list {
-                grid-template-columns: repeat(auto-fill, minmax(clamp(80px, 20vw, 140px), 1fr));
+                grid-template-columns: repeat(auto-fit, minmax(clamp(80px, 20vw, 140px), 1fr));
             }
 
             .chapter-title {
