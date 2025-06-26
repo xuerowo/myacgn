@@ -155,36 +155,64 @@ def decode_filename(filename):
     if not filename:
         return filename
     
+    original_filename = filename
+    
     try:
         # 處理 Git 的引號包圍檔名
-        if filename.startswith('"') and filename.endswith('"'):
-            filename = filename[1:-1]
+        if filename.startswith('"'):
+            # 移除開頭的引號
+            filename = filename[1:]
+            # 移除結尾的引號（如果有的話）
+            if filename.endswith('"'):
+                filename = filename[:-1]
             
-            # 嘗試解碼 Unicode 轉義序列
-            try:
-                # 處理類似 \350\207\252\345\213\225\346\233\264\346\226\260.py 的情況
-                if '\\' in filename:
-                    # 嘗試 bytes 解碼
+            # 檢查是否包含轉義序列
+            if '\\' in filename:
+                # 方法1: 處理八進制編碼 (\351\200\232 格式)
+                try:
+                    import re
+                    # 匹配八進制編碼模式
+                    octal_pattern = r'\\([0-7]{3})'
+                    if re.search(octal_pattern, filename):
+                        # 替換八進制編碼為對應的字節
+                        def octal_replace(match):
+                            octal_val = int(match.group(1), 8)
+                            return chr(octal_val)
+                        
+                        decoded = re.sub(octal_pattern, octal_replace, filename)
+                        # 嘗試用 UTF-8 解碼
+                        try:
+                            # 將字符轉換為字節然後用 UTF-8 解碼
+                            bytes_data = bytes(ord(c) for c in decoded)
+                            return bytes_data.decode('utf-8')
+                        except:
+                            pass
+                except:
+                    pass
+                
+                # 方法2: 標準 unicode_escape 解碼
+                try:
                     decoded = filename.encode('latin1').decode('unicode_escape')
-                    # 再嘗試 UTF-8 解碼
+                    # 嘗試 UTF-8 解碼
                     try:
-                        decoded = decoded.encode('latin1').decode('utf-8')
-                        return decoded
+                        return decoded.encode('latin1').decode('utf-8')
                     except:
                         return decoded
-                else:
-                    # 簡單的 unicode_escape 解碼
+                except:
+                    pass
+                
+                # 方法3: 直接 unicode_escape
+                try:
                     return filename.encode().decode('unicode_escape')
-            except:
-                # 如果解碼失敗，返回去除引號的原始字符串
-                return filename
+                except:
+                    pass
         
-        # 沒有引號包圍，直接返回
-        return filename
+        # 沒有引號或解碼失敗，返回處理後的檔名
+        return filename if filename != original_filename else original_filename
         
     except Exception:
         # 所有解碼嘗試都失敗，返回原始字符串
-        return filename
+        return original_filename
 
 def generate_commit_message(git_status):
     """根據 Git 狀態生成智慧 commit 訊息"""
@@ -262,6 +290,20 @@ def display_file_changes(git_status):
         else:
             print_colored(f"   {status.strip()} {display_name}", 'white')
 
+def setup_git_encoding():
+    """設置 Git 編碼配置，避免檔名轉義"""
+    try:
+        # 設置 Git 不要轉義檔案路徑
+        subprocess.run(
+            ["git", "config", "core.quotePath", "false"],
+            capture_output=True,
+            check=True
+        )
+        print_colored("🔧 已設定 Git 編碼配置", 'green')
+    except:
+        # 如果設定失敗，不影響主要功能
+        pass
+
 def main():
     """主要執行函數"""
     parser = argparse.ArgumentParser(description="通用 GitHub 儲存庫自動更新工具")
@@ -274,6 +316,9 @@ def main():
     
     # 設置控制台編碼
     setup_console_encoding()
+    
+    # 設置 Git 編碼
+    setup_git_encoding()
     
     # 設置視窗標題
     set_window_title("通用 GitHub 自動更新工具")
