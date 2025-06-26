@@ -122,29 +122,69 @@ def decode_filename(filename):
             
             # 檢查是否包含轉義序列
             if '\\' in filename:
-                # 方法1: 處理八進制編碼 (\351\200\232 格式)
+                # 方法1: 完整處理八進制編碼序列
                 try:
                     import re
-                    # 匹配八進制編碼模式
+                    # 匹配所有八進制編碼模式 (\351\200\232 格式)
                     octal_pattern = r'\\([0-7]{3})'
-                    if re.search(octal_pattern, filename):
-                        # 替換八進制編碼為對應的字節
-                        def octal_replace(match):
-                            octal_val = int(match.group(1), 8)
-                            return chr(octal_val)
+                    octal_matches = re.findall(octal_pattern, filename)
+                    
+                    if octal_matches:
+                        # 將所有八進制值轉換為字節
+                        byte_values = []
+                        result = filename
                         
-                        decoded = re.sub(octal_pattern, octal_replace, filename)
-                        # 嘗試用 UTF-8 解碼
+                        # 逐個替換八進制序列並收集字節值
+                        for match in re.finditer(octal_pattern, filename):
+                            octal_val = int(match.group(1), 8)
+                            byte_values.append(octal_val)
+                        
+                        # 嘗試將字節序列解碼為 UTF-8
                         try:
-                            # 將字符轉換為字節然後用 UTF-8 解碼
-                            bytes_data = bytes(ord(c) for c in decoded)
-                            return bytes_data.decode('utf-8')
-                        except:
+                            bytes_data = bytes(byte_values)
+                            decoded_part = bytes_data.decode('utf-8')
+                            
+                            # 替換原字符串中的八進制序列
+                            result = re.sub(octal_pattern, '', filename)
+                            # 將解碼後的字符插入正確位置
+                            first_match = re.search(octal_pattern, filename)
+                            if first_match:
+                                start_pos = first_match.start()
+                                result = filename[:start_pos] + decoded_part + result[start_pos:]
+                                return result
+                        except UnicodeDecodeError:
                             pass
                 except:
                     pass
                 
-                # 方法2: 標準 unicode_escape 解碼
+                # 方法2: 改進的逐個八進制解碼
+                try:
+                    import re
+                    # 使用更精確的替換方法
+                    def octal_to_utf8(text):
+                        octal_pattern = r'\\([0-7]{3})'
+                        
+                        def replace_octal_sequence(match_obj):
+                            octal_val = int(match_obj.group(1), 8)
+                            # 返回對應的字節值
+                            return bytes([octal_val]).decode('latin1')
+                        
+                        # 替換所有八進制序列
+                        intermediate = re.sub(octal_pattern, replace_octal_sequence, text)
+                        
+                        # 嘗試將結果作為 UTF-8 解碼
+                        try:
+                            return intermediate.encode('latin1').decode('utf-8')
+                        except:
+                            return intermediate
+                    
+                    result = octal_to_utf8(filename)
+                    if result != filename:
+                        return result
+                except:
+                    pass
+                
+                # 方法3: 標準 unicode_escape 解碼
                 try:
                     decoded = filename.encode('latin1').decode('unicode_escape')
                     # 嘗試 UTF-8 解碼
@@ -155,7 +195,7 @@ def decode_filename(filename):
                 except:
                     pass
                 
-                # 方法3: 直接 unicode_escape
+                # 方法4: 直接 unicode_escape
                 try:
                     return filename.encode().decode('unicode_escape')
                 except:
