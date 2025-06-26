@@ -61,7 +61,8 @@ def run_command(command, description, cwd=None):
         result = subprocess.run(
             command,
             cwd=cwd,
-            capture_output=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             text=True,
             encoding='utf-8',
             errors='ignore',
@@ -89,7 +90,8 @@ def fix_git_safe_directory():
         # 添加當前目錄到 Git 安全目錄列表
         result = subprocess.run(
             ["git", "config", "--global", "--add", "safe.directory", str(script_dir)],
-            capture_output=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             text=True,
             encoding='utf-8',
             errors='ignore'
@@ -112,6 +114,10 @@ def decode_filename(filename):
     original_filename = filename
     
     try:
+        # 如果檔名不包含引號和轉義序列，直接返回（Git 配置生效的情況）
+        if not filename.startswith('"') and '\\' not in filename:
+            return filename
+        
         # 處理 Git 的引號包圍檔名
         if filename.startswith('"'):
             # 移除引號
@@ -261,7 +267,8 @@ def setup_git_encoding():
         # 設置 Git 不要轉義檔案路徑
         subprocess.run(
             ["git", "config", "core.quotePath", "false"],
-            capture_output=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             check=True
         )
         print_colored("🔧 已設定 Git 編碼配置", 'green')
@@ -297,12 +304,11 @@ def main():
             result = subprocess.run(
                 [sys.executable, str(novels_script)],
                 cwd=script_dir / "輕小說翻譯",
-                capture_output=True,
+                stdout=subprocess.DEVNULL,  # 隱藏詳細輸出
+                stderr=subprocess.PIPE,     # 捕獲錯誤
                 text=True,
                 encoding='utf-8',
-                errors='ignore',
-                stdout=subprocess.DEVNULL,  # 隱藏詳細輸出
-                stderr=subprocess.PIPE
+                errors='ignore'
             )
             
             if result.returncode == 0:
