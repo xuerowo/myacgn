@@ -1,9 +1,12 @@
 {
-  "version": "1.2.11",
-  "releaseNotes": "修改了url路徑和其他問題",
-  "downloadUrl": "https://expo.dev/artifacts/eas/44xWoSepLHejUNqZfvK9eF.apk",
+  "downloadUrl": "https://expo.dev/artifacts/eas/c8fZ8TjoSRiVkAHSC6zxYM.apk",
   "fullChangelogUrl": "https://xuerowo.com/%E8%BC%95%E5%B0%8F%E8%AA%AA%E7%BF%BB%E8%AD%AF/changelog.html",
   "history": [
+    {
+      "version": "1.2.12",
+      "date": "2025-06-13",
+      "changes": "修復已知問題"
+    },
     {
       "version": "1.2.11",
       "date": "2025-06-08",

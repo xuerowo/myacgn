@@ -209,6 +209,66 @@ def decode_filename(filename):
         # 所有方法都失敗，返回原始檔名
         return original_filename
 
+def should_ignore_file(filename):
+    """判斷是否應該忽略特定檔案"""
+    import re
+    
+    # 解碼檔名以正確處理中文路徑
+    decoded_filename = decode_filename(filename)
+    
+    ignore_patterns = [
+        # Claude Code 相關檔案
+        r'^\.claude/',
+        r'^CLAUDE\.md$',
+        # 常見的臨時檔案和系統檔案
+        r'\.tmp$', r'\.temp$', r'~$',
+        r'Thumbs\.db$', r'\.DS_Store$',
+        r'\.swp$', r'\.swo$', r'\.bak$', r'\.orig$',
+        # 編輯器配置
+        r'^\.vscode/', r'^\.idea/',
+        # Node.js 和 Python 相關
+        r'^node_modules/', r'^__pycache__/',
+        # 日誌檔案
+        r'\.log$', r'\.pid$'
+    ]
+    
+    for pattern in ignore_patterns:
+        if re.search(pattern, decoded_filename, re.IGNORECASE):
+            return True
+    return False
+
+def filter_git_status(git_status):
+    """過濾 Git 狀態，移除應忽略的檔案"""
+    if not git_status.strip():
+        return git_status, []
+    
+    lines = git_status.strip().split('\n')
+    filtered_lines = []
+    ignored_files = []
+    
+    for line in lines:
+        if len(line) < 3:
+            continue
+            
+        # Git --porcelain 格式：正確解析狀態和檔名
+        if len(line) >= 3 and line[2] == ' ':
+            # 標準格式：XY filename
+            filename = line[3:]
+        else:
+            # 可能是簡化格式，需要找到第一個空格
+            space_index = line.find(' ')
+            if space_index > 0:
+                filename = line[space_index + 1:]
+            else:
+                continue
+        
+        if should_ignore_file(filename):
+            ignored_files.append(decode_filename(filename))
+        else:
+            filtered_lines.append(line)
+    
+    return '\n'.join(filtered_lines), ignored_files
+
 def generate_commit_message(git_status):
     """根據 Git 狀態生成 GitHub 風格的 commit 訊息"""
     if not git_status.strip():
@@ -253,7 +313,8 @@ def generate_commit_message(git_status):
     if total_changes == 1:
         # 單一檔案變更
         if added_files:
-            return "Add files via upload"
+            filename = os.path.basename(added_files[0])
+            return f"Add {filename}"
         elif modified_files:
             filename = os.path.basename(modified_files[0])
             return f"Update {filename}"
@@ -362,14 +423,26 @@ def main():
             input("\n按 Enter 鍵結束...")
             return
     
-    if not git_status.strip():
-        print_colored("✨ 沒有檔案變更，無需更新", 'green')
+    # 過濾 Git 狀態，移除應忽略的檔案
+    filtered_git_status, ignored_files = filter_git_status(git_status)
+    
+    # 顯示被忽略的檔案
+    if ignored_files:
+        print_colored(f"\n🚫 自動忽略 {len(ignored_files)} 個檔案:", 'purple')
+        for ignored_file in ignored_files:
+            print_colored(f"   🔒 忽略: {ignored_file}", 'purple')
+    
+    if not filtered_git_status.strip():
+        if ignored_files:
+            print_colored("✨ 所有變更檔案都被自動忽略，無需更新", 'green')
+        else:
+            print_colored("✨ 沒有檔案變更，無需更新", 'green')
         input("\n按 Enter 鍵結束...")
         return
     
-    # 顯示變更的檔案
-    print_colored("\n📋 檢測到以下檔案變更:", 'yellow')
-    for line in git_status.strip().split('\n'):
+    # 顯示將要處理的變更檔案
+    print_colored(f"\n📋 檢測到 {len(filtered_git_status.strip().split(chr(10)))} 個檔案變更:", 'yellow')
+    for line in filtered_git_status.strip().split('\n'):
         if len(line) < 3:
             continue
             
@@ -402,19 +475,42 @@ def main():
         else:
             print_colored(f"   {status.strip()} {display_filename}", 'white')
     
-    # 步驟 3: 添加所有變更
-    success, _ = run_command(
-        ["git", "add", "."],
-        "添加所有變更到暫存區"
-    )
+    # 步驟 3: 選擇性添加變更檔案（排除忽略的檔案）
+    files_to_add = []
+    for line in filtered_git_status.strip().split('\n'):
+        if len(line) < 3:
+            continue
+            
+        # 提取檔案名
+        if len(line) >= 3 and line[2] == ' ':
+            filename = line[3:]
+        else:
+            space_index = line.find(' ')
+            if space_index > 0:
+                filename = line[space_index + 1:]
+            else:
+                continue
+        
+        files_to_add.append(filename)
     
-    if not success:
-        print_colored("❌ 添加檔案到暫存區失敗", 'red')
+    # 添加每個非忽略的檔案
+    if files_to_add:
+        for filename in files_to_add:
+            success, _ = run_command(
+                ["git", "add", filename],
+                f"添加檔案: {decode_filename(filename)}"
+            )
+            if not success:
+                print_colored(f"⚠️  無法添加檔案: {decode_filename(filename)}", 'yellow')
+        
+        print_colored(f"✅ 成功添加 {len(files_to_add)} 個檔案到暫存區", 'green')
+    else:
+        print_colored("❌ 沒有檔案需要添加", 'red')
         input("\n按 Enter 鍵結束...")
         return
     
     # 步驟 4: 生成 commit 訊息並提交變更
-    commit_message = generate_commit_message(git_status)
+    commit_message = generate_commit_message(filtered_git_status)
     print_colored(f"📝 Commit 訊息: {commit_message}", 'cyan')
     
     success, _ = run_command(
