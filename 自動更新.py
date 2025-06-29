@@ -89,22 +89,30 @@ def run_command(command, description, cwd=None, capture_output=False):
                     print_colored(result.stderr.strip(), 'red')
                 return False, result.stderr
         else:
-            # 即時輸出模式
+            # 即時輸出模式，但仍需捕獲錯誤訊息
             result = subprocess.run(
                 command,
                 cwd=cwd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
                 text=True,
                 encoding='utf-8',
                 errors='ignore',
                 shell=True if isinstance(command, str) else False
             )
             
+            # 顯示輸出（模擬即時輸出）
+            if result.stdout.strip():
+                print(result.stdout.strip())
+            
             if result.returncode == 0:
                 print_colored(f"✅ {description} 完成", 'green')
-                return True, ""
+                return True, result.stdout
             else:
                 print_colored(f"❌ {description} 失敗", 'red')
-                return False, ""
+                if result.stderr.strip():
+                    print_colored(f"錯誤訊息: {result.stderr.strip()}", 'red')
+                return False, result.stderr
                 
     except Exception as e:
         print_colored(f"❌ 執行 {description} 時發生錯誤: {e}", 'red')
@@ -517,11 +525,12 @@ def main():
             if ignored_files:
                 for ignored_file in ignored_files:
                     # 嘗試移除被忽略的檔案從暫存區
-                    run_command(
+                    success_reset, _ = run_command(
                         ["git", "reset", "HEAD", ignored_file],
                         f"移除被忽略的檔案: {ignored_file}",
                         capture_output=True  # 這裡不需要顯示輸出
                     )
+                    # 忽略 reset 失敗（可能檔案本來就不在暫存區）
             
             # 統計檔案數量
             file_count = len([line for line in filtered_git_status.strip().split('\n') if len(line) >= 3])
@@ -535,11 +544,24 @@ def main():
         input("\n按 Enter 鍵結束...")
         return
     
-    # 步驟 4: 生成 commit 訊息並提交變更
+    # 步驟 4: 檢查暫存區狀態並提交變更
+    # 先檢查暫存區是否有內容
+    success_staged, staged_output = run_command(
+        ["git", "diff", "--cached", "--name-only"],
+        "檢查暫存區狀態",
+        capture_output=True
+    )
+    
+    if not success_staged or not staged_output.strip():
+        print_colored("⚠️  暫存區為空，無法提交", 'yellow')
+        print_colored("📝 這可能是因為所有變更都被忽略或已經提交", 'cyan')
+        input("\n按 Enter 鍵結束...")
+        return
+    
     commit_message = generate_commit_message(filtered_git_status)
     print_colored(f"📝 Commit 訊息: {commit_message}", 'cyan')
     
-    success, _ = run_command(
+    success, commit_output = run_command(
         ["git", "commit", "-m", commit_message],
         "提交變更",
         capture_output=False
