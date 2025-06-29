@@ -584,7 +584,26 @@ def main():
         print_colored("🔗 儲存庫: https://github.com/xuerowo/myacgn", 'cyan')
     else:
         print_colored("\n❌ 推送到 GitHub 失敗", 'red')
-        print_colored("請檢查網路連線和 Git 認證設定", 'yellow')
+        print_colored("📝 提交已儲存在本地，但未推送到 GitHub", 'yellow')
+        print_colored("\n🔧 認證設定方法:", 'cyan')
+        print_colored("1. 設定 Personal Access Token:", 'white')
+        print_colored("   git config --global credential.helper store", 'white')
+        print_colored("   然後手動執行: git push origin main", 'white')
+        print_colored("\n2. 或者使用 SSH 金鑰（建議）", 'white')
+        print_colored("\n3. 手動推送本地提交:", 'white')
+        print_colored("   git push origin main", 'white')
+        
+        # 顯示本地領先的提交
+        success_log, log_output = run_command(
+            ["git", "log", "--oneline", "origin/main..HEAD"],
+            "檢查未推送的提交",
+            capture_output=True
+        )
+        if success_log and log_output.strip():
+            print_colored("\n📋 本地未推送的提交:", 'cyan')
+            for line in log_output.strip().split('\n'):
+                if line.strip():
+                    print_colored(f"   {line}", 'yellow')
     
     print_colored("\n" + "=" * 60, 'blue')
     print_colored("🏁 自動更新流程完成", 'blue')
