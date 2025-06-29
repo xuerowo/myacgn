@@ -10,6 +10,7 @@ import sys
 import subprocess
 import time
 import locale
+import shlex
 from pathlib import Path
 
 def print_colored(text, color='white'):
@@ -58,6 +59,12 @@ def run_command(command, description, cwd=None, capture_output=False):
     """執行命令並顯示結果"""
     print_colored(f"\n🔄 {description}...", 'cyan')
     try:
+        # 對於 Git 命令，確保檔案路徑正確處理
+        if isinstance(command, list) and len(command) >= 3 and command[0] == "git" and command[1] == "add":
+            # 對 Git add 命令使用特殊處理
+            git_add_command = ["git", "add", "--"] + command[2:]  # 添加 -- 分隔符
+            command = git_add_command
+        
         if capture_output:
             # 需要捕獲輸出的情況（如推送衝突檢測）
             result = subprocess.run(
@@ -497,36 +504,32 @@ def main():
         else:
             print_colored(f"   {status.strip()} {display_filename}", 'white')
     
-    # 步驟 3: 選擇性添加變更檔案（排除忽略的檔案）
-    files_to_add = []
-    for line in filtered_git_status.strip().split('\n'):
-        if len(line) < 3:
-            continue
+    # 步驟 3: 添加所有變更檔案（使用 git add . 以避免路徑問題）
+    if filtered_git_status.strip():
+        success, _ = run_command(
+            ["git", "add", "."],
+            "添加所有變更檔案到暫存區",
+            capture_output=False
+        )
+        
+        if success:
+            # 移除被忽略的檔案（如果有的話）
+            if ignored_files:
+                for ignored_file in ignored_files:
+                    # 嘗試移除被忽略的檔案從暫存區
+                    run_command(
+                        ["git", "reset", "HEAD", ignored_file],
+                        f"移除被忽略的檔案: {ignored_file}",
+                        capture_output=True  # 這裡不需要顯示輸出
+                    )
             
-        # 提取檔案名
-        if len(line) >= 3 and line[2] == ' ':
-            filename = line[3:]
+            # 統計檔案數量
+            file_count = len([line for line in filtered_git_status.strip().split('\n') if len(line) >= 3])
+            print_colored(f"✅ 成功添加 {file_count} 個檔案到暫存區", 'green')
         else:
-            space_index = line.find(' ')
-            if space_index > 0:
-                filename = line[space_index + 1:]
-            else:
-                continue
-        
-        files_to_add.append(filename)
-    
-    # 添加每個非忽略的檔案
-    if files_to_add:
-        for filename in files_to_add:
-            success, _ = run_command(
-                ["git", "add", filename],
-                f"添加檔案: {decode_filename(filename)}",
-                capture_output=False
-            )
-            if not success:
-                print_colored(f"⚠️  無法添加檔案: {decode_filename(filename)}", 'yellow')
-        
-        print_colored(f"✅ 成功添加 {len(files_to_add)} 個檔案到暫存區", 'green')
+            print_colored("❌ 添加檔案失敗", 'red')
+            input("\n按 Enter 鍵結束...")
+            return
     else:
         print_colored("❌ 沒有檔案需要添加", 'red')
         input("\n按 Enter 鍵結束...")
