@@ -215,22 +215,36 @@ def process_novel_directory(novel_dir, script_dir):
         if os.path.exists(intro_file):
             with open(intro_file, 'r', encoding='utf-8') as f:
                 content = f.read()
-                # 尋找所有原始URL
-                url_matches = re.finditer(r'(https?://[^\s]+)', content)
-                for match in url_matches:
-                    original_urls.append(match.group(1))
                 
-                # 找到最後一個URL之後的內容作為描述
+                # 只提取「原連結」行的URL
+                original_url_match = re.search(r'原連結[：:]\s*(https?://[^\s]+)', content)
+                if original_url_match:
+                    original_urls = [original_url_match.group(1)]
+                
+                # 尋找作品描述部分
                 lines = content.split('\n')
-                last_url_index = -1
-                for i, line in enumerate(lines):
-                    if 'http' in line:
-                        last_url_index = i
-                if last_url_index != -1:
-                    description = '\n'.join(lines[last_url_index + 2:])
-                    # 如果描述為空，使用整個內容
-                    if not description.strip():
-                        description = content
+                description_lines = []
+                found_description = False
+                
+                for line in lines:
+                    # 跳過標題、作者、類型、原連結等元資訊行
+                    if (line.startswith('#') or 
+                        re.match(r'作者[：:]', line) or 
+                        re.match(r'類型[：:]', line) or 
+                        re.match(r'原連結[：:]', line) or 
+                        line.strip() == ''):
+                        continue
+                    
+                    # 找到真正的作品描述開始（通常是完整的敘述句子）
+                    if not found_description and ('故事' in line or '關於' in line or len(line.strip()) > 20):
+                        found_description = True
+                    
+                    if found_description:
+                        description_lines.append(line)
+                
+                # 如果沒有找到合適的描述，使用整個內容
+                if description_lines:
+                    description = '\n'.join(description_lines).strip()
                 else:
                     description = content
         
