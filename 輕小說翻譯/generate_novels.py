@@ -44,7 +44,8 @@ def clean_title(title):
     
     # 移除特定的後綴文本
     title = re.sub(r'～.*?～', '', title)
-    title = re.sub(r'《.*?》', '', title)
+    # 只移除小說標題，但保留有意義的章節標記如《幕間》
+    title = re.sub(r'《(?!幕間).*?》', '', title)
     
     # 移除特定的字符串
     unwanted_strings = [
