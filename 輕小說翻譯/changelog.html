@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>輕小說閱讀器 - 更新日誌</title>
+  <link rel="icon" href="/images/favicon.jpg" type="image/jpg">
+  <style>
+    :root {
+      --primary-color: #4a90e2;
+      --secondary-color: #f5f5f5;
+      --accent-color: #7c4dff;
+      --text-color: #333;
+      --border-color: #ddd;
+      --background-color: #fff;
+      --card-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      --timeline-width: 4px;
+      --timeline-circle-size: 16px;
+      --particle-color: rgba(74, 144, 226, 0.6);
+      --particle-color-alt: rgba(124, 77, 255, 0.4);
+      --typewriter-speed: 4s; 
+      --typewriter-char-count: 1; 
+      --typewriter-min-speed: 40ms; 
+      --typewriter-max-speed: 200ms; 
+    }
+
+    [data-theme="dark"] {
+      --primary-color: #64b5f6;
+      --secondary-color: #1a1a1a;
+      --accent-color: #bb86fc;
+      --text-color: #e0e0e0;
+      --border-color: #333;
+      --background-color: #121212;
+      --card-shadow: 0 10px 20px rgba(0,0,0,0.3);
+      --particle-color: rgba(100, 181, 246, 0.4);
+      --particle-color-alt: rgba(187, 134, 252, 0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body {
+      font-family: 'Microsoft JhengHei', Arial, sans-serif;
+      line-height: 1.6;
+      color: var(--text-color);
+      background-color: var(--secondary-color);
+      padding-top: 40px;
+      padding-bottom: 80px;
+      overflow-x: hidden;
+    }
+
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      opacity: 0.5;
+    }
+
+    .header {
+      text-align: center;
+      padding: 30px 0;
+      position: relative;
+      margin-bottom: 2rem;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .header:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
+    }
+
+    .header:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    h1 {
+      color: var(--text-color);
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    h1:after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
+      border-radius: 2px;
+    }
+
+    .subtitle {
+      color: var(--text-color);
+      opacity: 0.8;
+      font-size: 1.1rem;
+      margin-top: 1rem;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .typewriter {
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 2px solid var(--primary-color);
+      max-width: 0;
+      
+    }
+
+    @keyframes blink-caret {
+      from, to { border-color: transparent }
+      50% { border-color: var(--primary-color) }
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: var(--text-color);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 50%;
+      background-color: var(--background-color);
+      box-shadow: var(--card-shadow);
+      z-index: 100;
+      transition: transform 0.3s, background-color 0.3s;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .theme-toggle:hover {
+      transform: rotate(360deg);
+    }
+
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: none;
+      border: none;
+      color: var(--text-color);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 50%;
+      background-color: var(--background-color);
+      box-shadow: var(--card-shadow);
+      z-index: 100;
+      transition: transform 0.3s, background-color 0.3s;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .back-button:hover {
+      transform: translateX(-5px);
+    }
+
+    .timeline {
+      position: relative;
+      padding: 60px 0;
+      width: 100%;
+    }
+
+    .timeline:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: var(--timeline-width);
+      background-color: var(--primary-color);
+      transform: translateX(-50%);
+      border-radius: 2px;
+      transition: all 0.3s ease;
+      background-image: linear-gradient(to bottom, var(--accent-color), var(--primary-color), var(--accent-color));
+    }
+
+    .version {
+      position: relative;
+      margin-bottom: 60px;
+      width: 100%;
+      perspective: 1000px;
+    }
+
+    .version:last-child {
+      margin-bottom: 0;
+    }
+
+    .version-inner {
+      background-color: var(--background-color);
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: var(--card-shadow);
+      position: relative;
+      width: calc(50% - 30px);
+      transform-style: preserve-3d;
+      transition: transform 0.6s, box-shadow 0.3s;
+      opacity: 1;
+      transform: translateY(0);
+      backface-visibility: hidden;
+      animation: simpleAppear 0.5s ease-out;
+    }
+
+    @keyframes simpleAppear {
+      from {
+        opacity: 0.5;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .version-inner:hover {
+      transform: translateY(-5px) rotateY(5deg);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+
+    .version:nth-child(odd) .version-inner {
+      margin-left: auto;
+      transform-origin: left center;
+    }
+
+    .version:nth-child(even) .version-inner {
+      margin-right: auto;
+      transform-origin: right center;
+    }
+
+    .version:hover ~ .version:before {
+      transform: translateX(-50%) scale(1.2);
+      background-color: var(--accent-color);
+    }
+
+    .version:before {
+      content: '';
+      position: absolute;
+      top: 25px;
+      width: var(--timeline-circle-size);
+      height: var(--timeline-circle-size);
+      background-color: var(--accent-color);
+      border-radius: 50%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+      box-shadow: 0 0 0 4px rgba(124, 77, 255, 0.2);
+      transition: all 0.3s;
+    }
+
+    .version:hover:before {
+      background-color: var(--primary-color);
+      box-shadow: 0 0 0 6px rgba(74, 144, 226, 0.3), 0 0 20px rgba(74, 144, 226, 0.6);
+      transform: translateX(-50%) scale(1.3);
+    }
+
+    .version:after {
+      content: '';
+      position: absolute;
+      top: 25px;
+      width: 30px;
+      height: 2px;
+      background-color: var(--primary-color);
+      z-index: 0;
+      transition: all 0.3s;
+    }
+
+    .version:hover:after {
+      width: 50px;
+      background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
+    }
+
+    .version:nth-child(odd):after {
+      left: 50%;
+    }
+
+    .version:nth-child(even):after {
+      right: 50%;
+    }
+
+    .version h2 {
+      color: var(--primary-color);
+      margin-bottom: 10px;
+      font-size: 1.5rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .version .date {
+      color: var(--text-color);
+      opacity: 0.7;
+      font-size: 0.9em;
+      margin-bottom: 15px;
+      font-style: italic;
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 15px;
+      background-color: var(--secondary-color);
+      transition: all 0.3s;
+    }
+
+    .version-inner:hover .date {
+      opacity: 1;
+      transform: scale(1.05);
+      background: linear-gradient(to right, var(--background-color), var(--secondary-color));
+    }
+
+    .version ul {
+      padding-left: 20px;
+      margin-top: 15px;
+    }
+
+    .version li {
+      margin-bottom: 10px;
+      position: relative;
+      padding-left: 5px;
+      transition: transform 0.2s ease;
+    }
+
+    .version li:hover {
+      transform: translateX(5px);
+    }
+
+    .version li:before {
+      content: '•';
+      color: var(--accent-color);
+      position: absolute;
+      left: -15px;
+      font-size: 1.2em;
+      transition: all 0.3s;
+    }
+
+    .version li:hover:before {
+      color: var(--primary-color);
+      transform: scale(1.4);
+    }
+
+    .version-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8em;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: all 0.3s;
+    }
+
+    .version-inner:hover .version-badge {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .current {
+      position: relative;
+    }
+
+    .current .version-inner {
+      border: 2px solid transparent;
+      border-image: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+      border-image-slice: 1;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+      animation: pulse 2s infinite alternate;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      }
+      100% {
+        box-shadow: 0 15px 35px rgba(124, 77, 255, 0.3);
+      }
+    }
+
+    .current:before {
+      background-color: var(--primary-color);
+      box-shadow: 0 0 0 6px rgba(74, 144, 226, 0.3), 0 0 15px var(--primary-color);
+      animation: pulse-circle 2s infinite alternate;
+    }
+
+    @keyframes pulse-circle {
+      0% {
+        box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.3), 0 0 10px var(--primary-color);
+      }
+      100% {
+        box-shadow: 0 0 0 8px rgba(74, 144, 226, 0.4), 0 0 20px var(--primary-color);
+      }
+    }
+
+    .current:after {
+      background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
+      height: 3px;
+    }
+
+    .current .version-badge {
+      background: linear-gradient(135deg, #ff9d00, #ff6b6b);
+      animation: shine 2s infinite linear;
+      background-size: 200% auto;
+    }
+
+    @keyframes shine {
+      to {
+        background-position: 200% center;
+      }
+    }
+
+    .tooltip {
+      position: absolute;
+      background-color: var(--background-color);
+      padding: 10px 15px;
+      border-radius: 5px;
+      box-shadow: var(--card-shadow);
+      font-size: 0.9em;
+      top: -40px;
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      transform: translateY(10px);
+      pointer-events: none;
+      z-index: 10;
+      white-space: nowrap;
+      display: none;
+    }
+
+    .version:hover .tooltip {
+      opacity: 0;
+      transform: translateY(0);
+    }
+
+    .version:nth-child(odd) .tooltip {
+      right: 0;
+    }
+
+    .version:nth-child(even) .tooltip {
+      left: 0;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 50px;
+      font-size: 1.2em;
+      color: var(--text-color);
+      opacity: 0.7;
+    }
+
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid var(--secondary-color);
+      border-top-color: var(--primary-color);
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      animation: spin 1s infinite linear;
+    }
+
+    .error {
+      color: #e74c3c;
+      text-align: center;
+      padding: 20px;
+      border: 1px solid #e74c3c;
+      border-radius: 5px;
+      margin: 20px auto;
+      max-width: 80%;
+      background-color: rgba(231, 76, 60, 0.1);
+    }
+
+    .feature-type {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.8em;
+      margin-right: 8px;
+      font-weight: 600;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+      vertical-align: middle;
+      transform: translateY(-1px);
+    }
+
+    .feature-type:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background-color: currentColor;
+      transition: width 0.3s;
+    }
+
+    .version li:hover .feature-type:after {
+      width: 100%;
+    }
+
+    .feature-new {
+      background-color: rgba(46, 204, 113, 0.2);
+      color: #2ecc71;
+    }
+
+    .feature-improvement {
+      background-color: rgba(52, 152, 219, 0.2);
+      color: #3498db;
+    }
+
+    .feature-fix {
+      background-color: rgba(231, 76, 60, 0.2);
+      color: #e74c3c;
+    }
+
+    .version-controls {
+      text-align: center;
+      padding-top: 20px;
+      margin-top: 40px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .scroll-top {
+      background: var(--background-color);
+      color: var(--primary-color);
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.5rem;
+      margin: 0 auto;
+      box-shadow: var(--card-shadow);
+      transition: all 0.3s;
+      opacity: 0;
+      transform: scale(0.8);
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 99;
+    }
+
+    .scroll-top.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .scroll-top:hover {
+      transform: translateY(-5px) scale(1.1);
+      color: var(--accent-color);
+    }
+
+    .version-count {
+      position: absolute;
+      top: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.7rem;
+      color: white;
+      background-color: var(--primary-color);
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+
+    .tilt-effect {
+      transform-style: preserve-3d;
+      transform: perspective(1000px);
+    }
+
+    .tilt-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      transform: translateZ(-10px);
+      background: linear-gradient(135deg, rgba(124, 77, 255, 0.1), rgba(74, 144, 226, 0.1));
+      border-radius: 12px;
+      pointer-events: none;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .timeline:before {
+        left: 30px;
+      }
+      
+      .version:before {
+        left: 30px;
+        transform: none;
+      }
+
+      .version:hover:before {
+        transform: scale(1.3);
+      }
+      
+      .version:after {
+        display: none;
+      }
+      
+      .version-inner {
+        width: calc(100% - 60px);
+        margin-left: 60px !important;
+      }
+
+      .tooltip {
+        left: 60px !important;
+        right: auto !important;
+      }
+
+      .header {
+        padding: 20px 0;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      .subtitle {
+        font-size: 1rem;
+      }
+
+      .version-count {
+        left: 30px;
+        transform: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .version-inner {
+        padding: 15px;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      .version h2 {
+        font-size: 1.2rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .theme-toggle, .back-button {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+      }
+
+      .scroll-top {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+        right: 20px;
+        bottom: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="particles-js"></div>
+  <button class="back-button" onclick="window.history.back()">←</button>
+  <button class="theme-toggle" onclick="toggleTheme()">🌞</button>
+  <button class="scroll-top" onclick="scrollToTop()">↑</button>
+
+  <div class="header">
+    <div class="container">
+      <h1>輕小說閱讀器</h1>
+      <p class="subtitle"><span class="typewriter">持續精進的應用，為您帶來更好的閱讀體驗</span></p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div id="changelog">
+      <div class="loading">
+        <div class="loading-spinner"></div>
+        <p>載入更新日誌中...</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.0/dist/vanilla-tilt.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+      const typewriterEl = document.querySelector('.typewriter');
+      if (typewriterEl) {
+        const text = typewriterEl.textContent;
+        const charCount = text.length;
+        document.documentElement.style.setProperty('--typewriter-char-count', charCount);
+
+        typewriterEl.textContent = ''; 
+        typewriterEl.style.borderRight = '2px solid var(--primary-color)';
+        typewriterEl.style.animation = 'blink-caret 0.75s step-end infinite';
+        
+        let i = 0;
+        function typeNextChar() {
+          if (i < text.length) {
+
+            typewriterEl.textContent += text.charAt(i);
+            i++;
+
+            typewriterEl.style.maxWidth = typewriterEl.scrollWidth + 'px';
+
+            const minDelay = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--typewriter-min-speed'));
+            const maxDelay = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--typewriter-max-speed'));
+
+            let delay;
+
+            const punctuation = [',', '.', '，', '。', '！', '？', '；', '：'];
+            if (punctuation.includes(text.charAt(i-1))) {
+              delay = Math.random() * (maxDelay - minDelay) + maxDelay; 
+            } else if (i < text.length && text.charAt(i-1) === ' ' && text.charAt(i) !== ' ') {
+
+              delay = Math.random() * (maxDelay - minDelay) + minDelay * 1.5;
+            } else {
+
+              delay = Math.random() * (maxDelay - minDelay) + minDelay;
+            }
+
+            if (i < text.length && isCJK(text.charAt(i-1)) && isCJK(text.charAt(i))) {
+              delay = delay * 0.8; 
+            }
+            
+            setTimeout(typeNextChar, delay);
+          } else {
+
+            typewriterEl.style.borderRight = '2px solid var(--primary-color)';
+          }
+        }
+
+        function isCJK(char) {
+          const code = char.charCodeAt(0);
+          return (
+            (code >= 0x4E00 && code <= 0x9FFF) || 
+            (code >= 0x3400 && code <= 0x4DBF) || 
+            (code >= 0xAC00 && code <= 0xD7AF)    
+          );
+        }
+
+        setTimeout(typeNextChar, 500);
+      }
+
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      updateThemeToggle(savedTheme);
+
+      initScrollTop();
+
+      initParticles(savedTheme);
+
+      checkFileExists('version.json').then(exists => {
+        if (!exists) {
+          console.warn('version.json 文件不存在，使用默認數據');
+          displayChangelog({
+            history: [{
+              version: '1.0.0',
+              date: new Date().toISOString().split('T')[0],
+              changes: ['初始版本發布']
+            }]
+          });
+
+          setTimeout(initTiltEffect, 500);
+          return;
+        }
+
+        fetch('version.json')
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('無法加載更新日誌數據');
+            }
+            return response.json();
+          })
+          .then(data => {
+            displayChangelog(data);
+
+            setTimeout(initTiltEffect, 500);
+          })
+          .catch(error => {
+            console.error('加載更新日誌時出錯:', error);
+
+            displayChangelog({
+              history: [{
+                version: '1.0.0',
+                date: new Date().toISOString().split('T')[0],
+                changes: ['初始版本發布']
+              }]
+            });
+
+            setTimeout(initTiltEffect, 500);
+          });
+      });
+    });
+
+    function initTiltEffect() {
+      if (window.innerWidth > 768) {
+        VanillaTilt.init(document.querySelectorAll(".version-inner"), {
+          max: 5,
+          speed: 400,
+          glare: true,
+          "max-glare": 0.2,
+          scale: 1.02
+        });
+      }
+    }
+
+    function initParticles(theme) {
+      const isDark = theme === 'dark';
+      
+      particlesJS('particles-js', {
+        "particles": {
+          "number": {
+            "value": 30,
+            "density": {
+              "enable": true,
+              "value_area": 800
+            }
+          },
+          "color": {
+            "value": isDark ? "#64b5f6" : "#4a90e2"
+          },
+          "shape": {
+            "type": "circle",
+            "stroke": {
+              "width": 0,
+              "color": "#000000"
+            },
+            "polygon": {
+              "nb_sides": 5
+            }
+          },
+          "opacity": {
+            "value": 0.3,
+            "random": true,
+            "anim": {
+              "enable": true,
+              "speed": 1,
+              "opacity_min": 0.1,
+              "sync": false
+            }
+          },
+          "size": {
+            "value": 5,
+            "random": true,
+            "anim": {
+              "enable": true,
+              "speed": 2,
+              "size_min": 0.1,
+              "sync": false
+            }
+          },
+          "line_linked": {
+            "enable": true,
+            "distance": 150,
+            "color": isDark ? "#64b5f6" : "#4a90e2",
+            "opacity": 0.2,
+            "width": 1
+          },
+          "move": {
+            "enable": true,
+            "speed": 1,
+            "direction": "none",
+            "random": true,
+            "straight": false,
+            "out_mode": "out",
+            "bounce": false,
+            "attract": {
+              "enable": false,
+              "rotateX": 600,
+              "rotateY": 1200
+            }
+          }
+        },
+        "interactivity": {
+          "detect_on": "canvas",
+          "events": {
+            "onhover": {
+              "enable": true,
+              "mode": "grab"
+            },
+            "onclick": {
+              "enable": true,
+              "mode": "push"
+            },
+            "resize": true
+          },
+          "modes": {
+            "grab": {
+              "distance": 140,
+              "line_linked": {
+                "opacity": 0.6
+              }
+            },
+            "push": {
+              "particles_nb": 3
+            }
+          }
+        },
+        "retina_detect": true
+      });
+    }
+
+    function initScrollTop() {
+      const scrollTopBtn = document.querySelector('.scroll-top');
+      
+      window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 300) {
+          scrollTopBtn.classList.add('visible');
+        } else {
+          scrollTopBtn.classList.remove('visible');
+        }
+      });
+    }
+
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+
+    function updateThemeToggle(theme) {
+      const toggleBtn = document.querySelector('.theme-toggle');
+      if (theme === 'dark') {
+        toggleBtn.textContent = '🌜';
+      } else {
+        toggleBtn.textContent = '🌞';
+      }
+
+      if (window.pJSDom && window.pJSDom.length > 0) {
+
+        window.pJSDom[0].pJS.fn.vendors.destroypJS();
+        window.pJSDom = [];
+
+        initParticles(theme);
+      }
+    }
+
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      
+      updateThemeToggle(newTheme);
+    }
+
+    function getChangeTypeLabel(change) {
+      if (typeof change !== 'string') return '';
+      
+      const lowerChange = change.toLowerCase();
+      
+      if (lowerChange.includes('新增') || lowerChange.includes('新功能') || lowerChange.includes('添加')) {
+        return '<span class="feature-type feature-new">新增</span>';
+      } else if (lowerChange.includes('優化') || lowerChange.includes('改進') || lowerChange.includes('提升')) {
+        return '<span class="feature-type feature-improvement">優化</span>';
+      } else if (lowerChange.includes('修復') || lowerChange.includes('修正') || lowerChange.includes('解決')) {
+        return '<span class="feature-type feature-fix">修復</span>';
+      }
+      
+      return '';
+    }
+
+    function formatVersionDate(dateStr) {
+      if (!dateStr) return '未知時間';
+      
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      try {
+        const date = new Date(dateStr);
+
+        if (isNaN(date.getTime())) {
+          return '未知時間';
+        }
+        return date.toLocaleDateString('zh-TW', options);
+      } catch (e) {
+        return '未知時間';
+      }
+    }
+
+    function displayChangelog(data) {
+      const changelogDiv = document.getElementById('changelog');
+
+      changelogDiv.innerHTML = '';
+
+      const timelineDiv = document.createElement('div');
+      timelineDiv.className = 'timeline';
+
+      let versionsAdded = false; 
+      
+      try {
+        if (data && data.history && Array.isArray(data.history)) {
+
+          if (data.history.length === 0) {
+
+            data.history.push({
+              version: '1.0.0',
+              date: new Date().toISOString().split('T')[0],
+              changes: ['初始版本發布']
+            });
+          }
+          
+          data.history.forEach((version, index) => {
+            const versionDiv = document.createElement('div');
+
+            versionDiv.className = index === 0 ? 'version current' : 'version';
+
+            const versionCount = document.createElement('div');
+            versionCount.className = 'version-count';
+            versionCount.textContent = index + 1;
+            versionDiv.appendChild(versionCount);
+
+            const versionInner = document.createElement('div');
+            versionInner.className = 'version-inner';
+            versionInner.style.opacity = '1'; 
+
+            const tiltBg = document.createElement('div');
+            tiltBg.className = 'tilt-bg';
+            versionInner.appendChild(tiltBg);
+
+            if (version.date) {
+              const dateDiv = document.createElement('div');
+              dateDiv.className = 'date';
+              dateDiv.textContent = formatVersionDate(version.date);
+              versionInner.appendChild(dateDiv);
+            }
+
+            const versionTitle = document.createElement('h2');
+            
+            const versionNum = document.createElement('span');
+            versionNum.textContent = `版本 ${version.version}`;
+            versionTitle.appendChild(versionNum);
+            
+            const versionBadge = document.createElement('span');
+            versionBadge.className = 'version-badge';
+            versionBadge.textContent = index === 0 ? '最新版本' : '舊版本';
+            versionTitle.appendChild(versionBadge);
+            
+            versionInner.appendChild(versionTitle);
+            
+            if (version.changes) {
+              const changesList = document.createElement('ul');
+
+              if (typeof version.changes === 'string') {
+                const changeItem = document.createElement('li');
+                const typeLabel = getChangeTypeLabel(version.changes);
+                changeItem.innerHTML = typeLabel + version.changes;
+                changesList.appendChild(changeItem);
+              } 
+
+              else if (Array.isArray(version.changes)) {
+                version.changes.forEach(change => {
+                  const changeItem = document.createElement('li');
+                  const typeLabel = getChangeTypeLabel(change);
+                  changeItem.innerHTML = typeLabel + change;
+                  changesList.appendChild(changeItem);
+                });
+              }
+              
+              versionInner.appendChild(changesList);
+            }
+            
+            versionDiv.appendChild(versionInner);
+            timelineDiv.appendChild(versionDiv);
+            versionsAdded = true;
+          });
+        }
+      } catch (error) {
+        console.error('處理版本數據時出錯:', error);
+      }
+
+      if (!versionsAdded) {
+        console.log('創建預設版本卡片');
+        const versionDiv = document.createElement('div');
+        versionDiv.className = 'version current';
+        
+        const versionCount = document.createElement('div');
+        versionCount.className = 'version-count';
+        versionCount.textContent = '1';
+        versionDiv.appendChild(versionCount);
+        
+        const versionInner = document.createElement('div');
+        versionInner.className = 'version-inner';
+        versionInner.style.opacity = '1'; 
+        
+        const versionTitle = document.createElement('h2');
+        versionTitle.innerHTML = '<span>版本 1.0.0</span><span class="version-badge">最新版本</span>';
+        versionInner.appendChild(versionTitle);
+        
+        const dateDiv = document.createElement('div');
+        dateDiv.className = 'date';
+        dateDiv.textContent = formatVersionDate(new Date().toISOString());
+        versionInner.appendChild(dateDiv);
+        
+        const changesList = document.createElement('ul');
+        const changeItem = document.createElement('li');
+        changeItem.innerHTML = '<span class="feature-type feature-new">新增</span>初始版本發布';
+        changesList.appendChild(changeItem);
+        versionInner.appendChild(changesList);
+        
+        versionDiv.appendChild(versionInner);
+        timelineDiv.appendChild(versionDiv);
+      }
+      
+      changelogDiv.appendChild(timelineDiv);
+
+      const allVersions = timelineDiv.querySelectorAll('.version');
+      if (allVersions.length > 0) {
+
+        allVersions.forEach(v => v.classList.remove('current'));
+
+        allVersions[0].classList.add('current');
+      }
+    }
+
+    function checkFileExists(url) {
+      return fetch(url, { method: 'HEAD' })
+        .then(response => response.ok)
+        .catch(() => false);
+    }
+  </script>
+</body>
+</html>
