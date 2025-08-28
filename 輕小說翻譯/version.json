@@ -1,7 +1,12 @@
 {
-  "downloadUrl": "https://expo.dev/artifacts/eas/pxBahGb1uerB1hRzfyACi5.apk",
+  "downloadUrl": "https://expo.dev/artifacts/eas/6Ww142346SzwqFgAWesPVA.apk",
   "fullChangelogUrl": "https://xuerowo.com/%E8%BC%95%E5%B0%8F%E8%AA%AA%E7%BF%BB%E8%AD%AF/changelog.html",
   "history": [
+    {
+      "version": "1.2.19",
+      "date": "2025-08-29",
+      "changes": "修復了小說列表排序問題"
+    },
     {
       "version": "1.2.18",
       "date": "2025-08-27",
