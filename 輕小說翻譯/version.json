@@ -1,7 +1,12 @@
 {
-  "downloadUrl": "https://expo.dev/artifacts/eas/6Ww142346SzwqFgAWesPVA.apk",
+  "downloadUrl": "https://expo.dev/artifacts/eas/gng57TKwBr28s68uGTmDrv.apk",
   "fullChangelogUrl": "https://xuerowo.com/%E8%BC%95%E5%B0%8F%E8%AA%AA%E7%BF%BB%E8%AD%AF/changelog.html",
   "history": [
+    {
+      "version": "1.2.20",
+      "date": "2025-08-30",
+      "changes": "修復了文字被截斷問題。新增閱讀寬度設定。"
+    },
     {
       "version": "1.2.19",
       "date": "2025-08-29",
