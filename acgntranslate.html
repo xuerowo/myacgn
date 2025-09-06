@@ -1443,7 +1443,7 @@
                     <label>行距: {{ lineHeight }}</label>
                     <input type="range" 
                            v-model="lineHeight" 
-                           min="1.5" 
+                           min="1.0" 
                            max="2.5" 
                            step="0.1"
                            @mousedown="onSettingsInputStart" 
@@ -1564,7 +1564,7 @@
                     isLightboxActive: false,
                     lightboxImage: null,
                     fontSize: parseInt(localStorage.getItem(STORAGE_KEYS.FONT_SIZE)) || 18,
-                    lineHeight: parseFloat(localStorage.getItem(STORAGE_KEYS.LINE_HEIGHT)) || 1.8,
+                    lineHeight: parseFloat(localStorage.getItem(STORAGE_KEYS.LINE_HEIGHT)) || 1.5,
                     contentWidth: parseInt(localStorage.getItem(STORAGE_KEYS.CONTENT_WIDTH)) || 80,
                     chapterSortOrder: localStorage.getItem(STORAGE_KEYS.CHAPTER_SORT_ORDER) || 'desc',
                     retryCount: {},
