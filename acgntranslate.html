@@ -576,10 +576,7 @@
         .reader-content {
             margin-bottom: 2rem;
             line-height: var(--lh);
-        }
-
-        .reader-content p {
-            margin-bottom: var(--sp);
+            white-space: pre-wrap;
         }
 
         .reader-content img {
@@ -1640,6 +1637,8 @@
                 },
                 parsedContent() {
                     if (!this.chapterContent) return '';
+                    
+                    // 簡化的空行處理 - 保持原始換行但不添加額外標籤
                     return marked.parse ? marked.parse(this.chapterContent) : this.chapterContent;
                 },
                 hasNext() {
@@ -2017,7 +2016,12 @@
                                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                             }
                             
-                            this.chapterContent = await response.text();
+                            let rawContent = await response.text();
+                            
+                            // 確保文本中的空行格式正確保留
+                            this.chapterContent = rawContent
+                                .replace(/\r\n/g, '\n')  // 統一換行符
+                                .replace(/\r/g, '\n');   // 處理舊式 Mac 換行符
                             
                             this.$nextTick(() => {
                                 window.scrollTo(0, 0);
