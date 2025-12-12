@@ -14,37 +14,55 @@
     
     <link rel="icon" href="images/favicon.jpg" type="image/jpg">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Noto+Sans+TC:wght@300;400;700&display=swap');
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            touch-action: manipulation; 
-            -webkit-user-select: none;  
+            touch-action: manipulation;
+            -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
         }
         
         body {
-            font-family: '微軟正黑體', Arial, sans-serif;
+            font-family: 'Noto Sans TC', '微軟正黑體', Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             width: 100vw;
-            background-color: #1a1a2e;
+            background-color: #0b0b15;
             color: #fff;
-            overflow: hidden; 
+            overflow: hidden;
         }
         
         .game-container {
             position: relative;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #16213e, #0f3460);
+            background: radial-gradient(circle at center, #1b2735 0%, #090a0f 100%);
             border: none;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+        }
+        
+        /* Tech Grid Overlay */
+        .game-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(76, 201, 240, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(76, 201, 240, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 1;
         }
 
         .home-screen {
@@ -53,17 +71,19 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #16213e, #0f3460);
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             color: white;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
+            justify-content: flex-start; /* Changed from center to flex-start to allow scrolling from top */
             align-items: center;
-            padding: 20px 20px;
+            padding: 60px 20px 40px 20px; /* Further increased padding */
             z-index: 20;
             transition: all 0.5s ease;
             overflow-y: auto;
-            gap: 15px;
+            gap: 25px;
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -72,52 +92,85 @@
         .game-title {
             text-align: center;
             margin-bottom: 5px;
+            margin-top: 20px; /* Added top margin for better spacing */
         }
         
         .game-title h1 {
-            font-size: 52px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 64px;
             margin-bottom: 10px;
             color: #fff;
-            text-shadow: 0 0 15px rgba(80, 140, 255, 0.7);
-            animation: glow 2s ease-in-out infinite alternate;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow:
+                0 0 10px rgba(76, 201, 240, 0.8),
+                0 0 20px rgba(76, 201, 240, 0.6),
+                0 0 40px rgba(76, 201, 240, 0.4);
+            animation: title-pulse 2s infinite alternate;
         }
         
-        @keyframes glow {
-            from { text-shadow: 0 0 10px rgba(80, 140, 255, 0.7); }
-            to { text-shadow: 0 0 20px rgba(80, 140, 255, 0.9), 0 0 30px rgba(80, 140, 255, 0.6); }
+        @keyframes title-pulse {
+            from { text-shadow: 0 0 10px rgba(76, 201, 240, 0.8), 0 0 20px rgba(76, 201, 240, 0.6); transform: scale(1); }
+            to { text-shadow: 0 0 15px rgba(76, 201, 240, 1), 0 0 30px rgba(76, 201, 240, 0.8), 0 0 50px rgba(76, 201, 240, 0.6); transform: scale(1.02); }
         }
         
         .subtitle {
-            font-size: 22px;
-            color: #e2e2e2;
-            text-shadow: 0 0 5px rgba(0,0,0,0.5);
+            font-size: 20px;
+            color: #a0aec0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 300;
         }
         
         .game-menu {
             display: flex;
             flex-direction: column;
-            gap: 16px;
-            width: 280px;
+            gap: 20px;
+            width: 320px;
+            z-index: 10;
         }
         
         .menu-button {
-            background: linear-gradient(135deg, #4361ee, #3a0ca3);
-            color: white;
-            border: none;
-            padding: 15px 20px;
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            color: #4cc9f0;
+            border: 1px solid rgba(76, 201, 240, 0.3);
+            padding: 18px 20px;
             font-size: 18px;
-            border-radius: 8px;
+            font-weight: 700;
+            border-radius: 4px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: all 0.3s ease;
             width: 100%;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .menu-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(76, 201, 240, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .menu-button:hover::before {
+            left: 100%;
         }
         
         .menu-button:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 7px 14px rgba(0,0,0,0.3);
-            background: linear-gradient(135deg, #4895ef, #3f37c9);
+            transform: translateY(-3px);
+            box-shadow: 0 0 20px rgba(76, 201, 240, 0.4);
+            border-color: #4cc9f0;
+            background: rgba(76, 201, 240, 0.1);
+            color: #fff;
         }
         
         .menu-button:active {
@@ -135,42 +188,117 @@
             border: 1px solid rgba(255,255,255,0.1);
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
+
+        .setting-group-home {
+            margin: 12px 0;
+            width: 100%;
+            text-align: left;
+        }
+        
+        .setting-group-home label {
+            font-size: 13px;
+            color: #ccc;
+            margin-bottom: 5px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .player-name-input-large {
+            margin: 20px 0;
+            text-align: center;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .player-name-input-large label {
+            font-size: 18px;
+            color: #4cc9f0;
+        }
+        
+        .player-name-input-large input {
+            padding: 12px 20px;
+            font-size: 18px;
+            border-radius: 8px;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            width: 80%;
+            max-width: 300px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .player-name-input-large input:focus {
+            border-color: #4cc9f0;
+            box-shadow: 0 0 15px rgba(76, 201, 240, 0.3);
+            outline: none;
+        }
         
         .mode-display, .high-score {
             margin: 8px 0;
         }
+
+        .home-settings {
+            margin-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 10px;
+        }
+
+        .home-setting-group {
+            margin-bottom: 12px;
+            text-align: left;
+        }
+
+        .home-setting-group label {
+            font-size: 12px;
+            color: #aaa;
+            margin-bottom: 5px;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
         
         .high-score span {
-            color: #4cc9f0;
+            color: #f72585;
+            font-family: 'Orbitron', monospace;
             font-weight: bold;
+            font-size: 16px;
         }
         
         .player-name-input {
-            margin: 8px 0;
+            margin: 15px 0;
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 8px;
+            text-align: left;
         }
         
         .player-name-input label {
-            font-size: 14px;
-            color: #e2e2e2;
+            font-size: 12px;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
         .player-name-input input {
-            padding: 8px 12px;
-            border: 2px solid rgba(255,255,255,0.2);
-            border-radius: 5px;
-            background: rgba(0,0,0,0.3);
+            padding: 12px 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            background: rgba(0,0,0,0.5);
             color: white;
-            font-size: 14px;
-            transition: border-color 0.3s ease;
+            font-size: 16px;
+            font-family: 'Noto Sans TC', sans-serif;
+            transition: all 0.3s ease;
         }
         
         .player-name-input input:focus {
             outline: none;
             border-color: #4cc9f0;
-            box-shadow: 0 0 10px rgba(76, 201, 240, 0.3);
+            box-shadow: 0 0 15px rgba(76, 201, 240, 0.2);
+            background: rgba(0,0,0,0.7);
         }
         
         .player-name-input input::placeholder {
@@ -300,12 +428,38 @@
             top: 0;
             left: 30px;
             transition: transform 0.1s;
-            border: 2px solid #333;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            border: 2px solid rgba(255,255,255,0.2);
+            box-shadow: 0 0 15px rgba(77, 150, 255, 0.6);
+            z-index: 2;
+        }
+        
+        /* Face details */
+        .head::after {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: 8px;
+            width: 8px;
+            height: 8px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 50%;
+            box-shadow: 16px 0 0 rgba(0,0,0,0.3);
+        }
+        
+        .head::before {
+            content: '';
+            position: absolute;
+            bottom: 8px;
+            left: 12px;
+            width: 16px;
+            height: 4px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 2px;
         }
         
         .head:active {
             transform: scale(0.9);
+            filter: brightness(1.2);
         }
         
         .body {
@@ -313,77 +467,115 @@
             width: 50px;
             height: 80px;
             background-color: #4d96ff;
-            top: 40px;
+            top: 38px;
             left: 25px;
+            border-radius: 10px;
+            border: 2px solid rgba(255,255,255,0.2);
+            box-shadow: 0 0 10px rgba(77, 150, 255, 0.4);
+            z-index: 1;
+        }
+        
+        /* Body details - Vest */
+        .body::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 36px;
+            height: 40px;
+            background: rgba(0,0,0,0.1);
             border-radius: 5px;
-            border: 2px solid #333;
         }
         
         .arm-left, .arm-right {
             position: absolute;
-            width: 15px;
-            height: 60px;
+            width: 16px;
+            height: 65px;
             background-color: #4d96ff;
-            top: 45px;
-            border-radius: 5px;
-            border: 2px solid #333;
+            top: 42px;
+            border-radius: 8px;
+            border: 2px solid rgba(255,255,255,0.2);
+            box-shadow: 0 0 8px rgba(77, 150, 255, 0.3);
+            transform-origin: top center;
         }
         
         .arm-left {
-            left: 10px;
+            left: 8px;
+            transform: rotate(10deg);
         }
         
         .arm-right {
-            right: 10px;
+            right: 8px;
+            transform: rotate(-10deg);
         }
         
         .leg-left, .leg-right {
             position: absolute;
-            width: 15px;
-            height: 60px;
+            width: 18px;
+            height: 65px;
             background-color: #4d96ff;
-            top: 120px;
-            border-radius: 5px;
-            border: 2px solid #333;
+            top: 110px;
+            border-radius: 8px;
+            border: 2px solid rgba(255,255,255,0.2);
+            box-shadow: 0 0 8px rgba(77, 150, 255, 0.3);
+            z-index: 0;
         }
         
         .leg-left {
-            left: 25px;
+            left: 24px;
+            transform: rotate(5deg);
         }
         
         .leg-right {
-            right: 25px;
+            right: 24px;
+            transform: rotate(-5deg);
         }
 
         .info-panel {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0.6));
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1200px;
+            padding: 15px 25px;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
             color: white;
-            display: flex;
+            display: none; /* Initially hidden, shown only in game */
             justify-content: space-between;
             align-items: center;
-            font-size: 18px;
-            z-index: 5;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            font-size: 20px;
+            z-index: 50;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
         
         .time, .score {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
+            font-family: 'Orbitron', monospace;
         }
         
         .time i, .score i {
-            font-size: 20px;
+            font-size: 24px;
+            color: #aaa;
         }
         
-        .time span, .score span {
+        .time span {
             font-weight: bold;
             color: #4cc9f0;
+            font-size: 28px;
+            text-shadow: 0 0 10px rgba(76, 201, 240, 0.5);
+        }
+
+        .score span {
+            font-weight: bold;
+            color: #f72585;
+            font-size: 28px;
+            text-shadow: 0 0 10px rgba(247, 37, 133, 0.5);
         }
         
         .start-screen, .end-screen {
@@ -400,6 +592,17 @@
             align-items: center;
             z-index: 10;
             transition: all 0.5s ease;
+            overflow-y: auto;
+        }
+
+        .start-settings-container {
+            background-color: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 10px;
+            width: 280px;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin: 15px 0;
+            text-align: center;
         }
         
         .missed {
@@ -453,27 +656,36 @@
             text-decoration: none;
             display: inline-block;
             font-size: 18px;
-            margin: 10px 2px;
+            margin: 10px 5px;
             cursor: pointer;
-            border-radius: 8px;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(67, 97, 238, 0.3);
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 600;
         }
         
         button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 7px 14px rgba(0,0,0,0.3);
-            background: linear-gradient(135deg, #4895ef, #3f37c9);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(67, 97, 238, 0.5);
+            filter: brightness(1.1);
         }
         
         button:active {
-            transform: translateY(-1px);
+            transform: translateY(1px);
         }
         
         .small-button {
-            padding: 8px 12px;
+            padding: 8px 16px;
             font-size: 14px;
-            margin: 0 5px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: none;
+        }
+        
+        .small-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
         }
         
         #end-game-button {
@@ -497,20 +709,22 @@
 
         .settings-panel {
             position: absolute;
-            top: 60px;
-            right: -300px;
-            width: 280px;
-            max-height: 80vh; 
-            background: linear-gradient(135deg, rgba(22, 33, 62, 0.95), rgba(15, 52, 96, 0.95));
-            padding: 20px;
-            border-radius: 10px;
-            z-index: 25;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            transition: right 0.4s ease;
+            top: 70px;
+            right: -350px;
+            width: 320px;
+            max-height: 80vh;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 25px;
+            border-radius: 16px;
+            z-index: 1001; /* Ensure it's above everything */
+            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+            transition: right 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             border: 1px solid rgba(255,255,255,0.1);
-            overflow-y: auto; 
-            scrollbar-width: thin; 
-            scrollbar-color: rgba(255,255,255,0.3) rgba(0,0,0,0.2); 
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #4cc9f0 rgba(0,0,0,0.2);
         }
 
         .settings-panel::-webkit-scrollbar {
@@ -532,29 +746,31 @@
         }
         
         .settings-panel.show-settings {
-            right: 10px !important;
+            right: 20px !important;
         }
 
         .settings-toggle {
             position: absolute;
-            top: 25px;
-            right: 25px;
-            background: linear-gradient(135deg, #4896ef, #4361ee);
-            color: white;
-            border: none;
-            border-radius: 10px;
+            top: 30px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            color: #4cc9f0;
+            border: 1px solid rgba(76, 201, 240, 0.3);
+            border-radius: 8px;
             width: auto;
             height: auto;
-            padding: 8px 15px;
+            padding: 10px 20px;
             z-index: 1000;
             font-size: 16px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
+            font-family: 'Noto Sans TC', sans-serif;
         }
         
         .settings-toggle::before {
@@ -563,19 +779,24 @@
         }
         
         .settings-toggle:hover {
-            background: linear-gradient(135deg, #5ba3f0, #536cf5);
+            background: rgba(76, 201, 240, 0.2);
+            box-shadow: 0 0 15px rgba(76, 201, 240, 0.4);
             transform: translateY(-2px);
-            box-shadow: 0 5px 12px rgba(0,0,0,0.4);
+            color: #fff;
         }
         
         .setting-item {
-            margin: 15px 0;
+            margin: 20px 0;
         }
         
         .setting-item label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #a0aec0;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
         .difficulty-buttons {
@@ -585,15 +806,25 @@
         
         .diff-button {
             flex: 1;
-            padding: 8px 5px;
+            padding: 10px 5px;
             font-size: 14px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ccc;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+        }
+        
+        .diff-button:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
         
         .diff-button.active {
-            background: linear-gradient(135deg, #4895ef, #3f37c9);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            background: rgba(76, 201, 240, 0.2);
+            border-color: #4cc9f0;
+            color: #fff;
+            box-shadow: 0 0 10px rgba(76, 201, 240, 0.2);
         }
 
         .move-type-buttons {
@@ -603,29 +834,31 @@
         
         .move-button {
             flex: 1;
-            padding: 8px 3px;
+            padding: 10px 5px;
             font-size: 12px;
-            background: rgba(128,128,128,0.3); 
-            border: 1px solid rgba(255,255,255,0.2);
-            color: rgba(255,255,255,0.6); 
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ccc;
             transition: all 0.3s ease;
             cursor: pointer;
             white-space: nowrap;
+            border-radius: 4px;
         }
         
         .move-button.active {
-            background: linear-gradient(135deg, #4895ef, #3f37c9);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            color: white; 
+            background: rgba(76, 201, 240, 0.2);
+            border-color: #4cc9f0;
+            color: #fff;
+            box-shadow: 0 0 10px rgba(76, 201, 240, 0.2);
         }
         
         .move-button:hover {
-            background: rgba(128,128,128,0.5); 
+            background: rgba(255, 255, 255, 0.1);
         }
         
         .move-button.active:hover {
-            background: linear-gradient(135deg, #5ba3f0, #4361ee);
-            transform: translateY(-2px);
+            background: rgba(76, 201, 240, 0.3);
+            transform: translateY(-1px);
         }
 
         .bullet-hole {
@@ -787,6 +1020,20 @@
             border-radius: 50%;
             pointer-events: none;
             z-index: 100;
+            box-shadow: 0 0 10px currentColor;
+        }
+        
+        .critical-hit-text {
+            color: #ff0055 !important;
+            font-size: 24px !important;
+            text-shadow: 0 0 10px #ff0055 !important;
+            animation: critical-pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards !important;
+        }
+        
+        @keyframes critical-pop {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            50% { transform: translate(-50%, -100px) scale(1.5); opacity: 1; }
+            100% { transform: translate(-50%, -150px) scale(1); opacity: 0; }
         }
 
         .combo-display {
@@ -1072,29 +1319,30 @@
         
         .bg-mode-button {
             flex: 1;
-            padding: 8px 5px;
+            padding: 10px 5px;
             font-size: 14px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: rgba(255,255,255,0.6);
-            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ccc;
+            border-radius: 4px;
             cursor: pointer;
             transition: all 0.3s ease;
         }
         
         .bg-mode-button.active {
-            background: linear-gradient(135deg, #4895ef, #3f37c9);
-            color: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            background: rgba(76, 201, 240, 0.2);
+            border-color: #4cc9f0;
+            color: #fff;
+            box-shadow: 0 0 10px rgba(76, 201, 240, 0.2);
         }
         
         .bg-mode-button:hover {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.1);
         }
         
         .bg-mode-button.active:hover {
-            background: linear-gradient(135deg, #5ba3f0, #4361ee);
-            transform: translateY(-2px);
+            background: rgba(76, 201, 240, 0.3);
+            transform: translateY(-1px);
         }
 
         /* 背景圖片選項 */
@@ -1478,25 +1726,11 @@
             
             <div class="game-menu" role="navigation" aria-label="遊戲主選單">
                 <button id="play-button" class="menu-button" aria-label="開始射擊挑戰遊戲">開始遊戲</button>
-                <button id="home-toggle-mode" class="menu-button" aria-label="切換人形模式和靶心模式">切換模式</button>
                 <button id="leaderboard-button" class="menu-button" aria-label="查看全球玩家排行榜">全球排行榜</button>
                 <button id="instructions-button" class="menu-button" aria-label="查看遊戲玩法說明">遊戲說明</button>
             </div>
             
             <div class="game-info">
-                <div class="player-name-input">
-                    <label for="player-name">玩家名稱:</label>
-                    <input type="text" id="player-name" placeholder="請輸入您的名稱" maxlength="20">
-                </div>
-                <div class="mode-display">
-                    當前模式: <span id="current-mode">人形靶子</span>
-                </div>
-                <div class="move-display">
-                    移動效果: <span id="current-move-type">漸變移動</span>
-                </div>
-                <div class="trigger-display">
-                    觸發方式: <span id="current-move-trigger">手動移動</span>
-                </div>
                 <div class="high-score">
                     最高分數: <span id="high-score">0</span>
                 </div>
@@ -1508,10 +1742,54 @@
         </div>
 
         <div class="start-screen" id="start-screen">
-            <h1>射擊挑戰遊戲</h1>
+            <h1>準備開始</h1>
+            
+            <div class="player-name-input-large">
+                <label for="player-name">輸入玩家名稱</label>
+                <input type="text" id="player-name" placeholder="匿名玩家" maxlength="20">
+            </div>
+
             <p>射擊人形靶子的<strong>頭部</strong>獲得分數，<strong>沒射中會扣1分</strong>，一分鐘內看看你能獲得多少分！</p>
+            
+            <div class="start-settings-container">
+                <div class="setting-group-home">
+                    <label>難度</label>
+                    <div class="difficulty-buttons">
+                        <button id="easy-button" class="diff-button">簡單</button>
+                        <button id="medium-button" class="diff-button active">中等</button>
+                        <button id="hard-button" class="diff-button">困難</button>
+                    </div>
+                </div>
+
+                <div class="setting-group-home">
+                    <label>移動效果</label>
+                    <div class="move-type-buttons">
+                        <button id="transition-move" class="move-button active">漸變</button>
+                        <button id="instant-move" class="move-button">瞬間</button>
+                    </div>
+                </div>
+
+                <div class="setting-group-home">
+                    <label>觸發方式</label>
+                    <div class="move-trigger-buttons">
+                        <button id="manual-move" class="move-button active">手動</button>
+                        <button id="auto-move" class="move-button">自動</button>
+                        <button id="continuous-move" class="move-button">持續</button>
+                    </div>
+                </div>
+
+                <div class="setting-group-home">
+                    <label>遊戲模式</label>
+                    <button id="home-toggle-mode" class="menu-button" style="font-size: 14px; padding: 10px;">切換至靶心模式</button>
+                </div>
+                
+                <div class="mode-display" style="display: none;">
+                    當前模式: <span id="current-mode">人形靶子</span>
+                </div>
+            </div>
+
             <div class="button-group">
-                <button id="start-button">開始遊戲</button>
+                <button id="confirm-start-button">開始挑戰</button>
                 <button id="back-to-home">返回首頁</button>
             </div>
         </div>
@@ -1602,29 +1880,7 @@
                 <label for="mute-toggle">靜音</label>
                 <input type="checkbox" id="mute-toggle">
             </div>
-            <div class="setting-item">
-                <label>難度</label>
-                <div class="difficulty-buttons">
-                    <button id="easy-button" class="diff-button">簡單</button>
-                    <button id="medium-button" class="diff-button active">中等</button>
-                    <button id="hard-button" class="diff-button">困難</button>
-                </div>
-            </div>
-            <div class="setting-item">
-                <label>移動效果</label>
-                <div class="move-type-buttons">
-                    <button id="transition-move" class="move-button active">漸變移動</button>
-                    <button id="instant-move" class="move-button">瞬間移動</button>
-                </div>
-            </div>
-            <div class="setting-item">
-                <label>移動觸發方式</label>
-                <div class="move-trigger-buttons">
-                    <button id="manual-move" class="move-button active">手動移動</button>
-                    <button id="auto-move" class="move-button">自動連續</button>
-                    <button id="continuous-move" class="move-button">持續移動</button>
-                </div>
-            </div>
+            
             <div class="setting-item">
                 <label>背景模式</label>
                 <div class="bg-mode-buttons">
@@ -1713,7 +1969,7 @@
                     <button id="target-color-apply" class="color-apply">套用</button>
                 </div>
             </div>
-            <button id="close-settings">關閉</button>
+            <button id="close-settings" class="menu-button" style="margin-top: 20px;">關閉</button>
         </div>
 
 
@@ -1791,7 +2047,7 @@
         const finalScoreDisplay = document.getElementById('final-score');
         const currentModeDisplay = document.getElementById('current-mode');
         const highScoreDisplay = document.getElementById('high-score');
-        const startButton = document.getElementById('start-button');
+        const confirmStartButton = document.getElementById('confirm-start-button');
         const playButton = document.getElementById('play-button');
         const restartButton = document.getElementById('restart-button');
         const homeButton = document.getElementById('home-button');
@@ -1895,7 +2151,7 @@
                 });
 
                 try {
-                    const silentSound = new Audio("data:audio/mp3;base64,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");
+                    const silentSound = new Audio("data:audio/mp3;base64,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");
                     silentSound.volume = 0;
                     silentSound.play().catch(e => {
                         console.warn('無法播放靜音音頻:', e);
@@ -2063,6 +2319,7 @@
             timeLeftDisplay.textContent = timeLeft;
             comboCountDisplay.textContent = combo;
             comboDisplay.style.display = 'none';
+            document.querySelector('.info-panel').style.display = 'none'; // Ensure info panel is hidden during init
             
             getTarget().style.display = 'none';
             isPlaying = false;
@@ -2074,15 +2331,9 @@
 
             currentModeDisplay.textContent = gameMode === "human" ? "人形靶子" : gameMode === "target" ? "靶心" : "人形靶子";
 
-            document.getElementById('current-move-type').textContent = moveType === 'transition' ? '漸變移動' : '瞬間移動';
-            let moveTriggerText = '手動移動';
-            if (moveTrigger === 'auto') {
-                moveTriggerText = '自動連續';
-            } else if (moveTrigger === 'continuous') {
-                moveTriggerText = '持續移動';
-            }
-            document.getElementById('current-move-trigger').textContent = moveTriggerText;
-
+            // UI 元素已移至首頁，這裡不需要再設置 textContent，因為按鈕狀態會由 CSS active class 控制
+            // 但保留邏輯以防萬一
+            
             document.querySelectorAll('.bullet-hole, .particle, .floating-text').forEach(el => {
                 el.remove();
             });
@@ -2125,7 +2376,42 @@
 
             document.getElementById('settings-panel').classList.remove('show-settings');
 
+            // 根據當前模式更新說明文字
+            updateStartScreenDescription();
+
             startScreen.classList.add('slide-in');
+            
+            // 自動聚焦輸入框
+            setTimeout(() => {
+                const input = document.getElementById('player-name');
+                if(input) input.focus();
+            }, 500);
+        }
+
+        function updateStartScreenDescription() {
+            let description = '';
+            const interval = moveTrigger === "auto" ? getMovingModeIntervalRange() : 
+                           moveTrigger === "continuous" ? getContinuousModeIntervalRange() : "";
+            
+            if (gameMode === "human") {
+                if (moveTrigger === "manual") {
+                    description = '射擊人形靶子的<strong>頭部</strong>獲得分數，<strong>沒射中會扣1分</strong>，一分鐘內看看你能獲得多少分！';
+                } else if (moveTrigger === "auto") {
+                    description = `射擊人形靶子的<strong>頭部</strong>獲得分數，靶子會自動移動(${interval})！一分鐘內看看你能獲得多少分！`;
+                } else if (moveTrigger === "continuous") {
+                    description = `射擊人形靶子的<strong>頭部</strong>獲得分數，靶子會持續移動(每${interval})！一分鐘內看看你能獲得多少分！`;
+                }
+            } else {
+                if (moveTrigger === "manual") {
+                    description = '點擊靶心獲得分數，一分鐘內看看你能獲得多少分！';
+                } else if (moveTrigger === "auto") {
+                    description = `點擊靶心獲得分數，靶子會自動移動(${interval})！一分鐘內看看你能獲得多少分！`;
+                } else if (moveTrigger === "continuous") {
+                    description = `點擊靶心獲得分數，靶子會持續移動(每${interval})！一分鐘內看看你能獲得多少分！`;
+                }
+            }
+            
+            document.querySelector("#start-screen p").innerHTML = description;
         }
 
         function showInstructions() {
@@ -2149,11 +2435,21 @@
                 toggleModeButton.textContent = `切換至${nextMode}`;
             }
             
-            homeToggleModeButton.textContent = `切換至${nextMode}`;
+            if (homeToggleModeButton) {
+                homeToggleModeButton.textContent = `切換至${nextMode}`;
+            }
 
             // 更新當前模式顯示
-            const modeText = gameMode === "human" ? "人形靶子" : "靶心";
-            currentModeDisplay.textContent = modeText;
+            document.querySelectorAll('.bullet-hole, .particle, .floating-text').forEach(el => {
+                el.remove();
+            });
+
+            timeLeftDisplay.classList.remove('time-warning');
+
+            gameContainer.style.cursor = 'crosshair';
+
+            setBgColor(bgColor);
+            setTargetColor(targetColor);
         }
 
         function setupTargetByMode() {
@@ -2174,16 +2470,8 @@
                     <div class="leg-right"></div>
                 `;
 
-                let gameDescription = '射擊人形靶子的<strong>頭部</strong>獲得分數，一分鐘內看看你能獲得多少分！';
-                if (moveTrigger === "auto") {
-                    const interval = getMovingModeIntervalRange();
-                    gameDescription = `射擊人形靶子的<strong>頭部</strong>獲得分數，靶子會自動移動(${interval})！一分鐘內看看你能獲得多少分！`;
-                } else if (moveTrigger === "continuous") {
-                    const interval = getContinuousModeIntervalRange();
-                    gameDescription = `射擊人形靶子的<strong>頭部</strong>獲得分數，靶子會持續移動(每${interval})！一分鐘內看看你能獲得多少分！`;
-                }
-                document.querySelector("#start-screen p").innerHTML = gameDescription;
-
+                // 說明文字更新邏輯已移至 updateStartScreenDescription
+                
                 setTimeout(() => {
                     const head = document.getElementById('head');
                     if (head) {
@@ -2264,15 +2552,7 @@
 
                 newTarget.setAttribute('draggable', 'false');
 
-                let circleGameDescription = '點擊靶心獲得分數，一分鐘內看看你能獲得多少分！';
-                if (moveTrigger === "auto") {
-                    const interval = getMovingModeIntervalRange();
-                    circleGameDescription = `點擊靶心獲得分數，靶子會自動移動(${interval})！一分鐘內看看你能獲得多少分！`;
-                } else if (moveTrigger === "continuous") {
-                    const interval = getContinuousModeIntervalRange();
-                    circleGameDescription = `點擊靶心獲得分數，靶子會持續移動(每${interval})！一分鐘內看看你能獲得多少分！`;
-                }
-                document.querySelector("#start-screen p").innerHTML = circleGameDescription;
+                // 說明文字更新邏輯已移至 updateStartScreenDescription
 
                 newTarget.style.background = `radial-gradient(circle, white 10%, ${targetColor} 10%, ${targetColor} 30%, white 30%, white 50%, ${adjustColor(targetColor, -20)} 50%, ${adjustColor(targetColor, -20)} 70%, white 70%)`;
 
@@ -2384,6 +2664,7 @@
 
             showCountdown(() => {
                 getTarget().style.display = 'block';
+                document.querySelector('.info-panel').style.display = 'flex'; // Show info panel when game starts
                 isPlaying = true;
 
                 playSound('gameStart');
@@ -2421,6 +2702,7 @@
             stopContinuousMovement(); // 停止自動移動
             stopContinuousMovement(); // 停止持續移動
             getTarget().style.display = 'none';
+            document.querySelector('.info-panel').style.display = 'none'; // Hide info panel on game end
 
             document.getElementById('pause-overlay').style.display = 'none';
 
@@ -2463,8 +2745,8 @@
             const newRecord = {
                 date: new Date().toLocaleString(),
                 score: score,
-                mode: gameMode === "human" ? "人形靶子" : gameMode === "target" ? "靶心" : "持續移動靶子",
-                moveType: moveType === "transition" ? "漸變移動" : "瞬間移動",
+                mode: gameMode,
+                moveType: moveType,
                 accuracy: shotsFired > 0 ? Math.round((shotsHit / shotsFired) * 100) : 0
             };
         }
@@ -2708,63 +2990,81 @@
 
 
         function handleHeadClick(e) {
-            if (!isPlaying || isPaused) return; 
-
+            if (!isPlaying || isPaused) return;
+            
             e.preventDefault();
-
+            
             e.stopPropagation();
-
+            
             shotsFired++;
             shotsHit++;
-
-            score++;
+            
+            // Critical Hit Logic (Headshot is always critical)
+            const isCritical = true;
+            const points = isCritical ? 2 : 1;
+            
+            score += points;
             scoreDisplay.textContent = score;
-
+            
             playSound('hit');
-
+            
             createBulletHole(e.clientX, e.clientY);
-
+            
             createHitEffect(this);
-
-            createParticles(e.clientX, e.clientY, '#4cc9f0');
-
+            
+            createParticles(e.clientX, e.clientY, '#ff0055'); // Critical hit color
+            
+            if (isCritical) {
+                showFloatingText('CRITICAL!', e.clientX, e.clientY - 50, 'critical-hit-text');
+                screenShake(true); // Stronger shake for critical
+            } else {
+                screenShake(false);
+            }
+            
             updateCombo();
-
-            screenShake(false);
-
+            
             // 只有在手動移動模式下才射擊後移動靶子
             if (moveTrigger === 'manual') {
                 placeTargetRandomly();
             }
         }
-
+        
         function handleHeadTouchStart(e) {
             if (!isPlaying) return;
-
+            
             e.preventDefault();
-
+            
             e.stopPropagation();
-
+            
             const touch = e.touches[0];
-
+            
             shotsFired++;
             shotsHit++;
-
-            score++;
+            
+            // Critical Hit Logic
+            const isCritical = true;
+            const points = isCritical ? 2 : 1;
+            
+            score += points;
             scoreDisplay.textContent = score;
-
+            
             playSound('hit');
-
+            
             createBulletHole(touch.clientX, touch.clientY);
-
+            
             createHitEffect(this);
-
-            createParticles(touch.clientX, touch.clientY, '#4cc9f0');
-
+            
+            createParticles(touch.clientX, touch.clientY, '#ff0055');
+            
+            if (isCritical) {
+                showFloatingText('CRITICAL!', touch.clientX, touch.clientY - 50, 'critical-hit-text');
+                screenShake(true);
+            } else {
+                screenShake(false);
+            }
+            
             updateCombo();
-
-            screenShake(false);
-
+            
             // 只有在手動移動模式下才射擊後移動靶子
             if (moveTrigger === 'manual') {
                 placeTargetRandomly();
@@ -3037,7 +3337,7 @@
                     posY += vy;
 
                     particle.style.left = `${posX}px`;
-                    particle.style.top = `${posY}px`;
+                    particle.style.top = `${relativeY}px`;
 
                     particle.style.opacity = parseFloat(particle.style.opacity || 1) - 0.02;
                     
@@ -3470,12 +3770,7 @@
             moveType = type;
             console.log(`移動方式已設置為: ${type}`);
 
-            const moveTypeDisplay = document.getElementById('current-move-type');
-            if (moveTypeDisplay) {
-                moveTypeDisplay.textContent = type === 'transition' ? '漸變移動' : '瞬間移動';
-            } else {
-                console.error('找不到移動方式顯示元素');
-            }
+            // Removed dependency on 'current-move-type' element as it was removed from UI
 
             if (isPlaying) {
                 const targetElement = getTarget();
@@ -3491,18 +3786,7 @@
             moveTrigger = trigger;
             console.log(`移動觸發方式已設置為: ${trigger}`);
 
-            const moveTriggerDisplay = document.getElementById('current-move-trigger');
-            if (moveTriggerDisplay) {
-                let displayText = '手動移動';
-                if (trigger === 'auto') {
-                    displayText = '自動連續';
-                } else if (trigger === 'continuous') {
-                    displayText = '持續移動';
-                }
-                moveTriggerDisplay.textContent = displayText;
-            } else {
-                console.error('找不到移動觸發方式顯示元素');
-            }
+            // Removed dependency on 'current-move-trigger' element as it was removed from UI
 
             // 如果遊戲正在進行中，需要調整移動邏輯
             if (isPlaying && !isPaused) {
@@ -3606,16 +3890,19 @@
             document.getElementById('easy-button').addEventListener('click', function() {
                 setDifficulty('easy');
                 updateDifficultyButtons('easy');
+                updateStartScreenDescription();
             });
 
             document.getElementById('medium-button').addEventListener('click', function() {
                 setDifficulty('medium');
                 updateDifficultyButtons('medium');
+                updateStartScreenDescription();
             });
 
             document.getElementById('hard-button').addEventListener('click', function() {
                 setDifficulty('hard');
                 updateDifficultyButtons('hard');
+                updateStartScreenDescription();
             });
 
             document.getElementById('volume-control').addEventListener('input', function(e) {
@@ -3638,7 +3925,18 @@
 
             // 主要按鈕事件監聽器
             playButton.addEventListener('click', showStartScreen);
-            startButton.addEventListener('click', startGame);
+            
+            const startButton = document.getElementById('start-button'); // This ID might have been removed or reused.
+            if (startButton) {
+                 // If start-button still exists (e.g. if we didn't rename it in HTML but just in JS var), ensure it does the right thing.
+                 // In the previous edit, we changed the button in start-screen to id="confirm-start-button".
+                 // So 'start-button' might be null now.
+            }
+
+            if (confirmStartButton) {
+                confirmStartButton.addEventListener('click', startGame);
+            }
+            
             restartButton.addEventListener('click', startGame);
             homeButton.addEventListener('click', showHome);
             backToHomeButton.addEventListener('click', showHome);
@@ -3733,21 +4031,28 @@
                 document.querySelectorAll('.move-type-buttons .move-button').forEach(button => {
                     button.classList.remove('active');
                 });
-                document.getElementById(`${activeType}-move`).classList.add('active');
+                const button = document.getElementById(`${activeType}-move`);
+                if(button) button.classList.add('active');
             }
 
             const transitionButton = document.getElementById('transition-move');
             const instantButton = document.getElementById('instant-move');
             
             if (transitionButton && instantButton) {
+                // Remove old listeners to prevent duplicates if called multiple times
+                const newTransitionButton = transitionButton.cloneNode(true);
+                const newInstantButton = instantButton.cloneNode(true);
+                
+                transitionButton.parentNode.replaceChild(newTransitionButton, transitionButton);
+                instantButton.parentNode.replaceChild(newInstantButton, instantButton);
 
-                transitionButton.addEventListener('click', function() {
+                newTransitionButton.addEventListener('click', function() {
                     setMoveType('transition');
                     updateMoveTypeButtons('transition');
                     console.log('設置為漸變移動');
                 });
                 
-                instantButton.addEventListener('click', function() {
+                newInstantButton.addEventListener('click', function() {
                     setMoveType('instant');
                     updateMoveTypeButtons('instant');
                     console.log('設置為瞬間移動');
@@ -3763,7 +4068,8 @@
                 document.querySelectorAll('.move-trigger-buttons .move-button').forEach(button => {
                     button.classList.remove('active');
                 });
-                document.getElementById(`${activeTrigger}-move`).classList.add('active');
+                const button = document.getElementById(`${activeTrigger}-move`);
+                if(button) button.classList.add('active');
             }
 
             const manualButton = document.getElementById('manual-move');
@@ -3771,22 +4077,33 @@
             const continuousButton = document.getElementById('continuous-move');
             
             if (manualButton && autoButton && continuousButton) {
+                // Remove old listeners to prevent duplicates if called multiple times
+                const newManualButton = manualButton.cloneNode(true);
+                const newAutoButton = autoButton.cloneNode(true);
+                const newContinuousButton = continuousButton.cloneNode(true);
 
-                manualButton.addEventListener('click', function() {
+                manualButton.parentNode.replaceChild(newManualButton, manualButton);
+                autoButton.parentNode.replaceChild(newAutoButton, autoButton);
+                continuousButton.parentNode.replaceChild(newContinuousButton, continuousButton);
+
+                newManualButton.addEventListener('click', function() {
                     setMoveTrigger('manual');
                     updateMoveTriggerButtons('manual');
+                    updateStartScreenDescription();
                     console.log('設置為手動移動');
                 });
                 
-                autoButton.addEventListener('click', function() {
+                newAutoButton.addEventListener('click', function() {
                     setMoveTrigger('auto');
                     updateMoveTriggerButtons('auto');
+                    updateStartScreenDescription();
                     console.log('設置為自動連續移動');
                 });
                 
-                continuousButton.addEventListener('click', function() {
+                newContinuousButton.addEventListener('click', function() {
                     setMoveTrigger('continuous');
                     updateMoveTriggerButtons('continuous');
+                    updateStartScreenDescription();
                     console.log('設置為持續移動');
                 });
             } else {
