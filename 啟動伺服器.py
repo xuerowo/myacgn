@@ -136,7 +136,11 @@ def select_html_file():
         print("❌ 在當前目錄中找不到任何HTML檔案")
         return None
     
-    print("\n📄 發現以下HTML檔案：")
+    try:
+        print("\n📄 發現以下HTML檔案：")
+    except UnicodeEncodeError:
+        print("\nFile 發現以下HTML檔案：")
+        
     for i, file_path in enumerate(html_files, 1):
         file_size = os.path.getsize(file_path)
         file_size_kb = file_size / 1024
@@ -201,31 +205,38 @@ def start_server(port=8000, auto_kill=True, target_file=None):
     # 設置處理器，支援 UTF-8 編碼和性能優化
     class OptimizedHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         def end_headers(self):
-            # 設置適當的 MIME 類型和編碼
-            if self.path.endswith('.html'):
-                self.send_header('Content-Type', 'text/html; charset=utf-8')
-            elif self.path.endswith('.js'):
-                self.send_header('Content-Type', 'application/javascript; charset=utf-8')
-            elif self.path.endswith('.css'):
-                self.send_header('Content-Type', 'text/css; charset=utf-8')
-            elif self.path.endswith('.json'):
-                self.send_header('Content-Type', 'application/json; charset=utf-8')
-            elif self.path.endswith('.md'):
-                self.send_header('Content-Type', 'text/markdown; charset=utf-8')
+            try:
+                # 設置適當的 MIME 類型和編碼
+                if self.path.endswith('.html'):
+                    self.send_header('Content-Type', 'text/html; charset=utf-8')
+                elif self.path.endswith('.js'):
+                    self.send_header('Content-Type', 'application/javascript; charset=utf-8')
+                elif self.path.endswith('.css'):
+                    self.send_header('Content-Type', 'text/css; charset=utf-8')
+                elif self.path.endswith('.json'):
+                    self.send_header('Content-Type', 'application/json; charset=utf-8')
+                elif self.path.endswith('.md'):
+                    self.send_header('Content-Type', 'text/markdown; charset=utf-8')
             
-            # 禁用快取來確保檔案更新立即生效
-            self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
-            self.send_header('Pragma', 'no-cache')
-            self.send_header('Expires', '0')
-            
-            # 啟用 gzip 壓縮
-            self.send_header('Content-Encoding', 'identity')
-            
-            super().end_headers()
+                # 禁用快取來確保檔案更新立即生效
+                self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                self.send_header('Pragma', 'no-cache')
+                self.send_header('Expires', '0')
+                
+                # 啟用 gzip 壓縮
+                self.send_header('Content-Encoding', 'identity')
+                
+                super().end_headers()
+            except Exception as e:
+                print(f"❌ end_headers 發生錯誤: {e}")
+                raise
         
         def log_message(self, format, *args):
-            # 隱藏日誌輸出以保持版面乾淨
-            pass
+            # 恢復日誌輸出以便除錯
+            sys.stderr.write("%s - - [%s] %s\n" %
+                             (self.client_address[0],
+                              self.log_date_time_string(),
+                              format % args))
     
     # 使用多線程伺服器來提高性能
     class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
@@ -243,10 +254,16 @@ def start_server(port=8000, auto_kill=True, target_file=None):
                     # 如果失敗，使用 os.system
                     os.system(f'title 輕小說伺服器 - 運行中 (Port {port})')
             
-            print(f"\n✅ 伺服器啟動成功！")
-            print(f"\n🌐 開啟網址: http://localhost:{port}/{target_file}")
-            print(f"\n🟢 伺服器運行中... Port {port}")
-            print(f"\n📁 按 Ctrl+C 停止伺服器\n")
+            try:
+                print(f"\n✅ 伺服器啟動成功！")
+                print(f"\n🌐 開啟網址: http://localhost:{port}/{target_file}")
+                print(f"\n🟢 伺服器運行中... Port {port}")
+                print(f"\n📁 按 Ctrl+C 停止伺服器\n")
+            except UnicodeEncodeError:
+                print(f"\n* 伺服器啟動成功！")
+                print(f"\n* 開啟網址: http://localhost:{port}/{target_file}")
+                print(f"\n* 伺服器運行中... Port {port}")
+                print(f"\n* 按 Ctrl+C 停止伺服器\n")
             
             # 自動開啟瀏覽器
             try:
@@ -258,7 +275,10 @@ def start_server(port=8000, auto_kill=True, target_file=None):
             httpd.serve_forever()
             
     except KeyboardInterrupt:
-        print(f"\n🛑 伺服器已停止")
+        try:
+            print(f"\n🛑 伺服器已停止")
+        except UnicodeEncodeError:
+            print(f"\n* 伺服器已停止")
         sys.exit(0)
     except OSError as e:
         if "Address already in use" in str(e):
@@ -270,7 +290,16 @@ def start_server(port=8000, auto_kill=True, target_file=None):
             sys.exit(1)
 
 if __name__ == "__main__":
-    print("\n🌟 輕小說翻譯本地伺服器")
+    # 強制設置標準輸出為 utf-8
+    if sys.stdout.encoding != 'utf-8':
+        import io
+        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+        sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
+
+    try:
+        print("\n🌟 輕小說翻譯本地伺服器")
+    except UnicodeEncodeError:
+        print("\n* 輕小說翻譯本地伺服器")
     
     # 檢查 Python 版本
     if sys.version_info < (3, 6):
@@ -295,4 +324,7 @@ if __name__ == "__main__":
             print(f"❌ 生成小說列表失敗: {e}")
             print("繼續啟動伺服器...\n")
     
-    start_server() 
+    if len(sys.argv) > 1:
+        start_server(target_file=sys.argv[1])
+    else:
+        start_server()
