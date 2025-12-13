@@ -5,40 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>留言區</title>
     <link rel="icon" href="images/favicon.jpg" type="image/jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #4a90e2;
-            --secondary-color: #f5f5f5;
-            --text-color: #333;
-            --border-color: #ddd;
-            --background-color: #fff;
-            --dropdown-background: #fff;
-            --dropdown-hover: #f0f0f0;
+            --primary-color: #0ea5e9; /* Sky 500 */
+            --primary-hover: #0284c7; /* Sky 600 */
+            --secondary-color: #f0f9ff; /* Sky 50 */
+            --text-color: #0f172a; /* Slate 900 */
+            --text-muted: #64748b; /* Slate 500 */
+            --border-color: #e2e8f0; /* Slate 200 */
+            --background-color: #ffffff;
+            --nav-bg: rgba(255, 255, 255, 0.85);
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --dropdown-bg: rgba(255, 255, 255, 0.95);
+            --dropdown-hover: #e0f2fe; /* Sky 100 */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-glow: 0 0 15px rgba(14, 165, 233, 0.3);
+            --transition-speed: 0.3s;
+            --glass-border: 1px solid rgba(255, 255, 255, 0.5);
         }
 
         :root[data-theme="dark"] {
-            --primary-color: #64b5f6;
-            --secondary-color: #1a1a1a;
-            --text-color: #e0e0e0;
-            --border-color: #333;
-            --background-color: #121212;
-            --dropdown-background: #1a1a1a;
-            --dropdown-hover: #2a2a2a;
+            --primary-color: #38bdf8; /* Sky 400 */
+            --primary-hover: #0ea5e9; /* Sky 500 */
+            --secondary-color: #0f172a; /* Slate 900 */
+            --text-color: #f1f5f9; /* Slate 100 */
+            --text-muted: #94a3b8; /* Slate 400 */
+            --border-color: #334155; /* Slate 700 */
+            --background-color: #020617; /* Slate 950 */
+            --nav-bg: rgba(15, 23, 42, 0.85);
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --dropdown-bg: rgba(30, 41, 59, 0.95);
+            --dropdown-hover: #1e293b;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+            --shadow-glow: 0 0 20px rgba(56, 189, 248, 0.2);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            transition: background-color 0.3s, color 0.3s;
+            transition: background-color var(--transition-speed), color var(--transition-speed), border-color var(--transition-speed), box-shadow var(--transition-speed), transform var(--transition-speed);
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: 'Poppins', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             line-height: 1.6;
             color: var(--text-color);
             background-color: var(--secondary-color);
             padding-top: 80px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         .navbar {
@@ -46,11 +71,14 @@
             top: 0;
             left: 0;
             width: 100%;
-            background-color: var(--background-color);
+            background-color: var(--nav-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             padding: 1rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-sm);
             z-index: 1000;
-            transition: top 0.3s;
+            transition: top 0.3s, background-color 0.3s, box-shadow 0.3s;
+            border-bottom: var(--glass-border);
         }
 
         .navbar[style*="-80px"] .dropdown-menu {
@@ -79,9 +107,27 @@
         .nav-links a {
             color: var(--text-color);
             text-decoration: none;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
+            font-weight: 500;
             transition: color 0.3s;
             padding: 0.5rem 0;
+            position: relative;
+        }
+
+        .nav-links > a:not(.dropdown a)::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: var(--primary-color);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-links > a:not(.dropdown a):hover::after {
+            width: 100%;
         }
 
         .nav-links a:hover {
@@ -101,11 +147,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
             color: var(--text-color);
             background: none;
             border: none;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
+            font-weight: 500;
+            font-family: inherit;
             width: 100%;
         }
 
@@ -115,22 +163,28 @@
 
         .dropdown-toggle:after {
             content: '▼';
-            font-size: 0.8em;
+            font-size: 0.7em;
             transition: transform 0.3s;
+            opacity: 0.7;
         }
 
         .dropdown-menu {
             position: absolute;
-            top: 100%;
-            left: 0;
-            background-color: var(--dropdown-background);
-            min-width: 160px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            border-radius: 4px;
+            top: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            background-color: var(--dropdown-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            min-width: 180px;
+            box-shadow: var(--shadow-lg);
+            border-radius: 12px;
+            border: var(--glass-border);
             opacity: 0;
             visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 0.5rem;
+            overflow: hidden;
         }
 
         .dropdown-menu a {
@@ -138,18 +192,22 @@
             padding: 0.8rem 1rem;
             color: var(--text-color);
             text-decoration: none;
-            transition: background-color 0.3s;
+            transition: all 0.2s;
+            border-radius: 8px;
+            text-align: center;
+            white-space: nowrap;
         }
 
         .dropdown-menu a:hover {
             background-color: var(--dropdown-hover);
             color: var(--primary-color);
+            transform: translateX(5px);
         }
 
         .dropdown:hover .dropdown-menu {
             opacity: 1;
             visibility: visible;
-            transform: translateY(0);
+            transform: translateX(-50%) translateY(0);
         }
 
         .dropdown:hover .dropdown-toggle:after {
@@ -157,53 +215,78 @@
         }
 
         .theme-toggle {
-            background: none;
-            border: none;
+            background: var(--background-color);
+            border: var(--glass-border);
             color: var(--text-color);
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             cursor: pointer;
-            padding: 0.5rem;
-            transition: transform 0.3s;
+            padding: 0.6rem;
+            border-radius: 50%;
+            transition: all 0.3s;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
         }
 
         .theme-toggle:hover {
             transform: rotate(360deg);
+            background-color: var(--dropdown-hover);
+            color: var(--primary-color);
+            box-shadow: var(--shadow-md);
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 2rem;
+            flex-grow: 1;
+            width: 100%;
         }
 
         h1 {
             text-align: center;
             margin-bottom: 2rem;
+            font-weight: 700;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--primary-color), #6366f1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
         #disqus_thread {
-            background-color: var(--background-color);
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            background-color: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: var(--glass-border);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
             margin-bottom: 2rem;
         }
 
         footer {
             text-align: center;
-            padding: 2rem;
+            padding: 4rem 2rem;
             background-color: var(--background-color);
-            margin-top: 2rem;
+            border-top: var(--glass-border);
+            color: var(--text-muted);
+            margin-top: auto;
         }
 
         footer h4 {
             color: var(--text-color);
             margin-bottom: 1rem;
+            font-weight: 600;
         }
 
         footer h6 {
-            color: var(--text-color);
+            color: var(--text-muted);
             font-size: 0.9rem;
+            font-weight: 400;
         }
 
         @media (max-width: 768px) {
@@ -212,11 +295,19 @@
             }
 
             .nav-links {
-                gap: 1.2rem;
+                gap: 1rem;
             }
 
             .nav-links > * {
-                min-width: 60px;
+                min-width: auto;
+            }
+            
+            .container {
+                padding: 1.5rem;
+            }
+            
+            #disqus_thread {
+                padding: 1.5rem;
             }
         }
 
@@ -251,7 +342,7 @@
             }
 
             h1 {
-                font-size: 1.4rem;
+                font-size: 2rem;
             }
         }
     </style>
@@ -271,7 +362,7 @@
                     </div>
                 </div>
                 <div class="dropdown">
-                    <button class="dropdown-toggle">ACG翻譯</button>
+                    <button class="dropdown-toggle">ACGN翻譯</button>
                     <div class="dropdown-menu">
                         <a href="acgntranslate.html#webtoons">網漫</a>
                         <a href="acgntranslate.html#novels">輕小說</a>
