@@ -10,7 +10,6 @@ import sys
 import subprocess
 import time
 import locale
-import shlex
 from pathlib import Path
 
 def print_colored(text, color='white'):
@@ -64,7 +63,7 @@ def run_command(command, description, cwd=None, capture_output=False):
             # 對 Git add 命令使用特殊處理
             git_add_command = ["git", "add", "--"] + command[2:]  # 添加 -- 分隔符
             command = git_add_command
-        
+            
         if capture_output:
             # 需要捕獲輸出的情況（如推送衝突檢測）
             result = subprocess.run(
@@ -89,30 +88,22 @@ def run_command(command, description, cwd=None, capture_output=False):
                     print_colored(result.stderr.strip(), 'red')
                 return False, result.stderr
         else:
-            # 即時輸出模式，但仍需捕獲錯誤訊息
+            # 即時輸出模式
             result = subprocess.run(
                 command,
                 cwd=cwd,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
                 text=True,
                 encoding='utf-8',
                 errors='ignore',
                 shell=True if isinstance(command, str) else False
             )
             
-            # 顯示輸出（模擬即時輸出）
-            if result.stdout.strip():
-                print(result.stdout.strip())
-            
             if result.returncode == 0:
                 print_colored(f"✅ {description} 完成", 'green')
-                return True, result.stdout
+                return True, ""
             else:
                 print_colored(f"❌ {description} 失敗", 'red')
-                if result.stderr.strip():
-                    print_colored(f"錯誤訊息: {result.stderr.strip()}", 'red')
-                return False, result.stderr
+                return False, ""
                 
     except Exception as e:
         print_colored(f"❌ 執行 {description} 時發生錯誤: {e}", 'red')
@@ -140,6 +131,73 @@ def fix_git_safe_directory():
     except Exception as e:
         print_colored(f"⚠️  修復 Git 安全目錄時發生錯誤: {e}", 'yellow')
         return False
+
+def check_git_repository():
+    """檢查是否為 Git 儲存庫"""
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "--git-dir"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            encoding='utf-8',
+            errors='ignore'
+        )
+        return result.returncode == 0
+    except:
+        return False
+
+def is_system_directory():
+    """檢查當前目錄是否為系統敏感目錄"""
+    current_dir = str(Path.cwd()).lower()
+    # Windows 系統目錄
+    if os.name == 'nt':
+        system_paths = [
+            os.environ.get('SystemRoot', 'C:\\Windows').lower(),
+            os.environ.get('ProgramFiles', 'C:\\Program Files').lower(),
+            os.environ.get('ProgramFiles(x86)', 'C:\\Program Files (x86)').lower(),
+        ]
+        for path in system_paths:
+            if current_dir == path or current_dir.startswith(path + os.sep):
+                return True
+    # Unix/Linux 系統目錄
+    else:
+        system_paths = ['/bin', '/sbin', '/usr', '/etc', '/var', '/root']
+        for path in system_paths:
+            if current_dir == path or current_dir.startswith(path + '/'):
+                return True
+    return False
+
+def init_git_repository():
+    """初始化 Git 儲存庫"""
+    if is_system_directory():
+        print_colored("\n❌ 警告：檢測到當前目錄為系統目錄，禁止在此初始化 Git 儲存庫", 'red')
+        print_colored(f"目錄位置: {Path.cwd()}", 'yellow')
+        return False
+
+    print_colored("\n🚀 正在初始化 Git 儲存庫...", 'cyan')
+    
+    # 執行 git init
+    success, _ = run_command(["git", "init"], "初始化 Git 儲存庫")
+    if not success:
+        return False
+    
+    # 詢問是否設定遠端儲存庫
+    print_colored("\n🔗 是否要現在設定遠端儲存庫 (origin)？", 'cyan')
+    print_colored("   (如果不設定，後續的推送操作將會失敗)", 'white')
+    remote_url = input("請輸入遠端儲存庫 URL (直接按 Enter 跳過): ").strip()
+    
+    if remote_url:
+        success, _ = run_command(
+            ["git", "remote", "add", "origin", remote_url],
+            f"設定遠端儲存庫為 {remote_url}"
+        )
+        if success:
+            print_colored("✅ 遠端儲存庫設定成功", 'green')
+        else:
+            print_colored("⚠️  遠端儲存庫設定失敗，您可以稍後手動設定", 'yellow')
+    
+    return True
 
 def decode_filename(filename):
     """解碼檔案名稱，處理各種編碼情況"""
@@ -385,6 +443,9 @@ def setup_git_encoding():
 
 def main():
     """主要執行函數"""
+    # 確保工作目錄切換到腳本所在的目錄
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+    
     # 設置控制台編碼
     setup_console_encoding()
     
@@ -403,6 +464,20 @@ def main():
     os.chdir(script_dir)
     print_colored(f"📁 工作目錄: {script_dir}", 'yellow')
     
+    # 檢查是否為 Git 儲存庫
+    if not check_git_repository():
+        print_colored("❓ 當前目錄不是 Git 儲存庫", 'yellow')
+        choice = input("是否要將此目錄初始化為 Git 儲存庫？ (y/n): ").strip().lower()
+        if choice == 'y':
+            if not init_git_repository():
+                print_colored("❌ 初始化 Git 儲存庫失敗", 'red')
+                input("\n按 Enter 鍵結束...")
+                return
+        else:
+            print_colored("❌ 操作已取消", 'red')
+            input("\n按 Enter 鍵結束...")
+            return
+
     # 步驟 1: 生成輕小說索引
     novels_script = script_dir / "輕小說翻譯" / "generate_novels.py"
     if novels_script.exists():
@@ -512,56 +587,46 @@ def main():
         else:
             print_colored(f"   {status.strip()} {display_filename}", 'white')
     
-    # 步驟 3: 添加所有變更檔案（使用 git add . 以避免路徑問題）
-    if filtered_git_status.strip():
-        success, _ = run_command(
-            ["git", "add", "."],
-            "添加所有變更檔案到暫存區",
-            capture_output=False
-        )
-        
-        if success:
-            # 移除被忽略的檔案（如果有的話）
-            if ignored_files:
-                for ignored_file in ignored_files:
-                    # 嘗試移除被忽略的檔案從暫存區
-                    success_reset, _ = run_command(
-                        ["git", "reset", "HEAD", ignored_file],
-                        f"移除被忽略的檔案: {ignored_file}",
-                        capture_output=True  # 這裡不需要顯示輸出
-                    )
-                    # 忽略 reset 失敗（可能檔案本來就不在暫存區）
+    # 步驟 3: 選擇性添加變更檔案（排除忽略的檔案）
+    files_to_add = []
+    for line in filtered_git_status.strip().split('\n'):
+        if len(line) < 3:
+            continue
             
-            # 統計檔案數量
-            file_count = len([line for line in filtered_git_status.strip().split('\n') if len(line) >= 3])
-            print_colored(f"✅ 成功添加 {file_count} 個檔案到暫存區", 'green')
+        # 提取檔案名
+        if len(line) >= 3 and line[2] == ' ':
+            filename = line[3:]
         else:
-            print_colored("❌ 添加檔案失敗", 'red')
-            input("\n按 Enter 鍵結束...")
-            return
+            space_index = line.find(' ')
+            if space_index > 0:
+                filename = line[space_index + 1:]
+            else:
+                continue
+        
+        files_to_add.append(filename)
+    
+    # 添加每個非忽略的檔案
+    if files_to_add:
+        for filename in files_to_add:
+            success, _ = run_command(
+                ["git", "add", filename],
+                f"添加檔案: {decode_filename(filename)}",
+                capture_output=False
+            )
+            if not success:
+                print_colored(f"⚠️  無法添加檔案: {decode_filename(filename)}", 'yellow')
+        
+        print_colored(f"✅ 成功添加 {len(files_to_add)} 個檔案到暫存區", 'green')
     else:
         print_colored("❌ 沒有檔案需要添加", 'red')
         input("\n按 Enter 鍵結束...")
         return
     
-    # 步驟 4: 檢查暫存區狀態並提交變更
-    # 先檢查暫存區是否有內容
-    success_staged, staged_output = run_command(
-        ["git", "diff", "--cached", "--name-only"],
-        "檢查暫存區狀態",
-        capture_output=True
-    )
-    
-    if not success_staged or not staged_output.strip():
-        print_colored("⚠️  暫存區為空，無法提交", 'yellow')
-        print_colored("📝 這可能是因為所有變更都被忽略或已經提交", 'cyan')
-        input("\n按 Enter 鍵結束...")
-        return
-    
+    # 步驟 4: 生成 commit 訊息並提交變更
     commit_message = generate_commit_message(filtered_git_status)
     print_colored(f"📝 Commit 訊息: {commit_message}", 'cyan')
     
-    success, commit_output = run_command(
+    success, _ = run_command(
         ["git", "commit", "-m", commit_message],
         "提交變更",
         capture_output=False
@@ -584,26 +649,7 @@ def main():
         print_colored("🔗 儲存庫: https://github.com/xuerowo/myacgn", 'cyan')
     else:
         print_colored("\n❌ 推送到 GitHub 失敗", 'red')
-        print_colored("📝 提交已儲存在本地，但未推送到 GitHub", 'yellow')
-        print_colored("\n🔧 認證設定方法:", 'cyan')
-        print_colored("1. 設定 Personal Access Token:", 'white')
-        print_colored("   git config --global credential.helper store", 'white')
-        print_colored("   然後手動執行: git push origin main", 'white')
-        print_colored("\n2. 或者使用 SSH 金鑰（建議）", 'white')
-        print_colored("\n3. 手動推送本地提交:", 'white')
-        print_colored("   git push origin main", 'white')
-        
-        # 顯示本地領先的提交
-        success_log, log_output = run_command(
-            ["git", "log", "--oneline", "origin/main..HEAD"],
-            "檢查未推送的提交",
-            capture_output=True
-        )
-        if success_log and log_output.strip():
-            print_colored("\n📋 本地未推送的提交:", 'cyan')
-            for line in log_output.strip().split('\n'):
-                if line.strip():
-                    print_colored(f"   {line}", 'yellow')
+        print_colored("請檢查網路連線和 Git 認證設定", 'yellow')
     
     print_colored("\n" + "=" * 60, 'blue')
     print_colored("🏁 自動更新流程完成", 'blue')
